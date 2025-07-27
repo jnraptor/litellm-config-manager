@@ -1,9 +1,14 @@
-name: Cleanup OpenRouter Models and Update Costs
+name: Cleanup OpenRouter Models, Update Costs, and Manage Models
 
 on:
   schedule:
-    - cron: '0 0 * * 0'  # Weekly on Sunday at midnight UTC
-  workflow_dispatch:  # Allow manual triggering
+    - cron: '0 0 * * 0'  # Weekly on Sunday
+  workflow_dispatch:
+    inputs:
+      add_model:
+        description: 'Model ID to add (e.g., anthropic/claude-3-5-haiku)'
+        required: false
+        type: string
 
 jobs:
   cleanup:
@@ -29,6 +34,13 @@ jobs:
       - name: Clean up invalid models and update costs
         run: python cleanup_openrouter_models.py --verbose
         
+      - name: Add new model (if specified)
+        if: ${{ github.event.inputs.add_model != '' }}
+        run: |
+          echo "Adding model: ${{ github.event.inputs.add_model }}"
+          python cleanup_openrouter_models.py --add-model "${{ github.event.inputs.add_model }}" --dry-run
+          python cleanup_openrouter_models.py --add-model "${{ github.event.inputs.add_model }}"
+        
       - name: Check for changes
         id: verify-changed-files
         run: |
@@ -44,13 +56,17 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add config.yaml
-          git commit -m "Auto-cleanup: Remove invalid OpenRouter models and update costs"
+          git commit -m "Auto-cleanup invalid OpenRouter models, update costs, and manage models"
           git push
           
       - name: Create summary
         run: |
-          echo "## OpenRouter Model Cleanup Summary" >> $GITHUB_STEP_SUMMARY
+          echo "## OpenRouter Model Management Summary" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
+          if [[ "${{ github.event.inputs.add_model }}" != "" ]]; then
+            echo "🔧 **Manual model addition requested:** ${{ github.event.inputs.add_model }}" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+          fi
           if [[ "${{ steps.verify-changed-files.outputs.changed }}" == "true" ]]; then
             echo "✅ Changes detected and committed to config.yaml" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY

@@ -1,6 +1,6 @@
-# OpenRouter Model Cleanup and Cost Update Script
+# OpenRouter Model Cleanup, Cost Update, and Model Addition Script
 
-A Python script that validates OpenRouter models in LiteLLM configuration files against the current OpenRouter API, removes invalid model entries, and automatically updates model costs to match current pricing.
+A comprehensive Python script that validates OpenRouter models in LiteLLM configuration files against the current OpenRouter API, removes invalid model entries, automatically updates model costs to match current pricing, and provides an easy way to add new OpenRouter models.
 
 ## Overview
 
@@ -9,6 +9,7 @@ This script helps maintain your LiteLLM configuration by:
 - Checking their validity against the current OpenRouter API
 - Removing entire model entries for invalid/deprecated models
 - **Automatically updating model costs** (`input_cost_per_token` and `output_cost_per_token`) when they differ from API pricing
+- **Adding new OpenRouter models** with automatic cost detection and proper formatting
 - Providing detailed logging with percentage-based cost change information
 - Supporting dry-run capabilities for safe previewing
 
@@ -16,9 +17,13 @@ This script helps maintain your LiteLLM configuration by:
 
 - ✅ **Safe Operation**: Dry-run mode to preview changes before applying
 - ✅ **Automatic Cost Updates**: Synchronizes `input_cost_per_token` and `output_cost_per_token` with current API pricing
+- ✅ **Easy Model Addition**: Add new OpenRouter models with automatic cost detection and proper formatting
+- ✅ **Dual Version Support**: Automatically adds both free and paid versions when available (with same model name)
 - ✅ **Percentage-Based Logging**: Shows cost changes with percentage differences (e.g., "Input cost: 1e-06 → 3e-07 (-70.0%)")
 - ✅ **Free Model Handling**: Properly handles free models by preserving `1e-09` costs for LiteLLM compatibility
-- ✅ **Comprehensive Logging**: Detailed output with verbose mode for both model validation and cost updates
+- ✅ **Duplicate Prevention**: Prevents adding models that already exist in configuration
+- ✅ **Smart Naming**: Generates appropriate model names with conflict resolution
+- ✅ **Comprehensive Logging**: Detailed output with verbose mode for validation, cost updates, and model addition
 - ✅ **Error Handling**: Robust error handling for network and file issues
 - ✅ **No Authentication Required**: Uses public OpenRouter API endpoint
 - ✅ **Preserves Structure**: Maintains YAML formatting and structure
@@ -50,6 +55,19 @@ python cleanup_openrouter_models.py
 python cleanup_openrouter_models.py --config /path/to/your/config.yaml
 ```
 
+### Adding New Models
+
+```bash
+# Add a new OpenRouter model to the configuration
+python cleanup_openrouter_models.py --add-model "anthropic/claude-3-5-sonnet-20241022"
+
+# Preview adding a model without making changes
+python cleanup_openrouter_models.py --add-model "qwen/qwen-2.5-72b-instruct" --dry-run
+
+# Add a model with verbose output
+python cleanup_openrouter_models.py --add-model "meta-llama/llama-3.2-1b-instruct" --verbose
+```
+
 ### Dry-Run Mode (Recommended First)
 
 ```bash
@@ -65,8 +83,9 @@ python cleanup_openrouter_models.py --dry-run --verbose
 | Option | Description |
 |--------|-------------|
 | `--config CONFIG` | Path to LiteLLM configuration file (default: `config.yaml`) |
-| `--dry-run` | Preview all changes (model removals and cost updates) without modifying the configuration file |
+| `--dry-run` | Preview all changes (model removals, cost updates, and model additions) without modifying the configuration file |
 | `--verbose` | Enable detailed logging output with cost comparison information and percentage changes |
+| `--add-model MODEL_ID` | Add a new OpenRouter model to the configuration. Provide the model ID (e.g., "anthropic/claude-3-5-sonnet-20241022") |
 | `--help` | Show help message and exit |
 
 ## Example Output
@@ -122,8 +141,47 @@ python cleanup_openrouter_models.py --dry-run --verbose
 2025-07-27 21:09:22 - INFO - ✅ All OpenRouter models are valid with current costs
 ```
 
+### Adding New Models
+```
+2025-07-27 21:36:38 - INFO - Loading configuration from config.yaml
+2025-07-27 21:36:38 - INFO - Fetching available models with pricing from OpenRouter API...
+2025-07-27 21:36:38 - INFO - Fetched 319 available models from OpenRouter API
+2025-07-27 21:36:38 - INFO - Found 29 OpenRouter models in configuration
+2025-07-27 21:36:38 - INFO - Added model 'qwen/qwen-2.5-72b-instruct' with name 'or-2.5-72b-instruct'
+2025-07-27 21:36:38 - INFO -   Input cost: 1.01e-07
+2025-07-27 21:36:38 - INFO -   Output cost: 1.01e-07
+2025-07-27 21:36:38 - INFO - Also added free version 'qwen/qwen-2.5-72b-instruct:free' with same name 'or-2.5-72b-instruct'
+2025-07-27 21:36:38 - INFO - Saving updated configuration to config.yaml
+2025-07-27 21:36:38 - INFO - Configuration saved successfully
+2025-07-27 21:36:38 - INFO - ✅ Successfully added 2 model(s): qwen/qwen-2.5-72b-instruct, qwen/qwen-2.5-72b-instruct:free
+```
+
+### Adding Models (Dry-Run)
+```
+2025-07-27 21:36:29 - INFO - Loading configuration from config.yaml
+2025-07-27 21:36:29 - INFO - Fetching available models with pricing from OpenRouter API...
+2025-07-27 21:36:29 - INFO - Fetched 319 available models from OpenRouter API
+2025-07-27 21:36:29 - INFO - Loading configuration from config.yaml
+2025-07-27 21:36:29 - INFO - Found 29 OpenRouter models in configuration
+2025-07-27 21:36:29 - INFO - [DRY-RUN] Would add model 'qwen/qwen-2.5-72b-instruct' with name 'or-2.5-72b-instruct'
+2025-07-27 21:36:29 - INFO - [DRY-RUN]   Input cost: 1.01e-07
+2025-07-27 21:36:29 - INFO - [DRY-RUN]   Output cost: 1.01e-07
+2025-07-27 21:36:29 - INFO - [DRY-RUN] Would also add free version 'qwen/qwen-2.5-72b-instruct:free' with same name 'or-2.5-72b-instruct'
+```
+
+### Duplicate Model Detection
+```
+2025-07-27 21:34:49 - INFO - Loading configuration from config.yaml
+2025-07-27 21:34:49 - INFO - Fetching available models with pricing from OpenRouter API...
+2025-07-27 21:34:49 - INFO - Fetched 319 available models from OpenRouter API
+2025-07-27 21:34:49 - INFO - Loading configuration from config.yaml
+2025-07-27 21:34:49 - INFO - Found 29 OpenRouter models in configuration
+2025-07-27 21:34:49 - WARNING - [DRY-RUN] Model 'meta-llama/llama-3.2-1b-instruct' already exists in configuration
+```
+
 ## How It Works
 
+### Model Validation and Cost Updates
 1. **Load Configuration**: Parses the YAML configuration file safely
 2. **Extract OpenRouter Models**: Identifies all models starting with `openrouter/`
 3. **Fetch Available Models with Pricing**: Queries the OpenRouter API for current model list and pricing information
@@ -133,6 +191,17 @@ python cleanup_openrouter_models.py --dry-run --verbose
 7. **Remove Invalid Entries**: Removes entire model entries for invalid/deprecated models
 8. **Save Configuration**: Writes the updated configuration back to file (if any changes were made)
 9. **Generate Report**: Provides comprehensive summary of model removals and cost updates with percentage changes
+
+### Model Addition (--add-model)
+1. **Load Configuration**: Parses the YAML configuration file safely
+2. **Fetch Available Models with Pricing**: Queries the OpenRouter API for current model list and pricing information
+3. **Find Model in API**: Searches for the specified model ID in the API response
+4. **Check for Duplicates**: Verifies the model doesn't already exist in the configuration
+5. **Generate Model Name**: Creates an appropriate model name (e.g., "qwen/qwen-2.5-72b-instruct" → "or-2.5-72b-instruct")
+6. **Handle Dual Versions**: Automatically adds both paid and free versions when available (with same model name)
+7. **Apply Costs**: Sets appropriate costs based on API pricing (1e-09 for free models)
+8. **Save Configuration**: Writes the updated configuration back to file
+9. **Generate Report**: Provides summary of added models
 
 ## Model Identification
 
@@ -219,17 +288,27 @@ The script is organized into a main `OpenRouterModelCleaner` class with the foll
 - `validate_models()`: Compare config vs API models for validity
 - `remove_invalid_entries()`: Remove invalid model entries
 - `save_config()`: Write updated configuration
-- `generate_report()`: Summary reporting with both model and cost changes
+- `generate_report()`: Summary reporting with model changes, cost updates, and additions
 
 ### Cost Update Methods
 - `validate_and_update_costs()`: Compare and update model costs with API pricing
 - `preview_cost_changes()`: Show cost changes in dry-run mode with percentage differences
 
+### Model Addition Methods
+- `generate_model_name()`: Generate appropriate model names from OpenRouter model IDs
+- `find_model_in_api()`: Search for specific models in API data with fallback logic
+- `add_model_to_config()`: Add new models to configuration with proper cost handling
+- `preview_add_model()`: Preview model additions in dry-run mode with duplicate checking
+
 ### Enhanced Features
 - **Automatic cost synchronization**: Keeps your config costs current with API pricing
+- **Easy model addition**: Add new OpenRouter models with automatic cost detection
+- **Dual version support**: Automatically adds both free and paid versions with same model name
 - **Free model compatibility**: Handles LiteLLM's requirement for non-zero costs
+- **Duplicate prevention**: Prevents adding models that already exist
+- **Smart naming**: Generates appropriate model names with conflict resolution
 - **Percentage-based logging**: Clear visibility into cost impact
-- **Dual functionality**: Both model validation and cost updates in a single run
+- **Triple functionality**: Model validation, cost updates, and model addition in a single tool
 
 ## License
 

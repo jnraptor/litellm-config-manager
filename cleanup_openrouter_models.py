@@ -460,21 +460,217 @@ class OpenRouterModelCleaner:
             total_changes = len(invalid_models) + len(cost_changes)
             self.logger.info(f"✅ Cleanup completed: {total_changes} total changes applied")
     
-    def run(self) -> int:
+    def generate_model_name(self, model_id: str) -> str:
+        """
+        Generate an appropriate model_name from the OpenRouter model ID.
+        
+        Args:
+            model_id: The OpenRouter model ID (e.g., "anthropic/claude-3-5-sonnet-20241022")
+            
+        Returns:
+            Generated model name (e.g., "or-claude-3-5-sonnet-20241022")
+        """
+        # Remove common prefixes and clean up the name
+        clean_id = model_id.replace('/', '-').replace(':', '-')
+        
+        # Add 'or-' prefix for OpenRouter models
+        model_name = f"or-{clean_id}"
+        
+        # Handle some common cases to make names more readable
+        model_name = model_name.replace('anthropic-', '').replace('meta-llama-', '').replace('google-', '')
+        model_name = model_name.replace('mistralai-', 'mistral-').replace('qwen-', '')
+        
+        self.logger.debug(f"Generated model name '{model_name}' from ID '{model_id}'")
+        return model_name
+    
+    def find_model_in_api(self, model_id: str, api_models: Dict[str, Dict[str, Any]]) -> Optional[Dict[str, Any]]:
+        """
+        Find a specific model in the API models data.
+        
+        Args:
+            model_id: The model ID to search for
+            api_models: Dict of model data from API
+            
+        Returns:
+            Model info dict if found, None otherwise
+        """
+        if model_id in api_models:
+            return api_models[model_id]
+        
+        # Also check for variations (with/without :free suffix)
+        if f"{model_id}:free" in api_models:
+            return api_models[f"{model_id}:free"]
+        
+        # Check if the provided ID has :free and try without it
+        if model_id.endswith(':free'):
+            base_id = model_id[:-5]  # Remove ':free'
+            if base_id in api_models:
+                return api_models[base_id]
+        
+        return None
+    
+    def add_model_to_config(self, config: Dict[str, Any], model_id: str, 
+                           api_models: Dict[str, Dict[str, Any]]) -> Tuple[Dict[str, Any], List[str]]:
+        """
+        Add a new OpenRouter model to the configuration.
+        
+        Args:
+            config: The configuration dictionary
+            model_id: The OpenRouter model ID to add
+            api_models: Dict of model data from API
+            
+        Returns:
+            Tuple of (updated_config, list_of_added_models)
+        """
+        added_models = []
+        
+        # Find the model in API data
+        model_info = self.find_model_in_api(model_id, api_models)
+        if not model_info:
+            self.logger.error(f"Model '{model_id}' not found in OpenRouter API")
+            return config, added_models
+        
+        # Check if model already exists in config
+        existing_models = self.extract_openrouter_models(config)
+        existing_model_ids = [mid.replace('openrouter/', '') for _, mid, _ in existing_models]
+        
+        if model_id in existing_model_ids:
+            self.logger.warning(f"Model '{model_id}' already exists in configuration")
+            return config, added_models
+        
+        # Generate model name
+        model_name = self.generate_model_name(model_id)
+        
+        # Check for name conflicts and make unique if needed
+        existing_names = [name for _, _, name in existing_models]
+        original_name = model_name
+        counter = 1
+        while model_name in existing_names:
+            model_name = f"{original_name}-{counter}"
+            counter += 1
+        
+        # Create model entry
+        input_cost = model_info.get('input_cost')
+        output_cost = model_info.get('output_cost')
+        
+        # Handle free models: if API returns 0.0, use 1e-09 for LiteLLM compatibility
+        if input_cost is not None:
+            input_cost = 1e-09 if input_cost == 0.0 else input_cost
+        if output_cost is not None:
+            output_cost = 1e-09 if output_cost == 0.0 else output_cost
+        
+        model_entry = {
+            'litellm_params': {
+                'model': f'openrouter/{model_id}'
+            },
+            'model_name': model_name
+        }
+        
+        # Add costs if available
+        if input_cost is not None:
+            model_entry['litellm_params']['input_cost_per_token'] = input_cost
+        if output_cost is not None:
+            model_entry['litellm_params']['output_cost_per_token'] = output_cost
+        
+        # Add to config
+        config['model_list'].append(model_entry)
+        added_models.append(model_id)
+        
+        self.logger.info(f"Added model '{model_id}' with name '{model_name}'")
+        if input_cost is not None:
+            self.logger.info(f"  Input cost: {input_cost}")
+        if output_cost is not None:
+            self.logger.info(f"  Output cost: {output_cost}")
+        
+        # Also add free version if paid version exists and free version is available
+        free_model_id = f"{model_id}:free"
+        if not model_id.endswith(':free') and free_model_id in api_models:
+            free_model_info = api_models[free_model_id]
+            # Use the same model name for both free and paid versions
+            free_model_name = model_name
+            
+            free_model_entry = {
+                'litellm_params': {
+                    'model': f'openrouter/{free_model_id}',
+                    'input_cost_per_token': 1e-09,
+                    'output_cost_per_token': 1e-09
+                },
+                'model_name': free_model_name
+            }
+            
+            config['model_list'].append(free_model_entry)
+            added_models.append(free_model_id)
+            
+            self.logger.info(f"Also added free version '{free_model_id}' with same name '{free_model_name}'")
+        
+        return config, added_models
+    
+    def preview_add_model(self, model_id: str, api_models: Dict[str, Dict[str, Any]]) -> None:
+        """Preview what would be added when adding a new model."""
+        model_info = self.find_model_in_api(model_id, api_models)
+        if not model_info:
+            self.logger.error(f"[DRY-RUN] Model '{model_id}' not found in OpenRouter API")
+            return
+        
+        # Check if model already exists in config (same logic as add_model_to_config)
+        config = self.load_config()
+        existing_models = self.extract_openrouter_models(config)
+        existing_model_ids = [mid.replace('openrouter/', '') for _, mid, _ in existing_models]
+        
+        if model_id in existing_model_ids:
+            self.logger.warning(f"[DRY-RUN] Model '{model_id}' already exists in configuration")
+            return
+        
+        model_name = self.generate_model_name(model_id)
+        input_cost = model_info.get('input_cost')
+        output_cost = model_info.get('output_cost')
+        
+        # Handle free models
+        if input_cost is not None:
+            input_cost = 1e-09 if input_cost == 0.0 else input_cost
+        if output_cost is not None:
+            output_cost = 1e-09 if output_cost == 0.0 else output_cost
+        
+        self.logger.info(f"[DRY-RUN] Would add model '{model_id}' with name '{model_name}'")
+        if input_cost is not None:
+            self.logger.info(f"[DRY-RUN]   Input cost: {input_cost}")
+        if output_cost is not None:
+            self.logger.info(f"[DRY-RUN]   Output cost: {output_cost}")
+        
+        # Check for free version
+        free_model_id = f"{model_id}:free"
+        if not model_id.endswith(':free') and free_model_id in api_models:
+            # Use the same model name for both free and paid versions
+            free_model_name = model_name
+            self.logger.info(f"[DRY-RUN] Would also add free version '{free_model_id}' with same name '{free_model_name}'")
+    
+    def run(self, add_model: Optional[str] = None) -> int:
         """Main execution method."""
         try:
             # Load configuration
             config = self.load_config()
             
-            # Extract OpenRouter models
+            # Fetch available models with pricing from API
+            available_models = self.fetch_available_models()
+            
+            # Handle add-model functionality
+            if add_model:
+                if self.dry_run:
+                    self.preview_add_model(add_model, available_models)
+                    return 0
+                else:
+                    updated_config, added_models = self.add_model_to_config(config, add_model, available_models)
+                    if added_models:
+                        self.save_config(updated_config)
+                        self.logger.info(f"✅ Successfully added {len(added_models)} model(s): {', '.join(added_models)}")
+                    return 0
+            
+            # Extract OpenRouter models for cleanup/validation
             openrouter_models = self.extract_openrouter_models(config)
             
             if not openrouter_models:
                 self.logger.info("No OpenRouter models found in configuration")
                 return 0
-            
-            # Fetch available models with pricing from API
-            available_models = self.fetch_available_models()
             
             # Validate models
             invalid_models = self.validate_models(openrouter_models, available_models)
@@ -516,18 +712,21 @@ class OpenRouterModelCleaner:
 def main():
     """Main entry point for the script."""
     parser = argparse.ArgumentParser(
-        description="Clean up invalid OpenRouter models and update costs in LiteLLM configuration",
+        description="Clean up invalid OpenRouter models, update costs, and add new models in LiteLLM configuration",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
-This script performs two main functions:
+This script performs three main functions:
 1. Validates OpenRouter models against the current API and removes invalid entries
 2. Updates model costs (input_cost_per_token/output_cost_per_token) when they differ from API pricing
+3. Adds new OpenRouter models to the configuration
 
 Examples:
   %(prog)s                           # Process config.yaml (validate models + update costs)
   %(prog)s --config my-config.yaml   # Process custom config file
   %(prog)s --dry-run                 # Preview all changes without modifying file
   %(prog)s --verbose --dry-run       # Detailed preview mode with debug information
+  %(prog)s --add-model "anthropic/claude-3-5-sonnet-20241022"  # Add a new model
+  %(prog)s --add-model "qwen/qwen-2.5-72b-instruct" --dry-run  # Preview adding a model
         """
     )
     
@@ -549,6 +748,12 @@ Examples:
         help='Enable verbose logging output with detailed cost comparison information'
     )
     
+    parser.add_argument(
+        '--add-model',
+        type=str,
+        help='Add a new OpenRouter model to the configuration. Provide the model ID (e.g., "anthropic/claude-3-5-sonnet-20241022")'
+    )
+    
     args = parser.parse_args()
     
     # Create and run the cleaner
@@ -558,7 +763,7 @@ Examples:
         verbose=args.verbose
     )
     
-    return cleaner.run()
+    return cleaner.run(add_model=args.add_model)
 
 
 if __name__ == '__main__':
