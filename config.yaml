@@ -312,7 +312,7 @@ model_list:
   model_name: pplx-sonar-pro
 - model_name: req-smart-task
   litellm_params:
-    model: openai/smart/task
+    model: openai/smart-task
     api_base: https://router.requesty.ai/v1
     api_key: os.environ/REQUESTY_API_KEY
 - litellm_params:
