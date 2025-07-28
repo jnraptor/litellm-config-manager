@@ -1,11 +1,11 @@
-# OpenRouter & Requesty Model Cleanup, Cost Update, and Model Addition Scripts
+# OpenRouter, Requesty & Novita Model Cleanup, Cost Update, and Model Addition Scripts
 
-Comprehensive Python scripts that validate OpenRouter and Requesty models in LiteLLM configuration files against their respective APIs, remove invalid model entries, automatically update model costs to match current pricing, and provide an easy way to add new models.
+Comprehensive Python scripts that validate OpenRouter, Requesty, and Novita models in LiteLLM configuration files against their respective APIs, remove invalid model entries, automatically update model costs to match current pricing, and provide an easy way to add new models.
 
 ## Overview
 
 These scripts help maintain your LiteLLM configuration by:
-- Identifying OpenRouter/Requesty models in your `config.yaml`
+- Identifying OpenRouter/Requesty/Novita models in your `config.yaml`
 - Checking their validity against the current APIs
 - Removing entire model entries for invalid/deprecated models
 - **Automatically updating model costs** (`input_cost_per_token` and `output_cost_per_token`) when they differ from API pricing
@@ -45,6 +45,21 @@ These scripts help maintain your LiteLLM configuration by:
 - ✅ **Preserves Structure**: Maintains YAML formatting and structure
 - ✅ **Complete Removal**: Removes entire model entries (not just model references)
 
+### Novita Script
+- ✅ **Safe Operation**: Dry-run mode to preview changes before applying
+- ✅ **Automatic Cost Updates**: Synchronizes `input_cost_per_token` and `output_cost_per_token` with current API pricing
+- ✅ **Easy Model Addition**: Add new Novita models with automatic cost detection and proper formatting
+- ✅ **Correct Pricing Conversion**: Properly converts Novita's per-million token pricing format to per-token costs
+- ✅ **Percentage-Based Logging**: Shows cost changes with percentage differences
+- ✅ **Free Model Handling**: Properly handles free models by preserving `1e-09` costs for LiteLLM compatibility
+- ✅ **Duplicate Prevention**: Prevents adding models that already exist in configuration
+- ✅ **Smart Naming**: Generates appropriate model names with `nv-` prefix and conflict resolution
+- ✅ **Comprehensive Logging**: Detailed output with verbose mode for validation, cost updates, and model addition
+- ✅ **Error Handling**: Robust error handling for network and file issues
+- ✅ **No Authentication Required**: Uses public Novita API endpoint
+- ✅ **Preserves Structure**: Maintains YAML formatting and structure
+- ✅ **Complete Removal**: Removes entire model entries (not just model references)
+
 ## Installation
 
 1. **Clone or download the script files:**
@@ -52,6 +67,7 @@ These scripts help maintain your LiteLLM configuration by:
    # Files needed:
    # - cleanup_openrouter_models.py
    # - cleanup_requesty_models.py
+   # - cleanup_novita_models.py
    # - requirements.txt
    ```
 
@@ -68,10 +84,12 @@ These scripts help maintain your LiteLLM configuration by:
 # Process config.yaml in current directory (validates models + updates costs)
 python cleanup_openrouter_models.py
 python cleanup_requesty_models.py
+python cleanup_novita_models.py
 
 # Process a specific config file
 python cleanup_openrouter_models.py --config /path/to/your/config.yaml
 python cleanup_requesty_models.py --config /path/to/your/config.yaml
+python cleanup_novita_models.py --config /path/to/your/config.yaml
 ```
 
 ### Adding New Models
@@ -83,13 +101,18 @@ python cleanup_openrouter_models.py --add-model "anthropic/claude-3-5-sonnet-202
 # Add a new Requesty model to the configuration
 python cleanup_requesty_models.py --add-model "coding/gemini-2.5-flash"
 
+# Add a new Novita model to the configuration
+python cleanup_novita_models.py --add-model "deepseek/deepseek-v3-0324"
+
 # Preview adding a model without making changes
 python cleanup_openrouter_models.py --add-model "qwen/qwen-2.5-72b-instruct" --dry-run
 python cleanup_requesty_models.py --add-model "coding/gemini-2.5-pro" --dry-run
+python cleanup_novita_models.py --add-model "deepseek/deepseek-r1-0528-qwen3-8b" --dry-run
 
 # Add a model with verbose output
 python cleanup_openrouter_models.py --add-model "meta-llama/llama-3.2-1b-instruct" --verbose
 python cleanup_requesty_models.py --add-model "smart/task" --verbose
+python cleanup_novita_models.py --add-model "qwen/qwen3-235b-a22b-thinking-2507" --verbose
 ```
 
 ### Dry-Run Mode (Recommended First)
@@ -98,10 +121,12 @@ python cleanup_requesty_models.py --add-model "smart/task" --verbose
 # Preview all changes (model removals + cost updates) without making changes
 python cleanup_openrouter_models.py --dry-run
 python cleanup_requesty_models.py --dry-run
+python cleanup_novita_models.py --dry-run
 
 # Detailed preview with verbose logging and percentage changes
 python cleanup_openrouter_models.py --dry-run --verbose
 python cleanup_requesty_models.py --dry-run --verbose
+python cleanup_novita_models.py --dry-run --verbose
 ```
 
 ### Command-Line Options
@@ -111,7 +136,7 @@ python cleanup_requesty_models.py --dry-run --verbose
 | `--config CONFIG` | Path to LiteLLM configuration file (default: `config.yaml`) |
 | `--dry-run` | Preview all changes (model removals, cost updates, and model additions) without modifying the configuration file |
 | `--verbose` | Enable detailed logging output with cost comparison information and percentage changes |
-| `--add-model MODEL_ID` | Add a new model to the configuration. Provide the model ID (e.g., "anthropic/claude-3-5-sonnet-20241022" for OpenRouter or "coding/gemini-2.5-flash" for Requesty) |
+| `--add-model MODEL_ID` | Add a new model to the configuration. Provide the model ID (e.g., "anthropic/claude-3-5-sonnet-20241022" for OpenRouter, "coding/gemini-2.5-flash" for Requesty, or "deepseek/deepseek-v3-0324" for Novita) |
 | `--help` | Show help message and exit |
 
 ## Example Output
@@ -279,7 +304,7 @@ python cleanup_requesty_models.py --dry-run --verbose
 
 ### Model Validation and Cost Updates
 1. **Load Configuration**: Parses the YAML configuration file safely
-2. **Extract Models**: Identifies all OpenRouter models (starting with `openrouter/`) or Requesty models (with `api_base` containing `router.requesty.ai`)
+2. **Extract Models**: Identifies all OpenRouter models (starting with `openrouter/`), Requesty models (with `api_base` containing `router.requesty.ai`), or Novita models (starting with `novita/`)
 3. **Fetch Available Models with Pricing**: Queries the appropriate API for current model list and pricing information
 4. **Validate Models**: Compares config models against API response to identify invalid models
 5. **Validate and Update Costs**: Compares current costs with API pricing and updates when differences are found
@@ -293,7 +318,7 @@ python cleanup_requesty_models.py --dry-run --verbose
 2. **Fetch Available Models with Pricing**: Queries the appropriate API for current model list and pricing information
 3. **Find Model in API**: Searches for the specified model ID in the API response
 4. **Check for Duplicates**: Verifies the model doesn't already exist in the configuration
-5. **Generate Model Name**: Creates an appropriate model name (e.g., "qwen/qwen-2.5-72b-instruct" → "or-2.5-72b-instruct" for OpenRouter)
+5. **Generate Model Name**: Creates an appropriate model name (e.g., "qwen/qwen-2.5-72b-instruct" → "or-2.5-72b-instruct" for OpenRouter, "deepseek/deepseek-v3-0324" → "nv-v3-0324" for Novita)
 6. **Reuse Model Names for Load Balancing**: For Requesty, reuses existing model names to allow LiteLLM to distribute requests
 7. **Apply Costs**: Sets appropriate costs based on API pricing (1e-09 for free models)
 8. **Save Configuration**: Writes the updated configuration back to file
@@ -312,6 +337,11 @@ The script identifies Requesty models by looking for entries where:
 - `litellm_params.model` starts with `openai/`
 - Examples: `openai/coding/gemini-2.5-flash`, `openai/smart/task`
 
+### Novita Models
+The script identifies Novita models by looking for entries where:
+- `litellm_params.model` starts with `novita/`
+- Examples: `novita/deepseek/deepseek-v3-0324`, `novita/qwen/qwen3-235b-a22b-thinking-2507`
+
 ## Validation Logic
 
 ### OpenRouter Model Validation
@@ -324,12 +354,18 @@ The script identifies Requesty models by looking for entries where:
 - The `openai/` prefix is stripped for comparison
 - Models not found in the API response are marked as invalid
 
+### Novita Model Validation
+- Config models like `novita/deepseek/deepseek-v3-0324` are compared against API models like `deepseek/deepseek-v3-0324`
+- The `novita/` prefix is stripped for comparison
+- Models not found in the API response are marked as invalid
+
 ### Cost Validation and Updates
-- The script fetches current pricing from the APIs (`input_price` and `output_price` fields for Requesty, `pricing.prompt` and `pricing.completion` fields for OpenRouter)
+- The script fetches current pricing from the APIs (`input_price` and `output_price` fields for Requesty, `pricing.prompt` and `pricing.completion` fields for OpenRouter, `input_token_price_per_m` and `output_token_price_per_m` fields for Novita)
 - Compares `input_cost_per_token` and `output_cost_per_token` in your config with API pricing
 - **Automatically updates costs** when differences are detected
 - **Free model handling**: When API returns `0.0` for free models, the script preserves `1e-09` costs for LiteLLM compatibility
 - **Percentage tracking**: All cost changes are logged with percentage differences for easy impact assessment
+- **Novita pricing conversion**: Properly converts Novita's per-million token pricing format (e.g., 600 = $0.06 per million tokens = 6e-08 per token)
 
 ## Error Handling
 
@@ -376,6 +412,7 @@ Run the scripts with `--help` to see all available options:
 ```bash
 python cleanup_openrouter_models.py --help
 python cleanup_requesty_models.py --help
+python cleanup_novita_models.py --help
 ```
 
 ## Best Practices
@@ -386,6 +423,7 @@ python cleanup_requesty_models.py --help
 4. **Run periodically** to keep your configuration up to date
 5. **Check the logs** to understand what models were removed and why
 6. **For Requesty models**, the scripts preserve existing model names to allow LiteLLM to distribute requests across different providers
+7. **For Novita models**, ensure model IDs match the exact format from the Novita API (e.g., "deepseek/deepseek-v3-0324")
 
 ## Script Architecture
 
@@ -393,7 +431,7 @@ The scripts are organized into main classes with the following key methods:
 
 ### Core Methods
 - `load_config()`: Safe YAML loading with error handling
-- `extract_openrouter_models()` / `extract_requesty_models()`: Find models in config
+- `extract_openrouter_models()` / `extract_requesty_models()` / `extract_novita_models()`: Find models in config
 - `fetch_available_models()`: Query APIs for models and pricing data
 - `validate_models()`: Compare config vs API models for validity
 - `remove_invalid_entries()`: Remove invalid model entries
