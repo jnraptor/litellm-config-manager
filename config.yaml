@@ -242,8 +242,8 @@ model_list:
   model_name: or-mistral-small-3.2-24b
 - litellm_params:
     model: openrouter/moonshotai/kimi-k2
-    input_cost_per_token: 1.4e-07
-    output_cost_per_token: 2.49e-06
+    input_cost_per_token: 8.78e-08
+    output_cost_per_token: 8.78e-08
   model_name: or-moonshotai-kimi-k2
 - litellm_params:
     model: openrouter/moonshotai/kimi-k2:free
@@ -295,6 +295,16 @@ model_list:
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
   model_name: or-qwen3-coder
+- litellm_params:
+    model: openrouter/z-ai/glm-4.5-air
+    input_cost_per_token: 2.0e-07
+    output_cost_per_token: 1.1e-06
+  model_name: or-z-ai-glm-4.5-air
+- litellm_params:
+    model: openrouter/z-ai/glm-4.5-air:free
+    input_cost_per_token: 1.0e-09
+    output_cost_per_token: 1.0e-09
+  model_name: or-z-ai-glm-4.5-air
 - litellm_params:
     model: perplexity/r1-1776
     input_cost_per_token: 2.0e-06
