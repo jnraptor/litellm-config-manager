@@ -256,6 +256,11 @@ model_list:
     output_cost_per_token: 1.0e-09
   model_name: or-openrouter-horizon-alpha
 - litellm_params:
+    model: openrouter/openrouter/horizon-beta
+    input_cost_per_token: 1.0e-09
+    output_cost_per_token: 1.0e-09
+  model_name: or-openrouter-horizon-beta
+- litellm_params:
     model: openrouter/qwen/qwen3-14b
     input_cost_per_token: 6.0e-08
     output_cost_per_token: 2.4e-07
@@ -297,7 +302,7 @@ model_list:
   model_name: or-qwen3-coder
 - litellm_params:
     model: openrouter/z-ai/glm-4.5-air
-    input_cost_per_token: 2.0e-07
+    input_cost_per_token: 1.9e-07
     output_cost_per_token: 1.1e-06
   model_name: or-z-ai-glm-4.5-air
 - litellm_params:
