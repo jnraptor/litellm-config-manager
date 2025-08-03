@@ -56,8 +56,8 @@ model_list:
   model_name: deepseek-r1-0528-qwen3-8b
 - litellm_params:
     model: novita/baidu/ernie-4.5-21B-a3b
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
+    input_cost_per_token: 7.0e-08
+    output_cost_per_token: 2.8e-07
   model_name: ernie-4.5-21B-a3b-free
 - model_name: gemini-2.5-flash
   litellm_params:
