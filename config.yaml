@@ -251,11 +251,6 @@ model_list:
     output_cost_per_token: 1.0e-09
   model_name: or-moonshotai-kimi-k2
 - litellm_params:
-    model: openrouter/openrouter/horizon-alpha
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
-  model_name: or-openrouter-horizon-alpha
-- litellm_params:
     model: openrouter/openrouter/horizon-beta
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
@@ -300,6 +295,11 @@ model_list:
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
   model_name: or-qwen3-coder
+- litellm_params:
+    model: openrouter/z-ai/glm-4.5
+    input_cost_per_token: 2.0e-07
+    output_cost_per_token: 2.0e-07
+  model_name: or-z-ai-glm-4.5
 - litellm_params:
     model: openrouter/z-ai/glm-4.5-air
     input_cost_per_token: 2.0e-07
