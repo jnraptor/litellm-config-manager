@@ -331,6 +331,12 @@ model_list:
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
   model_name: tgt-DeepSeek-R1-Distill-Llama-70B-free
+- litellm_params:
+    api_key: os.environ/TOGETHERAI_API_KEY
+    model: together_ai/arcee-ai/AFM-4.5B
+    input_cost_per_token: 1.0e-09
+    output_cost_per_token: 1.0e-09
+  model_name: tgt-AFM-4.5B-free
 - model_name: tgt-Salesforce-Llama-Rank-V1
   litellm_params:
     model: together_ai/Salesforce/Llama-Rank-V1
