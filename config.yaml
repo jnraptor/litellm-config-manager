@@ -186,6 +186,11 @@ model_list:
     output_cost_per_token: 7.5e-05
   model_name: or-claude-opus-4
 - litellm_params:
+    model: openrouter/anthropic/claude-opus-4.1
+    input_cost_per_token: 1.5e-05
+    output_cost_per_token: 7.5e-05
+  model_name: or-claude-opus-4.1
+- litellm_params:
     model: openrouter/anthropic/claude-sonnet-4
     input_cost_per_token: 3.0e-06
     output_cost_per_token: 1.5e-05
@@ -232,8 +237,8 @@ model_list:
   model_name: or-mistral-codestral-2508
 - litellm_params:
     model: openrouter/mistralai/mistral-small-3.2-24b-instruct
-    input_cost_per_token: 3.0e-08
-    output_cost_per_token: 3.0e-08
+    input_cost_per_token: 1.999188e-08
+    output_cost_per_token: 8.00064e-08
   model_name: or-mistral-small-3.2-24b
 - litellm_params:
     model: openrouter/mistralai/mistral-small-3.2-24b-instruct:free
@@ -242,8 +247,8 @@ model_list:
   model_name: or-mistral-small-3.2-24b
 - litellm_params:
     model: openrouter/moonshotai/kimi-k2
-    input_cost_per_token: 8.78e-08
-    output_cost_per_token: 8.78e-08
+    input_cost_per_token: 1.4e-07
+    output_cost_per_token: 2.49e-06
   model_name: or-moonshotai-kimi-k2
 - litellm_params:
     model: openrouter/moonshotai/kimi-k2:free
@@ -267,8 +272,8 @@ model_list:
   model_name: or-qwen3-14b
 - litellm_params:
     model: openrouter/qwen/qwen3-235b-a22b-2507
-    input_cost_per_token: 1.179e-07
-    output_cost_per_token: 1.179e-07
+    input_cost_per_token: 7.7968332e-08
+    output_cost_per_token: 3.1202496e-07
   model_name: or-qwen3-235b-a22b-2507
 - litellm_params:
     model: openrouter/qwen/qwen3-30b-a3b-instruct-2507
@@ -277,8 +282,8 @@ model_list:
   model_name: or-qwen3-30b-a3b-2507
 - litellm_params:
     model: openrouter/qwen/qwen3-32b
-    input_cost_per_token: 2.7e-08
-    output_cost_per_token: 2.7e-08
+    input_cost_per_token: 1.7992692e-08
+    output_cost_per_token: 7.200576e-08
   model_name: or-qwen3-32b
 - litellm_params:
     model: openrouter/qwen/qwen3-coder
