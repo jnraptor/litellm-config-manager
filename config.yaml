@@ -257,8 +257,8 @@ model_list:
   model_name: or-moonshotai-kimi-k2
 - litellm_params:
     model: openrouter/openai/gpt-oss-120b
-    input_cost_per_token: 1.5e-07
-    output_cost_per_token: 6.0e-07
+    input_cost_per_token: 1.0e-07
+    output_cost_per_token: 5.0e-07
   model_name: or-openai-gpt-oss-120b
 - litellm_params:
     model: openrouter/openai/gpt-oss-20b
@@ -297,13 +297,8 @@ model_list:
   model_name: or-qwen3-32b
 - litellm_params:
     model: openrouter/qwen/qwen3-coder
-    input_cost_per_token: 3.0e-07
-    output_cost_per_token: 1.2e-06
-  model_name: or-qwen3-coder
-- litellm_params:
-    model: openrouter/qwen/qwen3-coder:free
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
+    input_cost_per_token: 1.999188e-07
+    output_cost_per_token: 8.00064e-07
   model_name: or-qwen3-coder
 - litellm_params:
     model: openrouter/z-ai/glm-4.5
