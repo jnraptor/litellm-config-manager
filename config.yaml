@@ -257,13 +257,13 @@ model_list:
   model_name: or-moonshotai-kimi-k2
 - litellm_params:
     model: openrouter/openai/gpt-oss-120b
-    input_cost_per_token: 1.0e-07
-    output_cost_per_token: 5.0e-07
+    input_cost_per_token: 9.0e-08
+    output_cost_per_token: 4.5e-07
   model_name: or-openai-gpt-oss-120b
 - litellm_params:
     model: openrouter/openai/gpt-oss-20b
-    input_cost_per_token: 5.0e-08
-    output_cost_per_token: 2.0e-07
+    input_cost_per_token: 4.0e-08
+    output_cost_per_token: 1.6e-07
   model_name: or-openai-gpt-oss-20b
 - litellm_params:
     model: openrouter/openrouter/horizon-beta
