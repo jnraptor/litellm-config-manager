@@ -266,6 +266,11 @@ model_list:
     output_cost_per_token: 1.6e-07
   model_name: or-openai-gpt-oss-20b
 - litellm_params:
+    model: openrouter/openai/gpt-oss-20b:free
+    input_cost_per_token: 1.0e-09
+    output_cost_per_token: 1.0e-09
+  model_name: or-openai-gpt-oss-20b-free
+- litellm_params:
     model: openrouter/openrouter/horizon-beta
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
