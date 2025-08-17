@@ -279,8 +279,8 @@ model_list:
   model_name: or-openai-gpt-5-nano
 - litellm_params:
     model: openrouter/openai/gpt-oss-120b
-    input_cost_per_token: 9.0e-08
-    output_cost_per_token: 4.5e-07
+    input_cost_per_token: 7.256312e-08
+    output_cost_per_token: 2.903936e-07
   model_name: or-openai-gpt-oss-120b
 - litellm_params:
     model: openrouter/openai/gpt-oss-20b
@@ -319,8 +319,8 @@ model_list:
   model_name: or-qwen3-32b
 - litellm_params:
     model: openrouter/qwen/qwen3-coder
-    input_cost_per_token: 1.999188e-07
-    output_cost_per_token: 8.00064e-07
+    input_cost_per_token: 2.0e-07
+    output_cost_per_token: 8.0e-07
   model_name: or-qwen3-coder
 - litellm_params:
     model: openrouter/z-ai/glm-4.5
