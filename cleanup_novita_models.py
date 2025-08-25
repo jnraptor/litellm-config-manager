@@ -613,129 +613,181 @@ class NovitaModelCleaner:
         
         return None
     
-    def add_model_to_config(self, config: Dict[str, Any], model_id: str, 
+    def add_model_to_config(self, config: Dict[str, Any], model_ids: List[str], 
                            api_models: Dict[str, Dict[str, Any]]) -> Tuple[Dict[str, Any], List[str]]:
         """
-        Add a new Novita model to the configuration.
+        Add one or more Novita models to the configuration.
         
         Args:
             config: The configuration dictionary
-            model_id: The Novita model ID to add
+            model_ids: List of Novita model IDs to add
             api_models: Dict of model data from API
             
         Returns:
             Tuple of (updated_config, list_of_added_models)
         """
         added_models = []
+        failed_models = []
         
-        # Find the model in API data
-        model_info = self.find_model_in_api(model_id, api_models)
-        if not model_info:
-            self.logger.error(f"Model '{model_id}' not found in Novita API")
-            return config, added_models
-        
-        # Check if model already exists in config
+        # Get existing models once to check for duplicates
         existing_models = self.extract_novita_models(config)
         existing_model_ids = [mid.replace('novita/', '') for _, mid, _ in existing_models]
-        
-        if model_id in existing_model_ids:
-            self.logger.warning(f"Model '{model_id}' already exists in configuration")
-            return config, added_models
-        
-        # Generate model name
-        model_name = self.generate_model_name(model_id)
-        
-        # Check for name conflicts and make unique if needed
         existing_names = [name for _, _, name in existing_models]
-        original_name = model_name
-        counter = 1
-        while model_name in existing_names:
-            model_name = f"{original_name}-{counter}"
-            counter += 1
         
-        # Create model entry
-        input_cost = model_info.get('input_cost')
-        output_cost = model_info.get('output_cost')
+        # Process each model ID
+        for model_id in model_ids:
+            self.logger.info(f"Processing model: {model_id}")
+            
+            # Find the model in API data
+            model_info = self.find_model_in_api(model_id, api_models)
+            if not model_info:
+                self.logger.error(f"Model '{model_id}' not found in Novita API")
+                failed_models.append(model_id)
+                continue
+            
+            # Check if model already exists in config
+            if model_id in existing_model_ids:
+                self.logger.warning(f"Model '{model_id}' already exists in configuration")
+                failed_models.append(model_id)
+                continue
+            
+            # Generate model name
+            model_name = self.generate_model_name(model_id)
+            
+            # Check for name conflicts and make unique if needed
+            original_name = model_name
+            counter = 1
+            while model_name in existing_names:
+                model_name = f"{original_name}-{counter}"
+                counter += 1
+            
+            # Create model entry
+            input_cost = model_info.get('input_cost')
+            output_cost = model_info.get('output_cost')
+            
+            # Handle free models: if API returns 0.0, use 1e-09 for LiteLLM compatibility
+            if input_cost is not None:
+                input_cost = 1e-09 if input_cost == 0.0 else input_cost
+            if output_cost is not None:
+                output_cost = 1e-09 if output_cost == 0.0 else output_cost
+            
+            model_entry = {
+                'litellm_params': {
+                    'model': f'novita/{model_id}'
+                },
+                'model_name': model_name
+            }
+            
+            # Add costs if available
+            if input_cost is not None:
+                model_entry['litellm_params']['input_cost_per_token'] = input_cost
+            if output_cost is not None:
+                model_entry['litellm_params']['output_cost_per_token'] = output_cost
+            
+            # Add to config
+            config['model_list'].append(model_entry)
+            added_models.append(model_id)
+            existing_model_ids.append(model_id)  # Update list to avoid duplicates in this batch
+            existing_names.append(model_name)    # Update list to avoid name conflicts in this batch
+            
+            self.logger.info(f"Added model '{model_id}' with name '{model_name}'")
+            if input_cost is not None:
+                self.logger.info(f"  Input cost: {input_cost}")
+            if output_cost is not None:
+                self.logger.info(f"  Output cost: {output_cost}")
         
-        # Handle free models: if API returns 0.0, use 1e-09 for LiteLLM compatibility
-        if input_cost is not None:
-            input_cost = 1e-09 if input_cost == 0.0 else input_cost
-        if output_cost is not None:
-            output_cost = 1e-09 if output_cost == 0.0 else output_cost
-        
-        model_entry = {
-            'litellm_params': {
-                'model': f'novita/{model_id}'
-            },
-            'model_name': model_name
-        }
-        
-        # Add costs if available
-        if input_cost is not None:
-            model_entry['litellm_params']['input_cost_per_token'] = input_cost
-        if output_cost is not None:
-            model_entry['litellm_params']['output_cost_per_token'] = output_cost
-        
-        # Add to config
-        config['model_list'].append(model_entry)
-        added_models.append(model_id)
-        
-        self.logger.info(f"Added model '{model_id}' with name '{model_name}'")
-        if input_cost is not None:
-            self.logger.info(f"  Input cost: {input_cost}")
-        if output_cost is not None:
-            self.logger.info(f"  Output cost: {output_cost}")
+        # Report summary
+        if failed_models:
+            self.logger.warning(f"Failed to add {len(failed_models)} model(s): {', '.join(failed_models)}")
+        if added_models:
+            self.logger.info(f"Successfully processed {len(added_models)} model(s) for addition")
         
         return config, added_models
     
-    def preview_add_model(self, model_id: str, api_models: Dict[str, Dict[str, Any]]) -> None:
-        """Preview what would be added when adding a new model."""
-        model_info = self.find_model_in_api(model_id, api_models)
-        if not model_info:
-            self.logger.error(f"[DRY-RUN] Model '{model_id}' not found in Novita API")
-            return
-        
-        # Check if model already exists in config (same logic as add_model_to_config)
+    def preview_add_model(self, model_ids: List[str], api_models: Dict[str, Dict[str, Any]]) -> None:
+        """Preview what would be added when adding one or more models."""
+        # Get existing models once to check for duplicates
         config = self.load_config()
         existing_models = self.extract_novita_models(config)
         existing_model_ids = [mid.replace('novita/', '') for _, mid, _ in existing_models]
+        existing_names = [name for _, _, name in existing_models]
         
-        if model_id in existing_model_ids:
-            self.logger.warning(f"[DRY-RUN] Model '{model_id}' already exists in configuration")
-            return
+        valid_models = []
+        invalid_models = []
+        duplicate_models = []
         
-        model_name = self.generate_model_name(model_id)
-        input_cost = model_info.get('input_cost')
-        output_cost = model_info.get('output_cost')
+        # Process each model ID for preview
+        for model_id in model_ids:
+            # Check if model exists in API
+            model_info = self.find_model_in_api(model_id, api_models)
+            if not model_info:
+                invalid_models.append(model_id)
+                continue
+            
+            # Check if model already exists in config
+            if model_id in existing_model_ids:
+                duplicate_models.append(model_id)
+                continue
+            
+            # Generate model name and costs for preview
+            model_name = self.generate_model_name(model_id)
+            original_name = model_name
+            counter = 1
+            while model_name in existing_names:
+                model_name = f"{original_name}-{counter}"
+                counter += 1
+            
+            input_cost = model_info.get('input_cost')
+            output_cost = model_info.get('output_cost')
+            
+            # Handle free models
+            if input_cost is not None:
+                input_cost = 1e-09 if input_cost == 0.0 else input_cost
+            if output_cost is not None:
+                output_cost = 1e-09 if output_cost == 0.0 else output_cost
+            
+            valid_models.append({
+                'id': model_id,
+                'name': model_name,
+                'input_cost': input_cost,
+                'output_cost': output_cost
+            })
+            existing_names.append(model_name)  # Update to avoid conflicts in preview
         
-        # Handle free models
-        if input_cost is not None:
-            input_cost = 1e-09 if input_cost == 0.0 else input_cost
-        if output_cost is not None:
-            output_cost = 1e-09 if output_cost == 0.0 else output_cost
+        # Display preview results
+        if invalid_models:
+            self.logger.error(f"[DRY-RUN] {len(invalid_models)} model(s) not found in Novita API: {', '.join(invalid_models)}")
         
-        self.logger.info(f"[DRY-RUN] Would add model '{model_id}' with name '{model_name}'")
-        if input_cost is not None:
-            self.logger.info(f"[DRY-RUN]   Input cost: {input_cost}")
-        if output_cost is not None:
-            self.logger.info(f"[DRY-RUN]   Output cost: {output_cost}")
+        if duplicate_models:
+            self.logger.warning(f"[DRY-RUN] {len(duplicate_models)} model(s) already exist in configuration: {', '.join(duplicate_models)}")
+        
+        if valid_models:
+            self.logger.info(f"[DRY-RUN] Would add {len(valid_models)} model(s):")
+            for model in valid_models:
+                self.logger.info(f"[DRY-RUN]   - Model '{model['id']}' with name '{model['name']}'")
+                if model['input_cost'] is not None:
+                    self.logger.info(f"[DRY-RUN]     Input cost: {model['input_cost']}")
+                if model['output_cost'] is not None:
+                    self.logger.info(f"[DRY-RUN]     Output cost: {model['output_cost']}")
+        else:
+            self.logger.info("[DRY-RUN] No valid models to add.")
     
-    def run(self, add_model: Optional[str] = None) -> int:
+    def run(self, add_models: Optional[List[str]] = None) -> int:
         """Main execution method."""
         try:
             # Load configuration
             config = self.load_config()
             
-            # Handle add-model functionality
-            if add_model:
+            # Handle add-models functionality
+            if add_models:
                 # Fetch available models with pricing from API
                 available_models = self.fetch_available_models()
                 
                 if self.dry_run:
-                    self.preview_add_model(add_model, available_models)
+                    self.preview_add_model(add_models, available_models)
                     return 0
                 else:
-                    updated_config, added_models = self.add_model_to_config(config, add_model, available_models)
+                    updated_config, added_models = self.add_model_to_config(config, add_models, available_models)
                     if added_models:
                         # Sort the model list after adding new models
                         updated_config, was_sorted = self.sort_model_list(updated_config)
@@ -743,6 +795,8 @@ class NovitaModelCleaner:
                         self.logger.info(f"✅ Successfully added {len(added_models)} model(s): {', '.join(added_models)}")
                         if was_sorted:
                             self.logger.info("✅ Model list sorted by model_name")
+                    else:
+                        self.logger.warning("⚠️ No models were added - all models either already exist or were not found in API")
                     return 0
             
             # Sort the model list first
@@ -812,14 +866,15 @@ This script performs four main functions:
 1. Sorts the model list alphabetically by model_name, then by litellm_params.model
 2. Validates Novita models against the current API and removes invalid entries
 3. Updates model costs (input_cost_per_token/output_cost_per_token) when they differ from API pricing
-4. Adds new Novita models to the configuration
+4. Adds one or more Novita models to the configuration
 
 Examples:
   %(prog)s                           # Process config.yaml (sort + validate models + update costs)
   %(prog)s --config my-config.yaml   # Process custom config file
   %(prog)s --dry-run                 # Preview all changes without modifying file
   %(prog)s --verbose --dry-run       # Detailed preview mode with debug information
-  %(prog)s --add-model "deepseek/deepseek-r1-0528-qwen3-8b"  # Add a new model
+  %(prog)s --add-model "deepseek/deepseek-r1-0528-qwen3-8b"  # Add a single model
+  %(prog)s --add-model "deepseek/deepseek-r1-0528-qwen3-8b" "qwen/qwen-2.5-72b-instruct"  # Add multiple models
   %(prog)s --add-model "qwen/qwen-2.5-72b-instruct" --dry-run  # Preview adding a model
         """
     )
@@ -844,8 +899,8 @@ Examples:
     
     parser.add_argument(
         '--add-model',
-        type=str,
-        help='Add a new Novita model to the configuration. Provide the model ID (e.g., "deepseek/deepseek-r1-0528-qwen3-8b")'
+        nargs='+',
+        help='Add one or more Novita models to the configuration. Provide one or more model IDs (e.g., "deepseek/deepseek-r1-0528-qwen3-8b" "qwen/qwen-2.5-72b-instruct")'
     )
     
     args = parser.parse_args()
@@ -857,7 +912,7 @@ Examples:
         verbose=args.verbose
     )
     
-    return cleaner.run(add_model=args.add_model)
+    return cleaner.run(add_models=args.add_model)
 
 
 if __name__ == '__main__':

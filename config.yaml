@@ -203,6 +203,11 @@ model_list:
     output_cost_per_token: 1.5e-05
   model_name: or-claude-sonnet-4
 - litellm_params:
+    model: openrouter/deepseek/deepseek-chat-v3.1
+    input_cost_per_token: 2.0e-07
+    output_cost_per_token: 8.0e-07
+  model_name: or-deepseek-deepseek-chat-v3.1
+- litellm_params:
     model: openrouter/mistralai/devstral-medium
     input_cost_per_token: 4.0e-07
     output_cost_per_token: 2.0e-06
@@ -242,6 +247,11 @@ model_list:
     input_cost_per_token: 3.0e-07
     output_cost_per_token: 9.0e-07
   model_name: or-mistral-codestral-2508
+- litellm_params:
+    model: openrouter/mistralai/mistral-medium-3.1
+    input_cost_per_token: 4.0e-07
+    output_cost_per_token: 2.0e-06
+  model_name: or-mistral-mistral-medium-3.1
 - litellm_params:
     model: openrouter/mistralai/mistral-small-3.2-24b-instruct
     input_cost_per_token: 5.0e-08
@@ -291,7 +301,7 @@ model_list:
     model: openrouter/openai/gpt-oss-20b:free
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
-  model_name: or-openai-gpt-oss-20b-free
+  model_name: or-openai-gpt-oss-20b
 - litellm_params:
     model: openrouter/qwen/qwen3-14b
     input_cost_per_token: 6.0e-08

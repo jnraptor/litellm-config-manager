@@ -15,10 +15,37 @@ These scripts help maintain your LiteLLM configuration by:
 
 ## Features
 
+### 🆕 NEW: Multiple Model Addition Support
+
+All three scripts now support adding multiple models in a single command:
+
+- ✅ **Batch Processing**: Add multiple models with one command
+- ✅ **Backward Compatible**: Single model addition still works exactly as before
+- ✅ **Efficient**: API data fetched once and reused for all models
+- ✅ **Robust Error Handling**: Continue processing other models if some fail
+- ✅ **Mixed Scenarios**: Handle valid and invalid models in the same batch
+- ✅ **Comprehensive Reporting**: Detailed summary of successes and failures
+- ✅ **Dry-Run Support**: Preview all models being added before making changes
+
+**Example Commands:**
+```bash
+# Add multiple OpenRouter models
+python cleanup_openrouter_models.py --add-model "mistralai/mistral-medium-3.1" "mistralai/mistral-small" "anthropic/claude-3-5-sonnet-20241022"
+
+# Add multiple Requesty models
+python cleanup_requesty_models.py --add-model "coding/gemini-2.5-flash" "smart-task" "coding/claude-3-5-sonnet"
+
+# Add multiple Novita models
+python cleanup_novita_models.py --add-model "deepseek/deepseek-v3-0324" "qwen/qwen-2.5-72b-instruct" "deepseek/deepseek-r1-0528-qwen3-8b"
+
+# Preview multiple models before adding
+python cleanup_openrouter_models.py --add-model "model1" "model2" "model3" --dry-run
+```
+
 ### OpenRouter Script
 - ✅ **Safe Operation**: Dry-run mode to preview changes before applying
 - ✅ **Automatic Cost Updates**: Synchronizes `input_cost_per_token` and `output_cost_per_token` with current API pricing
-- ✅ **Easy Model Addition**: Add new OpenRouter models with automatic cost detection and proper formatting
+- ✅ **Easy Model Addition**: Add one or more OpenRouter models with automatic cost detection and proper formatting
 - ✅ **Dual Version Support**: Automatically adds both free and paid versions when available (with same model name)
 - ✅ **Percentage-Based Logging**: Shows cost changes with percentage differences (e.g., "Input cost: 1e-06 → 3e-07 (-70.0%)")
 - ✅ **Free Model Handling**: Properly handles free models by preserving `1e-09` costs for LiteLLM compatibility
@@ -33,7 +60,7 @@ These scripts help maintain your LiteLLM configuration by:
 ### Requesty Script
 - ✅ **Safe Operation**: Dry-run mode to preview changes before applying
 - ✅ **Automatic Cost Updates**: Synchronizes `input_cost_per_token` and `output_cost_per_token` with current API pricing
-- ✅ **Easy Model Addition**: Add new Requesty models with automatic cost detection and proper formatting
+- ✅ **Easy Model Addition**: Add one or more Requesty models with automatic cost detection and proper formatting
 - ✅ **Provider Load Balancing**: Preserves existing model names to allow LiteLLM to distribute requests across different providers
 - ✅ **Percentage-Based Logging**: Shows cost changes with percentage differences
 - ✅ **Free Model Handling**: Properly handles free models by preserving `1e-09` costs for LiteLLM compatibility
@@ -48,7 +75,7 @@ These scripts help maintain your LiteLLM configuration by:
 ### Novita Script
 - ✅ **Safe Operation**: Dry-run mode to preview changes before applying
 - ✅ **Automatic Cost Updates**: Synchronizes `input_cost_per_token` and `output_cost_per_token` with current API pricing
-- ✅ **Easy Model Addition**: Add new Novita models with automatic cost detection and proper formatting
+- ✅ **Easy Model Addition**: Add one or more Novita models with automatic cost detection and proper formatting
 - ✅ **Correct Pricing Conversion**: Properly converts Novita's per-million token pricing format to per-token costs
 - ✅ **Percentage-Based Logging**: Shows cost changes with percentage differences
 - ✅ **Free Model Handling**: Properly handles free models by preserving `1e-09` costs for LiteLLM compatibility
@@ -95,21 +122,23 @@ python cleanup_novita_models.py --config /path/to/your/config.yaml
 ### Adding New Models
 
 ```bash
-# Add a new OpenRouter model to the configuration
+# Add a single model to the configuration (backward compatible)
 python cleanup_openrouter_models.py --add-model "anthropic/claude-3-5-sonnet-20241022"
-
-# Add a new Requesty model to the configuration
 python cleanup_requesty_models.py --add-model "coding/gemini-2.5-flash"
-
-# Add a new Novita model to the configuration
 python cleanup_novita_models.py --add-model "deepseek/deepseek-v3-0324"
 
-# Preview adding a model without making changes
+# Add multiple models at once (NEW FEATURE)
+python cleanup_openrouter_models.py --add-model "anthropic/claude-3-5-sonnet-20241022" "qwen/qwen-2.5-72b-instruct" "mistralai/mistral-medium-3.1"
+python cleanup_requesty_models.py --add-model "coding/gemini-2.5-flash" "smart-task" "coding/claude-3-5-sonnet"
+python cleanup_novita_models.py --add-model "deepseek/deepseek-v3-0324" "qwen/qwen-2.5-72b-instruct"
+
+# Preview adding models without making changes
 python cleanup_openrouter_models.py --add-model "qwen/qwen-2.5-72b-instruct" --dry-run
+python cleanup_openrouter_models.py --add-model "model1" "model2" "model3" --dry-run
 python cleanup_requesty_models.py --add-model "coding/gemini-2.5-pro" --dry-run
 python cleanup_novita_models.py --add-model "deepseek/deepseek-r1-0528-qwen3-8b" --dry-run
 
-# Add a model with verbose output
+# Add models with verbose output
 python cleanup_openrouter_models.py --add-model "meta-llama/llama-3.2-1b-instruct" --verbose
 python cleanup_requesty_models.py --add-model "smart/task" --verbose
 python cleanup_novita_models.py --add-model "qwen/qwen3-235b-a22b-thinking-2507" --verbose
@@ -136,7 +165,7 @@ python cleanup_novita_models.py --dry-run --verbose
 | `--config CONFIG` | Path to LiteLLM configuration file (default: `config.yaml`) |
 | `--dry-run` | Preview all changes (model removals, cost updates, and model additions) without modifying the configuration file |
 | `--verbose` | Enable detailed logging output with cost comparison information and percentage changes |
-| `--add-model MODEL_ID` | Add a new model to the configuration. Provide the model ID (e.g., "anthropic/claude-3-5-sonnet-20241022" for OpenRouter, "coding/gemini-2.5-flash" for Requesty, or "deepseek/deepseek-v3-0324" for Novita) |
+| `--add-model MODEL_ID [MODEL_ID ...]` | Add one or more models to the configuration. Provide one or more model IDs (e.g., "anthropic/claude-3-5-sonnet-20241022" for OpenRouter, "coding/gemini-2.5-flash" for Requesty, or "deepseek/deepseek-v3-0324" for Novita) |
 | `--help` | Show help message and exit |
 
 ## Example Output
@@ -260,26 +289,47 @@ python cleanup_novita_models.py --dry-run --verbose
 ```
 
 ### Adding Models (Dry-Run)
+
+#### Single Model Addition
 ```
 2025-07-27 21:36:29 - INFO - Loading configuration from config.yaml
 2025-07-27 21:36:29 - INFO - Fetching available models with pricing from OpenRouter API...
 2025-07-27 21:36:29 - INFO - Fetched 319 available models from OpenRouter API
 2025-07-27 21:36:29 - INFO - Loading configuration from config.yaml
 2025-07-27 21:36:29 - INFO - Found 29 OpenRouter models in configuration
-2025-07-27 21:36:29 - INFO - [DRY-RUN] Would add model 'qwen/qwen-2.5-72b-instruct' with name 'or-2.5-72b-instruct'
-2025-07-27 21:36:29 - INFO - [DRY-RUN]   Input cost: 1.01e-07
-2025-07-27 21:36:29 - INFO - [DRY-RUN]   Output cost: 1.01e-07
-2025-07-27 21:36:29 - INFO - [DRY-RUN] Would also add free version 'qwen/qwen-2.5-72b-instruct:free' with same name 'or-2.5-72b-instruct'
+2025-07-27 21:36:29 - INFO - [DRY-RUN] Would add 1 model(s):
+2025-07-27 21:36:29 - INFO - [DRY-RUN]   - Model 'qwen/qwen-2.5-72b-instruct' with name 'or-2.5-72b-instruct'
+2025-07-27 21:36:29 - INFO - [DRY-RUN]     Input cost: 1.01e-07
+2025-07-27 21:36:29 - INFO - [DRY-RUN]     Output cost: 1.01e-07
+2025-07-27 21:36:29 - INFO - [DRY-RUN]     Would also add free version: qwen/qwen-2.5-72b-instruct:free
+```
 
-# For Requesty
-2025-07-27 21:36:29 - INFO - Loading configuration from config.yaml
-2025-07-27 21:36:29 - INFO - Fetching available models with pricing from Requesty API...
-2025-07-27 21:36:29 - INFO - Fetched 50 available models from Requesty API
-2025-07-27 21:36:29 - INFO - Loading configuration from config.yaml
-2025-07-27 21:36:29 - INFO - Found 4 Requesty models in configuration
-2025-07-27 21:36:29 - INFO - [DRY-RUN] Would add model 'openai/coding/new-model' with name 'new-model'
-2025-07-27 21:36:29 - INFO - [DRY-RUN]   Input cost: 3e-07
-2025-07-27 21:36:29 - INFO - [DRY-RUN]   Output cost: 0.0000025
+#### Multiple Model Addition (NEW FEATURE)
+```
+2025-08-25 19:56:34 - INFO - Loading configuration from config.yaml
+2025-08-25 19:56:34 - INFO - Fetching available models with pricing from OpenRouter API...
+2025-08-25 19:56:34 - INFO - Fetched 316 available models from OpenRouter API
+2025-08-25 19:56:34 - INFO - Found 38 OpenRouter models in configuration
+2025-08-25 19:56:34 - INFO - [DRY-RUN] Would add 2 model(s):
+2025-08-25 19:56:34 - INFO - [DRY-RUN]   - Model 'mistralai/mistral-medium-3.1' with name 'or-mistral-mistral-medium-3.1'
+2025-08-25 19:56:34 - INFO - [DRY-RUN]     Input cost: 4e-07
+2025-08-25 19:56:34 - INFO - [DRY-RUN]     Output cost: 2e-06
+2025-08-25 19:56:34 - INFO - [DRY-RUN]   - Model 'mistralai/mistral-small' with name 'or-mistral-mistral-small'
+2025-08-25 19:56:34 - INFO - [DRY-RUN]     Input cost: 2e-07
+2025-08-25 19:56:34 - INFO - [DRY-RUN]     Output cost: 6e-07
+```
+
+#### Mixed Valid/Invalid Models
+```
+2025-08-25 19:56:19 - INFO - Loading configuration from config.yaml
+2025-08-25 19:56:19 - INFO - Fetching available models with pricing from OpenRouter API...
+2025-08-25 19:56:19 - INFO - Fetched 316 available models from OpenRouter API
+2025-08-25 19:56:19 - INFO - Found 38 OpenRouter models in configuration
+2025-08-25 19:56:19 - ERROR - [DRY-RUN] 1 model(s) not found in OpenRouter API: invalid/model1
+2025-08-25 19:56:19 - INFO - [DRY-RUN] Would add 1 model(s):
+2025-08-25 19:56:19 - INFO - [DRY-RUN]   - Model 'mistralai/mistral-medium-3.1' with name 'or-mistral-mistral-medium-3.1'
+2025-08-25 19:56:19 - INFO - [DRY-RUN]     Input cost: 4e-07
+2025-08-25 19:56:19 - INFO - [DRY-RUN]     Output cost: 2e-06
 ```
 
 ### Duplicate Model Detection
@@ -315,14 +365,16 @@ python cleanup_novita_models.py --dry-run --verbose
 
 ### Model Addition (--add-model)
 1. **Load Configuration**: Parses the YAML configuration file safely
-2. **Fetch Available Models with Pricing**: Queries the appropriate API for current model list and pricing information
-3. **Find Model in API**: Searches for the specified model ID in the API response
-4. **Check for Duplicates**: Verifies the model doesn't already exist in the configuration
-5. **Generate Model Name**: Creates an appropriate model name (e.g., "qwen/qwen-2.5-72b-instruct" → "or-2.5-72b-instruct" for OpenRouter, "deepseek/deepseek-v3-0324" → "nv-v3-0324" for Novita)
-6. **Reuse Model Names for Load Balancing**: For Requesty, reuses existing model names to allow LiteLLM to distribute requests
-7. **Apply Costs**: Sets appropriate costs based on API pricing (1e-09 for free models)
-8. **Save Configuration**: Writes the updated configuration back to file
-9. **Generate Report**: Provides summary of added models
+2. **Fetch Available Models with Pricing**: Queries the appropriate API for current model list and pricing information (fetched once for efficiency)
+3. **Process Multiple Models**: Iterates through all provided model IDs, handling each one individually
+4. **Find Models in API**: Searches for each specified model ID in the API response
+5. **Check for Duplicates**: Verifies each model doesn't already exist in the configuration
+6. **Generate Model Names**: Creates appropriate model names with conflict resolution (e.g., "qwen/qwen-2.5-72b-instruct" → "or-2.5-72b-instruct" for OpenRouter)
+7. **Reuse Model Names for Load Balancing**: For Requesty, reuses existing model names to allow LiteLLM to distribute requests
+8. **Apply Costs**: Sets appropriate costs based on API pricing (1e-09 for free models)
+9. **Error Handling**: Continues processing other models if some fail (invalid models, duplicates, etc.)
+10. **Save Configuration**: Writes the updated configuration back to file (only once after processing all models)
+11. **Generate Report**: Provides comprehensive summary of successful additions and failures
 
 ## Model Identification
 
@@ -445,8 +497,8 @@ The scripts are organized into main classes with the following key methods:
 ### Model Addition Methods
 - `generate_model_name()`: Generate appropriate model names from model IDs
 - `find_model_in_api()`: Search for specific models in API data with fallback logic
-- `add_model_to_config()`: Add new models to configuration with proper cost handling
-- `preview_add_model()`: Preview model additions in dry-run mode with duplicate checking
+- `add_model_to_config()`: Add one or more models to configuration with proper cost handling and batch processing
+- `preview_add_model()`: Preview multiple model additions in dry-run mode with comprehensive validation
 
 ### Enhanced Features
 - **Automatic cost synchronization**: Keeps your config costs current with API pricing
