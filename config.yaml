@@ -356,7 +356,7 @@ model_list:
     model: openrouter/qwen/qwen3-coder:free
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
-  model_name: or-qwen3-coder-free
+  model_name: or-qwen3-coder
 - litellm_params:
     model: openrouter/x-ai/grok-code-fast-1
     input_cost_per_token: 2.0e-07
