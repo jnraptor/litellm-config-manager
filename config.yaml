@@ -324,8 +324,8 @@ model_list:
   model_name: or-qwen3-235b-a22b-2507
 - litellm_params:
     model: openrouter/qwen/qwen3-30b-a3b-instruct-2507
-    input_cost_per_token: 2.0e-07
-    output_cost_per_token: 8.0e-07
+    input_cost_per_token: 5.18308e-08
+    output_cost_per_token: 2.07424e-07
   model_name: or-qwen3-30b-a3b-2507
 - litellm_params:
     model: openrouter/qwen/qwen3-32b
@@ -344,8 +344,8 @@ model_list:
   model_name: or-z-ai-glm-4.5
 - litellm_params:
     model: openrouter/z-ai/glm-4.5-air
-    input_cost_per_token: 2.0e-07
-    output_cost_per_token: 1.1e-06
+    input_cost_per_token: 1.4e-07
+    output_cost_per_token: 8.6e-07
   model_name: or-z-ai-glm-4.5-air
 - litellm_params:
     model: openrouter/z-ai/glm-4.5-air:free
