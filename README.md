@@ -15,12 +15,12 @@ These scripts help maintain your LiteLLM configuration by:
 
 ## Features
 
-### 🆕 NEW: Multiple Model Addition Support
+### 🆕 NEW: Space-Separated Model Addition Support
 
-All three scripts now support adding multiple models in a single command:
+All three scripts now support adding multiple models with space separation instead of requiring quotes around each model:
 
-- ✅ **Batch Processing**: Add multiple models with one command
-- ✅ **Backward Compatible**: Single model addition still works exactly as before
+- ✅ **Space-Separated Input**: Add multiple models by separating them with spaces
+- ✅ **Backward Compatible**: Quoted model addition still works exactly as before
 - ✅ **Efficient**: API data fetched once and reused for all models
 - ✅ **Robust Error Handling**: Continue processing other models if some fail
 - ✅ **Mixed Scenarios**: Handle valid and invalid models in the same batch
@@ -29,17 +29,20 @@ All three scripts now support adding multiple models in a single command:
 
 **Example Commands:**
 ```bash
-# Add multiple OpenRouter models
+# Add multiple OpenRouter models (NEW - space separated)
+python cleanup_openrouter_models.py --add-model mistralai/mistral-medium-3.1 mistralai/mistral-small anthropic/claude-3-5-sonnet-20241022
+
+# Add multiple Requesty models (NEW - space separated)
+python cleanup_requesty_models.py --add-model coding/gemini-2.5-flash smart-task coding/claude-3-5-sonnet
+
+# Add multiple Novita models (NEW - space separated)
+python cleanup_novita_models.py --add-model deepseek/deepseek-v3-0324 qwen/qwen-2.5-72b-instruct deepseek/deepseek-r1-0528-qwen3-8b
+
+# Add multiple models with quotes (backward compatible)
 python cleanup_openrouter_models.py --add-model "mistralai/mistral-medium-3.1" "mistralai/mistral-small" "anthropic/claude-3-5-sonnet-20241022"
 
-# Add multiple Requesty models
-python cleanup_requesty_models.py --add-model "coding/gemini-2.5-flash" "smart-task" "coding/claude-3-5-sonnet"
-
-# Add multiple Novita models
-python cleanup_novita_models.py --add-model "deepseek/deepseek-v3-0324" "qwen/qwen-2.5-72b-instruct" "deepseek/deepseek-r1-0528-qwen3-8b"
-
 # Preview multiple models before adding
-python cleanup_openrouter_models.py --add-model "model1" "model2" "model3" --dry-run
+python cleanup_openrouter_models.py --add-model model1 model2 model3 --dry-run
 ```
 
 ### OpenRouter Script
@@ -127,21 +130,23 @@ python cleanup_openrouter_models.py --add-model "anthropic/claude-3-5-sonnet-202
 python cleanup_requesty_models.py --add-model "coding/gemini-2.5-flash"
 python cleanup_novita_models.py --add-model "deepseek/deepseek-v3-0324"
 
-# Add multiple models at once (NEW FEATURE)
-python cleanup_openrouter_models.py --add-model "anthropic/claude-3-5-sonnet-20241022" "qwen/qwen-2.5-72b-instruct" "mistralai/mistral-medium-3.1"
-python cleanup_requesty_models.py --add-model "coding/gemini-2.5-flash" "smart-task" "coding/claude-3-5-sonnet"
-python cleanup_novita_models.py --add-model "deepseek/deepseek-v3-0324" "qwen/qwen-2.5-72b-instruct"
+# Add multiple models at once with space separation (NEW FEATURE)
+python cleanup_openrouter_models.py --add-model mistralai/mistral-medium-3.1 mistralai/mistral-small anthropic/claude-3-5-sonnet-20241022
+python cleanup_requesty_models.py --add-model coding/gemini-2.5-flash smart-task coding/claude-3-5-sonnet
+python cleanup_novita_models.py --add-model deepseek/deepseek-v3-0324 qwen/qwen-2.5-72b-instruct deepseek/deepseek-r1-0528-qwen3-8b
+
+# Add multiple models with quotes (backward compatible)
+python cleanup_openrouter_models.py --add-model "mistralai/mistral-medium-3.1" "mistralai/mistral-small" "anthropic/claude-3-5-sonnet-20241022"
 
 # Preview adding models without making changes
-python cleanup_openrouter_models.py --add-model "qwen/qwen-2.5-72b-instruct" --dry-run
-python cleanup_openrouter_models.py --add-model "model1" "model2" "model3" --dry-run
-python cleanup_requesty_models.py --add-model "coding/gemini-2.5-pro" --dry-run
-python cleanup_novita_models.py --add-model "deepseek/deepseek-r1-0528-qwen3-8b" --dry-run
+python cleanup_openrouter_models.py --add-model model1 model2 model3 --dry-run
+python cleanup_requesty_models.py --add-model coding/gemini-2.5-pro --dry-run
+python cleanup_novita_models.py --add-model deepseek/deepseek-r1-0528-qwen3-8b --dry-run
 
 # Add models with verbose output
-python cleanup_openrouter_models.py --add-model "meta-llama/llama-3.2-1b-instruct" --verbose
-python cleanup_requesty_models.py --add-model "smart/task" --verbose
-python cleanup_novita_models.py --add-model "qwen/qwen3-235b-a22b-thinking-2507" --verbose
+python cleanup_openrouter_models.py --add-model meta-llama/llama-3.2-1b-instruct --verbose
+python cleanup_requesty_models.py --add-model smart/task --verbose
+python cleanup_novita_models.py --add-model qwen/qwen3-235b-a22b-thinking-2507 --verbose
 ```
 
 ### Dry-Run Mode (Recommended First)
@@ -165,7 +170,7 @@ python cleanup_novita_models.py --dry-run --verbose
 | `--config CONFIG` | Path to LiteLLM configuration file (default: `config.yaml`) |
 | `--dry-run` | Preview all changes (model removals, cost updates, and model additions) without modifying the configuration file |
 | `--verbose` | Enable detailed logging output with cost comparison information and percentage changes |
-| `--add-model MODEL_ID [MODEL_ID ...]` | Add one or more models to the configuration. Provide one or more model IDs (e.g., "anthropic/claude-3-5-sonnet-20241022" for OpenRouter, "coding/gemini-2.5-flash" for Requesty, or "deepseek/deepseek-v3-0324" for Novita) |
+| `--add-model MODEL_ID [MODEL_ID ...]` | Add one or more models to the configuration. Provide model IDs separated by spaces (e.g., mistralai/mistral-medium-3.1 anthropic/claude-3-5-sonnet-20241022) or use quotes for each model |
 | `--help` | Show help message and exit |
 
 ## Example Output

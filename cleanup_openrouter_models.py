@@ -938,11 +938,21 @@ Examples:
     
     parser.add_argument(
         '--add-model',
-        nargs='+',
-        help='Add one or more OpenRouter models to the configuration. Provide one or more model IDs (e.g., "anthropic/claude-3-5-sonnet-20241022" "qwen/qwen-2.5-72b-instruct")'
+        nargs='*',
+        help='Add one or more OpenRouter models to the configuration. Provide model IDs separated by spaces (e.g., anthropic/claude-3-5-sonnet-20241022 qwen/qwen-2.5-72b-instruct) or use quotes for each model'
     )
     
     args = parser.parse_args()
+    
+    # Process the add_models argument to handle both space-separated and quoted models
+    processed_add_models = None
+    if args.add_model:
+        # Flatten the list by splitting any space-separated models
+        processed_add_models = []
+        for item in args.add_model:
+            # Split by spaces to handle space-separated models
+            models = item.split()
+            processed_add_models.extend(models)
     
     # Create and run the cleaner
     cleaner = OpenRouterModelCleaner(
@@ -951,7 +961,7 @@ Examples:
         verbose=args.verbose
     )
     
-    return cleaner.run(add_models=args.add_model)
+    return cleaner.run(add_models=processed_add_models)
 
 
 if __name__ == '__main__':

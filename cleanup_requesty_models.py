@@ -937,11 +937,21 @@ Examples:
     
     parser.add_argument(
         '--add-model',
-        nargs='+',
-        help='Add one or more Requesty models to the configuration. Provide one or more model IDs (e.g., "coding/gemini-2.5-flash" "smart-task")'
+        nargs='*',
+        help='Add one or more Requesty models to the configuration. Provide model IDs separated by spaces (e.g., coding/gemini-2.5-flash smart-task) or use quotes for each model'
     )
     
     args = parser.parse_args()
+    
+    # Process the add_models argument to handle both space-separated and quoted models
+    processed_add_models = None
+    if args.add_model:
+        # Flatten the list by splitting any space-separated models
+        processed_add_models = []
+        for item in args.add_model:
+            # Split by spaces to handle space-separated models
+            models = item.split()
+            processed_add_models.extend(models)
     
     # Create and run the cleaner
     cleaner = RequestyModelCleaner(
@@ -950,7 +960,7 @@ Examples:
         verbose=args.verbose
     )
     
-    return cleaner.run(add_models=args.add_model)
+    return cleaner.run(add_models=processed_add_models)
 
 
 if __name__ == '__main__':
