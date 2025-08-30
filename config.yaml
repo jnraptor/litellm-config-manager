@@ -223,6 +223,16 @@ model_list:
     output_cost_per_token: 1.0e-09
   model_name: or-devstral-small-2505-free
 - litellm_params:
+    model: openrouter/google/gemini-2.5-flash-image-preview
+    input_cost_per_token: 3.0e-07
+    output_cost_per_token: 2.5e-06
+  model_name: or-gemini-2.5-flash-image-preview
+- litellm_params:
+    model: openrouter/google/gemini-2.5-flash-image-preview:free
+    input_cost_per_token: 1.0e-09
+    output_cost_per_token: 1.0e-09
+  model_name: or-gemini-2.5-flash-image-preview
+- litellm_params:
     model: openrouter/meta-llama/llama-3.2-3b-instruct
     input_cost_per_token: 3.0e-09
     output_cost_per_token: 6.0e-09
@@ -328,6 +338,11 @@ model_list:
     output_cost_per_token: 2.07424e-07
   model_name: or-qwen3-30b-a3b-2507
 - litellm_params:
+    model: openrouter/qwen/qwen3-30b-a3b-thinking-2507
+    input_cost_per_token: 7.13e-08
+    output_cost_per_token: 2.852e-07
+  model_name: or-qwen3-30b-a3b-thinking-2507
+- litellm_params:
     model: openrouter/qwen/qwen3-32b
     input_cost_per_token: 1.7992692e-08
     output_cost_per_token: 7.200576e-08
@@ -337,6 +352,11 @@ model_list:
     input_cost_per_token: 2.0e-07
     output_cost_per_token: 8.0e-07
   model_name: or-qwen3-coder
+- litellm_params:
+    model: openrouter/x-ai/grok-code-fast-1
+    input_cost_per_token: 2.0e-07
+    output_cost_per_token: 1.5e-06
+  model_name: or-x-ai-grok-code-fast-1
 - litellm_params:
     model: openrouter/z-ai/glm-4.5
     input_cost_per_token: 1.999188e-07
