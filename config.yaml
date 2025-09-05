@@ -243,6 +243,11 @@ model_list:
     output_cost_per_token: 1.0e-09
   model_name: or-llama-3.3-70b-instruct-free
 - litellm_params:
+    model: openrouter/meta-llama/llama-3.3-8b-instruct:free
+    input_cost_per_token: 1.0e-09
+    output_cost_per_token: 1.0e-09
+  model_name: or-llama-3.3-8b-instruct-free
+- litellm_params:
     model: openrouter/nvidia/llama-3.3-nemotron-super-49b-v1
     input_cost_per_token: 1.3e-07
     output_cost_per_token: 4.0e-07
