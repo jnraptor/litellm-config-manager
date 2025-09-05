@@ -46,8 +46,8 @@ model_list:
   model_name: deepseek-r1-0528-qwen3-8b
 - litellm_params:
     model: openrouter/deepseek/deepseek-r1-0528-qwen3-8b
-    input_cost_per_token: 1.0e-08
-    output_cost_per_token: 2.0e-08
+    input_cost_per_token: 1.703012e-08
+    output_cost_per_token: 6.81536e-08
   model_name: deepseek-r1-0528-qwen3-8b
 - litellm_params:
     model: openrouter/deepseek/deepseek-r1-0528-qwen3-8b:free
@@ -228,14 +228,9 @@ model_list:
     output_cost_per_token: 2.5e-06
   model_name: or-gemini-2.5-flash-image-preview
 - litellm_params:
-    model: openrouter/google/gemini-2.5-flash-image-preview:free
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
-  model_name: or-gemini-2.5-flash-image-preview
-- litellm_params:
     model: openrouter/meta-llama/llama-3.2-3b-instruct
-    input_cost_per_token: 3.0e-09
-    output_cost_per_token: 6.0e-09
+    input_cost_per_token: 1.2e-08
+    output_cost_per_token: 2.4e-08
   model_name: or-llama-3.2-3b-instruct
 - litellm_params:
     model: openrouter/meta-llama/llama-3.2-3b-instruct:free
@@ -282,6 +277,11 @@ model_list:
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
   model_name: or-moonshotai-kimi-k2
+- litellm_params:
+    model: openrouter/moonshotai/kimi-k2-0905
+    input_cost_per_token: 6.0e-07
+    output_cost_per_token: 2.5e-06
+  model_name: or-moonshotai-kimi-k2-0905
 - litellm_params:
     model: openrouter/openai/gpt-5
     input_cost_per_token: 1.25e-06
@@ -369,8 +369,8 @@ model_list:
   model_name: or-x-ai-grok-code-fast-1
 - litellm_params:
     model: openrouter/z-ai/glm-4.5
-    input_cost_per_token: 1.999188e-07
-    output_cost_per_token: 8.00064e-07
+    input_cost_per_token: 3.2986602e-07
+    output_cost_per_token: 1.3201056e-06
   model_name: or-z-ai-glm-4.5
 - litellm_params:
     model: openrouter/z-ai/glm-4.5-air
