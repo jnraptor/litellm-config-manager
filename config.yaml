@@ -284,8 +284,8 @@ model_list:
   model_name: or-moonshotai-kimi-k2
 - litellm_params:
     model: openrouter/moonshotai/kimi-k2-0905
-    input_cost_per_token: 6.0e-07
-    output_cost_per_token: 2.5e-06
+    input_cost_per_token: 2.962e-07
+    output_cost_per_token: 1.1853e-06
   model_name: or-moonshotai-kimi-k2-0905
 - litellm_params:
     model: openrouter/openai/gpt-5
