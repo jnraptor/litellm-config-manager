@@ -323,6 +323,16 @@ model_list:
     output_cost_per_token: 1.0e-09
   model_name: or-openai-gpt-oss-20b
 - litellm_params:
+    model: openrouter/openrouter/sonoma-dusk-alpha
+    input_cost_per_token: 1.0e-09
+    output_cost_per_token: 1.0e-09
+  model_name: or-openrouter-sonoma-dusk-alpha
+- litellm_params:
+    model: openrouter/openrouter/sonoma-sky-alpha
+    input_cost_per_token: 1.0e-09
+    output_cost_per_token: 1.0e-09
+  model_name: or-openrouter-sonoma-sky-alpha
+- litellm_params:
     model: openrouter/qwen/qwen3-14b
     input_cost_per_token: 6.0e-08
     output_cost_per_token: 2.4e-07
