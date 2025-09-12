@@ -209,11 +209,6 @@ model_list:
     output_cost_per_token: 1.5e-05
   model_name: or-claude-3.7-sonnet
 - litellm_params:
-    model: openrouter/anthropic/claude-opus-4
-    input_cost_per_token: 1.5e-05
-    output_cost_per_token: 7.5e-05
-  model_name: or-claude-opus-4
-- litellm_params:
     model: openrouter/anthropic/claude-opus-4.1
     input_cost_per_token: 1.5e-05
     output_cost_per_token: 7.5e-05
@@ -227,7 +222,7 @@ model_list:
     model: openrouter/deepseek/deepseek-chat-v3.1
     input_cost_per_token: 2.4999988e-07
     output_cost_per_token: 9.99999888e-07
-  model_name: or-deepseek-deepseek-chat-v3.1
+  model_name: or-deepseek-chat-v3.1
 - litellm_params:
     model: openrouter/mistralai/devstral-medium
     input_cost_per_token: 4.0e-07
@@ -238,11 +233,6 @@ model_list:
     input_cost_per_token: 7.0e-08
     output_cost_per_token: 2.8e-07
   model_name: or-devstral-small
-- litellm_params:
-    model: openrouter/mistralai/devstral-small-2505:free
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
-  model_name: or-devstral-small-2505-free
 - litellm_params:
     model: openrouter/google/gemini-2.5-flash-image-preview
     input_cost_per_token: 3.0e-07
@@ -398,11 +388,6 @@ model_list:
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
   model_name: or-z-ai-glm-4.5-air
-- litellm_params:
-    model: perplexity/r1-1776
-    input_cost_per_token: 2.0e-06
-    output_cost_per_token: 8.0e-06
-  model_name: pplx-r1-1776
 - litellm_params:
     model: perplexity/sonar
     input_cost_per_token: 1.0e-06
