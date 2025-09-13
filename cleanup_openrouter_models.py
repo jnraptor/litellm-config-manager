@@ -254,8 +254,21 @@ class OpenRouterModelCleaner:
                     if api_input_cost is not None:
                         # Handle free models: if API returns 0.0, use 1e-09 for LiteLLM compatibility
                         adjusted_input_cost = 1e-09 if api_input_cost == 0.0 else api_input_cost
-                        
-                        if current_input_cost != adjusted_input_cost:
+
+                        # Compare costs with 2 decimal places precision to avoid floating-point issues
+                        if current_input_cost is not None:
+                            current_rounded = round(current_input_cost, 2)
+                            adjusted_rounded = round(adjusted_input_cost, 2)
+                            if current_rounded != adjusted_rounded:
+                                input_changed = True
+                                change_info['changes']['input_cost'] = {
+                                    'old': current_input_cost,
+                                    'new': adjusted_input_cost
+                                }
+                                litellm_params['input_cost_per_token'] = adjusted_input_cost
+                                self.logger.debug(f"Input cost change for {model_id}: {current_input_cost} → {adjusted_input_cost}")
+                        else:
+                            # Current cost is None, always update
                             input_changed = True
                             change_info['changes']['input_cost'] = {
                                 'old': current_input_cost,
@@ -263,13 +276,26 @@ class OpenRouterModelCleaner:
                             }
                             litellm_params['input_cost_per_token'] = adjusted_input_cost
                             self.logger.debug(f"Input cost change for {model_id}: {current_input_cost} → {adjusted_input_cost}")
-                    
+
                     # Compare output costs
                     if api_output_cost is not None:
                         # Handle free models: if API returns 0.0, use 1e-09 for LiteLLM compatibility
                         adjusted_output_cost = 1e-09 if api_output_cost == 0.0 else api_output_cost
-                        
-                        if current_output_cost != adjusted_output_cost:
+
+                        # Compare costs with 2 decimal places precision to avoid floating-point issues
+                        if current_output_cost is not None:
+                            current_rounded = round(current_output_cost, 2)
+                            adjusted_rounded = round(adjusted_output_cost, 2)
+                            if current_rounded != adjusted_rounded:
+                                output_changed = True
+                                change_info['changes']['output_cost'] = {
+                                    'old': current_output_cost,
+                                    'new': adjusted_output_cost
+                                }
+                                litellm_params['output_cost_per_token'] = adjusted_output_cost
+                                self.logger.debug(f"Output cost change for {model_id}: {current_output_cost} → {adjusted_output_cost}")
+                        else:
+                            # Current cost is None, always update
                             output_changed = True
                             change_info['changes']['output_cost'] = {
                                 'old': current_output_cost,
