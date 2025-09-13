@@ -192,6 +192,30 @@ model_list:
     api_base: http://infinity:7997
   model_info:
     mode: embedding
+- litellm_params:
+    model: nvidia/Llama-3_3-Nemotron-Super-49B-v1_5
+    input_cost_per_token: 5e-8
+    output_cost_per_token: 2.5e-07
+    api_base: os.environ/NANOGPT_API_BASE
+    api_key: os.environ/NANOGPT_API_KEY
+  model_name: nvidia-nemotron-nano-9b-v2
+- litellm_params:
+    model: nvidia/nvidia-nemotron-nano-9b-v2
+    input_cost_per_token: 1.7e-07
+    output_cost_per_token: 6.8e-07
+    api_base: os.environ/NANOGPT_API_BASE
+    api_key: os.environ/NANOGPT_API_KEY
+  model_name: nvidia-nemotron-nano-9b-v2
+- litellm_params:
+    model: openrouter/nvidia/nemotron-nano-9b-v2
+    input_cost_per_token: 4.0e-08
+    output_cost_per_token: 1.6e-07
+  model_name: nvidia-nemotron-nano-9b-v2
+- litellm_params:
+    model: openrouter/nvidia/nemotron-nano-9b-v2:free
+    input_cost_per_token: 1.0e-09
+    output_cost_per_token: 1.0e-09
+  model_name: nvidia-nemotron-nano-9b-v2
 - model_name: oai-text-embedding-3-small
   litellm_params:
     model: openai/oai-text-embedding-3-small
@@ -284,16 +308,6 @@ model_list:
     output_cost_per_token: 1.52173896e-06
   model_name: or-moonshotai-kimi-k2-0905
 - litellm_params:
-    model: openrouter/nvidia/nemotron-nano-9b-v2
-    input_cost_per_token: 4.0e-08
-    output_cost_per_token: 1.6e-07
-  model_name: or-nvidia-nemotron-nano-9b-v2
-- litellm_params:
-    model: openrouter/nvidia/nemotron-nano-9b-v2:free
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
-  model_name: or-nvidia-nemotron-nano-9b-v2
-- litellm_params:
     model: openrouter/openai/gpt-5-chat
     input_cost_per_token: 1.25e-06
     output_cost_per_token: 1.0e-05
@@ -355,13 +369,13 @@ model_list:
   model_name: or-qwen3-coder-30b-a3b-instruct
 - litellm_params:
     model: openrouter/qwen/qwen3-next-80b-a3b-instruct
-    input_cost_per_token: 1.4e-07
-    output_cost_per_token: 1.4e-06
+    input_cost_per_token: 9.782604e-08
+    output_cost_per_token: 3.91304304e-07
   model_name: or-qwen3-next-80b-a3b-instruct
 - litellm_params:
     model: openrouter/qwen/qwen3-next-80b-a3b-thinking
-    input_cost_per_token: 1.4e-07
-    output_cost_per_token: 1.4e-06
+    input_cost_per_token: 9.782604e-08
+    output_cost_per_token: 3.91304304e-07
   model_name: or-qwen3-next-80b-a3b-thinking
 - litellm_params:
     model: openrouter/x-ai/grok-code-fast-1
