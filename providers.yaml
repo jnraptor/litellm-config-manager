@@ -43,27 +43,6 @@ providers:
       url: "https://router.requesty.ai/v1"
       api_key_env: "REQUESTY_API_KEY"
 
-  novita:
-    name: "Novita"
-    description: "Novita AI model provider"
-    api_url: "https://api.novita.ai/v3/openai/models"
-    model_prefix: "novita/"
-    model_detection:
-      type: "prefix"
-      value: "novita/"
-    pricing:
-      input_field: "input_token_price_per_m"
-      output_field: "output_token_price_per_m"
-      is_per_million: true
-      # Novita pricing is in units that need division by 10000
-      divisor: 10000
-      free_model_handling: true
-    model_name_prefix: "nv-"
-    model_name_cleanup:
-      - replace: [["deepseek-", ""], ["meta-llama-", ""], ["google-", ""], ["mistralai-", "mistral-"], ["qwen-", ""]]
-    special_models: []
-    api_base_config: null
-
   nano_gpt:
     name: "Nano-GPT"
     description: "Nano-GPT model provider"
