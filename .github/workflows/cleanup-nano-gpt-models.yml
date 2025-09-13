@@ -1,8 +1,6 @@
 name: Cleanup Nano-GPT Models, Update Costs, and Manage Models
 
 on:
-  schedule:
-    - cron: '15 0 * * 0'  # Weekly on Sunday
   workflow_dispatch:
     inputs:
       add_model:

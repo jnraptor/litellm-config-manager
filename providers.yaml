@@ -1,0 +1,95 @@
+# Provider Configuration for Unified Model Cleanup Script
+# This file defines the configuration for each supported provider
+
+providers:
+  openrouter:
+    name: "OpenRouter"
+    description: "OpenRouter AI model provider"
+    api_url: "https://openrouter.ai/api/v1/models"
+    model_prefix: "openrouter/"
+    model_detection:
+      type: "prefix"
+      value: "openrouter/"
+    pricing:
+      input_field: "prompt"
+      output_field: "completion"
+      is_per_million: false
+      # Handle free models by converting 0.0 to 1e-09
+      free_model_handling: true
+    model_name_prefix: "or-"
+    model_name_cleanup:
+      - replace: [["anthropic-", ""], ["meta-llama-", ""], ["google-", ""], ["mistralai-", "mistral-"], ["qwen-", ""]]
+    special_models: []
+    api_base_config: null
+
+  requesty:
+    name: "Requesty"
+    description: "Requesty AI model provider"
+    api_url: "https://router.requesty.ai/v1/models"
+    model_prefix: "openai/"
+    model_detection:
+      type: "api_base"
+      value: "router.requesty.ai"
+    pricing:
+      input_field: "input_price"
+      output_field: "output_price"
+      is_per_million: false
+      free_model_handling: true
+    model_name_prefix: ""
+    model_name_cleanup: []
+    # Special models that should not be removed even if not found in API
+    special_models: ["smart-task"]
+    api_base_config:
+      url: "https://router.requesty.ai/v1"
+      api_key_env: "REQUESTY_API_KEY"
+
+  novita:
+    name: "Novita"
+    description: "Novita AI model provider"
+    api_url: "https://api.novita.ai/v3/openai/models"
+    model_prefix: "novita/"
+    model_detection:
+      type: "prefix"
+      value: "novita/"
+    pricing:
+      input_field: "input_token_price_per_m"
+      output_field: "output_token_price_per_m"
+      is_per_million: true
+      # Novita pricing is in units that need division by 10000
+      divisor: 10000
+      free_model_handling: true
+    model_name_prefix: "nv-"
+    model_name_cleanup:
+      - replace: [["deepseek-", ""], ["meta-llama-", ""], ["google-", ""], ["mistralai-", "mistral-"], ["qwen-", ""]]
+    special_models: []
+    api_base_config: null
+
+  nano_gpt:
+    name: "Nano-GPT"
+    description: "Nano-GPT model provider"
+    api_url: "https://nano-gpt.com/api/v1/models?detailed=true"
+    model_prefix: "openai/"
+    model_detection:
+      type: "api_base"
+      value: "NANOGPT_API_BASE"
+    pricing:
+      input_field: "pricing.prompt"
+      output_field: "pricing.completion"
+      is_per_million: true
+      free_model_handling: true
+    model_name_prefix: ""
+    model_name_cleanup:
+      - replace: [["qwen-", ""]]
+    special_models: []
+    api_base_config:
+      url_env: "NANOGPT_API_BASE"
+      api_key_env: "NANOGPT_API_KEY"
+
+# Default settings that apply to all providers unless overridden
+defaults:
+  timeout: 30
+  retry_count: 3
+  log_level: "INFO"
+  cost_comparison_precision: 2
+  # Standard free model cost for LiteLLM compatibility
+  free_model_cost: 1.0e-09

@@ -8,7 +8,26 @@ This is a LiteLLM configuration management repository with Python scripts for ma
 
 ## Development Commands
 
-### Core Scripts
+### Unified Script (Recommended)
+```bash
+# Validate models, update costs, and remove invalid entries for all providers
+python cleanup_models.py --provider all [--config config.yaml] [--dry-run] [--verbose]
+
+# Process specific provider
+python cleanup_models.py --provider openrouter [--config config.yaml] [--dry-run] [--verbose]
+python cleanup_models.py --provider requesty [--config config.yaml] [--dry-run] [--verbose]
+python cleanup_models.py --provider novita [--config config.yaml] [--dry-run] [--verbose]
+python cleanup_models.py --provider nano_gpt [--config config.yaml] [--dry-run] [--verbose]
+
+# Add new models with automatic cost detection
+python cleanup_models.py --provider openrouter --add-model "model1 model2" [--dry-run]
+python cleanup_models.py --provider requesty --add-model "provider|model1 provider|model2" [--dry-run]
+
+# Multiple providers with model addition
+python cleanup_models.py --provider all --add-model "openrouter|model1 requesty|model2" [--dry-run]
+```
+
+### Legacy Scripts (Deprecated)
 ```bash
 # Validate models, update costs, and remove invalid entries
 python cleanup_openrouter_models.py [--config config.yaml] [--dry-run] [--verbose]
@@ -49,7 +68,12 @@ Always run with `--dry-run --verbose` first to preview changes before applying t
 - Redis caching configuration
 - Model cost specifications (`input_cost_per_token`, `output_cost_per_token`)
 
-**Cleanup Scripts (4 parallel implementations):**
+**Unified Cleanup Script:**
+- `cleanup_models.py` - Single configurable script for all providers (~1,200 lines)
+- `providers.yaml` - Provider configuration file with API endpoints and settings
+- Strategy pattern implementation for provider-specific logic
+
+**Legacy Cleanup Scripts (Deprecated):**
 - `cleanup_openrouter_models.py` - OpenRouter API integration (~967 lines)
 - `cleanup_requesty_models.py` - Requesty API integration (~966 lines)
 - `cleanup_novita_models.py` - Novita API integration (~928 lines)
@@ -62,7 +86,30 @@ Always run with `--dry-run --verbose` first to preview changes before applying t
 
 ### Script Architecture Pattern
 
-Each cleanup script follows the same pattern:
+#### Unified Script Architecture
+The `cleanup_models.py` script uses a provider-agnostic approach:
+
+**Provider Configuration:**
+- `providers.yaml` defines all provider settings, API endpoints, and behavior
+- Strategy pattern for provider-specific model detection and pricing logic
+- Supports prefix-based and API-based model detection methods
+
+**Core Components:**
+- `ProviderConfig` - Data class for provider configuration
+- `ProviderStrategy` - Abstract base class for provider-specific logic
+- `PrefixDetectionStrategy` - For providers using model prefix detection
+- `ApiBaseDetectionStrategy` - For providers using API base detection
+- `UnifiedModelCleaner` - Main orchestrator class
+
+**Key Methods:**
+- `load_provider_config()` - Load provider configurations
+- `extract_models_by_provider()` - Provider-agnostic model extraction
+- `fetch_provider_models()` - API integration with provider-specific handling
+- `parse_pricing_data()` - Provider-specific pricing extraction
+- `generate_model_name()` - Provider-specific naming conventions
+
+#### Legacy Script Architecture
+Each legacy cleanup script follows the same pattern:
 - `ModelCleaner` class with API integration
 - Model extraction from config based on provider-specific patterns
 - Cost validation and automatic updates

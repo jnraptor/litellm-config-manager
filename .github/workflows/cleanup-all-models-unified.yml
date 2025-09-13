@@ -1,10 +1,23 @@
-name: Cleanup Novita Models, Update Costs, and Manage Models
+name: Cleanup All Models - Unified Script
 
 on:
+  schedule:
+    - cron: '0 0 * * 0'  # Weekly on Sunday
   workflow_dispatch:
     inputs:
+      provider:
+        description: 'Provider to process (all, openrouter, requesty, novita, nano_gpt)'
+        required: false
+        type: choice
+        default: 'all'
+        options:
+          - all
+          - openrouter
+          - requesty
+          - novita
+          - nano_gpt
       add_model:
-        description: 'Model ID to add (e.g., deepseek/deepseek-v3-0324)'
+        description: 'Model ID to add (e.g., openrouter|anthropic/claude-3-5-haiku or space-separated list for multiple models)'
         required: false
         type: string
 
@@ -14,35 +27,36 @@ jobs:
     permissions:
       contents: write
       actions: read
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          #fetch-depth: 0
-          
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.9'
-          
+
       - name: Install dependencies
         run: pip install -r requirements.txt
-        
+
       - name: Check for invalid models and cost updates (dry-run)
-        run: python cleanup_novita_models.py --dry-run --verbose
-        
+        run: |
+          python cleanup_models.py --provider "${{ github.event.inputs.provider || 'all' }}" --dry-run --verbose
+
       - name: Clean up invalid models and update costs
-        run: python cleanup_novita_models.py --verbose
-        
+        run: |
+          python cleanup_models.py --provider "${{ github.event.inputs.provider || 'all' }}" --verbose
+
       - name: Add new model (if specified)
         if: ${{ github.event.inputs.add_model != '' }}
         run: |
-          echo "Adding model: ${{ github.event.inputs.add_model }}"
-          python cleanup_novita_models.py --add-model "${{ github.event.inputs.add_model }}" --dry-run
-          python cleanup_novita_models.py --add-model "${{ github.event.inputs.add_model }}"
-        
+          echo "Adding model(s): ${{ github.event.inputs.add_model }}"
+          python cleanup_models.py --provider "${{ github.event.inputs.provider || 'all' }}" --add-model "${{ github.event.inputs.add_model }}" --dry-run
+          python cleanup_models.py --provider "${{ github.event.inputs.provider || 'all' }}" --add-model "${{ github.event.inputs.add_model }}"
+
       - name: Check for changes
         id: verify-changed-files
         run: |
@@ -51,19 +65,21 @@ jobs:
           else
             echo "changed=true" >> $GITHUB_OUTPUT
           fi
-          
+
       - name: Commit and push changes
         if: steps.verify-changed-files.outputs.changed == 'true'
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add config.yaml
-          git commit -m "Auto-cleanup invalid Novita models, update costs, and manage models"
+          git commit -m "Auto-cleanup invalid models, update costs, and manage models (unified script)"
           git push
-          
+
       - name: Create summary
         run: |
-          echo "## Novita Model Management Summary" >> $GITHUB_STEP_SUMMARY
+          echo "## Model Management Summary - Unified Script" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Provider:** ${{ github.event.inputs.provider || 'all' }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           if [[ "${{ github.event.inputs.add_model }}" != "" ]]; then
             echo "🔧 **Manual model addition requested:** ${{ github.event.inputs.add_model }}" >> $GITHUB_STEP_SUMMARY
