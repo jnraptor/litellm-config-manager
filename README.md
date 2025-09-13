@@ -1,11 +1,11 @@
-# OpenRouter, Requesty & Novita Model Cleanup, Cost Update, and Model Addition Scripts
+# OpenRouter, Requesty, Novita & Nano-GPT Model Cleanup, Cost Update, and Model Addition Scripts
 
-Comprehensive Python scripts that validate OpenRouter, Requesty, and Novita models in LiteLLM configuration files against their respective APIs, remove invalid model entries, automatically update model costs to match current pricing, and provide an easy way to add new models.
+Comprehensive Python scripts that validate OpenRouter, Requesty, Novita, and Nano-GPT models in LiteLLM configuration files against their respective APIs, remove invalid model entries, automatically update model costs to match current pricing, and provide an easy way to add new models.
 
 ## Overview
 
 These scripts help maintain your LiteLLM configuration by:
-- Identifying OpenRouter/Requesty/Novita models in your `config.yaml`
+- Identifying OpenRouter/Requesty/Novita/Nano-GPT models in your `config.yaml`
 - Checking their validity against the current APIs
 - Removing entire model entries for invalid/deprecated models
 - **Automatically updating model costs** (`input_cost_per_token` and `output_cost_per_token`) when they differ from API pricing
@@ -37,6 +37,9 @@ python cleanup_requesty_models.py --add-model coding/gemini-2.5-flash smart-task
 
 # Add multiple Novita models (NEW - space separated)
 python cleanup_novita_models.py --add-model deepseek/deepseek-v3-0324 qwen/qwen-2.5-72b-instruct deepseek/deepseek-r1-0528-qwen3-8b
+
+# Add multiple Nano-GPT models (NEW - space separated)
+python cleanup_nano_gpt_models.py --add-model nvidia/nvidia-nemotron-nano-9b-v2 qwen/qwen3-235b-a22b-thinking-2507
 
 # Add multiple models with quotes (backward compatible)
 python cleanup_openrouter_models.py --add-model "mistralai/mistral-medium-3.1" "mistralai/mistral-small" "anthropic/claude-3-5-sonnet-20241022"
@@ -90,6 +93,21 @@ python cleanup_openrouter_models.py --add-model model1 model2 model3 --dry-run
 - ✅ **Preserves Structure**: Maintains YAML formatting and structure
 - ✅ **Complete Removal**: Removes entire model entries (not just model references)
 
+### Nano-GPT Script
+- ✅ **Safe Operation**: Dry-run mode to preview changes before applying
+- ✅ **Automatic Cost Updates**: Synchronizes `input_cost_per_token` and `output_cost_per_token` with current API pricing
+- ✅ **Easy Model Addition**: Add one or more Nano-GPT models with automatic cost detection and proper formatting
+- ✅ **Correct Pricing Conversion**: Properly converts Nano-GPT's per-million token pricing format to per-token costs
+- ✅ **Percentage-Based Logging**: Shows cost changes with percentage differences
+- ✅ **Free Model Handling**: Properly handles free models by preserving `1e-09` costs for LiteLLM compatibility
+- ✅ **Duplicate Prevention**: Prevents adding models that already exist in configuration
+- ✅ **Smart Naming**: Generates appropriate model names with conflict resolution
+- ✅ **Comprehensive Logging**: Detailed output with verbose mode for validation, cost updates, and model addition
+- ✅ **Error Handling**: Robust error handling for network and file issues
+- ✅ **No Authentication Required**: Uses public Nano-GPT API endpoint
+- ✅ **Preserves Structure**: Maintains YAML formatting and structure
+- ✅ **Complete Removal**: Removes entire model entries (not just model references)
+
 ## Installation
 
 1. **Clone or download the script files:**
@@ -98,6 +116,7 @@ python cleanup_openrouter_models.py --add-model model1 model2 model3 --dry-run
    # - cleanup_openrouter_models.py
    # - cleanup_requesty_models.py
    # - cleanup_novita_models.py
+   # - cleanup_nano_gpt_models.py
    # - requirements.txt
    ```
 
@@ -115,11 +134,13 @@ python cleanup_openrouter_models.py --add-model model1 model2 model3 --dry-run
 python cleanup_openrouter_models.py
 python cleanup_requesty_models.py
 python cleanup_novita_models.py
+python cleanup_nano_gpt_models.py
 
 # Process a specific config file
 python cleanup_openrouter_models.py --config /path/to/your/config.yaml
 python cleanup_requesty_models.py --config /path/to/your/config.yaml
 python cleanup_novita_models.py --config /path/to/your/config.yaml
+python cleanup_nano_gpt_models.py --config /path/to/your/config.yaml
 ```
 
 ### Adding New Models
@@ -129,11 +150,13 @@ python cleanup_novita_models.py --config /path/to/your/config.yaml
 python cleanup_openrouter_models.py --add-model "anthropic/claude-3-5-sonnet-20241022"
 python cleanup_requesty_models.py --add-model "coding/gemini-2.5-flash"
 python cleanup_novita_models.py --add-model "deepseek/deepseek-v3-0324"
+python cleanup_nano_gpt_models.py --add-model "nvidia/nvidia-nemotron-nano-9b-v2"
 
 # Add multiple models at once with space separation (NEW FEATURE)
 python cleanup_openrouter_models.py --add-model mistralai/mistral-medium-3.1 mistralai/mistral-small anthropic/claude-3-5-sonnet-20241022
 python cleanup_requesty_models.py --add-model coding/gemini-2.5-flash smart-task coding/claude-3-5-sonnet
 python cleanup_novita_models.py --add-model deepseek/deepseek-v3-0324 qwen/qwen-2.5-72b-instruct deepseek/deepseek-r1-0528-qwen3-8b
+python cleanup_nano_gpt_models.py --add-model nvidia/nvidia-nemotron-nano-9b-v2 qwen/qwen3-235b-a22b-thinking-2507
 
 # Add multiple models with quotes (backward compatible)
 python cleanup_openrouter_models.py --add-model "mistralai/mistral-medium-3.1" "mistralai/mistral-small" "anthropic/claude-3-5-sonnet-20241022"
@@ -156,11 +179,13 @@ python cleanup_novita_models.py --add-model qwen/qwen3-235b-a22b-thinking-2507 -
 python cleanup_openrouter_models.py --dry-run
 python cleanup_requesty_models.py --dry-run
 python cleanup_novita_models.py --dry-run
+python cleanup_nano_gpt_models.py --dry-run
 
 # Detailed preview with verbose logging and percentage changes
 python cleanup_openrouter_models.py --dry-run --verbose
 python cleanup_requesty_models.py --dry-run --verbose
 python cleanup_novita_models.py --dry-run --verbose
+python cleanup_nano_gpt_models.py --dry-run --verbose
 ```
 
 ### Command-Line Options
@@ -399,6 +424,12 @@ The script identifies Novita models by looking for entries where:
 - `litellm_params.model` starts with `novita/`
 - Examples: `novita/deepseek/deepseek-v3-0324`, `novita/qwen/qwen3-235b-a22b-thinking-2507`
 
+### Nano-GPT Models
+The script identifies Nano-GPT models by looking for entries where:
+- `litellm_params.model` starts with `openai/`
+- `litellm_params.api_base` contains `NANOGPT_API_BASE`
+- Examples: `openai/nvidia/nvidia-nemotron-nano-9b-v2`, `openai/qwen/qwen3-235b-a22b-thinking-2507`
+
 ## Validation Logic
 
 ### OpenRouter Model Validation
@@ -416,13 +447,19 @@ The script identifies Novita models by looking for entries where:
 - The `novita/` prefix is stripped for comparison
 - Models not found in the API response are marked as invalid
 
+### Nano-GPT Model Validation
+- Config models like `openai/nvidia/nvidia-nemotron-nano-9b-v2` are compared against API models like `nvidia/nvidia-nemotron-nano-9b-v2`
+- The `openai/` prefix is stripped for comparison
+- Models not found in the API response are marked as invalid
+
 ### Cost Validation and Updates
-- The script fetches current pricing from the APIs (`input_price` and `output_price` fields for Requesty, `pricing.prompt` and `pricing.completion` fields for OpenRouter, `input_token_price_per_m` and `output_token_price_per_m` fields for Novita)
+- The script fetches current pricing from the APIs (`input_price` and `output_price` fields for Requesty, `pricing.prompt` and `pricing.completion` fields for OpenRouter, `input_token_price_per_m` and `output_token_price_per_m` fields for Novita, `pricing.prompt` and `pricing.completion` fields for Nano-GPT)
 - Compares `input_cost_per_token` and `output_cost_per_token` in your config with API pricing
 - **Automatically updates costs** when differences are detected
 - **Free model handling**: When API returns `0.0` for free models, the script preserves `1e-09` costs for LiteLLM compatibility
 - **Percentage tracking**: All cost changes are logged with percentage differences for easy impact assessment
 - **Novita pricing conversion**: Properly converts Novita's per-million token pricing format (e.g., 600 = $0.06 per million tokens = 6e-08 per token)
+- **Nano-GPT pricing conversion**: Properly converts Nano-GPT's per-million token pricing format to per-token costs
 
 ## Error Handling
 
@@ -470,6 +507,7 @@ Run the scripts with `--help` to see all available options:
 python cleanup_openrouter_models.py --help
 python cleanup_requesty_models.py --help
 python cleanup_novita_models.py --help
+python cleanup_nano_gpt_models.py --help
 ```
 
 ## Best Practices
@@ -481,6 +519,7 @@ python cleanup_novita_models.py --help
 5. **Check the logs** to understand what models were removed and why
 6. **For Requesty models**, the scripts preserve existing model names to allow LiteLLM to distribute requests across different providers
 7. **For Novita models**, ensure model IDs match the exact format from the Novita API (e.g., "deepseek/deepseek-v3-0324")
+8. **For Nano-GPT models**, ensure model IDs match the exact format from the Nano-GPT API (e.g., "nvidia/nvidia-nemotron-nano-9b-v2")
 
 ## Script Architecture
 
@@ -488,7 +527,7 @@ The scripts are organized into main classes with the following key methods:
 
 ### Core Methods
 - `load_config()`: Safe YAML loading with error handling
-- `extract_openrouter_models()` / `extract_requesty_models()` / `extract_novita_models()`: Find models in config
+- `extract_openrouter_models()` / `extract_requesty_models()` / `extract_novita_models()` / `extract_nano_gpt_models()`: Find models in config
 - `fetch_available_models()`: Query APIs for models and pricing data
 - `validate_models()`: Compare config vs API models for validity
 - `remove_invalid_entries()`: Remove invalid model entries

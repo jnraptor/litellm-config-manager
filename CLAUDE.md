@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Repository Overview
 
-This is a LiteLLM configuration management repository with Python scripts for managing model configurations across OpenRouter, Requesty, and Novita AI providers. The main config file (`config.yaml`) contains LiteLLM model definitions with routing strategies and cost information.
+This is a LiteLLM configuration management repository with Python scripts for managing model configurations across OpenRouter, Requesty, Novita AI, and Nano-GPT providers. The main config file (`config.yaml`) contains LiteLLM model definitions with routing strategies and cost information.
 
 ## Development Commands
 
@@ -12,13 +12,15 @@ This is a LiteLLM configuration management repository with Python scripts for ma
 ```bash
 # Validate models, update costs, and remove invalid entries
 python cleanup_openrouter_models.py [--config config.yaml] [--dry-run] [--verbose]
-python cleanup_requesty_models.py [--config config.yaml] [--dry-run] [--verbose] 
+python cleanup_requesty_models.py [--config config.yaml] [--dry-run] [--verbose]
 python cleanup_novita_models.py [--config config.yaml] [--dry-run] [--verbose]
+python cleanup_nano_gpt_models.py [--config config.yaml] [--dry-run] [--verbose]
 
 # Add new models with automatic cost detection
 python cleanup_openrouter_models.py --add-model "model/name" [--dry-run]
 python cleanup_requesty_models.py --add-model "provider/model" [--dry-run]
 python cleanup_novita_models.py --add-model "provider/model" [--dry-run]
+python cleanup_nano_gpt_models.py --add-model "provider/model" [--dry-run]
 
 # Multiple model addition (space-separated)
 python cleanup_openrouter_models.py --add-model model1 model2 model3 [--dry-run]
@@ -47,10 +49,11 @@ Always run with `--dry-run --verbose` first to preview changes before applying t
 - Redis caching configuration
 - Model cost specifications (`input_cost_per_token`, `output_cost_per_token`)
 
-**Cleanup Scripts (3 parallel implementations):**
+**Cleanup Scripts (4 parallel implementations):**
 - `cleanup_openrouter_models.py` - OpenRouter API integration (~967 lines)
-- `cleanup_requesty_models.py` - Requesty API integration (~966 lines) 
+- `cleanup_requesty_models.py` - Requesty API integration (~966 lines)
 - `cleanup_novita_models.py` - Novita API integration (~928 lines)
+- `cleanup_nano_gpt_models.py` - Nano-GPT API integration (new)
 
 **GitHub Automation:**
 - Weekly automated cleanup via GitHub Actions
@@ -70,6 +73,7 @@ Each cleanup script follows the same pattern:
 - OpenRouter: `litellm_params.model` starts with `openrouter/`
 - Requesty: `litellm_params.api_base` contains `router.requesty.ai`
 - Novita: `litellm_params.model` starts with `novita/`
+- Nano-GPT: `litellm_params.model` starts with `openai/` and `litellm_params.api_base` contains `NANOGPT_API_BASE`
 
 **Key Methods:**
 - `load_config()` / `save_config()` - YAML file operations
@@ -102,8 +106,9 @@ Each cleanup script follows the same pattern:
 
 **Automated Workflows:**
 - `.github/workflows/cleanup-openrouter-models.yml`
-- `.github/workflows/cleanup-requesty-models.yml` 
+- `.github/workflows/cleanup-requesty-models.yml`
 - `.github/workflows/cleanup-novita-models.yml`
+- `.github/workflows/cleanup-nano-gpt-models.yml`
 
 **Schedule:** Weekly on Sundays (`0 0 * * 0`)
 

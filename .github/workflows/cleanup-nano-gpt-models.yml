@@ -1,0 +1,83 @@
+name: Cleanup Nano-GPT Models, Update Costs, and Manage Models
+
+on:
+  schedule:
+    - cron: '15 0 * * 0'  # Weekly on Sunday
+  workflow_dispatch:
+    inputs:
+      add_model:
+        description: 'Model ID to add (e.g., nvidia/nvidia-nemotron-nano-9b-v2)'
+        required: false
+        type: string
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      actions: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          #fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Check for invalid models and cost updates (dry-run)
+        run: python cleanup_nano_gpt_models.py --dry-run --verbose
+
+      - name: Clean up invalid models and update costs
+        run: python cleanup_nano_gpt_models.py --verbose
+
+      - name: Add new model (if specified)
+        if: ${{ github.event.inputs.add_model != '' }}
+        run: |
+          echo "Adding model: ${{ github.event.inputs.add_model }}"
+          python cleanup_nano_gpt_models.py --add-model "${{ github.event.inputs.add_model }}" --dry-run
+          python cleanup_nano_gpt_models.py --add-model "${{ github.event.inputs.add_model }}"
+
+      - name: Check for changes
+        id: verify-changed-files
+        run: |
+          if git diff --quiet config.yaml; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Commit and push changes
+        if: steps.verify-changed-files.outputs.changed == 'true'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add config.yaml
+          git commit -m "Auto-cleanup invalid Nano-GPT models, update costs, and manage models"
+          git push
+
+      - name: Create summary
+        run: |
+          echo "## Nano-GPT Model Management Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [[ "${{ github.event.inputs.add_model }}" != "" ]]; then
+            echo "🔧 **Manual model addition requested:** ${{ github.event.inputs.add_model }}" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+          fi
+          if [[ "${{ steps.verify-changed-files.outputs.changed }}" == "true" ]]; then
+            echo "✅ Changes detected and committed to config.yaml" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "### Changes made:" >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+            git show --name-only --pretty=format:"Commit: %h%nDate: %ad%nMessage: %s%n" >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+          else
+            echo "ℹ️ No changes needed - all models are valid and costs are current" >> $GITHUB_STEP_SUMMARY
+          fi
