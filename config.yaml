@@ -270,6 +270,8 @@ model_list:
     output_cost_per_token: 2.5e-07
     api_base: os.environ/NANOGPT_API_BASE
     api_key: os.environ/NANOGPT_API_KEY
+  model_info:
+    supports_reasoning: True
   model_name: nvidia-nemotron-super-49b-v1.5
 - model_name: oai-text-embedding-3-small
   litellm_params:
