@@ -46,13 +46,6 @@ model_list:
     api_key: os.environ/REQUESTY_API_KEY
     input_cost_per_token: 8.0e-07
     output_cost_per_token: 4.0e-06
-- model_name: claude-3-5-haiku
-  litellm_params:
-    model: openai/claude-3-5-haiku-20241022
-    api_base: os.environ/NANOGPT_API_BASE
-    api_key: os.environ/NANOGPT_API_KEY
-    input_cost_per_token: 8.000000000000001e-07
-    output_cost_per_token: 4.0e-06
 - litellm_params:
     model: openrouter/anthropic/claude-3.5-haiku
     input_cost_per_token: 8.0e-07
@@ -241,6 +234,20 @@ model_list:
     api_base: os.environ/KILOCODE_API_BASE
     api_key: os.environ/KILOCODE_API_KEY
   model_name: kc-claude-3.5-haiku
+- litellm_params:
+    model: openai/qwen3-coder-30b-a3b-instruct
+    input_cost_per_token: 1e-07
+    output_cost_per_token: 4e-07
+    api_base: os.environ/NANOGPT_API_BASE
+    api_key: os.environ/NANOGPT_API_KEY
+  model_name: ng-qwen3-coder-30b-a3b-instruct
+- litellm_params:
+    model: openai/Qwen/Qwen3-Coder-480B-A35B-Instruct-FP8
+    input_cost_per_token: 1.3e-07
+    output_cost_per_token: 5e-07
+    api_base: os.environ/NANOGPT_API_BASE
+    api_key: os.environ/NANOGPT_API_KEY
+  model_name: ng-qwen3-coder-480b-a35b-instruct
 - model_name: nomic-embed-text
   litellm_params:
     model: infinity/nomic-ai/nomic-embed-text-v2-moe
