@@ -11,6 +11,12 @@ against their current APIs and:
 
 Supported providers: openrouter, requesty, novita, nano_gpt, all
 
+API Key Support:
+    Providers that require API keys for model listing:
+    - Requesty: Set REQUESTY_API_KEY environment variable
+    - Nano-GPT: Set NANOGPT_API_KEY environment variable
+    - OpenRouter: No API key required for model listing
+
 Usage:
     python cleanup_models.py --provider openrouter [--config config.yaml] [--dry-run] [--verbose]
     python cleanup_models.py --provider all [--config config.yaml] [--dry-run] [--verbose]
@@ -21,6 +27,7 @@ Author: Unified script for LiteLLM Config Management
 
 import argparse
 import logging
+import os
 import sys
 import yaml
 import requests
@@ -43,6 +50,7 @@ class ProviderConfig:
     model_name_cleanup: List[Dict[str, str]]
     special_models: List[str]
     api_base_config: Optional[Dict[str, str]] = None
+    api_key_env: Optional[str] = None
 
 
 class ProviderStrategy(ABC):
@@ -440,7 +448,17 @@ class UnifiedModelCleaner:
         try:
             self.logger.info(f"Fetching available models with pricing from {provider.name} API...")
 
-            response = requests.get(provider.api_url, timeout=30)
+            # Prepare headers
+            headers = {}
+            if provider.api_key_env:
+                api_key = os.environ.get(provider.api_key_env)
+                if api_key:
+                    headers['Authorization'] = f'Bearer {api_key}'
+                    self.logger.debug(f"Using API key from environment variable: {provider.api_key_env}")
+                else:
+                    self.logger.warning(f"API key environment variable '{provider.api_key_env}' not found, proceeding without authentication")
+
+            response = requests.get(provider.api_url, headers=headers, timeout=30)
             response.raise_for_status()
 
             data = response.json()
@@ -993,6 +1011,11 @@ This script performs four main functions:
 4. Adds one or more models to the configuration
 
 Supported providers: openrouter, requesty, novita, nano_gpt, all
+
+API Key Requirements:
+  - Requesty: Set REQUESTY_API_KEY environment variable
+  - Nano-GPT: Set NANOGPT_API_KEY environment variable
+  - OpenRouter: No API key required for model listing
 
 Examples:
   %(prog)s --provider openrouter                           # Process OpenRouter models

@@ -21,6 +21,7 @@ providers:
       - replace: [["anthropic-", ""], ["meta-llama-", ""], ["google-", ""], ["mistralai-", "mistral-"], ["qwen-", ""]]
     special_models: []
     api_base_config: null
+    api_key_env: null
 
   requesty:
     name: "Requesty"
@@ -42,6 +43,7 @@ providers:
     api_base_config:
       url: "https://router.requesty.ai/v1"
       api_key_env: "REQUESTY_API_KEY"
+    api_key_env: "REQUESTY_API_KEY"
 
   nano_gpt:
     name: "Nano-GPT"
@@ -63,6 +65,7 @@ providers:
     api_base_config:
       url_env: "NANOGPT_API_BASE"
       api_key_env: "NANOGPT_API_KEY"
+    api_key_env: "NANOGPT_API_KEY"
 
 # Default settings that apply to all providers unless overridden
 defaults:
