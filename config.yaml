@@ -264,6 +264,11 @@ model_list:
   model_info:
     mode: embedding
 - litellm_params:
+    model: openrouter/arcee-ai/afm-4.5b
+    input_cost_per_token: 1.0e-07
+    output_cost_per_token: 4.0e-07
+  model_name: or-arcee-ai-afm-4.5b
+- litellm_params:
     model: openrouter/deepseek/deepseek-chat-v3.1
     input_cost_per_token: 2.4999988e-07
     output_cost_per_token: 9.99999888e-07
@@ -349,6 +354,11 @@ model_list:
     output_cost_per_token: 1.0e-09
   model_name: or-openai-gpt-oss-20b
 - litellm_params:
+    model: openrouter/opengvlab/internvl3-78b
+    input_cost_per_token: 3.0e-08
+    output_cost_per_token: 1.3e-07
+  model_name: or-opengvlab-internvl3-78b
+- litellm_params:
     model: openrouter/openrouter/sonoma-dusk-alpha
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
@@ -398,6 +408,16 @@ model_list:
     input_cost_per_token: 7.065214e-08
     output_cost_per_token: 2.82608664e-07
   model_name: or-qwen3-coder-30b-a3b-instruct
+- litellm_params:
+    model: openrouter/qwen/qwen3-coder-flash
+    input_cost_per_token: 3.0e-07
+    output_cost_per_token: 1.5e-06
+  model_name: or-qwen3-coder-flash
+- litellm_params:
+    model: openrouter/qwen/qwen3-coder-plus
+    input_cost_per_token: 1.0e-06
+    output_cost_per_token: 5.0e-06
+  model_name: or-qwen3-coder-plus
 - litellm_params:
     model: openrouter/qwen/qwen3-next-80b-a3b-instruct
     input_cost_per_token: 9.782604e-08
