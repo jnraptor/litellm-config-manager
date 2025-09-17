@@ -477,12 +477,6 @@ model_list:
     api_key: os.environ/REQUESTY_API_KEY
 - litellm_params:
     api_key: os.environ/TOGETHERAI_API_KEY
-    model: together_ai/arcee-ai/AFM-4.5B
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
-  model_name: tgt-AFM-4.5B-free
-- litellm_params:
-    api_key: os.environ/TOGETHERAI_API_KEY
     model: together_ai/deepseek-ai/DeepSeek-R1-Distill-Llama-70B-free
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
