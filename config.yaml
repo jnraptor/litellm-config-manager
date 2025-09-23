@@ -264,15 +264,10 @@ model_list:
   model_info:
     mode: embedding
 - litellm_params:
-    model: openrouter/arcee-ai/afm-4.5b
-    input_cost_per_token: 1.0e-07
-    output_cost_per_token: 4.0e-07
-  model_name: or-arcee-ai-afm-4.5b
-- litellm_params:
-    model: openrouter/deepseek/deepseek-chat-v3.1
-    input_cost_per_token: 2.4999988e-07
-    output_cost_per_token: 9.99999888e-07
-  model_name: or-deepseek-chat-v3.1
+    model: openrouter/deepseek/deepseek-v3.1-terminus
+    input_cost_per_token: 2.7e-07
+    output_cost_per_token: 1.0e-06
+  model_name: or-deepseek-v3.1-terminus
 - litellm_params:
     model: openrouter/mistralai/devstral-medium
     input_cost_per_token: 4.0e-07
