@@ -35,6 +35,7 @@ from typing import Dict, List, Tuple, Any, Optional, Union
 from pathlib import Path
 from dataclasses import dataclass
 from abc import ABC, abstractmethod
+from dotenv import load_dotenv
 
 
 @dataclass
@@ -1058,6 +1059,8 @@ Examples:
     args = parser.parse_args()
 
     try:
+        load_dotenv(override=True)  # Load environment variables from .env file if present
+
         # Initialize provider manager to get available providers
         temp_manager = ProviderManager()
         available_providers = temp_manager.list_providers()
