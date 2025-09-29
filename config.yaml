@@ -268,6 +268,11 @@ model_list:
     input_cost_per_token: 2.7e-07
     output_cost_per_token: 1.0e-06
   model_name: or-deepseek-v3.1-terminus
+- model_name: or-deepseek-v3.2-exp
+  litellm_params:
+    model: openrouter/deepseek/deepseek-v3.2-exp
+    input_cost_per_token: 2.8e-07
+    output_cost_per_token: 4.2e-07
 - litellm_params:
     model: openrouter/mistralai/devstral-medium
     input_cost_per_token: 4.0e-07
