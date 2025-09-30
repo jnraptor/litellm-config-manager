@@ -93,7 +93,12 @@ model_list:
     api_key: os.environ/REQUESTY_API_KEY
     input_cost_per_token: 3.0e-06
     output_cost_per_token: 1.5e-05
-  model_name: claude-sonnet-4-5-20250929
+  model_name: claude-sonnet-4.5
+- litellm_params:
+    model: openrouter/anthropic/claude-sonnet-4.5
+    input_cost_per_token: 3.0e-06
+    output_cost_per_token: 1.5e-05
+  model_name: claude-sonnet-4.5
 - litellm_params:
     model: openrouter/deepseek/deepseek-r1-0528-qwen3-8b
     input_cost_per_token: 1.3043472e-08
@@ -270,11 +275,6 @@ model_list:
     api_key: os.environ/OPENAI_API_KEY
   model_info:
     mode: embedding
-- litellm_params:
-    model: openrouter/anthropic/claude-sonnet-4.5
-    input_cost_per_token: 3.0e-06
-    output_cost_per_token: 1.5e-05
-  model_name: or-claude-sonnet-4.5
 - litellm_params:
     model: openrouter/deepseek/deepseek-v3.1-terminus
     input_cost_per_token: 2.7e-07
