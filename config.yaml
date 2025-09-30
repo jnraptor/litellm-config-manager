@@ -205,6 +205,10 @@ model_list:
   litellm_params:
     model: openai/gpt-5
     api_key: os.environ/OPENAI_API_KEY
+- model_name: gpt-5-codex
+  litellm_params:
+    model: openai/gpt-5-codex
+    api_key: os.environ/OPENAI_API_KEY
 - litellm_params:
     api_base: os.environ/AZURE_API_BASE_EastUS2
     api_key: os.environ/AZURE_API_KEY_EastUS2
