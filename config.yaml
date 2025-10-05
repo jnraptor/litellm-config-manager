@@ -266,13 +266,6 @@ model_list:
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
   model_name: nvidia-nemotron-nano-9b-v2
-- litellm_params:
-    model: openai/nvidia/Llama-3_3-Nemotron-Super-49B-v1_5
-    input_cost_per_token: 5e-8
-    output_cost_per_token: 2.5e-07
-    api_base: os.environ/NANOGPT_API_BASE
-    api_key: os.environ/NANOGPT_API_KEY
-  model_name: nvidia-nemotron-super-49b-v1.5
 - model_name: oai-text-embedding-3-small
   litellm_params:
     model: openai/oai-text-embedding-3-small
@@ -415,16 +408,6 @@ model_list:
     output_cost_per_token: 2.82608664e-07
   model_name: or-qwen3-coder-30b-a3b-instruct
 - litellm_params:
-    model: openrouter/qwen/qwen3-coder-flash
-    input_cost_per_token: 3.0e-07
-    output_cost_per_token: 1.5e-06
-  model_name: or-qwen3-coder-flash
-- litellm_params:
-    model: openrouter/qwen/qwen3-coder-plus
-    input_cost_per_token: 1.0e-06
-    output_cost_per_token: 5.0e-06
-  model_name: or-qwen3-coder-plus
-- litellm_params:
     model: openrouter/qwen/qwen3-next-80b-a3b-instruct
     input_cost_per_token: 9.782604e-08
     output_cost_per_token: 3.91304304e-07
@@ -444,16 +427,6 @@ model_list:
     input_cost_per_token: 3.0e-07
     output_cost_per_token: 3.0e-06
   model_name: or-qwen3-vl-235b-a22b-thinking
-- litellm_params:
-    model: openrouter/x-ai/grok-4-fast:free
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
-  model_name: or-x-ai-grok-4-fast-free
-- litellm_params:
-    model: openrouter/x-ai/grok-code-fast-1
-    input_cost_per_token: 2.0e-07
-    output_cost_per_token: 1.5e-06
-  model_name: or-x-ai-grok-code-fast-1
 - litellm_params:
     model: openrouter/z-ai/glm-4.5
     input_cost_per_token: 4.12499802e-07
@@ -484,6 +457,30 @@ model_list:
     input_cost_per_token: 3.0e-06
     output_cost_per_token: 1.5e-05
   model_name: pplx-sonar-pro
+- model_name: qwen3-coder-flash
+  litellm_params:
+    model: openai/qwen/qwen3-coder-flash
+    api_base: os.environ/NANOGPT_API_BASE
+    api_key: os.environ/NANOGPT_API_KEY
+    input_cost_per_token: 3.0e-07
+    output_cost_per_token: 1.5e-06
+- litellm_params:
+    model: openrouter/qwen/qwen3-coder-flash
+    input_cost_per_token: 3.0e-07
+    output_cost_per_token: 1.5e-06
+  model_name: qwen3-coder-flash
+- model_name: qwen3-coder-plus
+  litellm_params:
+    model: openai/qwen/qwen3-coder-plus
+    api_base: os.environ/NANOGPT_API_BASE
+    api_key: os.environ/NANOGPT_API_KEY
+    input_cost_per_token: 1.0e-06
+    output_cost_per_token: 5.0e-06
+- litellm_params:
+    model: openrouter/qwen/qwen3-coder-plus
+    input_cost_per_token: 1.0e-06
+    output_cost_per_token: 5.0e-06
+  model_name: qwen3-coder-plus
 - model_name: qwen3-max
   litellm_params:
     model: openai/qwen/qwen3-max
@@ -513,3 +510,15 @@ model_list:
     api_key: os.environ/TOGETHERAI_API_KEY
   model_info:
     mode: rerank
+- model_name: x-ai-grok-code-fast-1
+  litellm_params:
+    model: openai/x-ai/grok-code-fast-1
+    api_base: os.environ/NANOGPT_API_BASE
+    api_key: os.environ/NANOGPT_API_KEY
+    input_cost_per_token: 2.0e-07
+    output_cost_per_token: 1.5e-06
+- litellm_params:
+    model: openrouter/x-ai/grok-code-fast-1
+    input_cost_per_token: 2.0e-07
+    output_cost_per_token: 1.5e-06
+  model_name: x-ai-grok-code-fast-1
