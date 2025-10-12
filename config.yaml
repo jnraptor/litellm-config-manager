@@ -367,12 +367,12 @@ model_list:
     input_cost_per_token: 3.0e-08
     output_cost_per_token: 1.3e-07
   model_name: or-opengvlab-internvl3-78b
-- model_name: or-qwen-qwen-plus-2025-07-28
+- model_name: or-qwen-plus-2025-07-28
   litellm_params:
     model: openrouter/qwen/qwen-plus-2025-07-28
     input_cost_per_token: 4.0e-07
     output_cost_per_token: 1.2e-06
-- model_name: or-qwen-qwen-plus-2025-07-28-thinking
+- model_name: or-qwen-plus-2025-07-28-thinking
   litellm_params:
     model: openrouter/qwen/qwen-plus-2025-07-28:thinking
     input_cost_per_token: 4.0e-07
@@ -428,26 +428,6 @@ model_list:
     output_cost_per_token: 3.0e-06
   model_name: or-qwen3-vl-235b-a22b-thinking
 - litellm_params:
-    model: openrouter/z-ai/glm-4.5
-    input_cost_per_token: 4.12499802e-07
-    output_cost_per_token: 1.6499998152e-06
-  model_name: or-z-ai-glm-4.5
-- litellm_params:
-    model: openrouter/z-ai/glm-4.5-air
-    input_cost_per_token: 1.4e-07
-    output_cost_per_token: 8.6e-07
-  model_name: or-z-ai-glm-4.5-air
-- litellm_params:
-    model: openrouter/z-ai/glm-4.5-air:free
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
-  model_name: or-z-ai-glm-4.5-air
-- litellm_params:
-    model: openrouter/z-ai/glm-4.6
-    input_cost_per_token: 6.0e-07
-    output_cost_per_token: 2.2e-06
-  model_name: or-z-ai-glm-4.6
-- litellm_params:
     model: perplexity/sonar
     input_cost_per_token: 1.0e-06
     output_cost_per_token: 1.0e-06
@@ -481,6 +461,11 @@ model_list:
     input_cost_per_token: 1.0e-06
     output_cost_per_token: 5.0e-06
   model_name: qwen3-coder-plus
+- model_name: qwen3-coder-plus
+  litellm_params:
+    model: vercel_ai_gateway/alibaba/qwen3-coder-plus
+    input_cost_per_token: 1.0e-06
+    output_cost_per_token: 5.0e-06
 - model_name: qwen3-max
   litellm_params:
     model: openai/qwen/qwen3-max
@@ -510,6 +495,11 @@ model_list:
     api_key: os.environ/TOGETHERAI_API_KEY
   model_info:
     mode: rerank
+- model_name: vc-meituan-longcat-flash-chat
+  litellm_params:
+    model: vercel_ai_gateway/meituan/longcat-flash-chat
+    input_cost_per_token: 1.0e-09
+    output_cost_per_token: 1.0e-09
 - model_name: x-ai-grok-code-fast-1
   litellm_params:
     model: openai/x-ai/grok-code-fast-1
@@ -522,3 +512,33 @@ model_list:
     input_cost_per_token: 2.0e-07
     output_cost_per_token: 1.5e-06
   model_name: x-ai-grok-code-fast-1
+- litellm_params:
+    model: openrouter/z-ai/glm-4.5-air
+    input_cost_per_token: 1.4e-07
+    output_cost_per_token: 8.6e-07
+  model_name: zai-glm-4.5-air
+- litellm_params:
+    model: openrouter/z-ai/glm-4.5-air:free
+    input_cost_per_token: 1.0e-09
+    output_cost_per_token: 1.0e-09
+  model_name: zai-glm-4.5-air
+- model_name: zai-glm-4.5-air
+  litellm_params:
+    model: vercel_ai_gateway/zai/glm-4.5-air
+    input_cost_per_token: 2.0e-07
+    output_cost_per_token: 1.1e-06
+- model_name: zai-glm-4.5v
+  litellm_params:
+    model: vercel_ai_gateway/zai/glm-4.5v
+    input_cost_per_token: 6.0e-07
+    output_cost_per_token: 1.8e-06
+- litellm_params:
+    model: openrouter/z-ai/glm-4.6
+    input_cost_per_token: 6.0e-07
+    output_cost_per_token: 2.2e-06
+  model_name: zai-glm-4.6
+- model_name: zai-glm-4.6
+  litellm_params:
+    model: vercel_ai_gateway/zai/glm-4.6
+    input_cost_per_token: 6.0e-07
+    output_cost_per_token: 2.2e-06

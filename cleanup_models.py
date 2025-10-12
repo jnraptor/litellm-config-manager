@@ -894,6 +894,16 @@ class UnifiedModelCleaner:
                             api_model_info = available_models[model_id]
                             model_entry = strategy.create_model_entry(model_id, api_model_info)
                             self.logger.info(f"[DRY-RUN] Would add model '{model_entry['litellm_params']['model']}' with name '{model_entry['model_name']}'")
+                            
+                            # Show cost information in dry run
+                            litellm_params = model_entry.get('litellm_params', {})
+                            input_cost = litellm_params.get('input_cost_per_token')
+                            output_cost = litellm_params.get('output_cost_per_token')
+                            if input_cost is not None and output_cost is not None:
+                                self.logger.info(f"[DRY-RUN]   Input cost: {input_cost}, Output cost: {output_cost}")
+                            else:
+                                self.logger.warning(f"[DRY-RUN]   Cost information missing: input={input_cost}, output={output_cost}")
+                            
                             added_models.append(model_id)
 
                     if added_models:

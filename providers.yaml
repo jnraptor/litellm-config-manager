@@ -67,6 +67,27 @@ providers:
       api_key_env: "NANOGPT_API_KEY"
     api_key_env: "NANOGPT_API_KEY"
 
+  vercel:
+    name: "Vercel AI Gateway"
+    description: "Vercel AI Gateway model provider"
+    api_url: "https://ai-gateway.vercel.sh/v1/models"
+    model_prefix: "vercel_ai_gateway/"
+    model_detection:
+      type: "prefix"
+      value: "vercel_ai_gateway/"
+    pricing:
+      input_field: "input"
+      output_field: "output"
+      is_per_million: false
+      # Handle free models by converting 0.0 to 1e-09
+      free_model_handling: true
+    model_name_prefix: "vc-"
+    model_name_cleanup:
+      - replace: [["anthropic/", "-"], ["meta-", "llama-"], ["google/", "-"], ["mistralai/", "mistral-"], ["qwen/", ""]]
+    special_models: []
+    api_base_config: null
+    api_key_env: null
+
 # Default settings that apply to all providers unless overridden
 defaults:
   timeout: 30
