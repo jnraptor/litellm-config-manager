@@ -500,6 +500,11 @@ model_list:
     model: vercel_ai_gateway/meituan/longcat-flash-chat
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
+- model_name: vc-openai-gpt-oss-20b
+  litellm_params:
+    model: vercel_ai_gateway/openai/gpt-oss-20b
+    input_cost_per_token: 7.0e-08
+    output_cost_per_token: 3.0e-07
 - model_name: x-ai-grok-code-fast-1
   litellm_params:
     model: openai/x-ai/grok-code-fast-1
