@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Repository Overview
 
-This is a LiteLLM configuration management repository with Python scripts for managing model configurations across OpenRouter, Requesty, Novita AI, and Nano-GPT providers. The main config file (`config.yaml`) contains LiteLLM model definitions with routing strategies and cost information.
+This is a LiteLLM configuration management repository with Python scripts for managing model configurations across OpenRouter, Requesty, Novita AI, Nano-GPT, and Vercel AI Gateway providers. The main config file (`config.yaml`) contains LiteLLM model definitions with routing strategies and cost information.
 
 ## Development Commands
 
@@ -18,13 +18,15 @@ python cleanup_models.py --provider openrouter [--config config.yaml] [--dry-run
 python cleanup_models.py --provider requesty [--config config.yaml] [--dry-run] [--verbose]
 python cleanup_models.py --provider novita [--config config.yaml] [--dry-run] [--verbose]
 python cleanup_models.py --provider nano_gpt [--config config.yaml] [--dry-run] [--verbose]
+python cleanup_models.py --provider vercel [--config config.yaml] [--dry-run] [--verbose]
 
 # Add new models with automatic cost detection
 python cleanup_models.py --provider openrouter --add-model "model1 model2" [--dry-run]
 python cleanup_models.py --provider requesty --add-model "provider|model1 provider|model2" [--dry-run]
+python cleanup_models.py --provider vercel --add-model "model1 model2" [--dry-run]
 
 # Multiple providers with model addition
-python cleanup_models.py --provider all --add-model "openrouter|model1 requesty|model2" [--dry-run]
+python cleanup_models.py --provider all --add-model "openrouter|model1 requesty|model2 vercel|model3" [--dry-run]
 ```
 
 ### Legacy Scripts (Deprecated)
@@ -34,15 +36,18 @@ python cleanup_openrouter_models.py [--config config.yaml] [--dry-run] [--verbos
 python cleanup_requesty_models.py [--config config.yaml] [--dry-run] [--verbose]
 python cleanup_novita_models.py [--config config.yaml] [--dry-run] [--verbose]
 python cleanup_nano_gpt_models.py [--config config.yaml] [--dry-run] [--verbose]
+python cleanup_vercel_models.py [--config config.yaml] [--dry-run] [--verbose]
 
 # Add new models with automatic cost detection
 python cleanup_openrouter_models.py --add-model "model/name" [--dry-run]
 python cleanup_requesty_models.py --add-model "provider/model" [--dry-run]
 python cleanup_novita_models.py --add-model "provider/model" [--dry-run]
 python cleanup_nano_gpt_models.py --add-model "provider/model" [--dry-run]
+python cleanup_vercel_models.py --add-model "model/name" [--dry-run]
 
 # Multiple model addition (space-separated)
 python cleanup_openrouter_models.py --add-model model1 model2 model3 [--dry-run]
+python cleanup_vercel_models.py --add-model model1 model2 model3 [--dry-run]
 ```
 
 ### Dependencies Management
@@ -78,6 +83,7 @@ Always run with `--dry-run --verbose` first to preview changes before applying t
 - `cleanup_requesty_models.py` - Requesty API integration (~966 lines)
 - `cleanup_novita_models.py` - Novita API integration (~928 lines)
 - `cleanup_nano_gpt_models.py` - Nano-GPT API integration (new)
+- `cleanup_vercel_models.py` - Vercel AI Gateway API integration (~581 lines)
 
 **GitHub Automation:**
 - Weekly automated cleanup via GitHub Actions
@@ -121,6 +127,7 @@ Each legacy cleanup script follows the same pattern:
 - Requesty: `litellm_params.api_base` contains `router.requesty.ai`
 - Novita: `litellm_params.model` starts with `novita/`
 - Nano-GPT: `litellm_params.model` starts with `openai/` and `litellm_params.api_base` contains `NANOGPT_API_BASE`
+- Vercel AI Gateway: `litellm_params.model` starts with `vercel_ai_gateway/`
 
 **Key Methods:**
 - `load_config()` / `save_config()` - YAML file operations
@@ -156,6 +163,7 @@ Each legacy cleanup script follows the same pattern:
 - `.github/workflows/cleanup-requesty-models.yml`
 - `.github/workflows/cleanup-novita-models.yml`
 - `.github/workflows/cleanup-nano-gpt-models.yml`
+- `.github/workflows/cleanup-vercel-models.yml`
 
 **Schedule:** Weekly on Sundays (`0 0 * * 0`)
 

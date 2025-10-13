@@ -1,11 +1,11 @@
-# OpenRouter, Requesty, Novita & Nano-GPT Model Cleanup, Cost Update, and Model Addition Scripts
+# OpenRouter, Requesty, Novita, Nano-GPT & Vercel AI Gateway Model Cleanup, Cost Update, and Model Addition Scripts
 
-Comprehensive Python scripts that validate OpenRouter, Requesty, Novita, and Nano-GPT models in LiteLLM configuration files against their respective APIs, remove invalid model entries, automatically update model costs to match current pricing, and provide an easy way to add new models.
+Comprehensive Python scripts that validate OpenRouter, Requesty, Novita, Nano-GPT, and Vercel AI Gateway models in LiteLLM configuration files against their respective APIs, remove invalid model entries, automatically update model costs to match current pricing, and provide an easy way to add new models.
 
 ## Overview
 
 These scripts help maintain your LiteLLM configuration by:
-- Identifying OpenRouter/Requesty/Novita/Nano-GPT models in your `config.yaml`
+- Identifying OpenRouter/Requesty/Novita/Nano-GPT/Vercel AI Gateway models in your `config.yaml`
 - Checking their validity against the current APIs
 - Removing entire model entries for invalid/deprecated models
 - **Automatically updating model costs** (`input_cost_per_token` and `output_cost_per_token`) when they differ from API pricing
@@ -41,12 +41,30 @@ python cleanup_novita_models.py --add-model deepseek/deepseek-v3-0324 qwen/qwen-
 # Add multiple Nano-GPT models (NEW - space separated)
 python cleanup_nano_gpt_models.py --add-model nvidia/nvidia-nemotron-nano-9b-v2 qwen/qwen3-235b-a22b-thinking-2507
 
+# Add multiple Vercel AI Gateway models (NEW - space separated)
+python cleanup_vercel_models.py --add-model alibaba/qwen-3-14b alibaba/qwen-3-30b meta-llama/llama-3.1-8b-instruct
+
 # Add multiple models with quotes (backward compatible)
 python cleanup_openrouter_models.py --add-model "mistralai/mistral-medium-3.1" "mistralai/mistral-small" "anthropic/claude-3-5-sonnet-20241022"
 
 # Preview multiple models before adding
 python cleanup_openrouter_models.py --add-model model1 model2 model3 --dry-run
 ```
+
+### Vercel AI Gateway Script
+- ✅ **Safe Operation**: Dry-run mode to preview changes before applying
+- ✅ **Automatic Cost Updates**: Synchronizes `input_cost_per_token` and `output_cost_per_token` with current API pricing
+- ✅ **Easy Model Addition**: Add one or more Vercel AI Gateway models with automatic cost detection and proper formatting
+- ✅ **Correct Pricing Conversion**: Properly handles Vercel's per-token pricing format
+- ✅ **Percentage-Based Logging**: Shows cost changes with percentage differences
+- ✅ **Free Model Handling**: Properly handles free models by preserving `1e-09` costs for LiteLLM compatibility
+- ✅ **Duplicate Prevention**: Prevents adding models that already exist in configuration
+- ✅ **Smart Naming**: Generates appropriate model names with `vc-` prefix and conflict resolution
+- ✅ **Comprehensive Logging**: Detailed output with verbose mode for validation, cost updates, and model addition
+- ✅ **Error Handling**: Robust error handling for network and file issues
+- ✅ **No Authentication Required**: Uses public Vercel AI Gateway API endpoint
+- ✅ **Preserves Structure**: Maintains YAML formatting and structure
+- ✅ **Complete Removal**: Removes entire model entries (not just model references)
 
 ### OpenRouter Script
 - ✅ **Safe Operation**: Dry-run mode to preview changes before applying
@@ -117,6 +135,7 @@ python cleanup_openrouter_models.py --add-model model1 model2 model3 --dry-run
    # - cleanup_requesty_models.py
    # - cleanup_novita_models.py
    # - cleanup_nano_gpt_models.py
+   # - cleanup_vercel_models.py
    # - requirements.txt
    ```
 
@@ -135,12 +154,14 @@ python cleanup_openrouter_models.py
 python cleanup_requesty_models.py
 python cleanup_novita_models.py
 python cleanup_nano_gpt_models.py
+python cleanup_vercel_models.py
 
 # Process a specific config file
 python cleanup_openrouter_models.py --config /path/to/your/config.yaml
 python cleanup_requesty_models.py --config /path/to/your/config.yaml
 python cleanup_novita_models.py --config /path/to/your/config.yaml
 python cleanup_nano_gpt_models.py --config /path/to/your/config.yaml
+python cleanup_vercel_models.py --config /path/to/your/config.yaml
 ```
 
 ### Adding New Models
@@ -151,12 +172,14 @@ python cleanup_openrouter_models.py --add-model "anthropic/claude-3-5-sonnet-202
 python cleanup_requesty_models.py --add-model "coding/gemini-2.5-flash"
 python cleanup_novita_models.py --add-model "deepseek/deepseek-v3-0324"
 python cleanup_nano_gpt_models.py --add-model "nvidia/nvidia-nemotron-nano-9b-v2"
+python cleanup_vercel_models.py --add-model "alibaba/qwen-3-14b"
 
 # Add multiple models at once with space separation (NEW FEATURE)
 python cleanup_openrouter_models.py --add-model mistralai/mistral-medium-3.1 mistralai/mistral-small anthropic/claude-3-5-sonnet-20241022
 python cleanup_requesty_models.py --add-model coding/gemini-2.5-flash smart-task coding/claude-3-5-sonnet
 python cleanup_novita_models.py --add-model deepseek/deepseek-v3-0324 qwen/qwen-2.5-72b-instruct deepseek/deepseek-r1-0528-qwen3-8b
 python cleanup_nano_gpt_models.py --add-model nvidia/nvidia-nemotron-nano-9b-v2 qwen/qwen3-235b-a22b-thinking-2507
+python cleanup_vercel_models.py --add-model alibaba/qwen-3-14b alibaba/qwen-3-30b meta-llama/llama-3.1-8b-instruct
 
 # Add multiple models with quotes (backward compatible)
 python cleanup_openrouter_models.py --add-model "mistralai/mistral-medium-3.1" "mistralai/mistral-small" "anthropic/claude-3-5-sonnet-20241022"
@@ -165,11 +188,14 @@ python cleanup_openrouter_models.py --add-model "mistralai/mistral-medium-3.1" "
 python cleanup_openrouter_models.py --add-model model1 model2 model3 --dry-run
 python cleanup_requesty_models.py --add-model coding/gemini-2.5-pro --dry-run
 python cleanup_novita_models.py --add-model deepseek/deepseek-r1-0528-qwen3-8b --dry-run
+python cleanup_nano_gpt_models.py --add-model nvidia/nvidia-nemotron-nano-9b-v2 --dry-run
+python cleanup_vercel_models.py --add-model alibaba/qwen-3-14b --dry-run
 
 # Add models with verbose output
 python cleanup_openrouter_models.py --add-model meta-llama/llama-3.2-1b-instruct --verbose
 python cleanup_requesty_models.py --add-model smart/task --verbose
 python cleanup_novita_models.py --add-model qwen/qwen3-235b-a22b-thinking-2507 --verbose
+python cleanup_vercel_models.py --add-model alibaba/qwen-3-14b --verbose
 ```
 
 ### Dry-Run Mode (Recommended First)
@@ -180,12 +206,14 @@ python cleanup_openrouter_models.py --dry-run
 python cleanup_requesty_models.py --dry-run
 python cleanup_novita_models.py --dry-run
 python cleanup_nano_gpt_models.py --dry-run
+python cleanup_vercel_models.py --dry-run
 
 # Detailed preview with verbose logging and percentage changes
 python cleanup_openrouter_models.py --dry-run --verbose
 python cleanup_requesty_models.py --dry-run --verbose
 python cleanup_novita_models.py --dry-run --verbose
 python cleanup_nano_gpt_models.py --dry-run --verbose
+python cleanup_vercel_models.py --dry-run --verbose
 ```
 
 ### Command-Line Options
@@ -424,6 +452,11 @@ The script identifies Novita models by looking for entries where:
 - `litellm_params.model` starts with `novita/`
 - Examples: `novita/deepseek/deepseek-v3-0324`, `novita/qwen/qwen3-235b-a22b-thinking-2507`
 
+### Vercel AI Gateway Models
+The script identifies Vercel AI Gateway models by looking for entries where:
+- `litellm_params.model` starts with `vercel_ai_gateway/`
+- Examples: `vercel_ai_gateway/alibaba/qwen-3-14b`, `vercel_ai_gateway/meta-llama/llama-3.1-8b-instruct`
+
 ### Nano-GPT Models
 The script identifies Nano-GPT models by looking for entries where:
 - `litellm_params.model` starts with `openai/`
@@ -453,13 +486,14 @@ The script identifies Nano-GPT models by looking for entries where:
 - Models not found in the API response are marked as invalid
 
 ### Cost Validation and Updates
-- The script fetches current pricing from the APIs (`input_price` and `output_price` fields for Requesty, `pricing.prompt` and `pricing.completion` fields for OpenRouter, `input_token_price_per_m` and `output_token_price_per_m` fields for Novita, `pricing.prompt` and `pricing.completion` fields for Nano-GPT)
+- The script fetches current pricing from the APIs (`input_price` and `output_price` fields for Requesty, `pricing.prompt` and `pricing.completion` fields for OpenRouter, `input_token_price_per_m` and `output_token_price_per_m` fields for Novita, `pricing.prompt` and `pricing.completion` fields for Nano-GPT, `input` and `output` fields for Vercel AI Gateway)
 - Compares `input_cost_per_token` and `output_cost_per_token` in your config with API pricing
 - **Automatically updates costs** when differences are detected
 - **Free model handling**: When API returns `0.0` for free models, the script preserves `1e-09` costs for LiteLLM compatibility
 - **Percentage tracking**: All cost changes are logged with percentage differences for easy impact assessment
 - **Novita pricing conversion**: Properly converts Novita's per-million token pricing format (e.g., 600 = $0.06 per million tokens = 6e-08 per token)
 - **Nano-GPT pricing conversion**: Properly converts Nano-GPT's per-million token pricing format to per-token costs
+- **Vercel AI Gateway pricing conversion**: Properly handles Vercel's per-token pricing format
 
 ## Error Handling
 
@@ -481,7 +515,7 @@ The scripts handle various error conditions:
 ## Dependencies
 
 - **PyYAML**: For safe YAML parsing and writing
-- **requests**: For HTTP API calls to OpenRouter and Requesty
+- **requests**: For HTTP API calls to OpenRouter, Requesty, Novita, Nano-GPT, and Vercel AI Gateway
 
 ## Troubleshooting
 
@@ -508,6 +542,7 @@ python cleanup_openrouter_models.py --help
 python cleanup_requesty_models.py --help
 python cleanup_novita_models.py --help
 python cleanup_nano_gpt_models.py --help
+python cleanup_vercel_models.py --help
 ```
 
 ## Best Practices
@@ -520,6 +555,7 @@ python cleanup_nano_gpt_models.py --help
 6. **For Requesty models**, the scripts preserve existing model names to allow LiteLLM to distribute requests across different providers
 7. **For Novita models**, ensure model IDs match the exact format from the Novita API (e.g., "deepseek/deepseek-v3-0324")
 8. **For Nano-GPT models**, ensure model IDs match the exact format from the Nano-GPT API (e.g., "nvidia/nvidia-nemotron-nano-9b-v2")
+9. **For Vercel AI Gateway models**, ensure model IDs match the exact format from the Vercel AI Gateway API (e.g., "alibaba/qwen-3-14b")
 
 ## Script Architecture
 
