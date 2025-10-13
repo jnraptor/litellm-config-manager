@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
     inputs:
       provider:
-        description: 'Provider to process (all, openrouter, requesty, nano_gpt)'
+        description: 'Provider to process (all, openrouter, requesty, nano_gpt, vercel)'
         required: false
         type: choice
         default: 'all'
@@ -15,6 +15,7 @@ on:
           - openrouter
           - requesty
           - nano_gpt
+          - vercel
       add_model:
         description: 'Model ID to add (e.g., openrouter|anthropic/claude-3-5-haiku or space-separated list for multiple models)'
         required: false
