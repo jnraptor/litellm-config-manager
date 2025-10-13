@@ -413,16 +413,6 @@ model_list:
     output_cost_per_token: 2.82608664e-07
   model_name: or-qwen3-coder-30b-a3b-instruct
 - litellm_params:
-    model: openrouter/qwen/qwen3-next-80b-a3b-instruct
-    input_cost_per_token: 9.782604e-08
-    output_cost_per_token: 3.91304304e-07
-  model_name: or-qwen3-next-80b-a3b-instruct
-- litellm_params:
-    model: openrouter/qwen/qwen3-next-80b-a3b-thinking
-    input_cost_per_token: 9.782604e-08
-    output_cost_per_token: 3.91304304e-07
-  model_name: or-qwen3-next-80b-a3b-thinking
-- litellm_params:
     model: openrouter/qwen/qwen3-vl-235b-a22b-instruct
     input_cost_per_token: 3.0e-07
     output_cost_per_token: 1.5e-06
@@ -483,6 +473,26 @@ model_list:
     model: openrouter/qwen/qwen3-max
     input_cost_per_token: 1.2e-06
     output_cost_per_token: 6.0e-06
+- litellm_params:
+    model: openrouter/qwen/qwen3-next-80b-a3b-instruct
+    input_cost_per_token: 9.782604e-08
+    output_cost_per_token: 3.91304304e-07
+  model_name: qwen3-next-80b-a3b-instruct
+- model_name: qwen3-next-80b-a3b-instruct
+  litellm_params:
+    model: vercel_ai_gateway/alibaba/qwen3-next-80b-a3b-instruct
+    input_cost_per_token: 1.5e-07
+    output_cost_per_token: 1.5e-06
+- litellm_params:
+    model: openrouter/qwen/qwen3-next-80b-a3b-thinking
+    input_cost_per_token: 9.782604e-08
+    output_cost_per_token: 3.91304304e-07
+  model_name: qwen3-next-80b-a3b-thinking
+- model_name: qwen3-next-80b-a3b-thinking
+  litellm_params:
+    model: vercel_ai_gateway/alibaba/qwen3-next-80b-a3b-thinking
+    input_cost_per_token: 1.4e-07
+    output_cost_per_token: 1.4e-06
 - model_name: req-smart-task
   litellm_params:
     model: openai/smart-task
