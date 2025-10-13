@@ -333,11 +333,6 @@ model_list:
     output_cost_per_token: 1.0e-07
   model_name: or-mistral-small-3.2-24b
 - litellm_params:
-    model: openrouter/mistralai/mistral-small-3.2-24b-instruct:free
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
-  model_name: or-mistral-small-3.2-24b
-- litellm_params:
     model: openrouter/moonshotai/kimi-k2-0905
     input_cost_per_token: 3.804346e-07
     output_cost_per_token: 1.52173896e-06
@@ -361,11 +356,6 @@ model_list:
     model: openrouter/openai/gpt-oss-20b
     input_cost_per_token: 4.0e-08
     output_cost_per_token: 1.5e-07
-  model_name: or-openai-gpt-oss-20b
-- litellm_params:
-    model: openrouter/openai/gpt-oss-20b:free
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
   model_name: or-openai-gpt-oss-20b
 - litellm_params:
     model: openrouter/opengvlab/internvl3-78b
@@ -401,11 +391,6 @@ model_list:
     model: openrouter/qwen/qwen3-coder
     input_cost_per_token: 2.4999988e-07
     output_cost_per_token: 9.99999888e-07
-  model_name: or-qwen3-coder
-- litellm_params:
-    model: openrouter/qwen/qwen3-coder:free
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
   model_name: or-qwen3-coder
 - litellm_params:
     model: openrouter/qwen/qwen3-coder-30b-a3b-instruct
