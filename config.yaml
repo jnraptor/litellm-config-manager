@@ -49,6 +49,13 @@ model_list:
     input_cost_per_token: 3.0e-06
     output_cost_per_token: 1.5e-05
   model_name: claude-3-7-sonnet
+- litellm_params:
+    model: openai/anthropic/claude-haiku-4-5-20251001
+    api_base: https://router.requesty.ai/v1
+    api_key: os.environ/REQUESTY_API_KEY
+    input_cost_per_token: 1.0e-06
+    output_cost_per_token: 5.0e-06
+  model_name: claude-haiku-4-5-20251001
 - model_name: claude-opus-4-1
   litellm_params:
     model: openai/anthropic/claude-opus-4-1-20250805
