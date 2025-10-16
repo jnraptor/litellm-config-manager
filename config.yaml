@@ -39,25 +39,11 @@ model_list:
     input_cost_per_token: 7.5e-08
     output_cost_per_token: 3e-7
   model_name: az-phi-4-mini-instruct
-- model_name: claude-3-5-haiku
-  litellm_params:
-    model: openai/anthropic/claude-3-5-haiku-latest
-    api_base: https://router.requesty.ai/v1
-    api_key: os.environ/REQUESTY_API_KEY
-    input_cost_per_token: 8.0e-07
-    output_cost_per_token: 4.0e-06
 - litellm_params:
     model: openrouter/anthropic/claude-3.5-haiku
     input_cost_per_token: 8.0e-07
     output_cost_per_token: 4.0e-06
   model_name: claude-3-5-haiku
-- model_name: claude-3-7-sonnet
-  litellm_params:
-    model: openai/anthropic/claude-3-7-sonnet-latest
-    api_base: https://router.requesty.ai/v1
-    api_key: os.environ/REQUESTY_API_KEY
-    input_cost_per_token: 3.0e-06
-    output_cost_per_token: 1.5e-05
 - litellm_params:
     model: openrouter/anthropic/claude-3.7-sonnet
     input_cost_per_token: 3.0e-06
