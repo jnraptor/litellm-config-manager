@@ -316,6 +316,21 @@ model_list:
     output_cost_per_token: 2.5e-06
   model_name: or-gemini-2.5-flash-image-preview
 - litellm_params:
+    model: openrouter/openai/gpt-5-chat
+    input_cost_per_token: 1.25e-06
+    output_cost_per_token: 1.0e-05
+  model_name: or-gpt-5-chat
+- litellm_params:
+    model: openrouter/openai/gpt-5-image
+    input_cost_per_token: 5.0e-06
+    output_cost_per_token: 1.0e-05
+  model_name: or-gpt-5-image
+- litellm_params:
+    model: openrouter/openai/gpt-5-image-mini
+    input_cost_per_token: 2.5e-06
+    output_cost_per_token: 2.0e-06
+  model_name: or-gpt-5-image-mini
+- litellm_params:
     model: openrouter/meta-llama/llama-3.2-3b-instruct
     input_cost_per_token: 1.2e-08
     output_cost_per_token: 2.4e-08
@@ -365,21 +380,6 @@ model_list:
     input_cost_per_token: 1.0e-07
     output_cost_per_token: 4.0e-07
   model_name: or-nvidia-llama-3.3-nemotron-super-49b-v1.5
-- litellm_params:
-    model: openrouter/openai/gpt-5-chat
-    input_cost_per_token: 1.25e-06
-    output_cost_per_token: 1.0e-05
-  model_name: or-gpt-5-chat
-- litellm_params:
-    model: openrouter/openai/gpt-5-image
-    input_cost_per_token: 5.0e-06
-    output_cost_per_token: 1.0e-05
-  model_name: or-gpt-5-image
-- litellm_params:
-    model: openrouter/openai/gpt-5-image-mini
-    input_cost_per_token: 2.5e-06
-    output_cost_per_token: 2.0e-06
-  model_name: or-gpt-5-image-mini
 - litellm_params:
     model: openrouter/opengvlab/internvl3-78b
     input_cost_per_token: 3.0e-08
