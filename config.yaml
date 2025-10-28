@@ -436,6 +436,11 @@ model_list:
     output_cost_per_token: 3.0e-06
   model_name: or-qwen3-vl-235b-a22b-thinking
 - litellm_params:
+    model: openrouter/qwen/qwen3-vl-32b-instruct
+    input_cost_per_token: 3.5e-07
+    output_cost_per_token: 1.1e-06
+  model_name: or-qwen3-vl-32b-instruct
+- litellm_params:
     model: openrouter/qwen/qwen3-vl-8b-instruct
     input_cost_per_token: 1.8e-07
     output_cost_per_token: 6.9e-07
