@@ -198,7 +198,17 @@ class OpenRouterModelCleaner:
                     invalid_models.append((index, model_id, model_name))
                     self.logger.debug(f"Invalid model found: {model_id} -> {api_model_id}")
                 else:
-                    self.logger.debug(f"Valid model: {model_id} -> {api_model_id}")
+                    # Show cost information for valid models
+                    api_model_info = api_models.get(api_model_id, {})
+                    input_cost = api_model_info.get('input_cost')
+                    output_cost = api_model_info.get('output_cost')
+                    
+                    # Handle free models: if API returns 0.0, use 1e-09 for LiteLLM compatibility
+                    adjusted_input_cost = 1e-09 if input_cost == 0.0 else input_cost
+                    adjusted_output_cost = 1e-09 if output_cost == 0.0 else output_cost
+                    
+                    cost_info = f" (input: {adjusted_input_cost}, output: {adjusted_output_cost})" if input_cost is not None and output_cost is not None else ""
+                    self.logger.debug(f"Valid model: {model_id} -> {api_model_id}{cost_info}")
         
         self.logger.info(f"Identified {len(invalid_models)} invalid OpenRouter models")
         return invalid_models
@@ -266,7 +276,7 @@ class OpenRouterModelCleaner:
                                     'new': adjusted_input_cost
                                 }
                                 litellm_params['input_cost_per_token'] = adjusted_input_cost
-                                self.logger.debug(f"Input cost change for {model_id}: {current_input_cost} → {adjusted_input_cost}")
+                                self.logger.info(f"Input cost change for {model_id}: {current_input_cost} → {adjusted_input_cost} (API: {api_input_cost})")
                         else:
                             # Current cost is None, always update
                             input_changed = True
@@ -275,7 +285,7 @@ class OpenRouterModelCleaner:
                                 'new': adjusted_input_cost
                             }
                             litellm_params['input_cost_per_token'] = adjusted_input_cost
-                            self.logger.debug(f"Input cost change for {model_id}: {current_input_cost} → {adjusted_input_cost}")
+                            self.logger.info(f"Input cost change for {model_id}: {current_input_cost} → {adjusted_input_cost} (API: {api_input_cost})")
 
                     # Compare output costs
                     if api_output_cost is not None:
@@ -293,7 +303,7 @@ class OpenRouterModelCleaner:
                                     'new': adjusted_output_cost
                                 }
                                 litellm_params['output_cost_per_token'] = adjusted_output_cost
-                                self.logger.debug(f"Output cost change for {model_id}: {current_output_cost} → {adjusted_output_cost}")
+                                self.logger.info(f"Output cost change for {model_id}: {current_output_cost} → {adjusted_output_cost} (API: {api_output_cost})")
                         else:
                             # Current cost is None, always update
                             output_changed = True
@@ -302,7 +312,7 @@ class OpenRouterModelCleaner:
                                 'new': adjusted_output_cost
                             }
                             litellm_params['output_cost_per_token'] = adjusted_output_cost
-                            self.logger.debug(f"Output cost change for {model_id}: {current_output_cost} → {adjusted_output_cost}")
+                            self.logger.info(f"Output cost change for {model_id}: {current_output_cost} → {adjusted_output_cost} (API: {api_output_cost})")
                     
                     # Record changes if any occurred
                     if input_changed or output_changed:
@@ -342,7 +352,8 @@ class OpenRouterModelCleaner:
         
         return config, cost_changes
     
-    def preview_cost_changes(self, cost_changes: List[Dict[str, Any]]) -> None:
+    def preview_cost_changes(self, cost_changes: List[Dict[str, Any]],
+                           api_models: Dict[str, Dict[str, Any]]) -> None:
         """Preview cost changes in dry-run mode."""
         if not cost_changes:
             self.logger.info("[DRY-RUN] No cost updates needed.")
@@ -369,7 +380,11 @@ class OpenRouterModelCleaner:
                 else:
                     pct_str = ""
                 
-                self.logger.info(f"    Input cost: {old_str} → {new_val}{pct_str}")
+                # Get API cost for reference
+                api_cost = api_models.get(model_id[len('openrouter/'):], {}).get('input_cost')
+                api_str = f" (API: {api_cost})" if api_cost is not None else " (API: None)"
+                
+                self.logger.info(f"    Input cost: {old_str} → {new_val}{pct_str}{api_str}")
             
             if 'output_cost' in changes:
                 old_val = changes['output_cost']['old']
@@ -383,7 +398,11 @@ class OpenRouterModelCleaner:
                 else:
                     pct_str = ""
                 
-                self.logger.info(f"    Output cost: {old_str} → {new_val}{pct_str}")
+                # Get API cost for reference
+                api_cost = api_models.get(model_id[len('openrouter/'):], {}).get('output_cost')
+                api_str = f" (API: {api_cost})" if api_cost is not None else " (API: None)"
+                
+                self.logger.info(f"    Output cost: {old_str} → {new_val}{pct_str}{api_str}")
     
     def preview_changes(self, invalid_models: List[Tuple[int, str, str]]) -> None:
         """Preview what changes would be made in dry-run mode."""
@@ -723,10 +742,17 @@ class OpenRouterModelCleaner:
             existing_names.append(model_name)    # Update list to avoid name conflicts in this batch
             
             self.logger.info(f"Added model '{model_id}' with name '{model_name}'")
+            # Get raw API costs for reference
+            api_model_info = api_models.get(model_id, {})
+            api_input_cost = api_model_info.get('input_cost')
+            api_output_cost = api_model_info.get('output_cost')
+            
             if input_cost is not None:
-                self.logger.info(f"  Input cost: {input_cost}")
+                input_api_str = f" (API: {api_input_cost})" if api_input_cost is not None else ""
+                self.logger.info(f"  Input cost: {input_cost}{input_api_str}")
             if output_cost is not None:
-                self.logger.info(f"  Output cost: {output_cost}")
+                output_api_str = f" (API: {api_output_cost})" if api_output_cost is not None else ""
+                self.logger.info(f"  Output cost: {output_cost}{output_api_str}")
             
             # Also add free version if paid version exists and free version is available
             free_model_id = f"{model_id}:free"
@@ -828,10 +854,17 @@ class OpenRouterModelCleaner:
             self.logger.info(f"[DRY-RUN] Would add {len(valid_models)} model(s):")
             for model in valid_models:
                 self.logger.info(f"[DRY-RUN]   - Model '{model['id']}' with name '{model['name']}'")
+                # Get raw API costs for reference
+                api_model_info = api_models.get(model['id'], {})
+                api_input_cost = api_model_info.get('input_cost')
+                api_output_cost = api_model_info.get('output_cost')
+                
                 if model['input_cost'] is not None:
-                    self.logger.info(f"[DRY-RUN]     Input cost: {model['input_cost']}")
+                    input_api_str = f" (API: {api_input_cost})" if api_input_cost is not None else ""
+                    self.logger.info(f"[DRY-RUN]     Input cost: {model['input_cost']}{input_api_str}")
                 if model['output_cost'] is not None:
-                    self.logger.info(f"[DRY-RUN]     Output cost: {model['output_cost']}")
+                    output_api_str = f" (API: {api_output_cost})" if api_output_cost is not None else ""
+                    self.logger.info(f"[DRY-RUN]     Output cost: {model['output_cost']}{output_api_str}")
                 if 'has_free_version' in model:
                     self.logger.info(f"[DRY-RUN]     Would also add free version: {model['has_free_version']}")
         else:
@@ -893,7 +926,7 @@ class OpenRouterModelCleaner:
                 # Preview mode - show what would be changed
                 self.preview_sort_changes(config)
                 self.preview_changes(invalid_models)
-                self.preview_cost_changes(cost_changes)
+                self.preview_cost_changes(cost_changes, available_models)
             else:
                 # Actually apply changes
                 changes_made = was_sorted
