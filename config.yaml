@@ -608,4 +608,4 @@ model_list:
     model: openai/GLM-4.6
     api_base: https://api.poe.com/v1
     api_key: os.environ/POE_API_KEY
-  model_name: GLM-4.6
+  model_name: zai-glm-4.6
