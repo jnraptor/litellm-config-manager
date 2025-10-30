@@ -6,12 +6,15 @@ This script validates Poe models in a LiteLLM config.yaml file against
 the current Poe API and:
 1. Removes any invalid model entries
 2. Updates model costs (input_cost_per_token and output_cost_per_token) when they differ from API pricing
+3. Adds new Poe models to the configuration with automatic cost detection
 
 The script fetches current pricing from https://api.poe.com/v1/models and automatically
 updates any cost differences found in the configuration file.
 
 Usage:
     python cleanup_poe_models.py [--config config.yaml] [--dry-run] [--verbose]
+    python cleanup_poe_models.py --add-model "Claude-Sonnet-4.5" [--dry-run]
+    python cleanup_poe_models.py --add-model "Claude-Sonnet-4.5" "GPT-4-Turbo" [--dry-run]
 
 Author: Generated for LiteLLM Config Management
 """
@@ -456,6 +459,157 @@ class PoeModelCleaner:
             self.logger.error(f"Error saving configuration: {e}")
             raise
     
+    def find_model_in_api(self, model_id: str, api_models: Dict[str, Dict[str, Any]]) -> Optional[Dict[str, Any]]:
+        """Find a specific model in the API models data."""
+        if model_id in api_models:
+            return api_models[model_id]
+        return None
+    
+    def add_model_to_config(self, config: Dict[str, Any], model_ids: List[str], 
+                           api_models: Dict[str, Dict[str, Any]]) -> Tuple[Dict[str, Any], List[str]]:
+        """Add one or more Poe models to the configuration."""
+        added_models = []
+        failed_models = []
+        
+        # Get existing models to check for duplicates
+        existing_models = self.extract_poe_models(config)
+        existing_model_ids = [mid for _, mid, _ in existing_models]
+        existing_names = [name for _, _, name in existing_models]
+        
+        for model_id in model_ids:
+            self.logger.info(f"Processing model: {model_id}")
+            
+            # Find the model in API data
+            model_info = self.find_model_in_api(model_id, api_models)
+            if not model_info:
+                self.logger.error(f"Model '{model_id}' not found in Poe API")
+                failed_models.append(model_id)
+                continue
+            
+            # Check if model already exists
+            full_model_id = f"openai/{model_id}"
+            if full_model_id in existing_model_ids:
+                self.logger.warning(f"Model '{full_model_id}' already exists in configuration")
+                failed_models.append(model_id)
+                continue
+            
+            # Generate model name
+            model_name = model_id.replace('/', '-').replace(':', '-')
+            counter = 1
+            while model_name in existing_names and counter < 10:
+                model_name = f"{model_id.replace('/', '-').replace(':', '-')}-{counter}"
+                counter += 1
+            
+            # Create model entry
+            input_cost = model_info.get('input_cost')
+            output_cost = model_info.get('output_cost')
+            
+            # Handle free models
+            if input_cost is not None:
+                input_cost = 1e-09 if input_cost == 0.0 else input_cost
+            if output_cost is not None:
+                output_cost = 1e-09 if output_cost == 0.0 else output_cost
+            
+            model_entry = {
+                'litellm_params': {
+                    'model': full_model_id,
+                    'api_base': 'https://api.poe.com/v1',
+                    'api_key': 'os.environ/POE_API_KEY'
+                },
+                'model_name': model_name
+            }
+            
+            # Add costs if available
+            if input_cost is not None:
+                model_entry['litellm_params']['input_cost_per_token'] = input_cost
+            if output_cost is not None:
+                model_entry['litellm_params']['output_cost_per_token'] = output_cost
+            
+            # Add to config
+            config['model_list'].append(model_entry)
+            added_models.append(full_model_id)
+            existing_model_ids.append(full_model_id)
+            existing_names.append(model_name)
+            
+            self.logger.info(f"Added model '{full_model_id}' with name '{model_name}'")
+            if input_cost is not None:
+                self.logger.info(f"  Input cost: {input_cost}")
+            if output_cost is not None:
+                self.logger.info(f"  Output cost: {output_cost}")
+        
+        if failed_models:
+            self.logger.warning(f"Failed to add {len(failed_models)} model(s): {', '.join(failed_models)}")
+        if added_models:
+            self.logger.info(f"Successfully processed {len(added_models)} model(s) for addition")
+        
+        return config, added_models
+    
+    def preview_add_model(self, model_ids: List[str], api_models: Dict[str, Dict[str, Any]]) -> None:
+        """Preview what would be added when adding one or more models."""
+        config = self.load_config()
+        existing_models = self.extract_poe_models(config)
+        existing_model_ids = [mid for _, mid, _ in existing_models]
+        existing_names = [name for _, _, name in existing_models]
+        
+        valid_models = []
+        invalid_models = []
+        duplicate_models = []
+        
+        for model_id in model_ids:
+            # Check if model exists in API
+            model_info = self.find_model_in_api(model_id, api_models)
+            if not model_info:
+                invalid_models.append(model_id)
+                continue
+            
+            # Check if model already exists
+            full_model_id = f"openai/{model_id}"
+            if full_model_id in existing_model_ids:
+                duplicate_models.append(model_id)
+                continue
+            
+            # Determine model name
+            model_name = model_id.replace('/', '-').replace(':', '-')
+            counter = 1
+            while model_name in existing_names and counter < 10:
+                model_name = f"{model_id.replace('/', '-').replace(':', '-')}-{counter}"
+                counter += 1
+            
+            input_cost = model_info.get('input_cost')
+            output_cost = model_info.get('output_cost')
+            
+            if input_cost is not None:
+                input_cost = 1e-09 if input_cost == 0.0 else input_cost
+            if output_cost is not None:
+                output_cost = 1e-09 if output_cost == 0.0 else output_cost
+            
+            valid_models.append({
+                'id': model_id,
+                'full_id': full_model_id,
+                'name': model_name,
+                'input_cost': input_cost,
+                'output_cost': output_cost
+            })
+            existing_names.append(model_name)
+        
+        # Display preview results
+        if invalid_models:
+            self.logger.error(f"[DRY-RUN] {len(invalid_models)} model(s) not found in Poe API: {', '.join(invalid_models)}")
+        
+        if duplicate_models:
+            self.logger.warning(f"[DRY-RUN] {len(duplicate_models)} model(s) already exist in configuration: {', '.join(duplicate_models)}")
+        
+        if valid_models:
+            self.logger.info(f"[DRY-RUN] Would add {len(valid_models)} model(s):")
+            for model in valid_models:
+                self.logger.info(f"[DRY-RUN]   - Model '{model['full_id']}' with name '{model['name']}'")
+                if model['input_cost'] is not None:
+                    self.logger.info(f"[DRY-RUN]     Input cost: {model['input_cost']}")
+                if model['output_cost'] is not None:
+                    self.logger.info(f"[DRY-RUN]     Output cost: {model['output_cost']}")
+        else:
+            self.logger.info("[DRY-RUN] No valid models to add.")
+    
     def generate_report(self, invalid_models: List[Tuple[int, str, str]],
                        cost_changes: Optional[List[Dict[str, Any]]] = None) -> None:
         """Generate a summary report of the cleanup operation."""
@@ -492,7 +646,7 @@ class PoeModelCleaner:
             total_changes = len(invalid_models) + len(cost_changes)
             self.logger.info(f"✅ Cleanup completed: {total_changes} total changes applied")
     
-    def run(self) -> int:
+    def run(self, add_models: Optional[List[str]] = None) -> int:
         """Main execution method."""
         try:
             # Load configuration
@@ -500,6 +654,20 @@ class PoeModelCleaner:
             
             # Fetch available models with pricing from API
             available_models = self.fetch_available_models()
+            
+            # Handle add-models functionality
+            if add_models:
+                if self.dry_run:
+                    self.preview_add_model(add_models, available_models)
+                    return 0
+                else:
+                    updated_config, added_models = self.add_model_to_config(config, add_models, available_models)
+                    if added_models:
+                        self.save_config(updated_config)
+                        self.logger.info(f"✅ Successfully added {len(added_models)} model(s): {', '.join(added_models)}")
+                    else:
+                        self.logger.warning("⚠️ No models were added - all models either already exist or were not found in API")
+                    return 0
             
             # Extract Poe models for cleanup/validation
             poe_models = self.extract_poe_models(config)
@@ -546,15 +714,19 @@ def main():
         description="Clean up invalid Poe models and update costs in LiteLLM configuration",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
-This script performs two main functions:
+This script performs three main functions:
 1. Validates Poe models against the current API and removes invalid entries
 2. Updates model costs (input_cost_per_token/output_cost_per_token) when they differ from API pricing
+3. Adds one or more Poe models to the configuration with automatic cost detection
 
 Examples:
-  %(prog)s                           # Process config.yaml (validate models + update costs)
-  %(prog)s --config my-config.yaml   # Process custom config file
-  %(prog)s --dry-run                 # Preview all changes without modifying file
-  %(prog)s --verbose --dry-run       # Detailed preview mode with debug information
+  %(prog)s                                    # Process config.yaml (validate models + update costs)
+  %(prog)s --config my-config.yaml           # Process custom config file
+  %(prog)s --dry-run                         # Preview all changes without modifying file
+  %(prog)s --verbose --dry-run               # Detailed preview mode with debug information
+  %(prog)s --add-model "Claude-Sonnet-4.5"  # Add a single model
+  %(prog)s --add-model "Claude-Sonnet-4.5" "GPT-4-Turbo"  # Add multiple models
+  %(prog)s --add-model "Claude-Sonnet-4.5" --dry-run  # Preview adding a model
         """
     )
     
@@ -576,7 +748,21 @@ Examples:
         help='Enable verbose logging output with detailed cost comparison information'
     )
     
+    parser.add_argument(
+        '--add-model',
+        nargs='*',
+        help='Add one or more Poe models to the configuration. Provide model IDs separated by spaces or use quotes for each model'
+    )
+    
     args = parser.parse_args()
+    
+    # Process the add_models argument
+    processed_add_models = None
+    if args.add_model:
+        processed_add_models = []
+        for item in args.add_model:
+            models = item.split()
+            processed_add_models.extend(models)
     
     # Create and run the cleaner
     cleaner = PoeModelCleaner(
@@ -585,7 +771,7 @@ Examples:
         verbose=args.verbose
     )
     
-    return cleaner.run()
+    return cleaner.run(add_models=processed_add_models)
 
 
 if __name__ == '__main__':
