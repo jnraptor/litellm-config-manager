@@ -39,6 +39,15 @@ jobs:
           POE_API_KEY: ${{ secrets.POE_API_KEY }}
         run: python cleanup_poe_models.py --verbose
         
+      - name: Add new model (if specified)
+        if: ${{ github.event.inputs.add_model != '' }}
+        env:
+          POE_API_KEY: ${{ secrets.POE_API_KEY }}
+        run: |
+          echo "Adding model(s): ${{ github.event.inputs.add_model }}"
+          python cleanup_poe_models.py --add-model "${{ github.event.inputs.add_model }}" --dry-run
+          python cleanup_poe_models.py --add-model "${{ github.event.inputs.add_model }}"
+        
       - name: Check for changes
         id: verify-changed-files
         run: |
