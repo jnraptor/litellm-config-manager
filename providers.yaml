@@ -88,6 +88,27 @@ providers:
     api_base_config: null
     api_key_env: null
 
+  poe:
+    name: "Poe"
+    description: "Poe model provider"
+    api_url: "https://api.poe.com/v1/models"
+    model_prefix: "openai/"
+    model_detection:
+      type: "api_base"
+      value: "api.poe.com"
+    pricing:
+      input_field: "pricing.prompt"
+      output_field: "pricing.completion"
+      is_per_million: false
+      free_model_handling: true
+    model_name_prefix: "poe-"
+    model_name_cleanup: []
+    special_models: []
+    api_base_config:
+      url: "https://api.poe.com/v1"
+      api_key_env: "POE_API_KEY"
+    api_key_env: "POE_API_KEY"
+
 # Default settings that apply to all providers unless overridden
 defaults:
   timeout: 30
