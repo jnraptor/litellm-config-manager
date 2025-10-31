@@ -111,6 +111,11 @@ model_list:
     input_cost_per_token: 3.0e-06
     output_cost_per_token: 1.5e-05
   model_name: claude-sonnet-4.5
+- model_name: codestral-embed-2505
+  litellm_params:
+    model: openrouter/mistralai/codestral-embed-2505
+  model_info:
+    mode: embedding
 - litellm_params:
     model: openrouter/deepseek/deepseek-r1-0528-qwen3-8b
     input_cost_per_token: 1.3043472e-08
@@ -275,13 +280,6 @@ model_list:
     api_key: os.environ/JINA_AI_API_KEY
   model_info:
     mode: rerank
-- litellm_params:
-    model: openai/anthropic/claude-3.5-haiku
-    input_cost_per_token: 8.0e-07
-    output_cost_per_token: 4.0e-06
-    api_base: os.environ/KILOCODE_API_BASE
-    api_key: os.environ/KILOCODE_API_KEY
-  model_name: kc-claude-3.5-haiku
 - model_name: nomic-embed-text
   litellm_params:
     model: infinity/nomic-ai/nomic-embed-text-v2-moe
@@ -302,6 +300,11 @@ model_list:
   litellm_params:
     model: openai/oai-text-embedding-3-small
     api_key: os.environ/OPENAI_API_KEY
+  model_info:
+    mode: embedding
+- model_name: oai-text-embedding-3-small
+  litellm_params:
+    model: openrouter/openai/text-embedding-3-small
   model_info:
     mode: embedding
 - litellm_params:
