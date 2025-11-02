@@ -111,11 +111,6 @@ model_list:
     input_cost_per_token: 3.0e-06
     output_cost_per_token: 1.5e-05
   model_name: claude-sonnet-4.5
-- model_name: codestral-embed-2505
-  litellm_params:
-    model: openrouter/mistralai/codestral-embed-2505
-  model_info:
-    mode: embedding
 - litellm_params:
     model: openrouter/deepseek/deepseek-r1-0528-qwen3-8b
     input_cost_per_token: 1.3043472e-08
@@ -300,11 +295,6 @@ model_list:
   litellm_params:
     model: openai/oai-text-embedding-3-small
     api_key: os.environ/OPENAI_API_KEY
-  model_info:
-    mode: embedding
-- model_name: oai-text-embedding-3-small
-  litellm_params:
-    model: openrouter/openai/text-embedding-3-small
   model_info:
     mode: embedding
 - litellm_params:
