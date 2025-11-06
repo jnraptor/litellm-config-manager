@@ -183,6 +183,13 @@ model_list:
     output_cost_per_token: 1.0e-09
   model_info:
     mode: embedding
+- model_name: gemini-embedding-001
+  litellm_params:
+    model: openrouter/google/gemini-embedding-001
+    input_cost_per_token: 1.5e-07
+    output_cost_per_token: 1.0e-09
+  model_info:
+    mode: embedding
 - model_name: gemma-3-27b-free
   litellm_params:
     model: gemini/gemma-3-27b-it
@@ -297,6 +304,13 @@ model_list:
     api_key: os.environ/OPENAI_API_KEY
   model_info:
     mode: embedding
+- model_name: oai-text-embedding-3-small
+  litellm_params:
+    model: openrouter/openai/text-embedding-3-small
+    input_cost_per_token: 2.0e-08
+    output_cost_per_token: 1.0e-09
+  model_info:
+    mode: embedding
 - litellm_params:
     model: openrouter/deepseek/deepseek-v3.1-terminus
     input_cost_per_token: 2.7e-07
@@ -372,6 +386,13 @@ model_list:
     input_cost_per_token: 3.0e-07
     output_cost_per_token: 9.0e-07
   model_name: or-mistral-codestral-2508
+- model_name: or-mistral-codestral-embed-2505
+  litellm_params:
+    model: openrouter/mistralai/codestral-embed-2505
+    input_cost_per_token: 1.5e-07
+    output_cost_per_token: 1.0e-09
+  model_info:
+    mode: embedding
 - litellm_params:
     model: openrouter/mistralai/mistral-medium-3.1
     input_cost_per_token: 4.0e-07
@@ -438,6 +459,20 @@ model_list:
     output_cost_per_token: 2.82608664e-07
   model_name: or-qwen3-coder-30b-a3b-instruct
 - litellm_params:
+    model: openrouter/qwen/qwen3-embedding-4b
+    input_cost_per_token: 2.0e-08
+    output_cost_per_token: 1.0e-09
+  model_name: or-qwen3-embedding-4b
+  model_info:
+    mode: embedding
+- litellm_params:
+    model: openrouter/qwen/qwen3-embedding-8b
+    input_cost_per_token: 4.0e-08
+    output_cost_per_token: 1.0e-09
+  model_name: or-qwen3-embedding-8b
+  model_info:
+    mode: embedding
+- litellm_params:
     model: openrouter/qwen/qwen3-vl-235b-a22b-instruct
     input_cost_per_token: 3.0e-07
     output_cost_per_token: 1.5e-06
@@ -447,11 +482,16 @@ model_list:
     input_cost_per_token: 3.0e-07
     output_cost_per_token: 3.0e-06
   model_name: or-qwen3-vl-235b-a22b-thinking
-- litellm_params:
-    model: openrouter/qwen/qwen3-vl-32b-instruct
-    input_cost_per_token: 3.5e-07
-    output_cost_per_token: 1.1e-06
-  model_name: or-qwen3-vl-32b-instruct
+- model_name: or-qwen3-vl-30b-a3b-instruct
+  litellm_params:
+    model: openrouter/qwen/qwen3-vl-30b-a3b-instruct
+    input_cost_per_token: 1.5e-07
+    output_cost_per_token: 6.0e-07
+- model_name: or-qwen3-vl-30b-a3b-thinking
+  litellm_params:
+    model: openrouter/qwen/qwen3-vl-30b-a3b-thinking
+    input_cost_per_token: 2.0e-07
+    output_cost_per_token: 1.0e-06
 - litellm_params:
     model: openrouter/qwen/qwen3-vl-8b-instruct
     input_cost_per_token: 1.8e-07

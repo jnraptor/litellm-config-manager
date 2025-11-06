@@ -6,9 +6,13 @@ This script validates OpenRouter models in a LiteLLM config.yaml file against
 the current OpenRouter API and:
 1. Removes any invalid model entries
 2. Updates model costs (input_cost_per_token and output_cost_per_token) when they differ from API pricing
+3. Supports both regular and embedding models
 
-The script fetches current pricing from https://openrouter.ai/api/v1/models and automatically
-updates any cost differences found in the configuration file.
+The script fetches current pricing from:
+- https://openrouter.ai/api/v1/models (regular models)
+- https://openrouter.ai/api/v1/models/embeddings (embedding models)
+
+Embedding models are automatically tagged with model_info.mode: embedding when added.
 
 Usage:
     python cleanup_openrouter_models.py [--config config.yaml] [--dry-run] [--verbose]
@@ -27,6 +31,7 @@ from pathlib import Path
 
 # Constants
 OPENROUTER_API_URL = "https://openrouter.ai/api/v1/models"
+OPENROUTER_EMBEDDINGS_API_URL = "https://openrouter.ai/api/v1/models/embeddings"
 DEFAULT_CONFIG_FILE = "config.yaml"
 
 
@@ -119,6 +124,9 @@ class OpenRouterModelCleaner:
         try:
             self.logger.info("Fetching available models with pricing from OpenRouter API...")
             
+            available_models = {}
+            
+            # Fetch regular models
             response = requests.get(OPENROUTER_API_URL, timeout=30)
             response.raise_for_status()
             
@@ -128,14 +136,14 @@ class OpenRouterModelCleaner:
                 raise ValueError("Invalid API response format: missing 'data' field")
             
             # Extract model IDs and pricing from the API response
-            available_models = {}
             for model in data['data']:
                 if isinstance(model, dict) and 'id' in model:
                     model_id = model['id']
                     model_info = {
                         'id': model_id,
                         'input_cost': None,
-                        'output_cost': None
+                        'output_cost': None,
+                        'model_info': None
                     }
                     
                     # Extract pricing information
@@ -158,6 +166,52 @@ class OpenRouterModelCleaner:
                                 self.logger.debug(f"Invalid completion cost for {model_id}: {completion_cost}")
                     
                     available_models[model_id] = model_info
+            
+            # Fetch embedding models
+            try:
+                self.logger.debug("Fetching embedding models from OpenRouter API...")
+                response = requests.get(OPENROUTER_EMBEDDINGS_API_URL, timeout=30)
+                response.raise_for_status()
+                
+                data = response.json()
+                
+                if 'data' in data:
+                    for model in data['data']:
+                        if isinstance(model, dict) and 'id' in model:
+                            model_id = model['id']
+                            model_info = {
+                                'id': model_id,
+                                'input_cost': None,
+                                'output_cost': None,
+                                'model_info': {'mode': 'embedding'}
+                            }
+                            
+                            # Extract pricing information
+                            pricing = model.get('pricing', {})
+                            if isinstance(pricing, dict):
+                                # Parse input cost (prompt)
+                                prompt_cost = pricing.get('prompt')
+                                if prompt_cost is not None:
+                                    try:
+                                        model_info['input_cost'] = float(prompt_cost)
+                                    except (ValueError, TypeError):
+                                        self.logger.debug(f"Invalid prompt cost for embedding {model_id}: {prompt_cost}")
+                                
+                                # Parse output cost (completion)
+                                completion_cost = pricing.get('completion')
+                                if completion_cost is not None:
+                                    try:
+                                        model_info['output_cost'] = float(completion_cost)
+                                    except (ValueError, TypeError):
+                                        self.logger.debug(f"Invalid completion cost for embedding {model_id}: {completion_cost}")
+                            
+                            available_models[model_id] = model_info
+                    
+                    self.logger.debug(f"Fetched embedding models from OpenRouter API")
+            except requests.RequestException as e:
+                self.logger.warning(f"Could not fetch embedding models from OpenRouter API: {e}")
+            except Exception as e:
+                self.logger.warning(f"Error processing embedding models API response: {e}")
             
             self.logger.info(f"Fetched {len(available_models)} available models from OpenRouter API")
             self.logger.debug(f"Sample models: {list(available_models.keys())[:5]}")
@@ -715,6 +769,7 @@ class OpenRouterModelCleaner:
             # Create model entry
             input_cost = model_info.get('input_cost')
             output_cost = model_info.get('output_cost')
+            model_info_section = model_info.get('model_info')
             
             # Handle free models: if API returns 0.0, use 1e-09 for LiteLLM compatibility
             if input_cost is not None:
@@ -734,6 +789,10 @@ class OpenRouterModelCleaner:
                 model_entry['litellm_params']['input_cost_per_token'] = input_cost
             if output_cost is not None:
                 model_entry['litellm_params']['output_cost_per_token'] = output_cost
+            
+            # Add model_info section if present (e.g., for embedding models)
+            if model_info_section:
+                model_entry['model_info'] = model_info_section
             
             # Add to config
             config['model_list'].append(model_entry)
@@ -821,6 +880,7 @@ class OpenRouterModelCleaner:
             
             input_cost = model_info.get('input_cost')
             output_cost = model_info.get('output_cost')
+            model_info_section = model_info.get('model_info')
             
             # Handle free models
             if input_cost is not None:
@@ -834,6 +894,10 @@ class OpenRouterModelCleaner:
                 'input_cost': input_cost,
                 'output_cost': output_cost
             }
+            
+            # Add model_info if present
+            if model_info_section:
+                model_preview['model_info'] = model_info_section
             
             # Check for free version
             free_model_id = f"{model_id}:free"
@@ -865,6 +929,8 @@ class OpenRouterModelCleaner:
                 if model['output_cost'] is not None:
                     output_api_str = f" (API: {api_output_cost})" if api_output_cost is not None else ""
                     self.logger.info(f"[DRY-RUN]     Output cost: {model['output_cost']}{output_api_str}")
+                if 'model_info' in model:
+                    self.logger.info(f"[DRY-RUN]     Model info: {model['model_info']}")
                 if 'has_free_version' in model:
                     self.logger.info(f"[DRY-RUN]     Would also add free version: {model['has_free_version']}")
         else:

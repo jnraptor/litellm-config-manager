@@ -8,8 +8,13 @@ against their current APIs and:
 2. Updates model costs (input_cost_per_token and output_cost_per_token) when they differ from API pricing
 3. Sorts the model list alphabetically
 4. Adds new models when requested
+5. Supports both regular and embedding models (where applicable)
 
 Supported providers: openrouter, requesty, novita, nano_gpt, all
+
+Embedding Model Support:
+    - OpenRouter: Fetches embedding models from https://openrouter.ai/api/v1/models/embeddings
+    - Embedding models are automatically tagged with model_info.mode: embedding when added
 
 API Key Support:
     Providers that require API keys for model listing:
@@ -52,6 +57,7 @@ class ProviderConfig:
     special_models: List[str]
     api_base_config: Optional[Dict[str, str]] = None
     api_key_env: Optional[str] = None
+    embeddings_api_url: Optional[str] = None
 
 
 class ProviderStrategy(ABC):
@@ -105,7 +111,8 @@ class PrefixDetectionStrategy(ProviderStrategy):
         model_info = {
             'id': api_model['id'],
             'input_cost': None,
-            'output_cost': None
+            'output_cost': None,
+            'model_info': None
         }
 
         pricing = api_model.get('pricing', {})
@@ -136,6 +143,10 @@ class PrefixDetectionStrategy(ProviderStrategy):
             except (ValueError, TypeError):
                 pass
 
+        # Extract model_info if present (e.g., for embedding models)
+        if 'model_info' in api_model:
+            model_info['model_info'] = api_model['model_info']
+
         return model_info
 
     def generate_model_name(self, model_id: str) -> str:
@@ -157,6 +168,7 @@ class PrefixDetectionStrategy(ProviderStrategy):
         # Handle free models
         input_cost = api_model_info.get('input_cost')
         output_cost = api_model_info.get('output_cost')
+        model_info_section = api_model_info.get('model_info')
 
         if self.config.pricing.get('free_model_handling', False):
             if input_cost is not None and input_cost == 0.0:
@@ -176,6 +188,10 @@ class PrefixDetectionStrategy(ProviderStrategy):
             model_entry['litellm_params']['input_cost_per_token'] = input_cost
         if output_cost is not None:
             model_entry['litellm_params']['output_cost_per_token'] = output_cost
+
+        # Add model_info section if present (e.g., for embedding models)
+        if model_info_section:
+            model_entry['model_info'] = model_info_section
 
         return model_entry
 
@@ -205,7 +221,8 @@ class ApiBaseDetectionStrategy(ProviderStrategy):
         model_info = {
             'id': api_model['id'],
             'input_cost': None,
-            'output_cost': None
+            'output_cost': None,
+            'model_info': None
         }
 
         def get_nested_value(data: Dict[str, Any], field_path: str) -> Any:
@@ -245,6 +262,10 @@ class ApiBaseDetectionStrategy(ProviderStrategy):
             except (ValueError, TypeError):
                 pass
 
+        # Extract model_info if present (e.g., for embedding models)
+        if 'model_info' in api_model:
+            model_info['model_info'] = api_model['model_info']
+
         return model_info
 
     def generate_model_name(self, model_id: str) -> str:
@@ -271,6 +292,7 @@ class ApiBaseDetectionStrategy(ProviderStrategy):
         # Handle free models
         input_cost = api_model_info.get('input_cost')
         output_cost = api_model_info.get('output_cost')
+        model_info_section = api_model_info.get('model_info')
 
         if self.config.pricing.get('free_model_handling', False):
             if input_cost is not None and input_cost == 0.0:
@@ -300,6 +322,10 @@ class ApiBaseDetectionStrategy(ProviderStrategy):
             model_entry['litellm_params']['input_cost_per_token'] = input_cost
         if output_cost is not None:
             model_entry['litellm_params']['output_cost_per_token'] = output_cost
+
+        # Add model_info section if present (e.g., for embedding models)
+        if model_info_section:
+            model_entry['model_info'] = model_info_section
 
         return model_entry
 
@@ -473,6 +499,32 @@ class UnifiedModelCleaner:
                 if isinstance(model, dict) and 'id' in model:
                     model_info = strategy.parse_api_model(model)
                     available_models[model_info['id']] = model_info
+
+            # Fetch embedding models if embeddings_api_url is configured
+            if provider.embeddings_api_url:
+                try:
+                    self.logger.debug(f"Fetching embedding models from {provider.name} API...")
+                    response = requests.get(provider.embeddings_api_url, headers=headers, timeout=30)
+                    response.raise_for_status()
+
+                    data = response.json()
+
+                    if 'data' in data:
+                        for model in data['data']:
+                            if isinstance(model, dict) and 'id' in model:
+                                # Add model_info for embedding models
+                                model_with_info = dict(model)
+                                if 'model_info' not in model_with_info:
+                                    model_with_info['model_info'] = {'mode': 'embedding'}
+                                
+                                model_info = strategy.parse_api_model(model_with_info)
+                                available_models[model_info['id']] = model_info
+                        
+                        self.logger.debug(f"Fetched embedding models from {provider.name} API")
+                except requests.RequestException as e:
+                    self.logger.warning(f"Could not fetch embedding models from {provider.name} API: {e}")
+                except Exception as e:
+                    self.logger.warning(f"Error processing embedding models API response for {provider.name}: {e}")
 
             self.logger.info(f"Fetched {len(available_models)} available models from {provider.name} API")
             return available_models
