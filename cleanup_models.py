@@ -536,6 +536,32 @@ class UnifiedModelCleaner:
             self.logger.error(f"Error processing API response for {provider.name}: {e}")
             raise
 
+    def _costs_are_equal(self, cost1: float, cost2: float, rel_tol: float = 1e-9) -> bool:
+        """
+        Compare two cost values using relative tolerance to handle scientific notation.
+        
+        Args:
+            cost1: First cost value
+            cost2: Second cost value
+            rel_tol: Relative tolerance (default 1e-9 for very small numbers)
+            
+        Returns:
+            True if costs are equal within tolerance, False otherwise
+        """
+        # Handle exact equality first
+        if cost1 == cost2:
+            return True
+        
+        # Handle zero cases
+        if cost1 == 0.0 or cost2 == 0.0:
+            return cost1 == cost2
+        
+        # Use relative tolerance comparison for non-zero values
+        abs_diff = abs(cost1 - cost2)
+        max_abs = max(abs(cost1), abs(cost2))
+        
+        return abs_diff <= rel_tol * max_abs
+
     def validate_models(self, config_models: List[Tuple[int, str, str]],
                        api_models: Dict[str, Dict[str, Any]],
                        provider_name: str) -> List[Tuple[int, str, str]]:
@@ -628,11 +654,9 @@ class UnifiedModelCleaner:
                     # Handle free models: if API returns 0.0, use 1e-09 for LiteLLM compatibility
                     adjusted_input_cost = 1e-09 if api_input_cost == 0.0 and provider.pricing.get('free_model_handling', False) else api_input_cost
 
-                    # Compare costs with 2 decimal places precision to avoid floating-point issues
+                    # Compare costs using relative tolerance for scientific notation values
                     if current_input_cost is not None:
-                        current_rounded = round(current_input_cost, 2)
-                        adjusted_rounded = round(adjusted_input_cost, 2)
-                        if current_rounded != adjusted_rounded:
+                        if not self._costs_are_equal(current_input_cost, adjusted_input_cost):
                             input_changed = True
                             change_info['changes']['input_cost'] = {
                                 'old': current_input_cost,
@@ -655,11 +679,9 @@ class UnifiedModelCleaner:
                     # Handle free models: if API returns 0.0, use 1e-09 for LiteLLM compatibility
                     adjusted_output_cost = 1e-09 if api_output_cost == 0.0 and provider.pricing.get('free_model_handling', False) else api_output_cost
 
-                    # Compare costs with 2 decimal places precision to avoid floating-point issues
+                    # Compare costs using relative tolerance for scientific notation values
                     if current_output_cost is not None:
-                        current_rounded = round(current_output_cost, 2)
-                        adjusted_rounded = round(adjusted_output_cost, 2)
-                        if current_rounded != adjusted_rounded:
+                        if not self._costs_are_equal(current_output_cost, adjusted_output_cost):
                             output_changed = True
                             change_info['changes']['output_cost'] = {
                                 'old': current_output_cost,

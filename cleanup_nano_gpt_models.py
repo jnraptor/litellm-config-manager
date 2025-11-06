@@ -61,6 +61,35 @@ class NanoGPTModelCleaner:
 
         return logger
 
+    def _costs_are_equal(self, cost1: float, cost2: float, rel_tol: float = 1e-9) -> bool:
+        """
+        Compare two cost values using relative tolerance for scientific notation.
+        
+        This method properly handles very small cost values in scientific notation
+        (e.g., 6.0e-07 vs 4e-07) which would incorrectly round to 0.0 with the
+        previous rounding approach.
+        
+        Args:
+            cost1: First cost value
+            cost2: Second cost value
+            rel_tol: Relative tolerance (default: 1e-9)
+            
+        Returns:
+            True if costs are equal within tolerance, False otherwise
+        """
+        # Exact equality check
+        if cost1 == cost2:
+            return True
+        
+        # Handle zero cases
+        if cost1 == 0.0 or cost2 == 0.0:
+            return cost1 == cost2
+        
+        # Use relative tolerance for non-zero values
+        abs_diff = abs(cost1 - cost2)
+        max_abs = max(abs(cost1), abs(cost2))
+        return abs_diff <= rel_tol * max_abs
+
     def load_config(self) -> Dict[str, Any]:
         """Load and parse the YAML configuration file."""
         try:
@@ -222,7 +251,7 @@ class NanoGPTModelCleaner:
 
             cost_differences = []
 
-            # Compare costs with 2 decimal places precision to avoid floating-point issues
+            # Compare costs using relative tolerance for scientific notation values
             if api_input_cost is not None:
                 # Convert current cost to float if it's a string
                 if current_input_cost is not None:
@@ -234,9 +263,7 @@ class NanoGPTModelCleaner:
                     current_float = None
 
                 if current_float is not None:
-                    current_rounded = round(current_float, 2)
-                    api_rounded = round(api_input_cost, 2)
-                    if current_rounded != api_rounded:
+                    if not self._costs_are_equal(current_float, api_input_cost):
                         cost_differences.append(f"input_cost_per_token: {current_input_cost} -> {api_input_cost}")
                         if not self.dry_run:
                             litellm_params['input_cost_per_token'] = api_input_cost
@@ -257,9 +284,7 @@ class NanoGPTModelCleaner:
                     current_float = None
 
                 if current_float is not None:
-                    current_rounded = round(current_float, 2)
-                    api_rounded = round(api_output_cost, 2)
-                    if current_rounded != api_rounded:
+                    if not self._costs_are_equal(current_float, api_output_cost):
                         cost_differences.append(f"output_cost_per_token: {current_output_cost} -> {api_output_cost}")
                         if not self.dry_run:
                             litellm_params['output_cost_per_token'] = api_output_cost

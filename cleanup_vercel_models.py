@@ -61,6 +61,35 @@ class VercelModelCleaner:
             
         return logger
     
+    def _costs_are_equal(self, cost1: float, cost2: float, rel_tol: float = 1e-9) -> bool:
+        """
+        Compare two cost values using relative tolerance for scientific notation.
+        
+        This method properly handles very small cost values in scientific notation
+        (e.g., 6.0e-07 vs 4e-07) which would incorrectly round to 0.0 with the
+        previous rounding approach.
+        
+        Args:
+            cost1: First cost value
+            cost2: Second cost value
+            rel_tol: Relative tolerance (default: 1e-9)
+            
+        Returns:
+            True if costs are equal within tolerance, False otherwise
+        """
+        # Exact equality check
+        if cost1 == cost2:
+            return True
+        
+        # Handle zero cases
+        if cost1 == 0.0 or cost2 == 0.0:
+            return cost1 == cost2
+        
+        # Use relative tolerance for non-zero values
+        abs_diff = abs(cost1 - cost2)
+        max_abs = max(abs(cost1), abs(cost2))
+        return abs_diff <= rel_tol * max_abs
+    
     def load_config(self) -> Dict[str, Any]:
         """Load and parse the YAML configuration file."""
         try:
@@ -237,11 +266,9 @@ class VercelModelCleaner:
                     # Handle free models: if API returns 0.0, use 1e-09 for LiteLLM compatibility
                     adjusted_input_cost = 1e-09 if api_input_cost == 0.0 else api_input_cost
 
-                    # Compare costs with 2 decimal places precision to avoid floating-point issues
+                    # Compare costs using relative tolerance for scientific notation values
                     if current_input_cost is not None:
-                        current_rounded = round(current_input_cost, 8)
-                        adjusted_rounded = round(adjusted_input_cost, 8)
-                        if current_rounded != adjusted_rounded:
+                        if not self._costs_are_equal(current_input_cost, adjusted_input_cost):
                             input_changed = True
                             change_info['changes']['input_cost'] = {
                                 'old': current_input_cost,
@@ -264,11 +291,9 @@ class VercelModelCleaner:
                     # Handle free models: if API returns 0.0, use 1e-09 for LiteLLM compatibility
                     adjusted_output_cost = 1e-09 if api_output_cost == 0.0 else api_output_cost
 
-                    # Compare costs with 2 decimal places precision to avoid floating-point issues
+                    # Compare costs using relative tolerance for scientific notation values
                     if current_output_cost is not None:
-                        current_rounded = round(current_output_cost, 8)
-                        adjusted_rounded = round(adjusted_output_cost, 8)
-                        if current_rounded != adjusted_rounded:
+                        if not self._costs_are_equal(current_output_cost, adjusted_output_cost):
                             output_changed = True
                             change_info['changes']['output_cost'] = {
                                 'old': current_output_cost,
