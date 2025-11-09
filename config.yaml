@@ -414,10 +414,20 @@ model_list:
     output_cost_per_token: 2.5e-06
   model_name: or-moonshotai-kimi-k2-thinking
 - litellm_params:
+    model: openrouter/moonshotai/kimi-linear-48b-a3b-instruct
+    input_cost_per_token: 3.0e-07
+    output_cost_per_token: 6.0e-07
+  model_name: or-moonshotai-kimi-linear-48b-a3b-instruct
+- litellm_params:
     model: openrouter/nvidia/llama-3.3-nemotron-super-49b-v1.5
     input_cost_per_token: 1.0e-07
     output_cost_per_token: 4.0e-07
   model_name: or-nvidia-llama-3.3-nemotron-super-49b-v1.5
+- litellm_params:
+    model: openrouter/nvidia/nemotron-nano-12b-v2-vl
+    input_cost_per_token: 2.0e-07
+    output_cost_per_token: 6.0e-07
+  model_name: or-nvidia-nemotron-nano-12b-v2-vl
 - litellm_params:
     model: openrouter/nvidia/nemotron-nano-12b-v2-vl:free
     input_cost_per_token: 1.0e-09
