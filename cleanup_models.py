@@ -159,7 +159,7 @@ class PrefixDetectionStrategy(ProviderStrategy):
                 clean_id = clean_id.replace(replace_old, replace_new)
 
         # Add provider prefix
-        model_name = f"{self.config.model_name_prefix}{clean_id}".lower()
+        model_name = f"{self.config.model_name_prefix}{clean_id}"
         return model_name
 
     def create_model_entry(self, model_id: str, api_model_info: Dict[str, Any]) -> Dict[str, Any]:
@@ -279,10 +279,10 @@ class ApiBaseDetectionStrategy(ProviderStrategy):
 
         # Add provider prefix if specified
         if self.config.model_name_prefix:
-            model_name = f"{self.config.model_name_prefix}{clean_id}".lower()
+            model_name = f"{self.config.model_name_prefix}{clean_id}"
         else:
             # Use base name for load balancing compatibility
-            model_name = clean_id.split('/')[-1].lower()  # Extract base name
+            model_name = clean_id.split('/')[-1]  # Extract base name
 
         return model_name
 
