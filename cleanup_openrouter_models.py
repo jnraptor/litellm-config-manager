@@ -10,7 +10,7 @@ the current OpenRouter API and:
 
 The script fetches current pricing from:
 - https://openrouter.ai/api/v1/models (regular models)
-- https://openrouter.ai/api/v1/models/embeddings (embedding models)
+- https://openrouter.ai/api/v1/embeddings/models (embedding models)
 
 Embedding models are automatically tagged with model_info.mode: embedding when added.
 
@@ -31,7 +31,7 @@ from pathlib import Path
 
 # Constants
 OPENROUTER_API_URL = "https://openrouter.ai/api/v1/models"
-OPENROUTER_EMBEDDINGS_API_URL = "https://openrouter.ai/api/v1/models/embeddings"
+OPENROUTER_EMBEDDINGS_API_URL = "https://openrouter.ai/api/v1/embeddings/models"
 DEFAULT_CONFIG_FILE = "config.yaml"
 
 
