@@ -469,6 +469,108 @@ class PoeModelCleaner:
         self.logger.info(f"Successfully removed {removed_count} invalid model entries")
         return config
     
+    def sort_model_list(self, config: Dict[str, Any]) -> Tuple[Dict[str, Any], bool]:
+        """
+        Sort the model list by model_name alphabetically, then by model under litellm_params.
+        
+        Args:
+            config: The configuration dictionary
+            
+        Returns:
+            Tuple of (updated_config, was_sorted)
+        """
+        if 'model_list' not in config or not config['model_list']:
+            self.logger.info("No model list found or model list is empty")
+            return config, False
+        
+        model_list = config['model_list']
+        
+        # Create tuples for comparison (original order)
+        original_order = []
+        for model in model_list:
+            model_name = model.get('model_name', 'unnamed')
+            litellm_model = model.get('litellm_params', {}).get('model', '')
+            original_order.append((model_name, litellm_model))
+        
+        # Sort by model_name first, then by litellm_params.model
+        sorted_model_list = sorted(
+            model_list,
+            key=lambda x: (
+                x.get('model_name', 'unnamed').lower(),
+                x.get('litellm_params', {}).get('model', '').lower()
+            )
+        )
+        
+        # Create tuples for comparison (sorted order)
+        sorted_order = []
+        for model in sorted_model_list:
+            model_name = model.get('model_name', 'unnamed')
+            litellm_model = model.get('litellm_params', {}).get('model', '')
+            sorted_order.append((model_name, litellm_model))
+        
+        # Check if sorting actually changed the order
+        was_sorted = original_order != sorted_order
+        
+        if was_sorted:
+            config['model_list'] = sorted_model_list
+            self.logger.info(f"Sorted {len(model_list)} models by model_name, then by litellm_params.model")
+            self.logger.debug(f"Original order: {original_order[:5]}{'...' if len(original_order) > 5 else ''}")
+            self.logger.debug(f"Sorted order: {sorted_order[:5]}{'...' if len(sorted_order) > 5 else ''}")
+        else:
+            self.logger.info("Model list is already sorted by model_name and litellm_params.model")
+        
+        return config, was_sorted
+    
+    def preview_sort_changes(self, config: Dict[str, Any]) -> None:
+        """Preview what the sorting would change in dry-run mode."""
+        if 'model_list' not in config or not config['model_list']:
+            self.logger.info("[DRY-RUN] No model list found or model list is empty")
+            return
+        
+        model_list = config['model_list']
+        
+        # Create tuples for comparison (original order)
+        original_order = []
+        for model in model_list:
+            model_name = model.get('model_name', 'unnamed')
+            litellm_model = model.get('litellm_params', {}).get('model', '')
+            original_order.append((model_name, litellm_model))
+        
+        # Sort by model_name first, then by litellm_params.model
+        sorted_model_list = sorted(
+            model_list,
+            key=lambda x: (
+                x.get('model_name', 'unnamed').lower(),
+                x.get('litellm_params', {}).get('model', '').lower()
+            )
+        )
+        
+        # Create tuples for comparison (sorted order)
+        sorted_order = []
+        for model in sorted_model_list:
+            model_name = model.get('model_name', 'unnamed')
+            litellm_model = model.get('litellm_params', {}).get('model', '')
+            sorted_order.append((model_name, litellm_model))
+        
+        # Check if sorting would change the order
+        would_sort = original_order != sorted_order
+        
+        if would_sort:
+            self.logger.info(f"[DRY-RUN] Would sort {len(model_list)} models by model_name, then by litellm_params.model")
+            self.logger.info("[DRY-RUN] Current order (first 10):")
+            for i, (name, model) in enumerate(original_order[:10]):
+                self.logger.info(f"[DRY-RUN]   {i+1:2d}. {name} ({model})")
+            if len(original_order) > 10:
+                self.logger.info(f"[DRY-RUN]   ... and {len(original_order) - 10} more")
+            
+            self.logger.info("[DRY-RUN] Would become (first 10):")
+            for i, (name, model) in enumerate(sorted_order[:10]):
+                self.logger.info(f"[DRY-RUN]   {i+1:2d}. {name} ({model})")
+            if len(sorted_order) > 10:
+                self.logger.info(f"[DRY-RUN]   ... and {len(sorted_order) - 10} more")
+        else:
+            self.logger.info("[DRY-RUN] Model list is already sorted by model_name and litellm_params.model - no changes needed")
+
     def save_config(self, config: Dict[str, Any]) -> None:
         """Save the updated configuration back to the file."""
         try:
@@ -519,10 +621,10 @@ class PoeModelCleaner:
                 continue
             
             # Generate model name
-            model_name = model_id.replace('/', '-').replace(':', '-')
+            model_name = model_id.replace('/', '-').replace(':', '-').lower()
             counter = 1
             while model_name in existing_names and counter < 10:
-                model_name = f"{model_id.replace('/', '-').replace(':', '-')}-{counter}"
+                model_name = f"{model_id.replace('/', '-').replace(':', '-').lower()}-{counter}"
                 counter += 1
             
             # Create model entry
@@ -594,10 +696,10 @@ class PoeModelCleaner:
                 continue
             
             # Determine model name
-            model_name = model_id.replace('/', '-').replace(':', '-')
+            model_name = model_id.replace('/', '-').replace(':', '-').lower()
             counter = 1
             while model_name in existing_names and counter < 10:
-                model_name = f"{model_id.replace('/', '-').replace(':', '-')}-{counter}"
+                model_name = f"{model_id.replace('/', '-').replace(':', '-').lower()}-{counter}"
                 counter += 1
             
             input_cost = model_info.get('input_cost')
@@ -632,11 +734,15 @@ class PoeModelCleaner:
                     self.logger.info(f"[DRY-RUN]     Input cost: {model['input_cost']}")
                 if model['output_cost'] is not None:
                     self.logger.info(f"[DRY-RUN]     Output cost: {model['output_cost']}")
+            
+            # Show sorting information
+            self.logger.info("[DRY-RUN] Model list would be sorted by model_name after adding new models")
         else:
             self.logger.info("[DRY-RUN] No valid models to add.")
     
     def generate_report(self, invalid_models: List[Tuple[int, str, str]],
-                       cost_changes: Optional[List[Dict[str, Any]]] = None) -> None:
+                       cost_changes: Optional[List[Dict[str, Any]]] = None,
+                       was_sorted: bool = False) -> None:
         """Generate a summary report of the cleanup operation."""
         if cost_changes is None:
             cost_changes = []
@@ -660,15 +766,22 @@ class PoeModelCleaner:
             else:
                 self.logger.info(f"✅ Cost updates: {len(cost_changes)} models had cost changes applied")
         
+        # Report on sorting
+        if was_sorted:
+            if self.dry_run:
+                self.logger.info("📝 [DRY-RUN] Model list would be sorted by model_name")
+            else:
+                self.logger.info("✅ Model list sorted by model_name")
+        
         # Overall summary
-        if not invalid_models and not cost_changes:
-            self.logger.info("✅ All Poe models are valid with current costs")
+        if not invalid_models and not cost_changes and not was_sorted:
+            self.logger.info("✅ All Poe models are valid with current costs and list is already sorted")
         elif self.dry_run:
-            total_changes = len(invalid_models) + len(cost_changes)
+            total_changes = len(invalid_models) + len(cost_changes) + (1 if was_sorted else 0)
             self.logger.info(f"📋 [DRY-RUN] Total changes identified: {total_changes}")
             self.logger.info("[DRY-RUN] No changes made to file. Use without --dry-run to apply changes.")
         else:
-            total_changes = len(invalid_models) + len(cost_changes)
+            total_changes = len(invalid_models) + len(cost_changes) + (1 if was_sorted else 0)
             self.logger.info(f"✅ Cleanup completed: {total_changes} total changes applied")
     
     def run(self, add_models: Optional[List[str]] = None) -> int:
@@ -677,54 +790,76 @@ class PoeModelCleaner:
             # Load configuration
             config = self.load_config()
             
-            # Fetch available models with pricing from API
-            available_models = self.fetch_available_models()
-            
             # Handle add-models functionality
             if add_models:
+                # Fetch available models with pricing from API
+                available_models = self.fetch_available_models()
+                
                 if self.dry_run:
                     self.preview_add_model(add_models, available_models)
                     return 0
                 else:
                     updated_config, added_models = self.add_model_to_config(config, add_models, available_models)
                     if added_models:
+                        # Sort the model list after adding new models
+                        updated_config, was_sorted = self.sort_model_list(updated_config)
                         self.save_config(updated_config)
                         self.logger.info(f"✅ Successfully added {len(added_models)} model(s): {', '.join(added_models)}")
+                        if was_sorted:
+                            self.logger.info("✅ Model list sorted by model_name")
                     else:
                         self.logger.warning("⚠️ No models were added - all models either already exist or were not found in API")
                     return 0
             
+            # Sort the model list first
+            updated_config, was_sorted = self.sort_model_list(config)
+            
+            # Fetch available models with pricing from API
+            available_models = self.fetch_available_models()
+            
             # Extract Poe models for cleanup/validation
-            poe_models = self.extract_poe_models(config)
+            poe_models = self.extract_poe_models(updated_config)
             
             if not poe_models:
-                self.logger.info("No Poe models found in configuration")
+                if self.dry_run:
+                    self.preview_sort_changes(config)
+                    self.generate_report([], [], was_sorted)
+                else:
+                    if was_sorted:
+                        self.save_config(updated_config)
+                    self.generate_report([], [], was_sorted)
                 return 0
             
             # Validate models
             invalid_models = self.validate_models(poe_models, available_models)
             
             # Validate and update costs
-            updated_config, cost_changes = self.validate_and_update_costs(config, poe_models, available_models)
+            updated_config, cost_changes = self.validate_and_update_costs(updated_config, poe_models, available_models)
             
             if self.dry_run:
                 # Preview mode - show what would be changed
+                self.preview_sort_changes(config)
                 self.preview_changes(invalid_models)
                 self.preview_cost_changes(cost_changes)
             else:
                 # Actually apply changes
+                changes_made = was_sorted
+                
                 # Remove invalid entries
                 if invalid_models:
                     updated_config = self.remove_invalid_entries(updated_config, invalid_models)
+                    changes_made = True
                 
-                # Save config if any changes were made
-                if invalid_models or cost_changes:
+                # Save config if any changes were made (sorting, invalid models, or cost updates)
+                if was_sorted or invalid_models or cost_changes:
                     self.save_config(updated_config)
-                else:
-                    self.logger.info("No changes needed - all models are valid with current costs")
+                    changes_made = True
+                
+                if not changes_made:
+                    self.logger.info("No changes needed - all models are valid with current costs and list is already sorted")
             
             # Generate final report
-            self.generate_report(invalid_models, cost_changes)
+            self.generate_report(invalid_models, cost_changes, was_sorted)
             
             return 0
             
@@ -736,19 +871,20 @@ class PoeModelCleaner:
 def main():
     """Main entry point for the script."""
     parser = argparse.ArgumentParser(
-        description="Clean up invalid Poe models and update costs in LiteLLM configuration",
+        description="Clean up invalid Poe models, update costs, sort model list, and add new models in LiteLLM configuration",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
-This script performs three main functions:
-1. Validates Poe models against the current API and removes invalid entries
-2. Updates model costs (input_cost_per_token/output_cost_per_token) when they differ from API pricing
-3. Adds one or more Poe models to the configuration with automatic cost detection
+This script performs four main functions:
+1. Sorts the model list alphabetically by model_name, then by litellm_params.model
+2. Validates Poe models against the current API and removes invalid entries
+3. Updates model costs (input_cost_per_token/output_cost_per_token) when they differ from API pricing
+4. Adds one or more Poe models to the configuration with automatic cost detection
 
 Examples:
-  %(prog)s                                    # Process config.yaml (validate models + update costs)
-  %(prog)s --config my-config.yaml           # Process custom config file
-  %(prog)s --dry-run                         # Preview all changes without modifying file
-  %(prog)s --verbose --dry-run               # Detailed preview mode with debug information
+  %(prog)s                           # Process config.yaml (sort + validate models + update costs)
+  %(prog)s --config my-config.yaml   # Process custom config file
+  %(prog)s --dry-run                 # Preview all changes without modifying file
+  %(prog)s --verbose --dry-run       # Detailed preview mode with debug information
   %(prog)s --add-model "Claude-Sonnet-4.5"  # Add a single model
   %(prog)s --add-model "Claude-Sonnet-4.5" "GPT-4-Turbo"  # Add multiple models
   %(prog)s --add-model "Claude-Sonnet-4.5" --dry-run  # Preview adding a model
@@ -764,7 +900,7 @@ Examples:
     parser.add_argument(
         '--dry-run',
         action='store_true',
-        help='Preview all changes (model removals and cost updates) without modifying the configuration file'
+        help='Preview all changes (sorting, model removals, and cost updates) without modifying the configuration file'
     )
     
     parser.add_argument(
