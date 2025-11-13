@@ -405,8 +405,8 @@ model_list:
   model_name: or-moonshotai-kimi-k2-0905
 - litellm_params:
     model: openrouter/moonshotai/kimi-k2-thinking
-    input_cost_per_token: 6.0e-07
-    output_cost_per_token: 2.5e-06
+    input_cost_per_token: 5.5e-07
+    output_cost_per_token: 2.25e-06
   model_name: or-moonshotai-kimi-k2-thinking
 - litellm_params:
     model: openrouter/moonshotai/kimi-linear-48b-a3b-instruct
@@ -449,7 +449,7 @@ model_list:
     input_cost_per_token: 4.0e-07
     output_cost_per_token: 4.0e-06
 - litellm_params:
-    model: openrouter/qwen/qwen3-25b-a22b-2507
+    model: openrouter/qwen/qwen3-235b-a22b-2507
     input_cost_per_token: 8.0e-08
     output_cost_per_token: 5.5e-07
   model_name: or-qwen3-235b-a22b-2507
@@ -461,7 +461,7 @@ model_list:
 - litellm_params:
     model: openrouter/qwen/qwen3-30b-a3b-thinking-2507
     input_cost_per_token: 9.0e-08
-    output_cost_per_token: 3.0e-0
+    output_cost_per_token: 3.0e-07
   model_name: or-qwen3-30b-a3b-thinking-2507
 - litellm_params:
     model: openrouter/qwen/qwen3-coder:exacto
@@ -649,8 +649,8 @@ model_list:
   model_name: zai-glm-4.6
 - litellm_params:
     model: openrouter/z-ai/glm-4.6:exacto
-    input_cost_per_token: 4.5e-07
-    output_cost_per_token: 1.9e-06
+    input_cost_per_token: 6.0e-07
+    output_cost_per_token: 2.2e-06
   model_name: zai-glm-4.6
 - model_name: zai-glm-4.6
   litellm_params:
