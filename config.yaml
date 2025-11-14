@@ -221,14 +221,6 @@ model_list:
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
   model_name: gemma-3-27b-free
-- model_name: gpt-4.1
-  litellm_params:
-    model: openai/gpt-4.1
-    api_key: os.environ/OPENAI_API_KEY
-- model_name: gpt-4.1-mini
-  litellm_params:
-    model: openai/gpt-4.1-mini
-    api_key: os.environ/OPENAI_API_KEY
 - litellm_params:
     api_base: os.environ/AZURE_API_BASE_EastUS2
     api_key: os.environ/AZURE_API_KEY_EastUS2
@@ -239,14 +231,6 @@ model_list:
 - model_name: gpt-4.1-nano
   litellm_params:
     model: openai/gpt-4.1-nano
-    api_key: os.environ/OPENAI_API_KEY
-- model_name: gpt-5
-  litellm_params:
-    model: openai/gpt-5
-    api_key: os.environ/OPENAI_API_KEY
-- model_name: gpt-5-codex
-  litellm_params:
-    model: openai/gpt-5-codex
     api_key: os.environ/OPENAI_API_KEY
 - litellm_params:
     api_base: os.environ/AZURE_API_BASE_EastUS2
@@ -271,6 +255,74 @@ model_list:
     model: openai/gpt-5-nano
     api_key: os.environ/OPENAI_API_KEY
 - litellm_params:
+    model: openai/GPT-5.1
+    api_base: https://api.poe.com/v1
+    api_key: os.environ/POE_API_KEY
+    input_cost_per_token: 1.1e-06
+    output_cost_per_token: 9.0e-06
+  model_name: gpt-5.1
+- model_name: gpt-5.1
+  litellm_params:
+    model: openai/gpt-5.1-2025-11-13
+    api_key: os.environ/OPENAI_API_KEY
+- litellm_params:
+    model: openrouter/openai/gpt-5.1
+    input_cost_per_token: 1.25e-06
+    output_cost_per_token: 1.0e-05
+  model_name: gpt-5.1
+- model_name: gpt-5.1-chat
+  litellm_params:
+    model: openai/gpt-5.1-chat-latest
+    api_key: os.environ/OPENAI_API_KEY
+- litellm_params:
+    model: openai/GPT-5.1-Instant
+    api_base: https://api.poe.com/v1
+    api_key: os.environ/POE_API_KEY
+    input_cost_per_token: 1.1e-06
+    output_cost_per_token: 9.0e-06
+  model_name: gpt-5.1-chat
+- litellm_params:
+    model: openrouter/openai/gpt-5.1-chat
+    input_cost_per_token: 1.25e-06
+    output_cost_per_token: 1.0e-05
+  model_name: gpt-5.1-chat
+- model_name: gpt-5.1-codex
+  litellm_params:
+    model: openai/gpt-5.1-codex
+    api_key: os.environ/OPENAI_API_KEY
+- litellm_params:
+    model: openai/GPT-5.1-Codex
+    api_base: https://api.poe.com/v1
+    api_key: os.environ/POE_API_KEY
+    input_cost_per_token: 1.1e-06
+    output_cost_per_token: 9.0e-06
+  model_name: gpt-5.1-codex
+- litellm_params:
+    model: openrouter/openai/gpt-5.1-codex
+    input_cost_per_token: 1.25e-06
+    output_cost_per_token: 1.0e-05
+  model_name: gpt-5.1-codex
+- model_name: gpt-5.1-codex-mini
+  litellm_params:
+    model: openai/gpt-5.1-codex-mini
+    api_key: os.environ/OPENAI_API_KEY
+- litellm_params:
+    model: openai/GPT-5.1-Codex-Mini
+    api_base: https://api.poe.com/v1
+    api_key: os.environ/POE_API_KEY
+    input_cost_per_token: 2.2e-07
+    output_cost_per_token: 1.8e-06
+  model_name: gpt-5.1-codex-mini
+- litellm_params:
+    model: openrouter/openai/gpt-5.1-codex-mini
+    input_cost_per_token: 1.5e-06
+    output_cost_per_token: 6.0e-06
+  model_name: gpt-5.1-codex-mini
+- model_name: gpt-oss-120b
+  litellm_params:
+    model: openai/gpt-oss-120b
+    api_key: os.environ/OPENAI_API_KEY
+- litellm_params:
     model: openrouter/openai/gpt-oss-120b:exacto
     input_cost_per_token: 5.0e-08
     output_cost_per_token: 2.4e-07
@@ -280,6 +332,10 @@ model_list:
     model: vercel_ai_gateway/openai/gpt-oss-120b
     input_cost_per_token: 1.0e-07
     output_cost_per_token: 5.0e-07
+- model_name: gpt-oss-20b
+  litellm_params:
+    model: openai/gpt-oss-20b
+    api_key: os.environ/OPENAI_API_KEY
 - litellm_params:
     model: openrouter/openai/gpt-oss-20b
     input_cost_per_token: 3.0e-08
@@ -357,11 +413,6 @@ model_list:
     output_cost_per_token: 2.5e-06
   model_name: or-gemini-2.5-flash-image-preview
 - litellm_params:
-    model: openrouter/openai/gpt-5-chat
-    input_cost_per_token: 1.25e-06
-    output_cost_per_token: 1.0e-05
-  model_name: or-gpt-5-chat
-- litellm_params:
     model: openrouter/openai/gpt-5-image
     input_cost_per_token: 1.0e-05
     output_cost_per_token: 1.0e-05
@@ -371,6 +422,11 @@ model_list:
     input_cost_per_token: 2.5e-06
     output_cost_per_token: 2.0e-06
   model_name: or-gpt-5-image-mini
+- litellm_params:
+    model: openrouter/kwaipilot/kat-coder-pro:free
+    input_cost_per_token: 1.0e-09
+    output_cost_per_token: 1.0e-09
+  model_name: or-kwaipilot-kat-coder-pro-free
 - litellm_params:
     model: openrouter/meta-llama/llama-3.2-3b-instruct
     input_cost_per_token: 2.0e-08
@@ -453,11 +509,6 @@ model_list:
     input_cost_per_token: 7.0e-08
     output_cost_per_token: 2.6e-07
   model_name: or-opengvlab-internvl3-78b
-- litellm_params:
-    model: openrouter/openrouter/polaris-alpha
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
-  model_name: or-openrouter-polaris-alpha
 - model_name: or-qwen-plus-2025-07-28
   litellm_params:
     model: openrouter/qwen/qwen-plus-2025-07-28
