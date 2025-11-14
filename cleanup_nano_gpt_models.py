@@ -6,12 +6,15 @@ This script validates Nano-GPT models in a LiteLLM config.yaml file against
 the current Nano-GPT API and:
 1. Removes any invalid model entries
 2. Updates model costs (input_cost_per_token and output_cost_per_token) when they differ from API pricing
+3. Sorts the model list alphabetically by model_name, then by litellm_params.model
+4. Adds new Nano-GPT models to the configuration with automatic cost detection
 
 The script fetches current pricing from https://nano-gpt.com/api/v1/models?detailed=true and automatically
 updates any cost differences found in the configuration file.
 
 Usage:
     python cleanup_nano_gpt_models.py [--config config.yaml] [--dry-run] [--verbose]
+    python cleanup_nano_gpt_models.py --add-model "model-id" [--dry-run]
 
 Author: Generated for LiteLLM Config Management
 """
@@ -309,10 +312,10 @@ class NanoGPTModelCleaner:
             self.logger.error(f"Model {model_id} not found in available models")
             return False
 
-        # Check if model already exists
-        for model_entry in config['model_list']:
-            if (isinstance(model_entry, dict) and
-                model_entry.get('litellm_params', {}).get('model') == f"openai/{model_id}"):
+        # Check if model already exists in Nano-GPT models
+        nano_gpt_models = self.extract_nano_gpt_models(config)
+        for _, existing_model_id, _ in nano_gpt_models:
+            if existing_model_id == f"openai/{model_id}":
                 self.logger.warning(f"Model {model_id} already exists in configuration")
                 return False
 
@@ -344,6 +347,58 @@ class NanoGPTModelCleaner:
 
         self.logger.info(f"Added new model: {model_id}")
         return True
+
+    def sort_model_list(self, config: Dict[str, Any]) -> Tuple[Dict[str, Any], bool]:
+        """
+        Sort the model list by model_name alphabetically, then by model under litellm_params.
+        
+        Args:
+            config: The configuration dictionary
+            
+        Returns:
+            Tuple of (updated_config, was_sorted)
+        """
+        if 'model_list' not in config or not config['model_list']:
+            self.logger.info("No model list found or model list is empty")
+            return config, False
+        
+        model_list = config['model_list']
+        
+        # Create tuples for comparison (original order)
+        original_order = []
+        for model in model_list:
+            model_name = model.get('model_name', 'unnamed')
+            litellm_model = model.get('litellm_params', {}).get('model', '')
+            original_order.append((model_name, litellm_model))
+        
+        # Sort by model_name first, then by litellm_params.model
+        sorted_model_list = sorted(
+            model_list,
+            key=lambda x: (
+                x.get('model_name', 'unnamed').lower(),
+                x.get('litellm_params', {}).get('model', '').lower()
+            )
+        )
+        
+        # Create tuples for comparison (sorted order)
+        sorted_order = []
+        for model in sorted_model_list:
+            model_name = model.get('model_name', 'unnamed')
+            litellm_model = model.get('litellm_params', {}).get('model', '')
+            sorted_order.append((model_name, litellm_model))
+        
+        # Check if sorting actually changed the order
+        was_sorted = original_order != sorted_order
+        
+        if was_sorted:
+            config['model_list'] = sorted_model_list
+            self.logger.info(f"Sorted {len(model_list)} models by model_name, then by litellm_params.model")
+            self.logger.debug(f"Original order: {original_order[:5]}{'...' if len(original_order) > 5 else ''}")
+            self.logger.debug(f"Sorted order: {sorted_order[:5]}{'...' if len(sorted_order) > 5 else ''}")
+        else:
+            self.logger.info("Model list is already sorted by model_name and litellm_params.model")
+        
+        return config, was_sorted
 
     def save_config(self, config: Dict[str, Any]) -> None:
         """Save the configuration back to the YAML file."""
@@ -397,6 +452,11 @@ class NanoGPTModelCleaner:
                     if self.add_model_to_config(config, model_id, available_models):
                         changes_made.append(f"Added new model: {model_id}")
 
+            # Sort the model list
+            config, was_sorted = self.sort_model_list(config)
+            if was_sorted:
+                changes_made.append("Sorted model list by model_name and litellm_params.model")
+
             # Save configuration
             if changes_made and not self.dry_run:
                 self.save_config(config)
@@ -411,15 +471,22 @@ class NanoGPTModelCleaner:
 def main():
     """Main entry point."""
     parser = argparse.ArgumentParser(
-        description="Clean up and update Nano-GPT models in LiteLLM configuration",
+        description="Clean up, update costs, sort, and add Nano-GPT models in LiteLLM configuration",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
+This script performs four main functions:
+1. Validates Nano-GPT models against the current API and removes invalid entries
+2. Updates model costs (input_cost_per_token/output_cost_per_token) when they differ from API pricing
+3. Sorts the model list alphabetically by model_name, then by litellm_params.model
+4. Adds one or more Nano-GPT models to the configuration with automatic cost detection
+
 Examples:
-    python cleanup_nano_gpt_models.py
-    python cleanup_nano_gpt_models.py --config my-config.yaml
-    python cleanup_nano_gpt_models.py --dry-run --verbose
-    python cleanup_nano_gpt_models.py --add-model "nvidia/nvidia-nemotron-nano-9b-v2"
-    python cleanup_nano_gpt_models.py --add-model model1 model2 model3
+    python cleanup_nano_gpt_models.py                           # Process config.yaml (validate + update costs + sort)
+    python cleanup_nano_gpt_models.py --config my-config.yaml   # Process custom config file
+    python cleanup_nano_gpt_models.py --dry-run --verbose       # Preview all changes without modifying file
+    python cleanup_nano_gpt_models.py --add-model "model-id"    # Add a single model
+    python cleanup_nano_gpt_models.py --add-model model1 model2 model3  # Add multiple models
+    python cleanup_nano_gpt_models.py --add-model "model-id" --dry-run  # Preview adding a model
         """
     )
 
