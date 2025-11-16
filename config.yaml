@@ -343,8 +343,8 @@ model_list:
     output_cost_per_token: 2.0e-06
 - litellm_params:
     model: openrouter/openai/gpt-5.1-codex-mini
-    input_cost_per_token: 1.5e-06
-    output_cost_per_token: 6.0e-06
+    input_cost_per_token: 2.5e-07
+    output_cost_per_token: 2.0e-06
   model_name: gpt-5.1-codex-mini
 - model_name: gpt-oss-120b
   litellm_params:
@@ -470,11 +470,6 @@ model_list:
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
   model_name: or-llama-3.3-70b-instruct-free
-- litellm_params:
-    model: openrouter/meta-llama/llama-3.3-8b-instruct:free
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
-  model_name: or-llama-3.3-8b-instruct-free
 - litellm_params:
     model: openrouter/minimax/minimax-m2
     input_cost_per_token: 2.55e-07
@@ -748,8 +743,8 @@ model_list:
   model_name: zai-glm-4.6
 - litellm_params:
     model: openrouter/z-ai/glm-4.6:exacto
-    input_cost_per_token: 6.0e-07
-    output_cost_per_token: 2.2e-06
+    input_cost_per_token: 4.5e-07
+    output_cost_per_token: 1.9e-06
   model_name: zai-glm-4.6
 - model_name: zai-glm-4.6
   litellm_params:
