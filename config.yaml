@@ -416,6 +416,13 @@ model_list:
   model_info:
     mode: embedding
 - litellm_params:
+    model: openrouter/baai/bge-m3
+    input_cost_per_token: 1.0e-08
+    output_cost_per_token: 1.0e-09
+  model_name: or-baai-bge-m3
+  model_info:
+    mode: embedding
+- litellm_params:
     model: openrouter/deepseek/deepseek-v3.1-terminus:exacto
     input_cost_per_token: 2.7e-07
     output_cost_per_token: 1.0e-06
@@ -504,12 +511,12 @@ model_list:
   model_name: or-moonshotai-kimi-k2-0905
 - litellm_params:
     model: openrouter/moonshotai/kimi-k2-thinking
-    input_cost_per_token: 5.5e-07
-    output_cost_per_token: 2.25e-06
+    input_cost_per_token: 5.0e-07
+    output_cost_per_token: 2.5e-06
   model_name: or-moonshotai-kimi-k2-thinking
 - litellm_params:
     model: openrouter/moonshotai/kimi-linear-48b-a3b-instruct
-    input_cost_per_token: 3.0e-07
+    input_cost_per_token: 5.0e-07
     output_cost_per_token: 6.0e-07
   model_name: or-moonshotai-kimi-linear-48b-a3b-instruct
 - litellm_params:
@@ -583,8 +590,8 @@ model_list:
     mode: embedding
 - litellm_params:
     model: openrouter/qwen/qwen3-vl-235b-a22b-instruct
-    input_cost_per_token: 2.2e-07
-    output_cost_per_token: 8.8e-07
+    input_cost_per_token: 2.1e-07
+    output_cost_per_token: 1.9e-06
   model_name: or-qwen3-vl-235b-a22b-instruct
 - litellm_params:
     model: openrouter/qwen/qwen3-vl-235b-a22b-thinking
@@ -611,6 +618,20 @@ model_list:
     input_cost_per_token: 1.8e-07
     output_cost_per_token: 2.1e-06
   model_name: or-qwen3-vl-8b-thinking
+- litellm_params:
+    model: openrouter/thenlper/gte-base
+    input_cost_per_token: 5.0e-09
+    output_cost_per_token: 1.0e-09
+  model_name: or-thenlper-gte-base
+  model_info:
+    mode: embedding
+- litellm_params:
+    model: openrouter/thenlper/gte-large
+    input_cost_per_token: 1.0e-08
+    output_cost_per_token: 1.0e-09
+  model_name: or-thenlper-gte-large
+  model_info:
+    mode: embedding
 - litellm_params:
     model: perplexity/sonar
     input_cost_per_token: 1.0e-06
