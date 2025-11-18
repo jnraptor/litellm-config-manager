@@ -195,6 +195,13 @@ model_list:
     input_cost_per_token: 1.25e-06
     output_cost_per_token: 1.0e-05
   model_name: gemini-2.5-pro
+- model_name: gemini-3-pro-preview
+  litellm_params:
+    model: openai/gemini-3-pro-preview
+    api_base: os.environ/NANOGPT_API_BASE
+    api_key: os.environ/NANOGPT_API_KEY
+    input_cost_per_token: 2.0e-06
+    output_cost_per_token: 1.2e-05
 - model_name: gemini-embedding-001
   litellm_params:
     model: gemini/gemini-embedding-001
