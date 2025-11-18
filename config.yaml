@@ -202,6 +202,13 @@ model_list:
     api_key: os.environ/NANOGPT_API_KEY
     input_cost_per_token: 2.0e-06
     output_cost_per_token: 1.2e-05
+- litellm_params:
+    model: openai/Gemini-3.0-Pro
+    api_base: https://api.poe.com/v1
+    api_key: os.environ/POE_API_KEY
+    input_cost_per_token: 1.6e-06
+    output_cost_per_token: 9.6e-06
+  model_name: gemini-3.0-pro
 - model_name: gemini-embedding-001
   litellm_params:
     model: gemini/gemini-embedding-001
