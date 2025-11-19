@@ -530,8 +530,8 @@ model_list:
   model_name: or-moonshotai-kimi-k2-0905
 - litellm_params:
     model: openrouter/moonshotai/kimi-k2-thinking
-    input_cost_per_token: 5.0e-07
-    output_cost_per_token: 2.5e-06
+    input_cost_per_token: 4.5e-07
+    output_cost_per_token: 2.35e-06
   model_name: or-moonshotai-kimi-k2-thinking
 - litellm_params:
     model: openrouter/moonshotai/kimi-linear-48b-a3b-instruct
