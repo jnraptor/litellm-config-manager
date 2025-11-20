@@ -644,7 +644,7 @@ model_list:
   model_name: or-thenlper-gte-large
   model_info:
     mode: embedding
-- model_name: poe-grok-4.1-fast-reasoning
+- model_name: x-ai-grok-4.1-fast
   litellm_params:
     model: openai/Grok-4.1-Fast-Reasoning
     api_base: https://api.poe.com/v1
