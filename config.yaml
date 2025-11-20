@@ -213,7 +213,7 @@ model_list:
     api_key: os.environ/REQUESTY_API_KEY
     input_cost_per_token: 2.0e-06
     output_cost_per_token: 1.2e-05
-  model_name: gemini-3-pro-preview
+  model_name: gemini-3-pro
 - model_name: gemini-embedding-001
   litellm_params:
     model: gemini/gemini-embedding-001
