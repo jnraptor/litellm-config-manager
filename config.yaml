@@ -195,6 +195,13 @@ model_list:
     input_cost_per_token: 1.25e-06
     output_cost_per_token: 1.0e-05
   model_name: gemini-2.5-pro
+- litellm_params:
+    model: openai/Gemini-3-Pro
+    api_base: https://api.poe.com/v1
+    api_key: os.environ/POE_API_KEY
+    input_cost_per_token: 1.6e-06
+    output_cost_per_token: 9.6e-06
+  model_name: gemini-3-pro
 - model_name: gemini-3-pro
   litellm_params:
     model: openai/gemini-3-pro-preview
