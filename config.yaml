@@ -79,7 +79,7 @@ model_list:
     api_base: https://api.poe.com/v1
     api_key: os.environ/POE_API_KEY
     input_cost_per_token: 8.5e-07
-    output_cost_per_token: 4.2e-06
+    output_cost_per_token: 4.3e-06
 - litellm_params:
     model: openrouter/anthropic/claude-haiku-4.5
     input_cost_per_token: 1.0e-06
@@ -202,13 +202,6 @@ model_list:
     api_key: os.environ/NANOGPT_API_KEY
     input_cost_per_token: 2.0e-06
     output_cost_per_token: 1.2e-05
-- litellm_params:
-    model: openai/Gemini-3.0-Pro
-    api_base: https://api.poe.com/v1
-    api_key: os.environ/POE_API_KEY
-    input_cost_per_token: 1.6e-06
-    output_cost_per_token: 9.6e-06
-  model_name: gemini-3-pro
 - litellm_params:
     model: openrouter/google/gemini-3-pro-preview
     input_cost_per_token: 2.0e-06
@@ -651,11 +644,11 @@ model_list:
   model_name: or-thenlper-gte-large
   model_info:
     mode: embedding
-- litellm_params:
-    model: openrouter/x-ai/grok-4.1-fast
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
-  model_name: x-ai-grok-4.1-fast
+- model_name: poe-grok-4.1-fast-reasoning
+  litellm_params:
+    model: openai/Grok-4.1-Fast-Reasoning
+    api_base: https://api.poe.com/v1
+    api_key: os.environ/POE_API_KEY
 - litellm_params:
     model: perplexity/sonar
     input_cost_per_token: 1.0e-06
@@ -749,6 +742,18 @@ model_list:
     model: vercel_ai_gateway/meituan/longcat-flash-chat
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
+- model_name: x-ai-grok-4.1-fast
+  litellm_params:
+    model: openai/x-ai/grok-4.1-fast
+    api_base: os.environ/NANOGPT_API_BASE
+    api_key: os.environ/NANOGPT_API_KEY
+    input_cost_per_token: 2.0000000000000002e-07
+    output_cost_per_token: 5.0e-07
+- litellm_params:
+    model: openrouter/x-ai/grok-4.1-fast
+    input_cost_per_token: 1.0e-09
+    output_cost_per_token: 1.0e-09
+  model_name: x-ai-grok-4.1-fast
 - model_name: x-ai-grok-code-fast-1
   litellm_params:
     model: openai/x-ai/grok-code-fast-1
