@@ -662,7 +662,7 @@ model_list:
     model: openrouter/x-ai/grok-4.1-fast:free
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
-  model_name: or-x-ai-grok-4.1-fast-free
+  model_name: x-ai-grok-4.1-fast
 - litellm_params:
     model: perplexity/sonar
     input_cost_per_token: 1.0e-06
