@@ -562,6 +562,70 @@ class UnifiedModelCleaner:
         
         return abs_diff <= rel_tol * max_abs
 
+    def preview_add_model(self, model_ids: List[str], provider_name: str, 
+                         available_models: Dict[str, Dict[str, Any]], custom_model_name: Optional[str] = None) -> None:
+        """Preview what models would be added in dry-run mode."""
+        strategy = self.provider_manager.get_strategy(provider_name)
+        existing_models = self.extract_provider_models(self.load_config(), provider_name) # Load config again for dry-run preview
+        
+        existing_model_ids = []
+        for _, full_model_id, _ in existing_models:
+            model_entry = {'litellm_params': {'model': full_model_id}}
+            model_id = strategy.extract_model_id(model_entry)
+            if model_id:
+                existing_model_ids.append(model_id)
+
+        existing_names = [name for _, _, name in existing_models]
+        
+        previewed_additions = []
+
+        for model_id in model_ids:
+            if model_id not in available_models:
+                self.logger.error(f"[DRY-RUN] Model '{model_id}' not found in {provider_name} API")
+                continue
+
+            if model_id in existing_model_ids:
+                self.logger.warning(f"[DRY-RUN] Model '{model_id}' already exists in configuration")
+                continue
+
+            api_model_info = available_models[model_id]
+            model_entry = strategy.create_model_entry(model_id, api_model_info)
+
+            # Apply custom model name if applicable
+            if custom_model_name and len(model_ids) == 1:
+                model_entry['model_name'] = custom_model_name
+
+            # Check for name conflicts and make unique if needed for preview logging
+            model_name = model_entry['model_name']
+            original_name = model_name
+            counter = 1
+            while model_name in existing_names:
+                model_name = f"{original_name}-{counter}"
+                counter += 1
+            
+            model_entry['model_name'] = model_name # Update for logging
+
+            self.logger.info(f"[DRY-RUN] Would add model '{model_entry['litellm_params']['model']}' with name '{model_entry['model_name']}'")
+            
+            litellm_params = model_entry.get('litellm_params', {})
+            input_cost = litellm_params.get('input_cost_per_token')
+            output_cost = litellm_params.get('output_cost_per_token')
+            if input_cost is not None and output_cost is not None:
+                self.logger.info(f"[DRY-RUN]   Input cost: {input_cost}, Output cost: {output_cost}")
+            else:
+                self.logger.warning(f"[DRY-RUN]   Cost information missing: input={input_cost}, output={output_cost}")
+            
+            previewed_additions.append(model_id)
+            existing_model_ids.append(model_id) # Simulate addition for subsequent checks
+            existing_names.append(model_name) # Simulate addition for subsequent checks
+
+        if previewed_additions:
+            self.logger.info(f"[DRY-RUN] Would add {len(previewed_additions)} model(s): {', '.join(previewed_additions)}")
+        else:
+            self.logger.info("[DRY-RUN] No valid models to add.")
+        self.logger.info("[DRY-RUN] No changes made to file. Use without --dry-run to apply changes.")
+
+
     def validate_models(self, config_models: List[Tuple[int, str, str]],
                        api_models: Dict[str, Dict[str, Any]],
                        provider_name: str) -> List[Tuple[int, str, str]]:
@@ -853,8 +917,8 @@ class UnifiedModelCleaner:
                 self.logger.info("Restored configuration from backup")
             raise
 
-    def add_model_to_config(self, config: Dict[str, Any], provider_name: str,
-                           model_ids: List[str], api_models: Dict[str, Dict[str, Any]]) -> Tuple[Dict[str, Any], List[str]]:
+    def add_model_to_config(self, config: Dict[str, Any], model_ids: List[str], 
+                           provider_name: str, available_models: Dict[str, Dict[str, Any]], custom_model_name: Optional[str] = None) -> Tuple[Dict[str, Any], List[str]]:
         """Add one or more models to the configuration for a specific provider."""
         strategy = self.provider_manager.get_strategy(provider_name)
         provider = self.provider_manager.get_provider(provider_name)
@@ -879,7 +943,7 @@ class UnifiedModelCleaner:
             self.logger.info(f"Processing model: {model_id}")
 
             # Find the model in API data
-            if model_id not in api_models:
+            if model_id not in available_models:
                 self.logger.error(f"Model '{model_id}' not found in {provider.name} API")
                 failed_models.append(model_id)
                 continue
@@ -891,8 +955,11 @@ class UnifiedModelCleaner:
                 continue
 
             # Get API model info and create model entry
-            api_model_info = api_models[model_id]
-            model_entry = strategy.create_model_entry(model_id, api_model_info)
+            model_entry = strategy.create_model_entry(model_id, available_models[model_id])
+
+            # Override model_name if custom_model_name is provided and only one model is being added
+            if custom_model_name and len(model_ids) == 1:
+                model_entry['model_name'] = custom_model_name
 
             # Check for name conflicts and make unique if needed
             model_name = model_entry['model_name']
@@ -931,7 +998,7 @@ class UnifiedModelCleaner:
 
         return config, added_models
 
-    def cleanup_provider(self, provider_name: str, add_models: Optional[List[str]] = None) -> Tuple[int, int, List[str]]:
+    def cleanup_provider(self, provider_name: str, add_models: Optional[List[str]] = None, custom_model_name: Optional[str] = None) -> Tuple[int, int, List[str]]:
         """Clean up models for a specific provider."""
         try:
             # Load configuration
@@ -942,52 +1009,12 @@ class UnifiedModelCleaner:
                 # Fetch available models with pricing from API
                 available_models = self.fetch_available_models(provider_name)
 
-                added_models = []
                 if self.dry_run:
-                    # Preview mode for adding models
-                    existing_models = self.extract_provider_models(config, provider_name)
-                    strategy = self.provider_manager.get_strategy(provider_name)
-
-                    for model_id in add_models:
-                        if model_id not in available_models:
-                            self.logger.error(f"[DRY-RUN] Model '{model_id}' not found in {provider_name} API")
-                            continue
-
-                        # Check for duplicates
-                        model_exists = False
-                        for _, full_model_id, _ in existing_models:
-                            model_entry = {'litellm_params': {'model': full_model_id}}
-                            existing_id = strategy.extract_model_id(model_entry)
-                            if existing_id == model_id:
-                                model_exists = True
-                                break
-
-                        if model_exists:
-                            self.logger.warning(f"[DRY-RUN] Model '{model_id}' already exists in configuration")
-                        else:
-                            api_model_info = available_models[model_id]
-                            model_entry = strategy.create_model_entry(model_id, api_model_info)
-                            self.logger.info(f"[DRY-RUN] Would add model '{model_entry['litellm_params']['model']}' with name '{model_entry['model_name']}'")
-                            
-                            # Show cost information in dry run
-                            litellm_params = model_entry.get('litellm_params', {})
-                            input_cost = litellm_params.get('input_cost_per_token')
-                            output_cost = litellm_params.get('output_cost_per_token')
-                            if input_cost is not None and output_cost is not None:
-                                self.logger.info(f"[DRY-RUN]   Input cost: {input_cost}, Output cost: {output_cost}")
-                            else:
-                                self.logger.warning(f"[DRY-RUN]   Cost information missing: input={input_cost}, output={output_cost}")
-                            
-                            added_models.append(model_id)
-
-                    if added_models:
-                        self.logger.info(f"[DRY-RUN] Would add {len(added_models)} model(s): {', '.join(added_models)}")
-                    else:
-                        self.logger.info("[DRY-RUN] No valid models to add.")
-                    return 0, 0, [f"Previewed {len(added_models)} models for addition"]
+                    self.preview_add_model(add_models, provider_name, available_models, custom_model_name)
+                    return 0, 0, [f"Previewed {len(add_models)} models for addition"]
                 else:
                     # Actually add models
-                    config, added_models = self.add_model_to_config(config, provider_name, add_models, available_models)
+                    config, added_models = self.add_model_to_config(config, add_models, provider_name, available_models, custom_model_name)
 
                     if added_models:
                         # Sort the model list after adding new models
@@ -1063,7 +1090,7 @@ class UnifiedModelCleaner:
             self.logger.error(f"Cleanup failed for {provider_name}: {e}")
             raise
 
-    def cleanup_all_providers(self, add_models: Optional[Dict[str, List[str]]] = None) -> Dict[str, Tuple[int, int, List[str]]]:
+    def cleanup_all_providers(self, add_models: Optional[Dict[str, List[str]]] = None, custom_model_name: Optional[str] = None) -> Dict[str, Tuple[int, int, List[str]]]:
         """Clean up models for all configured providers."""
         results = {}
 
@@ -1074,7 +1101,7 @@ class UnifiedModelCleaner:
 
             provider_add_models = add_models.get(provider_name) if add_models else None
             try:
-                models_removed, models_updated, changes_made = self.cleanup_provider(provider_name, provider_add_models)
+                models_removed, models_updated, changes_made = self.cleanup_provider(provider_name, provider_add_models, custom_model_name)
                 results[provider_name] = (models_removed, models_updated, changes_made)
             except Exception as e:
                 self.logger.error(f"Error processing provider {provider_name}: {e}")
@@ -1108,6 +1135,7 @@ Examples:
   %(prog)s --provider requesty --add-model "model1 model2"  # Add models to Requesty
   %(prog)s --provider openrouter --config my-config.yaml   # Use custom config
   %(prog)s --provider novita --dry-run --verbose           # Preview changes
+  %(prog)s --provider openrouter --add-model gpt-4 --model-name "My GPT-4" # Add gpt-4 with custom name
         """
     )
 
@@ -1136,10 +1164,16 @@ Examples:
     )
 
     parser.add_argument(
-        '--add-model', '-a',
-        help='Add model(s) to configuration. Format: "model1 model2" or provider:model1,provider:model2'
+        '--add-model',
+        nargs='+', # Changed from single string to multiple arguments
+        help='Add one or more models to the configuration (requires --provider to be set to a specific provider)'
     )
 
+    parser.add_argument(
+        '--model-name',
+        help='Custom model name to use when adding a single model. Only valid when --add-model is used with exactly one model.'
+    )
+    
     args = parser.parse_args()
 
     try:
@@ -1167,8 +1201,8 @@ Examples:
             add_models = {}
 
             # Parse provider|model format or default to first provider
-            model_specs = args.add_model.split()
-            for model_spec in model_specs:
+            # args.add_model is already a list due to nargs='*'
+            for model_spec in args.add_model:
                 if '|' in model_spec:
                     # provider|model format
                     provider, model_id = model_spec.split('|', 1)
@@ -1199,7 +1233,7 @@ Examples:
         if len(provider_names) == 1:
             # Single provider mode
             provider_add_models = add_models.get(provider_names[0]) if add_models else None
-            models_removed, models_updated, changes_made = cleaner.cleanup_provider(provider_names[0], provider_add_models)
+            models_removed, models_updated, changes_made = cleaner.cleanup_provider(provider_names[0], provider_add_models, args.model_name)
 
             print(f"\nSummary for {provider_names[0]}:")
             print(f"Models removed: {models_removed}")
@@ -1212,7 +1246,7 @@ Examples:
                     print(f"  - {change}")
         else:
             # Multiple providers mode
-            results = cleaner.cleanup_all_providers(add_models)
+            results = cleaner.cleanup_all_providers(add_models, args.model_name)
 
             print(f"\nSummary for all providers:")
             total_removed = 0

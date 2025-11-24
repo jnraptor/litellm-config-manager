@@ -593,7 +593,7 @@ class PoeModelCleaner:
         return None
     
     def add_model_to_config(self, config: Dict[str, Any], model_ids: List[str], 
-                           api_models: Dict[str, Dict[str, Any]]) -> Tuple[Dict[str, Any], List[str]]:
+                           api_models: Dict[str, Dict[str, Any]], custom_model_name: Optional[str] = None) -> Tuple[Dict[str, Any], List[str]]:
         """Add one or more Poe models to the configuration."""
         added_models = []
         failed_models = []
@@ -621,7 +621,10 @@ class PoeModelCleaner:
                 continue
             
             # Generate model name
-            model_name = model_id.replace('/', '-').replace(':', '-').lower()
+            if custom_model_name and len(model_ids) == 1:
+                model_name = custom_model_name
+            else:
+                model_name = model_id.replace('/', '-').replace(':', '-').lower()
             counter = 1
             while model_name in existing_names and counter < 10:
                 model_name = f"{model_id.replace('/', '-').replace(':', '-').lower()}-{counter}"
@@ -671,7 +674,7 @@ class PoeModelCleaner:
         
         return config, added_models
     
-    def preview_add_model(self, model_ids: List[str], api_models: Dict[str, Dict[str, Any]]) -> None:
+    def preview_add_model(self, model_ids: List[str], api_models: Dict[str, Dict[str, Any]], custom_model_name: Optional[str] = None) -> None:
         """Preview what would be added when adding one or more models."""
         config = self.load_config()
         existing_models = self.extract_poe_models(config)
@@ -696,7 +699,10 @@ class PoeModelCleaner:
                 continue
             
             # Determine model name
-            model_name = model_id.replace('/', '-').replace(':', '-').lower()
+            if custom_model_name and len(model_ids) == 1:
+                model_name = custom_model_name
+            else:
+                model_name = model_id.replace('/', '-').replace(':', '-').lower()
             counter = 1
             while model_name in existing_names and counter < 10:
                 model_name = f"{model_id.replace('/', '-').replace(':', '-').lower()}-{counter}"
@@ -784,7 +790,7 @@ class PoeModelCleaner:
             total_changes = len(invalid_models) + len(cost_changes) + (1 if was_sorted else 0)
             self.logger.info(f"✅ Cleanup completed: {total_changes} total changes applied")
     
-    def run(self, add_models: Optional[List[str]] = None) -> int:
+    def run(self, add_models: Optional[List[str]] = None, custom_model_name: Optional[str] = None) -> int:
         """Main execution method."""
         try:
             # Load configuration
@@ -796,10 +802,10 @@ class PoeModelCleaner:
                 available_models = self.fetch_available_models()
                 
                 if self.dry_run:
-                    self.preview_add_model(add_models, available_models)
+                    self.preview_add_model(add_models, available_models, custom_model_name)
                     return 0
                 else:
-                    updated_config, added_models = self.add_model_to_config(config, add_models, available_models)
+                    updated_config, added_models = self.add_model_to_config(config, add_models, available_models, custom_model_name)
                     if added_models:
                         # Sort the model list after adding new models
                         updated_config, was_sorted = self.sort_model_list(updated_config)
@@ -914,6 +920,11 @@ Examples:
         nargs='*',
         help='Add one or more Poe models to the configuration. Provide model IDs separated by spaces or use quotes for each model'
     )
+
+    parser.add_argument(
+        '--model-name',
+        help='Custom model name to use when adding a single model. Only valid when --add-model is used with exactly one model.'
+    )
     
     args = parser.parse_args()
     
@@ -924,6 +935,13 @@ Examples:
         for item in args.add_model:
             models = item.split()
             processed_add_models.extend(models)
+
+    # Validate --model-name usage
+    if args.model_name:
+        if not processed_add_models:
+            parser.error("--model-name can only be used with --add-model")
+        if len(processed_add_models) > 1:
+            parser.error("--model-name can only be used when adding a single model")
     
     # Create and run the cleaner
     cleaner = PoeModelCleaner(
@@ -932,7 +950,7 @@ Examples:
         verbose=args.verbose
     )
     
-    return cleaner.run(add_models=processed_add_models)
+    return cleaner.run(add_models=processed_add_models, custom_model_name=args.model_name)
 
 
 if __name__ == '__main__':

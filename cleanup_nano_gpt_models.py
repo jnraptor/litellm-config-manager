@@ -306,7 +306,7 @@ class NanoGPTModelCleaner:
 
         return models_removed, models_updated, changes_made
 
-    def add_model_to_config(self, config: Dict[str, Any], model_id: str, available_models: Dict[str, Dict[str, Any]]) -> bool:
+    def add_model_to_config(self, config: Dict[str, Any], model_id: str, available_models: Dict[str, Dict[str, Any]], custom_model_name: Optional[str] = None) -> bool:
         """Add a new model to the configuration."""
         if model_id not in available_models:
             self.logger.error(f"Model {model_id} not found in available models")
@@ -322,8 +322,9 @@ class NanoGPTModelCleaner:
         api_model_info = available_models[model_id]
 
         # Create new model entry
+        model_name = custom_model_name if custom_model_name else model_id.replace('/', '-').replace('_', '-')
         new_model_entry = {
-            'model_name': model_id.replace('/', '-').replace('_', '-'),
+            'model_name': model_name,
             'litellm_params': {
                 'model': f"openai/{model_id}",
                 'api_base': "os.environ/NANOGPT_API_BASE",
@@ -345,7 +346,7 @@ class NanoGPTModelCleaner:
         if not self.dry_run:
             config['model_list'].append(new_model_entry)
 
-        self.logger.info(f"Added new model: {model_id}")
+        self.logger.info(f"Added new model: {model_id} with name: {model_name}")
         return True
 
     def sort_model_list(self, config: Dict[str, Any]) -> Tuple[Dict[str, Any], bool]:
@@ -429,7 +430,7 @@ class NanoGPTModelCleaner:
                 self.logger.info("Restored configuration from backup")
             raise
 
-    def cleanup_models(self, add_models: Optional[List[str]] = None) -> Tuple[int, int, List[str]]:
+    def cleanup_models(self, add_models: Optional[List[str]] = None, custom_model_name: Optional[str] = None) -> Tuple[int, int, List[str]]:
         """
         Main cleanup method.
 
@@ -449,7 +450,9 @@ class NanoGPTModelCleaner:
             # Add new models if requested
             if add_models:
                 for model_id in add_models:
-                    if self.add_model_to_config(config, model_id, available_models):
+                    # Only pass custom_model_name if we are adding a single model
+                    name_to_use = custom_model_name if len(add_models) == 1 else None
+                    if self.add_model_to_config(config, model_id, available_models, name_to_use):
                         changes_made.append(f"Added new model: {model_id}")
 
             # Sort the model list
@@ -514,7 +517,19 @@ Examples:
         help='Add new model(s) to configuration (space-separated list)'
     )
 
+    parser.add_argument(
+        '--model-name',
+        help='Custom model name to use when adding a single model. Only valid when --add-model is used with exactly one model.'
+    )
+
     args = parser.parse_args()
+
+    # Validate --model-name usage
+    if args.model_name:
+        if not args.add_model:
+            parser.error("--model-name can only be used with --add-model")
+        if len(args.add_model) > 1:
+            parser.error("--model-name can only be used when adding a single model")
 
     try:
         cleaner = NanoGPTModelCleaner(
@@ -523,7 +538,7 @@ Examples:
             verbose=args.verbose
         )
 
-        models_removed, models_updated, changes_made = cleaner.cleanup_models(add_models=args.add_model)
+        models_removed, models_updated, changes_made = cleaner.cleanup_models(add_models=args.add_model, custom_model_name=args.model_name)
 
         print(f"\nSummary:")
         print(f"Models removed: {models_removed}")

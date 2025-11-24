@@ -388,7 +388,7 @@ class VercelModelCleaner:
         self.logger.info(f"Removed {removed_count} invalid model entries from configuration")
         return config
     
-    def add_model_to_config(self, config: Dict[str, Any], model_id: str) -> bool:
+    def add_model_to_config(self, config: Dict[str, Any], model_id: str, custom_model_name: Optional[str] = None) -> bool:
         """Add a new model to the configuration if it doesn't already exist."""
         try:
             # Fetch available models to get pricing info
@@ -413,8 +413,11 @@ class VercelModelCleaner:
             api_model_info = api_models[model_id]
             
             # Generate model name
-            base_name = model_id.replace('/', '-').replace(':', '-')
-            model_name = f"vc-{base_name}"
+            if custom_model_name:
+                model_name = custom_model_name
+            else:
+                base_name = model_id.replace('/', '-').replace(':', '-')
+                model_name = f"vc-{base_name}"
             
             # Handle new model name conflicts
             counter = 1
@@ -493,7 +496,7 @@ class VercelModelCleaner:
             self.logger.error(f"Error saving configuration: {e}")
             raise
     
-    def run_cleanup(self, add_models: Optional[List[str]] = None) -> int:
+    def run_cleanup(self, add_models: Optional[List[str]] = None, custom_model_name: Optional[str] = None) -> int:
         """Run the complete cleanup process."""
         try:
             # Load configuration
@@ -523,7 +526,9 @@ class VercelModelCleaner:
             if add_models:
                 self.logger.info(f"Adding {len(add_models)} new models...")
                 for model_id in add_models:
-                    self.add_model_to_config(config, model_id)
+                    # Only pass custom_model_name if we are adding a single model
+                    name_to_use = custom_model_name if len(add_models) == 1 else None
+                    self.add_model_to_config(config, model_id, name_to_use)
             
             # Sort model list
             config = self.sort_model_list(config)
@@ -589,8 +594,20 @@ Examples:
         metavar='MODEL_ID',
         help='Add new model(s) to configuration (e.g., alibaba/qwen-3-14b)'
     )
+
+    parser.add_argument(
+        '--model-name',
+        help='Custom model name to use when adding a single model. Only valid when --add-model is used with exactly one model.'
+    )
     
     args = parser.parse_args()
+
+    # Validate --model-name usage
+    if args.model_name:
+        if not args.add_model:
+            parser.error("--model-name can only be used with --add-model")
+        if len(args.add_model) > 1:
+            parser.error("--model-name can only be used when adding a single model")
     
     # Create and run cleaner
     cleaner = VercelModelCleaner(
@@ -599,7 +616,7 @@ Examples:
         verbose=args.verbose
     )
     
-    return cleaner.run_cleanup(args.add_model)
+    return cleaner.run_cleanup(add_models=args.add_model, custom_model_name=args.model_name)
 
 
 if __name__ == "__main__":

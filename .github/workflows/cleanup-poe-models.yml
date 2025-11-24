@@ -7,6 +7,10 @@ on:
         description: 'Model ID to add (e.g., GPT-4-Turbo or space-separated list for multiple models)'
         required: false
         type: string
+      model_name:
+        description: 'Custom model name (optional, only for single model addition)'
+        required: false
+        type: string
 
 jobs:
   cleanup:
@@ -45,8 +49,14 @@ jobs:
           POE_API_KEY: ${{ secrets.POE_API_KEY }}
         run: |
           echo "Adding model(s): ${{ github.event.inputs.add_model }}"
-          python cleanup_poe_models.py --add-model "${{ github.event.inputs.add_model }}" --dry-run
-          python cleanup_poe_models.py --add-model "${{ github.event.inputs.add_model }}"
+          if [[ "${{ github.event.inputs.model_name }}" != "" ]]; then
+            echo "Using custom model name: ${{ github.event.inputs.model_name }}"
+            python cleanup_poe_models.py --add-model "${{ github.event.inputs.add_model }}" --model-name "${{ github.event.inputs.model_name }}" --dry-run
+            python cleanup_poe_models.py --add-model "${{ github.event.inputs.add_model }}" --model-name "${{ github.event.inputs.model_name }}"
+          else
+            python cleanup_poe_models.py --add-model "${{ github.event.inputs.add_model }}" --dry-run
+            python cleanup_poe_models.py --add-model "${{ github.event.inputs.add_model }}"
+          fi
         
       - name: Check for changes
         id: verify-changed-files
@@ -70,6 +80,13 @@ jobs:
         run: |
           echo "## Poe Model Management Summary" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
+          if [[ "${{ github.event.inputs.add_model }}" != "" ]]; then
+            echo "🔧 **Manual model addition requested:** ${{ github.event.inputs.add_model }}" >> $GITHUB_STEP_SUMMARY
+            if [[ "${{ github.event.inputs.model_name }}" != "" ]]; then
+              echo "🏷️ **Custom model name:** ${{ github.event.inputs.model_name }}" >> $GITHUB_STEP_SUMMARY
+            fi
+            echo "" >> $GITHUB_STEP_SUMMARY
+          fi
           if [[ "${{ steps.verify-changed-files.outputs.changed }}" == "true" ]]; then
             echo "✅ Changes detected and committed to config.yaml" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY

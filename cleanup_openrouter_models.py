@@ -746,7 +746,7 @@ class OpenRouterModelCleaner:
         return None
     
     def add_model_to_config(self, config: Dict[str, Any], model_ids: List[str], 
-                           api_models: Dict[str, Dict[str, Any]]) -> Tuple[Dict[str, Any], List[str]]:
+                           api_models: Dict[str, Dict[str, Any]], custom_model_name: Optional[str] = None) -> Tuple[Dict[str, Any], List[str]]:
         """
         Add one or more OpenRouter models to the configuration.
         
@@ -784,7 +784,10 @@ class OpenRouterModelCleaner:
                 continue
             
             # Generate model name
-            model_name = self.generate_model_name(model_id)
+            if custom_model_name and len(model_ids) == 1:
+                model_name = custom_model_name
+            else:
+                model_name = self.generate_model_name(model_id)
             
             # Check for name conflicts and make unique if needed
             original_name = model_name
@@ -872,7 +875,7 @@ class OpenRouterModelCleaner:
         
         return config, added_models
     
-    def preview_add_model(self, model_ids: List[str], api_models: Dict[str, Dict[str, Any]]) -> None:
+    def preview_add_model(self, model_ids: List[str], api_models: Dict[str, Dict[str, Any]], custom_model_name: Optional[str] = None) -> None:
         """Preview what would be added when adding one or more models."""
         # Get existing models once to check for duplicates
         config = self.load_config()
@@ -898,7 +901,10 @@ class OpenRouterModelCleaner:
                 continue
             
             # Generate model name and costs for preview
-            model_name = self.generate_model_name(model_id)
+            if custom_model_name and len(model_ids) == 1:
+                model_name = custom_model_name
+            else:
+                model_name = self.generate_model_name(model_id)
             original_name = model_name
             counter = 1
             while model_name in existing_names:
@@ -963,7 +969,7 @@ class OpenRouterModelCleaner:
         else:
             self.logger.info("[DRY-RUN] No valid models to add.")
     
-    def run(self, add_models: Optional[List[str]] = None) -> int:
+    def run(self, add_models: Optional[List[str]] = None, custom_model_name: Optional[str] = None) -> int:
         """Main execution method."""
         try:
             # Load configuration
@@ -975,10 +981,10 @@ class OpenRouterModelCleaner:
                 available_models = self.fetch_available_models()
                 
                 if self.dry_run:
-                    self.preview_add_model(add_models, available_models)
+                    self.preview_add_model(add_models, available_models, custom_model_name)
                     return 0
                 else:
-                    updated_config, added_models = self.add_model_to_config(config, add_models, available_models)
+                    updated_config, added_models = self.add_model_to_config(config, add_models, available_models, custom_model_name)
                     if added_models:
                         # Sort the model list after adding new models
                         updated_config, was_sorted = self.sort_model_list(updated_config)
@@ -1093,6 +1099,11 @@ Examples:
         nargs='*',
         help='Add one or more OpenRouter models to the configuration. Provide model IDs separated by spaces (e.g., anthropic/claude-3-5-sonnet-20241022 qwen/qwen-2.5-72b-instruct) or use quotes for each model'
     )
+
+    parser.add_argument(
+        '--model-name',
+        help='Custom model name to use when adding a single model. Only valid when --add-model is used with exactly one model.'
+    )
     
     args = parser.parse_args()
     
@@ -1105,6 +1116,13 @@ Examples:
             # Split by spaces to handle space-separated models
             models = item.split()
             processed_add_models.extend(models)
+
+    # Validate --model-name usage
+    if args.model_name:
+        if not processed_add_models:
+            parser.error("--model-name can only be used with --add-model")
+        if len(processed_add_models) > 1:
+            parser.error("--model-name can only be used when adding a single model")
     
     # Create and run the cleaner
     cleaner = OpenRouterModelCleaner(
@@ -1113,7 +1131,7 @@ Examples:
         verbose=args.verbose
     )
     
-    return cleaner.run(add_models=processed_add_models)
+    return cleaner.run(add_models=processed_add_models, custom_model_name=args.model_name)
 
 
 if __name__ == '__main__':
