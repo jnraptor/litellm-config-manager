@@ -173,7 +173,7 @@ model_list:
     output_cost_per_token: 4.0e-07
   model_name: gemini-2.5-flash-lite
 - litellm_params:
-    model: openrouter/google/gemini-2.5-flash-lite-preview-09-2025
+    model: openrouter/google/gemini-2.5-flash-lite
     input_cost_per_token: 1.0e-07
     output_cost_per_token: 4.0e-07
   model_name: gemini-2.5-flash-lite
