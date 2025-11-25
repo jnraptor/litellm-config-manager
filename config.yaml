@@ -565,6 +565,11 @@ model_list:
     input_cost_per_token: 7.0e-08
     output_cost_per_token: 2.6e-07
   model_name: or-opengvlab-internvl3-78b
+- litellm_params:
+    model: openrouter/openrouter/bert-nebulon-alpha
+    input_cost_per_token: 1.0e-09
+    output_cost_per_token: 1.0e-09
+  model_name: or-openrouter-bert-nebulon-alpha
 - model_name: or-qwen-plus-2025-07-28
   litellm_params:
     model: openrouter/qwen/qwen-plus-2025-07-28
