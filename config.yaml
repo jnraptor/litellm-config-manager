@@ -86,28 +86,9 @@ model_list:
     output_cost_per_token: 5.0e-06
   model_name: claude-haiku-4-5
 - litellm_params:
-    model: anthropic/claude-opus-4-1-20250805
+    model: anthropic/claude-opus-4-5-20251101
     api_key: os.environ/ANTHROPIC_API_KEY
-  model_name: claude-opus-4-1
-- litellm_params:
-    model: openai/anthropic/claude-opus-4-1
-    api_base: https://router.requesty.ai/v1
-    api_key: os.environ/REQUESTY_API_KEY
-    input_cost_per_token: 1.5e-05
-    output_cost_per_token: 7.5e-05
-  model_name: claude-opus-4-1
-- litellm_params:
-    model: openai/Claude-Opus-4.1
-    api_base: https://api.poe.com/v1
-    api_key: os.environ/POE_API_KEY
-    input_cost_per_token: 1.3e-05
-    output_cost_per_token: 6.4e-05
-  model_name: claude-opus-4-1
-- litellm_params:
-    model: openrouter/anthropic/claude-opus-4.1
-    input_cost_per_token: 1.5e-05
-    output_cost_per_token: 7.5e-05
-  model_name: claude-opus-4-1
+  model_name: claude-opus-4.5
 - litellm_params:
     model: openai/anthropic/claude-opus-4-5
     api_base: https://router.requesty.ai/v1
