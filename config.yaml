@@ -109,6 +109,11 @@ model_list:
     output_cost_per_token: 7.5e-05
   model_name: claude-opus-4-1
 - litellm_params:
+    model: openrouter/anthropic/claude-opus-4.5
+    input_cost_per_token: 5.0e-06
+    output_cost_per_token: 2.5e-05
+  model_name: claude-opus-4.5
+- litellm_params:
     model: anthropic/claude-sonnet-4-5-20250929
     api_key: os.environ/ANTHROPIC_API_KEY
   model_name: claude-sonnet-4.5
@@ -449,6 +454,11 @@ model_list:
   model_info:
     mode: embedding
 - litellm_params:
+    model: openrouter/openrouter/bert-nebulon-alpha
+    input_cost_per_token: 1.0e-09
+    output_cost_per_token: 1.0e-09
+  model_name: or-bert-nebulon-alpha
+- litellm_params:
     model: openrouter/deepseek/deepseek-v3.1-terminus:exacto
     input_cost_per_token: 2.16e-07
     output_cost_per_token: 8.0e-07
@@ -565,11 +575,6 @@ model_list:
     input_cost_per_token: 7.0e-08
     output_cost_per_token: 2.6e-07
   model_name: or-opengvlab-internvl3-78b
-- litellm_params:
-    model: openrouter/openrouter/bert-nebulon-alpha
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
-  model_name: or-bert-nebulon-alpha
 - model_name: or-qwen-plus-2025-07-28
   litellm_params:
     model: openrouter/qwen/qwen-plus-2025-07-28
