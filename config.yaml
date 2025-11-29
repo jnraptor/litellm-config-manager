@@ -15,11 +15,6 @@ router_settings:
   redis_password: ''
   redis_port: 6379
 model_list:
-- model_name: arcee-auto
-  litellm_params:
-    model: openai/auto
-    api_base: https://conductor.arcee.ai/v1
-    api_key: os.environ/ARCEE_API_KEY
 - litellm_params:
     api_base: os.environ/AZURE_API_BASE
     api_key: os.environ/AZURE_API_KEY
@@ -179,24 +174,6 @@ model_list:
     input_cost_per_token: 1.0e-07
     output_cost_per_token: 4.0e-07
   model_name: gemini-2.5-flash-lite
-- model_name: gemini-2.5-pro
-  litellm_params:
-    model: gemini/gemini-2.5-pro
-    api_key: os.environ/GEMINI_API_KEY
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
-- model_name: gemini-2.5-pro
-  litellm_params:
-    model: openai/google/gemini-2.5-pro
-    input_cost_per_token: 1.25e-06
-    output_cost_per_token: 1.0e-05
-    api_base: https://router.requesty.ai/v1
-    api_key: os.environ/REQUESTY_API_KEY
-- litellm_params:
-    model: openrouter/google/gemini-2.5-pro
-    input_cost_per_token: 1.25e-06
-    output_cost_per_token: 1.0e-05
-  model_name: gemini-2.5-pro
 - litellm_params:
     model: openai/gemini-3-pro
     api_base: https://api.poe.com/v1
@@ -305,29 +282,6 @@ model_list:
     input_cost_per_token: 1.25e-06
     output_cost_per_token: 1.0e-05
   model_name: gpt-5.1
-- model_name: gpt-5.1-chat
-  litellm_params:
-    model: openai/gpt-5.1-chat
-    api_base: os.environ/NANOGPT_API_BASE
-    api_key: os.environ/NANOGPT_API_KEY
-    input_cost_per_token: 1.25e-06
-    output_cost_per_token: 1.0e-05
-- model_name: gpt-5.1-chat
-  litellm_params:
-    model: openai/gpt-5.1-chat-latest
-    api_key: os.environ/OPENAI_API_KEY
-- litellm_params:
-    model: openai/gpt-5.1-instant
-    api_base: https://api.poe.com/v1
-    api_key: os.environ/POE_API_KEY
-    input_cost_per_token: 1.1e-06
-    output_cost_per_token: 9.0e-06
-  model_name: gpt-5.1-chat
-- litellm_params:
-    model: openrouter/openai/gpt-5.1-chat
-    input_cost_per_token: 1.25e-06
-    output_cost_per_token: 1.0e-05
-  model_name: gpt-5.1-chat
 - model_name: gpt-5.1-codex
   litellm_params:
     model: openai/gpt-5.1-codex
@@ -466,21 +420,6 @@ model_list:
     output_cost_per_token: 2.8e-07
   model_name: or-devstral-small
 - litellm_params:
-    model: openrouter/google/gemini-2.5-flash-image-preview
-    input_cost_per_token: 3.0e-07
-    output_cost_per_token: 2.5e-06
-  model_name: or-gemini-2.5-flash-image-preview
-- litellm_params:
-    model: openrouter/openai/gpt-5-image
-    input_cost_per_token: 1.0e-05
-    output_cost_per_token: 1.0e-05
-  model_name: or-gpt-5-image
-- litellm_params:
-    model: openrouter/openai/gpt-5-image-mini
-    input_cost_per_token: 2.5e-06
-    output_cost_per_token: 2.0e-06
-  model_name: or-gpt-5-image-mini
-- litellm_params:
     model: openrouter/kwaipilot/kat-coder-pro:free
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
@@ -557,11 +496,6 @@ model_list:
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
   model_name: or-nvidia-nemotron-nano-12b-v2-vl
-- litellm_params:
-    model: openrouter/opengvlab/internvl3-78b
-    input_cost_per_token: 7.0e-08
-    output_cost_per_token: 2.6e-07
-  model_name: or-opengvlab-internvl3-78b
 - model_name: or-qwen-plus-2025-07-28
   litellm_params:
     model: openrouter/qwen/qwen-plus-2025-07-28
@@ -641,20 +575,6 @@ model_list:
     input_cost_per_token: 1.8e-07
     output_cost_per_token: 2.1e-06
   model_name: or-qwen3-vl-8b-thinking
-- litellm_params:
-    model: openrouter/thenlper/gte-base
-    input_cost_per_token: 5.0e-09
-    output_cost_per_token: 1.0e-09
-  model_name: or-thenlper-gte-base
-  model_info:
-    mode: embedding
-- litellm_params:
-    model: openrouter/thenlper/gte-large
-    input_cost_per_token: 1.0e-08
-    output_cost_per_token: 1.0e-09
-  model_name: or-thenlper-gte-large
-  model_info:
-    mode: embedding
 - litellm_params:
     model: perplexity/sonar
     input_cost_per_token: 1.0e-06
