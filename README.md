@@ -1,23 +1,58 @@
-# OpenRouter, Requesty, Novita, Nano-GPT & Vercel AI Gateway Model Cleanup, Cost Update, and Model Addition Scripts
+# LiteLLM Model Cleanup, Cost Update, and Model Addition Scripts
 
-Comprehensive Python scripts that validate OpenRouter, Requesty, Novita, Nano-GPT, and Vercel AI Gateway models in LiteLLM configuration files against their respective APIs, remove invalid model entries, automatically update model costs to match current pricing, and provide an easy way to add new models.
+Comprehensive Python scripts that validate models from multiple providers (OpenRouter, Requesty, Novita, Nano-GPT, Vercel AI Gateway, and Poe) in LiteLLM configuration files against their respective APIs, remove invalid model entries, automatically update model costs to match current pricing, and provide an easy way to add new models.
 
 ## Overview
 
 These scripts help maintain your LiteLLM configuration by:
-- Identifying OpenRouter/Requesty/Novita/Nano-GPT/Vercel AI Gateway models in your `config.yaml`
+- Identifying models from multiple providers (OpenRouter, Requesty, Novita, Nano-GPT, Vercel AI Gateway, Poe) in your `config.yaml`
 - Checking their validity against the current APIs
 - Removing entire model entries for invalid/deprecated models
 - **Automatically updating model costs** (`input_cost_per_token` and `output_cost_per_token`) when they differ from API pricing
 - **Adding new models** with automatic cost detection and proper formatting
+- **Custom model naming** when adding models
+- **Sorting model lists** alphabetically for better organization
 - Providing detailed logging with percentage-based cost change information
 - Supporting dry-run capabilities for safe previewing
 
+## Available Scripts
+
+- **cleanup_models.py** - Unified script that can process all providers or specific ones
+- **cleanup_openrouter_models.py** - OpenRouter-specific cleanup
+- **cleanup_requesty_models.py** - Requesty-specific cleanup
+- **cleanup_novita_models.py** - Novita-specific cleanup
+- **cleanup_nano_gpt_models.py** - Nano-GPT-specific cleanup
+- **cleanup_vercel_models.py** - Vercel AI Gateway-specific cleanup
+- **cleanup_poe_models.py** - Poe-specific cleanup
+
 ## Features
+
+### 🆕 NEW: Unified Cleanup Script
+
+The new `cleanup_models.py` script provides a unified interface for managing models across all providers:
+- Process all providers at once with `--provider all`
+- Process specific providers individually
+- Consistent command-line interface across all providers
+- Efficient batch processing with detailed reporting
+
+### 🆕 NEW: Custom Model Names
+
+All scripts now support custom model naming when adding models:
+- Use `--model-name "My Custom Name"` when adding a single model
+- Provides flexibility in organizing your model configuration
+- Works with all provider-specific scripts and the unified script
+
+### 🆕 NEW: Poe Provider Support
+
+Added full support for Poe models with `cleanup_poe_models.py`:
+- Validates Poe models against the Poe API
+- Updates costs automatically
+- Adds new Poe models with proper configuration
+- Supports all standard features (dry-run, verbose, custom names)
 
 ### 🆕 NEW: Space-Separated Model Addition Support
 
-All three scripts now support adding multiple models with space separation instead of requiring quotes around each model:
+All scripts now support adding multiple models with space separation instead of requiring quotes around each model:
 
 - ✅ **Space-Separated Input**: Add multiple models by separating them with spaces
 - ✅ **Backward Compatible**: Quoted model addition still works exactly as before
@@ -29,32 +64,69 @@ All three scripts now support adding multiple models with space separation inste
 
 **Example Commands:**
 ```bash
-# Add multiple OpenRouter models (NEW - space separated)
+# Add multiple OpenRouter models (space separated)
 python cleanup_openrouter_models.py --add-model mistralai/mistral-medium-3.1 mistralai/mistral-small anthropic/claude-3-5-sonnet-20241022
 
-# Add multiple Requesty models (NEW - space separated)
+# Add multiple Requesty models (space separated)
 python cleanup_requesty_models.py --add-model coding/gemini-2.5-flash smart-task coding/claude-3-5-sonnet
 
-# Add multiple Novita models (NEW - space separated)
+# Add multiple Novita models (space separated)
 python cleanup_novita_models.py --add-model deepseek/deepseek-v3-0324 qwen/qwen-2.5-72b-instruct deepseek/deepseek-r1-0528-qwen3-8b
 
-# Add multiple Nano-GPT models (NEW - space separated)
+# Add multiple Nano-GPT models (space separated)
 python cleanup_nano_gpt_models.py --add-model nvidia/nvidia-nemotron-nano-9b-v2 qwen/qwen3-235b-a22b-thinking-2507
 
-# Add multiple Vercel AI Gateway models (NEW - space separated)
+# Add multiple Vercel AI Gateway models (space separated)
 python cleanup_vercel_models.py --add-model alibaba/qwen-3-14b alibaba/qwen-3-30b meta-llama/llama-3.1-8b-instruct
+
+# Add multiple Poe models (space separated)
+python cleanup_poe_models.py --add-model Claude-Sonnet-4.5 GPT-4-Turbo Gemini-2.0-Flash
+
+# Add model with custom name (single model only)
+python cleanup_openrouter_models.py --add-model mistralai/mistral-medium-3.1 --model-name "my-mistral-medium"
 
 # Add multiple models with quotes (backward compatible)
 python cleanup_openrouter_models.py --add-model "mistralai/mistral-medium-3.1" "mistralai/mistral-small" "anthropic/claude-3-5-sonnet-20241022"
 
 # Preview multiple models before adding
 python cleanup_openrouter_models.py --add-model model1 model2 model3 --dry-run
+
+# Use unified script to process all providers
+python cleanup_models.py --provider all
+
+# Use unified script to add models to specific provider
+python cleanup_models.py --provider openrouter --add-model gpt-4 --model-name "My GPT-4"
 ```
 
-### Vercel AI Gateway Script
+### Unified Cleanup Script (cleanup_models.py)
+- ✅ **Multi-Provider Support**: Process all providers or specific ones with a single script
+- ✅ **Consistent Interface**: Unified command-line interface across all providers
+- ✅ **Provider Configuration**: Uses `providers.yaml` for flexible provider management
+- ✅ **Batch Processing**: Efficiently process multiple providers in one run
+- ✅ **Custom Model Names**: Support for custom naming when adding models
+- ✅ **All Standard Features**: Includes validation, cost updates, model addition, sorting, and dry-run mode
+
+### Poe Script (cleanup_poe_models.py)
+- ✅ **Safe Operation**: Dry-run mode to preview changes before applying
+- ✅ **Automatic Cost Updates**: Synchronizes `input_cost_per_token` and `output_cost_per_token` with current API pricing
+- ✅ **Easy Model Addition**: Add one or more Poe models with automatic cost detection and proper formatting
+- ✅ **Custom Model Names**: Support for custom naming when adding a single model
+- ✅ **Percentage-Based Logging**: Shows cost changes with percentage differences
+- ✅ **Free Model Handling**: Properly handles free models by preserving `1e-09` costs for LiteLLM compatibility
+- ✅ **Duplicate Prevention**: Prevents adding models that already exist in configuration
+- ✅ **Smart Naming**: Generates appropriate model names with conflict resolution
+- ✅ **Model List Sorting**: Automatically sorts models alphabetically
+- ✅ **Comprehensive Logging**: Detailed output with verbose mode for validation, cost updates, and model addition
+- ✅ **Error Handling**: Robust error handling for network and file issues
+- ✅ **No Authentication Required**: Uses public Poe API endpoint
+- ✅ **Preserves Structure**: Maintains YAML formatting and structure
+- ✅ **Complete Removal**: Removes entire model entries (not just model references)
+
+### Vercel AI Gateway Script (cleanup_vercel_models.py)
 - ✅ **Safe Operation**: Dry-run mode to preview changes before applying
 - ✅ **Automatic Cost Updates**: Synchronizes `input_cost_per_token` and `output_cost_per_token` with current API pricing
 - ✅ **Easy Model Addition**: Add one or more Vercel AI Gateway models with automatic cost detection and proper formatting
+- ✅ **Custom Model Names**: Support for custom naming when adding a single model
 - ✅ **Correct Pricing Conversion**: Properly handles Vercel's per-token pricing format
 - ✅ **Percentage-Based Logging**: Shows cost changes with percentage differences
 - ✅ **Free Model Handling**: Properly handles free models by preserving `1e-09` costs for LiteLLM compatibility
@@ -66,10 +138,11 @@ python cleanup_openrouter_models.py --add-model model1 model2 model3 --dry-run
 - ✅ **Preserves Structure**: Maintains YAML formatting and structure
 - ✅ **Complete Removal**: Removes entire model entries (not just model references)
 
-### OpenRouter Script
+### OpenRouter Script (cleanup_openrouter_models.py)
 - ✅ **Safe Operation**: Dry-run mode to preview changes before applying
 - ✅ **Automatic Cost Updates**: Synchronizes `input_cost_per_token` and `output_cost_per_token` with current API pricing
 - ✅ **Easy Model Addition**: Add one or more OpenRouter models with automatic cost detection and proper formatting
+- ✅ **Custom Model Names**: Support for custom naming when adding a single model
 - ✅ **Dual Version Support**: Automatically adds both free and paid versions when available (with same model name)
 - ✅ **Percentage-Based Logging**: Shows cost changes with percentage differences (e.g., "Input cost: 1e-06 → 3e-07 (-70.0%)")
 - ✅ **Free Model Handling**: Properly handles free models by preserving `1e-09` costs for LiteLLM compatibility
@@ -81,10 +154,11 @@ python cleanup_openrouter_models.py --add-model model1 model2 model3 --dry-run
 - ✅ **Preserves Structure**: Maintains YAML formatting and structure
 - ✅ **Complete Removal**: Removes entire model entries (not just model references)
 
-### Requesty Script
+### Requesty Script (cleanup_requesty_models.py)
 - ✅ **Safe Operation**: Dry-run mode to preview changes before applying
 - ✅ **Automatic Cost Updates**: Synchronizes `input_cost_per_token` and `output_cost_per_token` with current API pricing
 - ✅ **Easy Model Addition**: Add one or more Requesty models with automatic cost detection and proper formatting
+- ✅ **Custom Model Names**: Support for custom naming when adding a single model
 - ✅ **Provider Load Balancing**: Preserves existing model names to allow LiteLLM to distribute requests across different providers
 - ✅ **Percentage-Based Logging**: Shows cost changes with percentage differences
 - ✅ **Free Model Handling**: Properly handles free models by preserving `1e-09` costs for LiteLLM compatibility
@@ -96,10 +170,11 @@ python cleanup_openrouter_models.py --add-model model1 model2 model3 --dry-run
 - ✅ **Preserves Structure**: Maintains YAML formatting and structure
 - ✅ **Complete Removal**: Removes entire model entries (not just model references)
 
-### Novita Script
+### Novita Script (cleanup_novita_models.py)
 - ✅ **Safe Operation**: Dry-run mode to preview changes before applying
 - ✅ **Automatic Cost Updates**: Synchronizes `input_cost_per_token` and `output_cost_per_token` with current API pricing
 - ✅ **Easy Model Addition**: Add one or more Novita models with automatic cost detection and proper formatting
+- ✅ **Custom Model Names**: Support for custom naming when adding a single model
 - ✅ **Correct Pricing Conversion**: Properly converts Novita's per-million token pricing format to per-token costs
 - ✅ **Percentage-Based Logging**: Shows cost changes with percentage differences
 - ✅ **Free Model Handling**: Properly handles free models by preserving `1e-09` costs for LiteLLM compatibility
@@ -111,10 +186,11 @@ python cleanup_openrouter_models.py --add-model model1 model2 model3 --dry-run
 - ✅ **Preserves Structure**: Maintains YAML formatting and structure
 - ✅ **Complete Removal**: Removes entire model entries (not just model references)
 
-### Nano-GPT Script
+### Nano-GPT Script (cleanup_nano_gpt_models.py)
 - ✅ **Safe Operation**: Dry-run mode to preview changes before applying
 - ✅ **Automatic Cost Updates**: Synchronizes `input_cost_per_token` and `output_cost_per_token` with current API pricing
 - ✅ **Easy Model Addition**: Add one or more Nano-GPT models with automatic cost detection and proper formatting
+- ✅ **Custom Model Names**: Support for custom naming when adding a single model
 - ✅ **Correct Pricing Conversion**: Properly converts Nano-GPT's per-million token pricing format to per-token costs
 - ✅ **Percentage-Based Logging**: Shows cost changes with percentage differences
 - ✅ **Free Model Handling**: Properly handles free models by preserving `1e-09` costs for LiteLLM compatibility
@@ -131,11 +207,14 @@ python cleanup_openrouter_models.py --add-model model1 model2 model3 --dry-run
 1. **Clone or download the script files:**
    ```bash
    # Files needed:
+   # - cleanup_models.py (unified script)
    # - cleanup_openrouter_models.py
    # - cleanup_requesty_models.py
    # - cleanup_novita_models.py
    # - cleanup_nano_gpt_models.py
    # - cleanup_vercel_models.py
+   # - cleanup_poe_models.py
+   # - providers.yaml (for unified script)
    # - requirements.txt
    ```
 
@@ -144,42 +223,70 @@ python cleanup_openrouter_models.py --add-model model1 model2 model3 --dry-run
    pip install -r requirements.txt
    ```
 
+3. **Configure providers (for unified script):**
+   - The `providers.yaml` file contains configuration for all supported providers
+   - You can customize provider settings, API endpoints, and model naming conventions
+   - The unified script (`cleanup_models.py`) uses this file to manage multiple providers
+
+4. **Set up API keys (if required):**
+   ```bash
+   # Some providers require API keys for model listing
+   export REQUESTY_API_KEY="your-requesty-api-key"
+   export NANOGPT_API_KEY="your-nanogpt-api-key"
+   
+   # Or use a .env file
+   echo "REQUESTY_API_KEY=your-requesty-api-key" >> .env
+   echo "NANOGPT_API_KEY=your-nanogpt-api-key" >> .env
+   ```
+   
+   Providers that require API keys:
+   - **Requesty**: Set `REQUESTY_API_KEY` environment variable
+   - **Nano-GPT**: Set `NANOGPT_API_KEY` environment variable
+   - **OpenRouter, Novita, Vercel, Poe**: No API key required for model listing
+
 ## Usage
 
 ### Basic Usage
 
 ```bash
-# Process config.yaml in current directory (validates models + updates costs)
-python cleanup_openrouter_models.py
+# Using the unified script (recommended)
+python cleanup_models.py --provider all                    # Process all providers
+python cleanup_models.py --provider openrouter             # Process specific provider
+python cleanup_models.py --provider requesty --config my-config.yaml
+
+# Using provider-specific scripts
+python cleanup_openrouter_models.py                        # Process config.yaml
 python cleanup_requesty_models.py
 python cleanup_novita_models.py
 python cleanup_nano_gpt_models.py
 python cleanup_vercel_models.py
+python cleanup_poe_models.py
 
 # Process a specific config file
 python cleanup_openrouter_models.py --config /path/to/your/config.yaml
-python cleanup_requesty_models.py --config /path/to/your/config.yaml
-python cleanup_novita_models.py --config /path/to/your/config.yaml
-python cleanup_nano_gpt_models.py --config /path/to/your/config.yaml
-python cleanup_vercel_models.py --config /path/to/your/config.yaml
+python cleanup_poe_models.py --config /path/to/your/config.yaml
 ```
 
 ### Adding New Models
 
 ```bash
-# Add a single model to the configuration (backward compatible)
-python cleanup_openrouter_models.py --add-model "anthropic/claude-3-5-sonnet-20241022"
-python cleanup_requesty_models.py --add-model "coding/gemini-2.5-flash"
-python cleanup_novita_models.py --add-model "deepseek/deepseek-v3-0324"
-python cleanup_nano_gpt_models.py --add-model "nvidia/nvidia-nemotron-nano-9b-v2"
-python cleanup_vercel_models.py --add-model "alibaba/qwen-3-14b"
+# Using the unified script
+python cleanup_models.py --provider openrouter --add-model mistralai/mistral-medium-3.1
+python cleanup_models.py --provider requesty --add-model coding/gemini-2.5-flash smart-task
+python cleanup_models.py --provider all --add-model model1 model2  # Add to all providers
 
-# Add multiple models at once with space separation (NEW FEATURE)
+# Add a single model with custom name
+python cleanup_openrouter_models.py --add-model "anthropic/claude-3-5-sonnet-20241022" --model-name "my-claude-sonnet"
+python cleanup_poe_models.py --add-model "Claude-Sonnet-4.5" --model-name "poe-claude-45"
+python cleanup_models.py --provider novita --add-model deepseek/deepseek-v3-0324 --model-name "my-deepseek"
+
+# Add multiple models at once with space separation
 python cleanup_openrouter_models.py --add-model mistralai/mistral-medium-3.1 mistralai/mistral-small anthropic/claude-3-5-sonnet-20241022
 python cleanup_requesty_models.py --add-model coding/gemini-2.5-flash smart-task coding/claude-3-5-sonnet
 python cleanup_novita_models.py --add-model deepseek/deepseek-v3-0324 qwen/qwen-2.5-72b-instruct deepseek/deepseek-r1-0528-qwen3-8b
 python cleanup_nano_gpt_models.py --add-model nvidia/nvidia-nemotron-nano-9b-v2 qwen/qwen3-235b-a22b-thinking-2507
 python cleanup_vercel_models.py --add-model alibaba/qwen-3-14b alibaba/qwen-3-30b meta-llama/llama-3.1-8b-instruct
+python cleanup_poe_models.py --add-model Claude-Sonnet-4.5 GPT-4-Turbo Gemini-2.0-Flash
 
 # Add multiple models with quotes (backward compatible)
 python cleanup_openrouter_models.py --add-model "mistralai/mistral-medium-3.1" "mistralai/mistral-small" "anthropic/claude-3-5-sonnet-20241022"
@@ -190,23 +297,30 @@ python cleanup_requesty_models.py --add-model coding/gemini-2.5-pro --dry-run
 python cleanup_novita_models.py --add-model deepseek/deepseek-r1-0528-qwen3-8b --dry-run
 python cleanup_nano_gpt_models.py --add-model nvidia/nvidia-nemotron-nano-9b-v2 --dry-run
 python cleanup_vercel_models.py --add-model alibaba/qwen-3-14b --dry-run
+python cleanup_poe_models.py --add-model Claude-Sonnet-4.5 --dry-run
 
 # Add models with verbose output
 python cleanup_openrouter_models.py --add-model meta-llama/llama-3.2-1b-instruct --verbose
 python cleanup_requesty_models.py --add-model smart/task --verbose
 python cleanup_novita_models.py --add-model qwen/qwen3-235b-a22b-thinking-2507 --verbose
 python cleanup_vercel_models.py --add-model alibaba/qwen-3-14b --verbose
+python cleanup_poe_models.py --add-model GPT-4-Turbo --verbose
 ```
 
 ### Dry-Run Mode (Recommended First)
 
 ```bash
-# Preview all changes (model removals + cost updates) without making changes
+# Using unified script
+python cleanup_models.py --provider all --dry-run
+python cleanup_models.py --provider openrouter --dry-run --verbose
+
+# Using provider-specific scripts
 python cleanup_openrouter_models.py --dry-run
 python cleanup_requesty_models.py --dry-run
 python cleanup_novita_models.py --dry-run
 python cleanup_nano_gpt_models.py --dry-run
 python cleanup_vercel_models.py --dry-run
+python cleanup_poe_models.py --dry-run
 
 # Detailed preview with verbose logging and percentage changes
 python cleanup_openrouter_models.py --dry-run --verbose
@@ -214,19 +328,75 @@ python cleanup_requesty_models.py --dry-run --verbose
 python cleanup_novita_models.py --dry-run --verbose
 python cleanup_nano_gpt_models.py --dry-run --verbose
 python cleanup_vercel_models.py --dry-run --verbose
+python cleanup_poe_models.py --dry-run --verbose
 ```
 
 ### Command-Line Options
 
+#### Unified Script (cleanup_models.py)
+
+| Option | Description |
+|--------|-------------|
+| `--provider PROVIDER` | Provider to process: `openrouter`, `requesty`, `novita`, `nano_gpt`, `vercel`, `poe`, or `all` (required) |
+| `--config CONFIG` | Path to LiteLLM configuration file (default: `config.yaml`) |
+| `--dry-run` | Preview all changes without modifying the configuration file |
+| `--verbose` | Enable detailed logging output with cost comparison information and percentage changes |
+| `--add-model MODEL_ID [MODEL_ID ...]` | Add one or more models to the configuration. Provide model IDs separated by spaces |
+| `--model-name NAME` | Custom model name to use when adding a single model (only valid with one model) |
+| `--help` | Show help message and exit |
+
+#### Provider-Specific Scripts
+
 | Option | Description |
 |--------|-------------|
 | `--config CONFIG` | Path to LiteLLM configuration file (default: `config.yaml`) |
-| `--dry-run` | Preview all changes (model removals, cost updates, and model additions) without modifying the configuration file |
+| `--dry-run` | Preview all changes (model removals, cost updates, sorting, and model additions) without modifying the configuration file |
 | `--verbose` | Enable detailed logging output with cost comparison information and percentage changes |
 | `--add-model MODEL_ID [MODEL_ID ...]` | Add one or more models to the configuration. Provide model IDs separated by spaces (e.g., mistralai/mistral-medium-3.1 anthropic/claude-3-5-sonnet-20241022) or use quotes for each model |
+| `--model-name NAME` | Custom model name to use when adding a single model (only valid with `--add-model` and exactly one model) |
 | `--help` | Show help message and exit |
 
 ## Example Output
+
+### Unified Script - Processing All Providers
+```
+python cleanup_models.py --provider all --dry-run
+
+============================================================
+Processing provider: openrouter
+============================================================
+2025-07-27 21:07:05 - INFO - Loading configuration from config.yaml
+2025-07-27 21:07:05 - INFO - Found 28 OpenRouter models in configuration
+2025-07-27 21:07:05 - INFO - Fetching available models with pricing from OpenRouter API...
+2025-07-27 21:07:05 - INFO - Fetched 319 available models from OpenRouter API
+2025-07-27 21:07:05 - INFO - [DRY-RUN] Would update costs for 3 models
+2025-07-27 21:07:05 - INFO - 💰 [DRY-RUN] Cost updates: 3 models would have cost changes
+
+============================================================
+Processing provider: requesty
+============================================================
+2025-07-27 21:07:06 - INFO - Loading configuration from config.yaml
+2025-07-27 21:07:06 - INFO - Found 4 Requesty models in configuration
+2025-07-27 21:07:06 - INFO - Fetching available models with pricing from Requesty API...
+2025-07-27 21:07:06 - INFO - [DRY-RUN] Would update costs for 1 models
+
+Summary for all providers:
+
+openrouter:
+  Models removed: 0
+  Models updated: 3
+  Changes: 3
+
+requesty:
+  Models removed: 0
+  Models updated: 1
+  Changes: 1
+
+Overall Summary:
+Total models removed: 0
+Total models updated: 4
+Total changes across all providers: 4
+```
 
 ### Dry-Run Mode with Cost Updates
 ```
@@ -390,6 +560,22 @@ python cleanup_vercel_models.py --dry-run --verbose
 2025-08-25 19:56:19 - INFO - [DRY-RUN]     Output cost: 2e-06
 ```
 
+### Adding Model with Custom Name
+```
+python cleanup_openrouter_models.py --add-model "mistralai/mistral-medium-3.1" --model-name "my-mistral-medium"
+
+2025-07-27 21:36:38 - INFO - Loading configuration from config.yaml
+2025-07-27 21:36:38 - INFO - Fetching available models with pricing from OpenRouter API...
+2025-07-27 21:36:38 - INFO - Fetched 319 available models from OpenRouter API
+2025-07-27 21:36:38 - INFO - Found 29 OpenRouter models in configuration
+2025-07-27 21:36:38 - INFO - Added model 'mistralai/mistral-medium-3.1' with name 'my-mistral-medium'
+2025-07-27 21:36:38 - INFO -   Input cost: 4e-07
+2025-07-27 21:36:38 - INFO -   Output cost: 2e-06
+2025-07-27 21:36:38 - INFO - Saving updated configuration to config.yaml
+2025-07-27 21:36:38 - INFO - Configuration saved successfully
+2025-07-27 21:36:38 - INFO - ✅ Successfully added 1 model(s): mistralai/mistral-medium-3.1
+```
+
 ### Duplicate Model Detection
 ```
 2025-07-27 21:34:49 - INFO - Loading configuration from config.yaml
@@ -399,13 +585,13 @@ python cleanup_vercel_models.py --dry-run --verbose
 2025-07-27 21:34:49 - INFO - Found 29 OpenRouter models in configuration
 2025-07-27 21:34:49 - WARNING - [DRY-RUN] Model 'meta-llama/llama-3.2-1b-instruct' already exists in configuration
 
-# For Requesty
+# For Poe
 2025-07-27 21:34:49 - INFO - Loading configuration from config.yaml
-2025-07-27 21:34:49 - INFO - Fetching available models with pricing from Requesty API...
-2025-07-27 21:34:49 - INFO - Fetched 50 available models from Requesty API
+2025-07-27 21:34:49 - INFO - Fetching available models with pricing from Poe API...
+2025-07-27 21:34:49 - INFO - Fetched 25 available models from Poe API
 2025-07-27 21:34:49 - INFO - Loading configuration from config.yaml
-2025-07-27 21:34:49 - INFO - Found 4 Requesty models in configuration
-2025-07-27 21:34:49 - WARNING - [DRY-RUN] Model 'openai/coding/gemini-2.5-flash' already exists in configuration
+2025-07-27 21:34:49 - INFO - Found 3 Poe models in configuration
+2025-07-27 21:34:49 - WARNING - [DRY-RUN] Model 'openai/Claude-Sonnet-4.5' already exists in configuration
 ```
 
 ## How It Works
@@ -485,8 +671,19 @@ The script identifies Nano-GPT models by looking for entries where:
 - The `openai/` prefix is stripped for comparison
 - Models not found in the API response are marked as invalid
 
+### Poe Model Validation
+- Config models like `openai/Claude-Sonnet-4.5` are compared against API models like `Claude-Sonnet-4.5`
+- The `openai/` prefix is stripped for comparison
+- Models not found in the API response are marked as invalid
+
 ### Cost Validation and Updates
-- The script fetches current pricing from the APIs (`input_price` and `output_price` fields for Requesty, `pricing.prompt` and `pricing.completion` fields for OpenRouter, `input_token_price_per_m` and `output_token_price_per_m` fields for Novita, `pricing.prompt` and `pricing.completion` fields for Nano-GPT, `input` and `output` fields for Vercel AI Gateway)
+- The script fetches current pricing from the APIs:
+  - Requesty: `input_price` and `output_price` fields
+  - OpenRouter: `pricing.prompt` and `pricing.completion` fields
+  - Novita: `input_token_price_per_m` and `output_token_price_per_m` fields
+  - Nano-GPT: `pricing.prompt` and `pricing.completion` fields
+  - Vercel AI Gateway: `input` and `output` fields
+  - Poe: `pricing.prompt` and `pricing.completion` fields
 - Compares `input_cost_per_token` and `output_cost_per_token` in your config with API pricing
 - **Automatically updates costs** when differences are detected
 - **Free model handling**: When API returns `0.0` for free models, the script preserves `1e-09` costs for LiteLLM compatibility
@@ -494,6 +691,7 @@ The script identifies Nano-GPT models by looking for entries where:
 - **Novita pricing conversion**: Properly converts Novita's per-million token pricing format (e.g., 600 = $0.06 per million tokens = 6e-08 per token)
 - **Nano-GPT pricing conversion**: Properly converts Nano-GPT's per-million token pricing format to per-token costs
 - **Vercel AI Gateway pricing conversion**: Properly handles Vercel's per-token pricing format
+- **Poe pricing conversion**: Properly handles Poe's per-token pricing format
 
 ## Error Handling
 
@@ -534,15 +732,21 @@ The scripts handle various error conditions:
    - The config file might have syntax errors
    - Validate your YAML syntax
 
+4. **"--model-name can only be used when adding a single model"**
+   - Custom model names are only supported when adding exactly one model
+   - Remove `--model-name` when adding multiple models, or add models one at a time
+
 ### Getting Help
 
 Run the scripts with `--help` to see all available options:
 ```bash
+python cleanup_models.py --help
 python cleanup_openrouter_models.py --help
 python cleanup_requesty_models.py --help
 python cleanup_novita_models.py --help
 python cleanup_nano_gpt_models.py --help
 python cleanup_vercel_models.py --help
+python cleanup_poe_models.py --help
 ```
 
 ## Best Practices
@@ -552,44 +756,64 @@ python cleanup_vercel_models.py --help
 3. **Commit your config to git before running** (as you mentioned using git)
 4. **Run periodically** to keep your configuration up to date
 5. **Check the logs** to understand what models were removed and why
-6. **For Requesty models**, the scripts preserve existing model names to allow LiteLLM to distribute requests across different providers
-7. **For Novita models**, ensure model IDs match the exact format from the Novita API (e.g., "deepseek/deepseek-v3-0324")
-8. **For Nano-GPT models**, ensure model IDs match the exact format from the Nano-GPT API (e.g., "nvidia/nvidia-nemotron-nano-9b-v2")
-9. **For Vercel AI Gateway models**, ensure model IDs match the exact format from the Vercel AI Gateway API (e.g., "alibaba/qwen-3-14b")
+6. **Use the unified script** (`cleanup_models.py --provider all`) for efficient batch processing
+7. **Custom model names** are only supported when adding a single model at a time
+8. **For Requesty models**, the scripts preserve existing model names to allow LiteLLM to distribute requests across different providers
+9. **For Novita models**, ensure model IDs match the exact format from the Novita API (e.g., "deepseek/deepseek-v3-0324")
+10. **For Nano-GPT models**, ensure model IDs match the exact format from the Nano-GPT API (e.g., "nvidia/nvidia-nemotron-nano-9b-v2")
+11. **For Vercel AI Gateway models**, ensure model IDs match the exact format from the Vercel AI Gateway API (e.g., "alibaba/qwen-3-14b")
+12. **For Poe models**, ensure model IDs match the exact format from the Poe API (e.g., "Claude-Sonnet-4.5")
 
 ## Script Architecture
 
-The scripts are organized into main classes with the following key methods:
+### Unified Script (cleanup_models.py)
 
-### Core Methods
+The unified script uses a provider-based architecture with:
+
+- **ProviderManager**: Loads provider configurations from `providers.yaml`
+- **ProviderStrategy**: Abstract base class for provider-specific logic
+  - `PrefixDetectionStrategy`: For providers using model prefix detection (OpenRouter, Novita, Vercel)
+  - `ApiBaseDetectionStrategy`: For providers using API base detection (Requesty, Nano-GPT)
+- **UnifiedModelCleaner**: Main class that orchestrates cleanup across providers
+
+### Provider-Specific Scripts
+
+Each provider-specific script is organized into main classes with the following key methods:
+
+#### Core Methods
 - `load_config()`: Safe YAML loading with error handling
-- `extract_openrouter_models()` / `extract_requesty_models()` / `extract_novita_models()` / `extract_nano_gpt_models()`: Find models in config
+- `extract_[provider]_models()`: Find provider-specific models in config
 - `fetch_available_models()`: Query APIs for models and pricing data
 - `validate_models()`: Compare config vs API models for validity
 - `remove_invalid_entries()`: Remove invalid model entries
+- `sort_model_list()`: Sort models alphabetically by model_name and litellm_params.model
 - `save_config()`: Write updated configuration
 - `generate_report()`: Summary reporting with model changes, cost updates, and additions
 
-### Cost Update Methods
+#### Cost Update Methods
 - `validate_and_update_costs()`: Compare and update model costs with API pricing
 - `preview_cost_changes()`: Show cost changes in dry-run mode with percentage differences
+- `_costs_are_equal()`: Compare costs using relative tolerance for scientific notation
 
-### Model Addition Methods
+#### Model Addition Methods
 - `generate_model_name()`: Generate appropriate model names from model IDs
 - `find_model_in_api()`: Search for specific models in API data with fallback logic
 - `add_model_to_config()`: Add one or more models to configuration with proper cost handling and batch processing
 - `preview_add_model()`: Preview multiple model additions in dry-run mode with comprehensive validation
 
 ### Enhanced Features
+- **Unified interface**: Single script to manage all providers
 - **Automatic cost synchronization**: Keeps your config costs current with API pricing
 - **Easy model addition**: Add new models with automatic cost detection
+- **Custom model naming**: Specify custom names when adding single models
+- **Automatic sorting**: Keeps model lists organized alphabetically
 - **Dual version support** (OpenRouter): Automatically adds both free and paid versions with same model name
 - **Provider load balancing** (Requesty): Preserves existing model names to allow LiteLLM to distribute requests
 - **Free model compatibility**: Handles LiteLLM's requirement for non-zero costs
 - **Duplicate prevention**: Prevents adding models that already exist
 - **Smart naming**: Generates appropriate model names with conflict resolution
 - **Percentage-based logging**: Clear visibility into cost impact
-- **Triple functionality**: Model validation, cost updates, and model addition in a single tool
+- **Multi-functionality**: Model validation, cost updates, sorting, and model addition in a single tool
 
 ## License
 
