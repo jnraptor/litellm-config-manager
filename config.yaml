@@ -388,6 +388,16 @@ model_list:
   model_info:
     mode: embedding
 - litellm_params:
+    model: openrouter/arcee-ai/trinity-mini
+    input_cost_per_token: 4.5e-08
+    output_cost_per_token: 1.5e-07
+  model_name: or-arcee-ai-trinity-mini
+- litellm_params:
+    model: openrouter/arcee-ai/trinity-mini:free
+    input_cost_per_token: 1.0e-09
+    output_cost_per_token: 1.0e-09
+  model_name: or-arcee-ai-trinity-mini
+- litellm_params:
     model: openrouter/baai/bge-m3
     input_cost_per_token: 1.0e-08
     output_cost_per_token: 1.0e-09
@@ -399,11 +409,16 @@ model_list:
     input_cost_per_token: 2.16e-07
     output_cost_per_token: 8.0e-07
   model_name: or-deepseek-v3.1-terminus
-- model_name: or-deepseek-v3.2-exp
-  litellm_params:
-    model: openrouter/deepseek/deepseek-v3.2-exp
-    input_cost_per_token: 2.16e-07
-    output_cost_per_token: 3.28e-07
+- litellm_params:
+    model: openrouter/deepseek/deepseek-v3.2
+    input_cost_per_token: 2.8e-07
+    output_cost_per_token: 4.0e-07
+  model_name: or-deepseek-v3.2
+- litellm_params:
+    model: openrouter/deepseek/deepseek-v3.2-speciale
+    input_cost_per_token: 2.8e-07
+    output_cost_per_token: 4.0e-07
+  model_name: or-deepseek-v3.2-speciale
 - litellm_params:
     model: openrouter/mistralai/devstral-medium
     input_cost_per_token: 4.0e-07
@@ -452,10 +467,15 @@ model_list:
   model_info:
     mode: embedding
 - litellm_params:
+    model: openrouter/mistralai/mistral-large-2512
+    input_cost_per_token: 5.0e-07
+    output_cost_per_token: 1.5e-06
+  model_name: or-mistral-large-2512
+- litellm_params:
     model: openrouter/mistralai/mistral-medium-3.1
     input_cost_per_token: 4.0e-07
     output_cost_per_token: 2.0e-06
-  model_name: or-mistral-mistral-medium-3.1
+  model_name: or-mistral-medium-3.1
 - litellm_params:
     model: openrouter/mistralai/mistral-small-3.2-24b-instruct
     input_cost_per_token: 6.0e-08
