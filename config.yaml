@@ -421,8 +421,8 @@ model_list:
   model_name: or-deepseek-v3.1-terminus
 - litellm_params:
     model: openrouter/deepseek/deepseek-v3.2
-    input_cost_per_token: 2.7e-07
-    output_cost_per_token: 4.0e-07
+    input_cost_per_token: 2.6e-07
+    output_cost_per_token: 3.9e-07
   model_name: or-deepseek-v3.2
 - litellm_params:
     model: openrouter/deepseek/deepseek-v3.2-speciale
@@ -503,8 +503,8 @@ model_list:
   model_name: or-moonshotai-kimi-k2-thinking
 - litellm_params:
     model: openrouter/moonshotai/kimi-linear-48b-a3b-instruct
-    input_cost_per_token: 5.0e-07
-    output_cost_per_token: 6.0e-07
+    input_cost_per_token: 7.0e-07
+    output_cost_per_token: 9.0e-07
   model_name: or-moonshotai-kimi-linear-48b-a3b-instruct
 - litellm_params:
     model: openrouter/nvidia/llama-3.3-nemotron-super-49b-v1.5
@@ -583,8 +583,8 @@ model_list:
 - model_name: or-qwen3-vl-30b-a3b-instruct
   litellm_params:
     model: openrouter/qwen/qwen3-vl-30b-a3b-instruct
-    input_cost_per_token: 1.5e-07
-    output_cost_per_token: 6.0e-07
+    input_cost_per_token: 1.4e-07
+    output_cost_per_token: 1.0e-06
 - model_name: or-qwen3-vl-30b-a3b-thinking
   litellm_params:
     model: openrouter/qwen/qwen3-vl-30b-a3b-thinking
@@ -600,6 +600,11 @@ model_list:
     input_cost_per_token: 1.8e-07
     output_cost_per_token: 2.1e-06
   model_name: or-qwen3-vl-8b-thinking
+- litellm_params:
+    model: openrouter/z-ai/glm-4.6v
+    input_cost_per_token: 3.0e-07
+    output_cost_per_token: 9.0e-07
+  model_name: or-z-ai-glm-4.6v
 - litellm_params:
     model: perplexity/sonar
     input_cost_per_token: 1.0e-06
