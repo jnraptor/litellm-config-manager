@@ -404,7 +404,7 @@ model_list:
     mode: embedding
 - litellm_params:
     model: openrouter/deepseek/deepseek-v3.2
-    input_cost_per_token: 2.5e-07
+    input_cost_per_token: 2.4e-07
     output_cost_per_token: 3.8e-07
   model_name: or-deepseek-v3.2
 - litellm_params:
@@ -434,8 +434,8 @@ model_list:
   model_name: or-llama-3.3-70b-instruct-free
 - litellm_params:
     model: openrouter/minimax/minimax-m2
-    input_cost_per_token: 2.54e-07
-    output_cost_per_token: 1.02e-06
+    input_cost_per_token: 2.0e-07
+    output_cost_per_token: 1.0e-06
   model_name: or-minimax-m2
 - litellm_params:
     model: openrouter/mistralai/codestral-2508
