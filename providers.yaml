@@ -110,6 +110,29 @@ providers:
       api_key_env: "POE_API_KEY"
     api_key_env: "POE_API_KEY"
 
+  nvidia:
+    name: "Nvidia"
+    description: "Nvidia NIM model provider (free models)"
+    api_url: "https://integrate.api.nvidia.com/v1/models"
+    model_prefix: "nvidia_nim/"
+    model_detection:
+      type: "prefix"
+      value: "nvidia_nim/"
+    pricing:
+      # Nvidia models are free - no pricing fields in API
+      input_field: null
+      output_field: null
+      is_per_million: false
+      # All models are free, use nominal cost for LiteLLM compatibility
+      free_model_handling: true
+      default_cost: 1.0e-09
+    model_name_prefix: "nim-"
+    model_name_cleanup:
+      - replace: [["nvidia-", ""], ["meta-", ""], ["google-", ""], ["mistralai-", "mistral-"]]
+    special_models: []
+    api_base_config: null
+    api_key_env: null
+
 # Default settings that apply to all providers unless overridden
 defaults:
   timeout: 30

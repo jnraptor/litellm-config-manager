@@ -115,13 +115,20 @@ class PrefixDetectionStrategy(ProviderStrategy):
             'model_info': None
         }
 
+        # Check if this provider has default costs (e.g., free models like Nvidia)
+        default_cost = self.config.pricing.get('default_cost')
+        if default_cost is not None:
+            model_info['input_cost'] = default_cost
+            model_info['output_cost'] = default_cost
+            return model_info
+
         pricing = api_model.get('pricing', {})
         if not isinstance(pricing, dict):
             return model_info
 
         # Extract input cost
-        input_field = self.config.pricing['input_field']
-        if input_field in pricing:
+        input_field = self.config.pricing.get('input_field')
+        if input_field and input_field in pricing:
             try:
                 input_cost = float(pricing[input_field])
                 if self.config.pricing.get('is_per_million', False):
@@ -132,8 +139,8 @@ class PrefixDetectionStrategy(ProviderStrategy):
                 pass
 
         # Extract output cost
-        output_field = self.config.pricing['output_field']
-        if output_field in pricing:
+        output_field = self.config.pricing.get('output_field')
+        if output_field and output_field in pricing:
             try:
                 output_cost = float(pricing[output_field])
                 if self.config.pricing.get('is_per_million', False):
@@ -169,6 +176,14 @@ class PrefixDetectionStrategy(ProviderStrategy):
         input_cost = api_model_info.get('input_cost')
         output_cost = api_model_info.get('output_cost')
         model_info_section = api_model_info.get('model_info')
+
+        # Apply default cost if configured and costs are None
+        default_cost = self.config.pricing.get('default_cost')
+        if default_cost is not None:
+            if input_cost is None:
+                input_cost = default_cost
+            if output_cost is None:
+                output_cost = default_cost
 
         if self.config.pricing.get('free_model_handling', False):
             if input_cost is not None and input_cost == 0.0:
