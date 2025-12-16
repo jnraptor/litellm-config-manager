@@ -4,10 +4,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Repository Overview
 
-This is a LiteLLM configuration management repository with Python scripts for managing model configurations across OpenRouter, Requesty, Novita AI, Nano-GPT, Vercel AI Gateway, and Poe providers. The main config file (`config.yaml`) contains LiteLLM model definitions with routing strategies and cost information.
+This is a LiteLLM configuration management repository with Python scripts for managing model configurations across multiple AI providers: OpenRouter, Requesty, Novita AI, Nano-GPT, Vercel AI Gateway, Poe, and Nvidia NIM. The main config file (`config.yaml`) contains LiteLLM model definitions with routing strategies and cost information.
 
 **Key Features:**
-- Unified script for managing all providers
+- Unified script (`cleanup_models.py`) for managing all providers via strategy pattern
+- Provider-specific scripts for individual provider management
+- Provider configuration via `providers.yaml`
 - Custom model naming support
 - Automatic model list sorting
 - Cost synchronization with provider APIs
@@ -28,10 +30,12 @@ python cleanup_models.py --provider novita [--config config.yaml] [--dry-run] [-
 python cleanup_models.py --provider nano_gpt [--config config.yaml] [--dry-run] [--verbose]
 python cleanup_models.py --provider vercel [--config config.yaml] [--dry-run] [--verbose]
 python cleanup_models.py --provider poe [--config config.yaml] [--dry-run] [--verbose]
+python cleanup_models.py --provider nvidia [--config config.yaml] [--dry-run] [--verbose]
 
 # Add new models with automatic cost detection
 python cleanup_models.py --provider openrouter --add-model model1 model2 [--dry-run]
 python cleanup_models.py --provider poe --add-model Claude-Sonnet-4.5 GPT-4-Turbo [--dry-run]
+python cleanup_models.py --provider nvidia --add-model meta/llama-3.1-8b-instruct [--dry-run]
 
 # Add model with custom name (single model only)
 python cleanup_models.py --provider openrouter --add-model gpt-4 --model-name "My GPT-4" [--dry-run]
@@ -47,6 +51,7 @@ python cleanup_novita_models.py [--config config.yaml] [--dry-run] [--verbose]
 python cleanup_nano_gpt_models.py [--config config.yaml] [--dry-run] [--verbose]
 python cleanup_vercel_models.py [--config config.yaml] [--dry-run] [--verbose]
 python cleanup_poe_models.py [--config config.yaml] [--dry-run] [--verbose]
+python cleanup_nvidia_models.py [--config config.yaml] [--dry-run] [--verbose]
 
 # Add new models with automatic cost detection
 python cleanup_openrouter_models.py --add-model "model/name" [--dry-run]
@@ -55,6 +60,7 @@ python cleanup_novita_models.py --add-model "provider/model" [--dry-run]
 python cleanup_nano_gpt_models.py --add-model "provider/model" [--dry-run]
 python cleanup_vercel_models.py --add-model "model/name" [--dry-run]
 python cleanup_poe_models.py --add-model "Model-Name" [--dry-run]
+python cleanup_nvidia_models.py --add-model "meta/llama-3.1-8b-instruct" [--dry-run]
 
 # Add models with custom names (single model only)
 python cleanup_openrouter_models.py --add-model "model/name" --model-name "my-custom-name" [--dry-run]
@@ -87,7 +93,7 @@ echo "NANOGPT_API_KEY=your-key" >> .env
 **API Key Requirements:**
 - **Requesty**: Requires `REQUESTY_API_KEY` environment variable
 - **Nano-GPT**: Requires `NANOGPT_API_KEY` environment variable
-- **OpenRouter, Novita, Vercel, Poe**: No API key required for model listing
+- **OpenRouter, Novita, Vercel, Poe, Nvidia**: No API key required for model listing
 
 ### Testing Workflow
 Always run with `--dry-run --verbose` first to preview changes before applying them.
@@ -103,18 +109,19 @@ Always run with `--dry-run --verbose` first to preview changes before applying t
 - Model cost specifications (`input_cost_per_token`, `output_cost_per_token`)
 
 **Unified Cleanup Script:**
-- `cleanup_models.py` - Single configurable script for all providers (~1,287 lines)
+- `cleanup_models.py` - Single configurable script for all providers (~1,301 lines)
 - `providers.yaml` - Provider configuration file with API endpoints and settings
 - Strategy pattern implementation for provider-specific logic
-- Supports all providers: openrouter, requesty, novita, nano_gpt, vercel, poe
+- Supports all providers: openrouter, requesty, novita, nano_gpt, vercel, poe, nvidia
 
 **Provider-Specific Cleanup Scripts:**
-- `cleanup_openrouter_models.py` - OpenRouter API integration
-- `cleanup_requesty_models.py` - Requesty API integration
-- `cleanup_novita_models.py` - Novita API integration
-- `cleanup_nano_gpt_models.py` - Nano-GPT API integration
-- `cleanup_vercel_models.py` - Vercel AI Gateway API integration
-- `cleanup_poe_models.py` - Poe API integration (~958 lines)
+- `cleanup_openrouter_models.py` - OpenRouter API integration (~1,138 lines)
+- `cleanup_requesty_models.py` - Requesty API integration (~1,034 lines)
+- `cleanup_novita_models.py` - Novita API integration (~994 lines)
+- `cleanup_poe_models.py` - Poe API integration (~957 lines)
+- `cleanup_vercel_models.py` - Vercel AI Gateway API integration (~623 lines)
+- `cleanup_nano_gpt_models.py` - Nano-GPT API integration (~563 lines)
+- `cleanup_nvidia_models.py` - Nvidia NIM API integration (~584 lines, free models only)
 
 **GitHub Automation:**
 - Weekly automated cleanup via GitHub Actions
@@ -154,12 +161,13 @@ Each legacy cleanup script follows the same pattern:
 - Comprehensive logging and dry-run capabilities
 
 **Model Identification:**
-- OpenRouter: `litellm_params.model` starts with `openrouter/`
-- Requesty: `litellm_params.api_base` contains `router.requesty.ai`
-- Novita: `litellm_params.model` starts with `novita/`
-- Nano-GPT: `litellm_params.model` starts with `openai/` and `litellm_params.api_base` contains `NANOGPT_API_BASE`
-- Vercel AI Gateway: `litellm_params.model` starts with `vercel_ai_gateway/`
-- Poe: `litellm_params.api_base` contains `api.poe.com` and `litellm_params.model` starts with `openai/`
+- **OpenRouter**: `litellm_params.model` starts with `openrouter/`
+- **Requesty**: `litellm_params.api_base` contains `router.requesty.ai`
+- **Novita**: `litellm_params.model` starts with `novita/`
+- **Nano-GPT**: `litellm_params.model` starts with `openai/` and `litellm_params.api_base` contains `NANOGPT_API_BASE`
+- **Vercel AI Gateway**: `litellm_params.model` starts with `vercel_ai_gateway/`
+- **Poe**: `litellm_params.api_base` contains `api.poe.com` and `litellm_params.model` starts with `openai/`
+- **Nvidia NIM**: `litellm_params.model` starts with `nvidia_nim/`
 
 **Key Methods:**
 - `load_config()` / `save_config()` - YAML file operations
@@ -186,20 +194,27 @@ Each legacy cleanup script follows the same pattern:
 **Free Model Handling:**
 - Uses `1.0e-09` costs for free models (LiteLLM compatibility)
 - Automatic detection and preservation of free model pricing
+- **Nvidia NIM models**: All models are free, no pricing data in API - all use `1.0e-09` cost
 
 **Load Balancing:**
 - Multiple entries can share the same `model_name` for request distribution
 - Requesty script preserves existing model names for load balancing
 
+**Embedding Models:**
+- OpenRouter supports embedding models via separate API endpoint
+- Embedding models automatically tagged with `model_info.mode: embedding`
+
 ## GitHub Actions
 
 **Automated Workflows:**
+- `.github/workflows/cleanup-all-models-unified.yml` - Unified workflow for all providers
 - `.github/workflows/cleanup-openrouter-models.yml`
 - `.github/workflows/cleanup-requesty-models.yml`
 - `.github/workflows/cleanup-novita-models.yml`
 - `.github/workflows/cleanup-nano-gpt-models.yml`
 - `.github/workflows/cleanup-vercel-models.yml`
 - `.github/workflows/cleanup-poe-models.yml`
+- `.github/workflows/cleanup-nvidia-models.yml`
 
 **Schedule:** Weekly on Sundays (`0 0 * * 0`)
 
