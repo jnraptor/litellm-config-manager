@@ -298,8 +298,8 @@ model_list:
     model: openai/gpt-5.2
     api_base: os.environ/NANOGPT_API_BASE
     api_key: os.environ/NANOGPT_API_KEY
-    input_cost_per_token: 1.75e-06
-    output_cost_per_token: 1.4e-05
+    input_cost_per_token: 1.3125e-06
+    output_cost_per_token: 1.05e-05
 - litellm_params:
     model: openai/gpt-5.2
     api_base: https://api.poe.com/v1
