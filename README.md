@@ -1,11 +1,11 @@
 # LiteLLM Model Cleanup, Cost Update, and Model Addition Scripts
 
-Comprehensive Python scripts that validate models from multiple providers (OpenRouter, Requesty, Novita, Nano-GPT, Vercel AI Gateway, and Poe) in LiteLLM configuration files against their respective APIs, remove invalid model entries, automatically update model costs to match current pricing, and provide an easy way to add new models.
+Comprehensive Python scripts that validate models from multiple providers (OpenRouter, Requesty, Novita, Nano-GPT, Vercel AI Gateway, Poe, and Nvidia NIM) in LiteLLM configuration files against their respective APIs, remove invalid model entries, automatically update model costs to match current pricing, and provide an easy way to add new models.
 
 ## Overview
 
 These scripts help maintain your LiteLLM configuration by:
-- Identifying models from multiple providers (OpenRouter, Requesty, Novita, Nano-GPT, Vercel AI Gateway, Poe) in your `config.yaml`
+- Identifying models from multiple providers (OpenRouter, Requesty, Novita, Nano-GPT, Vercel AI Gateway, Poe, Nvidia NIM) in your `config.yaml`
 - Checking their validity against the current APIs
 - Removing entire model entries for invalid/deprecated models
 - **Automatically updating model costs** (`input_cost_per_token` and `output_cost_per_token`) when they differ from API pricing
@@ -24,6 +24,7 @@ These scripts help maintain your LiteLLM configuration by:
 - **cleanup_nano_gpt_models.py** - Nano-GPT-specific cleanup
 - **cleanup_vercel_models.py** - Vercel AI Gateway-specific cleanup
 - **cleanup_poe_models.py** - Poe-specific cleanup
+- **cleanup_nvidia_models.py** - Nvidia NIM-specific cleanup
 
 ## Features
 
@@ -41,6 +42,14 @@ All scripts now support custom model naming when adding models:
 - Use `--model-name "My Custom Name"` when adding a single model
 - Provides flexibility in organizing your model configuration
 - Works with all provider-specific scripts and the unified script
+
+### 🆕 NEW: Nvidia NIM Provider Support
+
+Added full support for Nvidia NIM models with `cleanup_nvidia_models.py`:
+- Validates Nvidia NIM models against the Nvidia API
+- All Nvidia NIM models are free (uses `1e-09` cost for LiteLLM compatibility)
+- Adds new Nvidia NIM models with proper configuration
+- Supports all standard features (dry-run, verbose, custom names)
 
 ### 🆕 NEW: Poe Provider Support
 
@@ -81,6 +90,9 @@ python cleanup_vercel_models.py --add-model alibaba/qwen-3-14b alibaba/qwen-3-30
 
 # Add multiple Poe models (space separated)
 python cleanup_poe_models.py --add-model Claude-Sonnet-4.5 GPT-4-Turbo Gemini-2.0-Flash
+
+# Add multiple Nvidia NIM models (space separated)
+python cleanup_nvidia_models.py --add-model meta/llama-3.1-8b-instruct nvidia/llama-3.1-nemotron-70b-instruct
 
 # Add model with custom name (single model only)
 python cleanup_openrouter_models.py --add-model mistralai/mistral-medium-3.1 --model-name "my-mistral-medium"
@@ -202,6 +214,20 @@ python cleanup_models.py --provider openrouter --add-model gpt-4 --model-name "M
 - ✅ **Preserves Structure**: Maintains YAML formatting and structure
 - ✅ **Complete Removal**: Removes entire model entries (not just model references)
 
+### Nvidia NIM Script (cleanup_nvidia_models.py)
+- ✅ **Safe Operation**: Dry-run mode to preview changes before applying
+- ✅ **Free Models**: All Nvidia NIM models are free - uses `1e-09` costs for LiteLLM compatibility
+- ✅ **Easy Model Addition**: Add one or more Nvidia NIM models with proper formatting
+- ✅ **Custom Model Names**: Support for custom naming when adding a single model
+- ✅ **Duplicate Prevention**: Prevents adding models that already exist in configuration
+- ✅ **Smart Naming**: Generates appropriate model names with `nim-` prefix and conflict resolution
+- ✅ **Model List Sorting**: Automatically sorts models alphabetically
+- ✅ **Comprehensive Logging**: Detailed output with verbose mode for validation and model addition
+- ✅ **Error Handling**: Robust error handling for network and file issues
+- ✅ **No Authentication Required**: Uses public Nvidia API endpoint
+- ✅ **Preserves Structure**: Maintains YAML formatting and structure
+- ✅ **Complete Removal**: Removes entire model entries (not just model references)
+
 ## Installation
 
 1. **Clone or download the script files:**
@@ -214,6 +240,7 @@ python cleanup_models.py --provider openrouter --add-model gpt-4 --model-name "M
    # - cleanup_nano_gpt_models.py
    # - cleanup_vercel_models.py
    # - cleanup_poe_models.py
+   # - cleanup_nvidia_models.py
    # - providers.yaml (for unified script)
    # - requirements.txt
    ```
@@ -242,7 +269,7 @@ python cleanup_models.py --provider openrouter --add-model gpt-4 --model-name "M
    Providers that require API keys:
    - **Requesty**: Set `REQUESTY_API_KEY` environment variable
    - **Nano-GPT**: Set `NANOGPT_API_KEY` environment variable
-   - **OpenRouter, Novita, Vercel, Poe**: No API key required for model listing
+   - **OpenRouter, Novita, Vercel, Poe, Nvidia**: No API key required for model listing
 
 ## Usage
 
@@ -261,6 +288,7 @@ python cleanup_novita_models.py
 python cleanup_nano_gpt_models.py
 python cleanup_vercel_models.py
 python cleanup_poe_models.py
+python cleanup_nvidia_models.py
 
 # Process a specific config file
 python cleanup_openrouter_models.py --config /path/to/your/config.yaml
@@ -287,6 +315,7 @@ python cleanup_novita_models.py --add-model deepseek/deepseek-v3-0324 qwen/qwen-
 python cleanup_nano_gpt_models.py --add-model nvidia/nvidia-nemotron-nano-9b-v2 qwen/qwen3-235b-a22b-thinking-2507
 python cleanup_vercel_models.py --add-model alibaba/qwen-3-14b alibaba/qwen-3-30b meta-llama/llama-3.1-8b-instruct
 python cleanup_poe_models.py --add-model Claude-Sonnet-4.5 GPT-4-Turbo Gemini-2.0-Flash
+python cleanup_nvidia_models.py --add-model meta/llama-3.1-8b-instruct nvidia/llama-3.1-nemotron-70b-instruct
 
 # Add multiple models with quotes (backward compatible)
 python cleanup_openrouter_models.py --add-model "mistralai/mistral-medium-3.1" "mistralai/mistral-small" "anthropic/claude-3-5-sonnet-20241022"
@@ -298,6 +327,7 @@ python cleanup_novita_models.py --add-model deepseek/deepseek-r1-0528-qwen3-8b -
 python cleanup_nano_gpt_models.py --add-model nvidia/nvidia-nemotron-nano-9b-v2 --dry-run
 python cleanup_vercel_models.py --add-model alibaba/qwen-3-14b --dry-run
 python cleanup_poe_models.py --add-model Claude-Sonnet-4.5 --dry-run
+python cleanup_nvidia_models.py --add-model meta/llama-3.1-8b-instruct --dry-run
 
 # Add models with verbose output
 python cleanup_openrouter_models.py --add-model meta-llama/llama-3.2-1b-instruct --verbose
@@ -305,6 +335,7 @@ python cleanup_requesty_models.py --add-model smart/task --verbose
 python cleanup_novita_models.py --add-model qwen/qwen3-235b-a22b-thinking-2507 --verbose
 python cleanup_vercel_models.py --add-model alibaba/qwen-3-14b --verbose
 python cleanup_poe_models.py --add-model GPT-4-Turbo --verbose
+python cleanup_nvidia_models.py --add-model meta/llama-3.1-8b-instruct --verbose
 ```
 
 ### Dry-Run Mode (Recommended First)
@@ -321,6 +352,7 @@ python cleanup_novita_models.py --dry-run
 python cleanup_nano_gpt_models.py --dry-run
 python cleanup_vercel_models.py --dry-run
 python cleanup_poe_models.py --dry-run
+python cleanup_nvidia_models.py --dry-run
 
 # Detailed preview with verbose logging and percentage changes
 python cleanup_openrouter_models.py --dry-run --verbose
@@ -329,6 +361,7 @@ python cleanup_novita_models.py --dry-run --verbose
 python cleanup_nano_gpt_models.py --dry-run --verbose
 python cleanup_vercel_models.py --dry-run --verbose
 python cleanup_poe_models.py --dry-run --verbose
+python cleanup_nvidia_models.py --dry-run --verbose
 ```
 
 ### Command-Line Options
@@ -337,7 +370,7 @@ python cleanup_poe_models.py --dry-run --verbose
 
 | Option | Description |
 |--------|-------------|
-| `--provider PROVIDER` | Provider to process: `openrouter`, `requesty`, `novita`, `nano_gpt`, `vercel`, `poe`, or `all` (required) |
+| `--provider PROVIDER` | Provider to process: `openrouter`, `requesty`, `novita`, `nano_gpt`, `vercel`, `poe`, `nvidia`, or `all` (required) |
 | `--config CONFIG` | Path to LiteLLM configuration file (default: `config.yaml`) |
 | `--dry-run` | Preview all changes without modifying the configuration file |
 | `--verbose` | Enable detailed logging output with cost comparison information and percentage changes |
@@ -649,6 +682,11 @@ The script identifies Nano-GPT models by looking for entries where:
 - `litellm_params.api_base` contains `NANOGPT_API_BASE`
 - Examples: `openai/nvidia/nvidia-nemotron-nano-9b-v2`, `openai/qwen/qwen3-235b-a22b-thinking-2507`
 
+### Nvidia NIM Models
+The script identifies Nvidia NIM models by looking for entries where:
+- `litellm_params.model` starts with `nvidia_nim/`
+- Examples: `nvidia_nim/meta/llama-3.1-8b-instruct`, `nvidia_nim/nvidia/llama-3.1-nemotron-70b-instruct`
+
 ## Validation Logic
 
 ### OpenRouter Model Validation
@@ -675,6 +713,12 @@ The script identifies Nano-GPT models by looking for entries where:
 - Config models like `openai/Claude-Sonnet-4.5` are compared against API models like `Claude-Sonnet-4.5`
 - The `openai/` prefix is stripped for comparison
 - Models not found in the API response are marked as invalid
+
+### Nvidia NIM Model Validation
+- Config models like `nvidia_nim/meta/llama-3.1-8b-instruct` are compared against API models like `meta/llama-3.1-8b-instruct`
+- The `nvidia_nim/` prefix is stripped for comparison
+- Models not found in the API response are marked as invalid
+- All Nvidia NIM models are free - no pricing data in API, uses `1e-09` cost for LiteLLM compatibility
 
 ### Cost Validation and Updates
 - The script fetches current pricing from the APIs:
@@ -713,7 +757,7 @@ The scripts handle various error conditions:
 ## Dependencies
 
 - **PyYAML**: For safe YAML parsing and writing
-- **requests**: For HTTP API calls to OpenRouter, Requesty, Novita, Nano-GPT, and Vercel AI Gateway
+- **requests**: For HTTP API calls to OpenRouter, Requesty, Novita, Nano-GPT, Vercel AI Gateway, Poe, and Nvidia
 
 ## Troubleshooting
 
@@ -747,6 +791,7 @@ python cleanup_novita_models.py --help
 python cleanup_nano_gpt_models.py --help
 python cleanup_vercel_models.py --help
 python cleanup_poe_models.py --help
+python cleanup_nvidia_models.py --help
 ```
 
 ## Best Practices
@@ -763,6 +808,7 @@ python cleanup_poe_models.py --help
 10. **For Nano-GPT models**, ensure model IDs match the exact format from the Nano-GPT API (e.g., "nvidia/nvidia-nemotron-nano-9b-v2")
 11. **For Vercel AI Gateway models**, ensure model IDs match the exact format from the Vercel AI Gateway API (e.g., "alibaba/qwen-3-14b")
 12. **For Poe models**, ensure model IDs match the exact format from the Poe API (e.g., "Claude-Sonnet-4.5")
+13. **For Nvidia NIM models**, ensure model IDs match the exact format from the Nvidia API (e.g., "meta/llama-3.1-8b-instruct") - all models are free
 
 ## Script Architecture
 
@@ -772,8 +818,8 @@ The unified script uses a provider-based architecture with:
 
 - **ProviderManager**: Loads provider configurations from `providers.yaml`
 - **ProviderStrategy**: Abstract base class for provider-specific logic
-  - `PrefixDetectionStrategy`: For providers using model prefix detection (OpenRouter, Novita, Vercel)
-  - `ApiBaseDetectionStrategy`: For providers using API base detection (Requesty, Nano-GPT)
+  - `PrefixDetectionStrategy`: For providers using model prefix detection (OpenRouter, Novita, Vercel, Nvidia)
+  - `ApiBaseDetectionStrategy`: For providers using API base detection (Requesty, Nano-GPT, Poe)
 - **UnifiedModelCleaner**: Main class that orchestrates cleanup across providers
 
 ### Provider-Specific Scripts
