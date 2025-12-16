@@ -96,7 +96,24 @@ echo "NANOGPT_API_KEY=your-key" >> .env
 - **OpenRouter, Novita, Vercel, Poe, Nvidia**: No API key required for model listing
 
 ### Testing Workflow
-Always run with `--dry-run --verbose` first to preview changes before applying them.
+
+Always run with `--dry-run --verbose` first to preview changes before applying them:
+
+```bash
+# Test unified script across all providers
+python cleanup_models.py --provider all --dry-run --verbose
+
+# Test specific provider
+python cleanup_models.py --provider openrouter --dry-run --verbose
+
+# Test legacy scripts
+python cleanup_openrouter_models.py --dry-run --verbose
+```
+
+**Before committing config changes:**
+1. Run with `--dry-run --verbose` to review all changes
+2. Review the output for unexpected model removals or cost changes
+3. Apply changes without `--dry-run` only after validation
 
 ## Architecture
 
@@ -128,29 +145,46 @@ Always run with `--dry-run --verbose` first to preview changes before applying t
 - Manual model addition through workflow dispatch
 - Automatic commits when changes are detected
 
+**Base Module (`cleanup_base.py`):**
+- Shared utilities for all cleanup scripts (~750 lines)
+- Common logging setup with verbose support
+- YAML file operations with error handling
+- Cost comparison utilities using relative tolerance for scientific notation
+- Model list sorting by `model_name` and `litellm_params.model`
+- Base classes for provider-specific implementations
+- CLI argument parsing utilities
+
 ### Script Architecture Pattern
 
 #### Unified Script Architecture
-The `cleanup_models.py` script uses a provider-agnostic approach:
+The `cleanup_models.py` script uses a provider-agnostic approach that centralizes configuration and reduces code duplication:
 
-**Provider Configuration:**
+**Provider Configuration Management:**
 - `providers.yaml` defines all provider settings, API endpoints, and behavior
+- Each provider has: API URL, model detection method, pricing field mapping, cost handling
 - Strategy pattern for provider-specific model detection and pricing logic
-- Supports prefix-based and API-based model detection methods
+- Supports two detection methods:
+  - **Prefix-based**: Matches `litellm_params.model` prefix (OpenRouter, Novita, Vercel, Nvidia)
+  - **API-base-based**: Matches `litellm_params.api_base` URL (Requesty, Nano-GPT, Poe)
 
-**Core Components:**
-- `ProviderConfig` - Data class for provider configuration
-- `ProviderStrategy` - Abstract base class for provider-specific logic
-- `PrefixDetectionStrategy` - For providers using model prefix detection
-- `ApiBaseDetectionStrategy` - For providers using API base detection
-- `UnifiedModelCleaner` - Main orchestrator class
+**Core Classes:**
+- `ProviderConfig` - Data class encapsulating provider settings from providers.yaml
+- `ProviderStrategy` - Abstract base class defining detection, API parsing, and naming logic
+- `PrefixDetectionStrategy` - Implements detection for prefix-based providers
+- `ApiBaseDetectionStrategy` - Implements detection for API-base-based providers
+- `UnifiedModelCleaner` - Main orchestrator that processes models across all providers
 
 **Key Methods:**
-- `load_provider_config()` - Load provider configurations
-- `extract_models_by_provider()` - Provider-agnostic model extraction
-- `fetch_provider_models()` - API integration with provider-specific handling
-- `parse_pricing_data()` - Provider-specific pricing extraction
-- `generate_model_name()` - Provider-specific naming conventions
+- `load_provider_config()` - Parses providers.yaml into ProviderConfig objects
+- `extract_models_by_provider()` - Provider-agnostic model extraction using strategy
+- `fetch_provider_models()` - Fetches and caches API data with provider-specific handling
+- `parse_pricing_data()` - Extracts pricing based on provider's configuration
+- `generate_model_name()` - Generates names using provider-specific prefixes and cleanup rules
+
+**Design Pattern Benefits:**
+- Adding new providers only requires updating `providers.yaml`, no code changes needed (in most cases)
+- Consistent behavior across all providers through unified interface
+- Centralized cost comparison and validation logic
 
 #### Legacy Script Architecture
 Each legacy cleanup script follows the same pattern:
@@ -204,6 +238,24 @@ Each legacy cleanup script follows the same pattern:
 - OpenRouter supports embedding models via separate API endpoint
 - Embedding models automatically tagged with `model_info.mode: embedding`
 
+## Choosing Between Unified and Legacy Scripts
+
+**Use the Unified Script (`cleanup_models.py`) for:**
+- Processing multiple providers efficiently (`--provider all`)
+- Standardized interface across all providers
+- Easier configuration management via `providers.yaml`
+- New feature development and improvements
+
+**Use Legacy Scripts (`cleanup_*.py`) for:**
+- Provider-specific edge cases or custom handling
+- Backward compatibility with existing workflows
+- Standalone provider management without dependencies
+- Testing individual provider logic in isolation
+
+**Key Difference:**
+- Unified: Configuration-driven, provider-agnostic, extensible
+- Legacy: Provider-specific, standalone, direct API integration
+
 ## GitHub Actions
 
 **Automated Workflows:**
@@ -233,3 +285,18 @@ Each legacy cleanup script follows the same pattern:
 - Batch model addition (space-separated)
 - Cost synchronization with provider APIs
 - Comprehensive dry-run and verbose modes
+
+## Extending the System
+
+**Adding a New Provider:**
+1. Add provider configuration to `providers.yaml` with API details and detection method
+2. Choose detection strategy: prefix-based or API-base-based
+3. Set pricing field mappings and cost handling rules
+4. Optional: Create legacy script if provider needs custom logic
+5. Test with `python cleanup_models.py --provider <new_provider> --dry-run --verbose`
+
+**Common Configuration Changes:**
+- **Update API endpoint**: Edit `api_url` in `providers.yaml`
+- **Change cost precision**: Modify `cost_comparison_precision` in defaults
+- **Add special models**: Update `special_models` list for providers that need exceptions
+- **Adjust model name cleanup**: Edit `model_name_cleanup` rules for better naming
