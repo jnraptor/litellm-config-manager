@@ -126,12 +126,6 @@ model_list:
     input_cost_per_token: 3.0e-06
     output_cost_per_token: 1.5e-05
   model_name: claude-sonnet-4.5
-- model_name: gemini-2.5-flash
-  litellm_params:
-    model: gemini/gemini-flash-latest
-    api_key: os.environ/GEMINI_API_KEY
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
 - litellm_params:
     model: openai/google/gemini-2.5-flash
     input_cost_per_token: 3.0e-07
@@ -144,12 +138,6 @@ model_list:
     input_cost_per_token: 3.0e-07
     output_cost_per_token: 2.5e-06
   model_name: gemini-2.5-flash
-- model_name: gemini-2.5-flash-lite
-  litellm_params:
-    model: gemini/gemini-flash-lite-latest
-    api_key: os.environ/GEMINI_API_KEY
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
 - litellm_params:
     model: openai/google/gemini-2.5-flash-lite
     api_base: https://router.requesty.ai/v1
@@ -162,12 +150,6 @@ model_list:
     input_cost_per_token: 1.0e-07
     output_cost_per_token: 4.0e-07
   model_name: gemini-2.5-flash-lite
-- model_name: gemini-3-flash
-  litellm_params:
-    model: gemini/gemini-3-flash-preview
-    api_key: os.environ/GEMINI_API_KEY
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
 - model_name: gemini-3-flash
   litellm_params:
     model: openai/gemini-3-flash
@@ -215,25 +197,11 @@ model_list:
   model_name: gemini-3-pro
 - model_name: gemini-embedding-001
   litellm_params:
-    model: gemini/gemini-embedding-001
-    api_key: os.environ/GEMINI_API_KEY
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
-  model_info:
-    mode: embedding
-- model_name: gemini-embedding-001
-  litellm_params:
     model: openrouter/google/gemini-embedding-001
     input_cost_per_token: 1.5e-07
     output_cost_per_token: 1.0e-09
   model_info:
     mode: embedding
-- model_name: gemma-3-27b-free
-  litellm_params:
-    model: gemini/gemma-3-27b-it
-    api_key: os.environ/GEMINI_API_KEY
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
 - litellm_params:
     model: openrouter/google/gemma-3-27b-it:free
     input_cost_per_token: 1.0e-09
