@@ -166,6 +166,13 @@ model_list:
     output_cost_per_token: 3.0e-06
 - model_name: gemini-3-flash
   litellm_params:
+    model: openai/google/gemini-3-flash-preview
+    api_base: https://router.requesty.ai/v1
+    api_key: os.environ/REQUESTY_API_KEY
+    input_cost_per_token: 5.0e-07
+    output_cost_per_token: 3.0e-06
+- model_name: gemini-3-flash
+  litellm_params:
     model: openrouter/google/gemini-3-flash-preview
     input_cost_per_token: 5.0e-07
     output_cost_per_token: 3.0e-06
