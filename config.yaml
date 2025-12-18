@@ -162,6 +162,13 @@ model_list:
     input_cost_per_token: 1.0e-07
     output_cost_per_token: 4.0e-07
   model_name: gemini-2.5-flash-lite
+- model_name: gemini-3-flash
+  litellm_params:
+    model: openai/gemini-3-flash
+    api_base: https://api.poe.com/v1
+    api_key: os.environ/POE_API_KEY
+    input_cost_per_token: 4.0e-07
+    output_cost_per_token: 2.4e-06
 - model_name: gemini-3-flash-preview
   litellm_params:
     model: openai/google/gemini-3-flash-preview
