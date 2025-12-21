@@ -439,7 +439,7 @@ model_list:
     mode: embedding
 - litellm_params:
     model: openrouter/deepseek/deepseek-v3.2
-    input_cost_per_token: 2.6e-07
+    input_cost_per_token: 2.4e-07
     output_cost_per_token: 3.8e-07
   model_name: or-deepseek-v3.2
 - litellm_params:
@@ -501,8 +501,8 @@ model_list:
   model_name: or-moonshotai-kimi-k2-0905
 - litellm_params:
     model: openrouter/moonshotai/kimi-k2-thinking
-    input_cost_per_token: 4.5e-07
-    output_cost_per_token: 2.35e-06
+    input_cost_per_token: 4.0e-07
+    output_cost_per_token: 1.75e-06
   model_name: or-moonshotai-kimi-k2-thinking
 - model_name: or-qwen-plus-2025-07-28
   litellm_params:
@@ -536,8 +536,8 @@ model_list:
   model_name: or-qwen3-coder
 - litellm_params:
     model: openrouter/qwen/qwen3-coder-30b-a3b-instruct
-    input_cost_per_token: 6.0e-08
-    output_cost_per_token: 2.5e-07
+    input_cost_per_token: 7.0e-08
+    output_cost_per_token: 2.7e-07
   model_name: or-qwen3-coder-30b-a3b-instruct
 - litellm_params:
     model: openrouter/qwen/qwen3-embedding-4b
