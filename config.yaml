@@ -321,7 +321,7 @@ model_list:
     model: openai/gpt-oss-120b
     api_key: os.environ/OPENAI_API_KEY
 - litellm_params:
-    model: openrouter/openai/gpt-oss-120b:exacto
+    model: openrouter/openai/gpt-oss-120b
     input_cost_per_token: 3.9e-08
     output_cost_per_token: 1.9e-07
   model_name: gpt-oss-120b
@@ -439,7 +439,7 @@ model_list:
     mode: embedding
 - litellm_params:
     model: openrouter/deepseek/deepseek-v3.2
-    input_cost_per_token: 2.4e-07
+    input_cost_per_token: 2.6e-07
     output_cost_per_token: 3.8e-07
   model_name: or-deepseek-v3.2
 - litellm_params:
@@ -467,11 +467,11 @@ model_list:
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
   model_name: or-llama-3.3-70b-instruct-free
-- litellm_params:
-    model: openrouter/minimax/minimax-m2
-    input_cost_per_token: 2.0e-07
-    output_cost_per_token: 1.0e-06
-  model_name: or-minimax-m2
+- model_name: or-minimax-m2.1
+  litellm_params:
+    model: openrouter/minimax/minimax-m2.1
+    input_cost_per_token: 3.0e-07
+    output_cost_per_token: 1.2e-06
 - litellm_params:
     model: openrouter/mistralai/codestral-2508
     input_cost_per_token: 3.0e-07
@@ -700,20 +700,41 @@ model_list:
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
   model_name: zai-glm-4.5-air
-- litellm_params:
-    model: openrouter/z-ai/glm-4.6:exacto
-    input_cost_per_token: 4.4e-07
-    output_cost_per_token: 1.76e-06
-  model_name: zai-glm-4.6
 - model_name: zai-glm-4.6v
   litellm_params:
-    model: openai/zai-org/glm-4.6v-original
+    model: openai/glm-4.6v
+    api_base: https://api.poe.com/v1
+    api_key: os.environ/POE_API_KEY
+    input_cost_per_token: 3.0e-07
+    output_cost_per_token: 9.0e-07
+- model_name: zai-glm-4.6v
+  litellm_params:
+    model: openai/zai-org/glm-4.6v
     api_base: os.environ/NANOGPT_API_BASE
     api_key: os.environ/NANOGPT_API_KEY
-    input_cost_per_token: 6.0e-07
+    input_cost_per_token: 3.0e-07
     output_cost_per_token: 9.0e-07
 - litellm_params:
     model: openrouter/z-ai/glm-4.6v
     input_cost_per_token: 3.0e-07
     output_cost_per_token: 9.0e-07
   model_name: zai-glm-4.6v
+- model_name: zai-glm-4.7
+  litellm_params:
+    model: openai/glm-4.7
+    api_base: https://api.poe.com/v1
+    api_key: os.environ/POE_API_KEY
+    input_cost_per_token: 6.0e-07
+    output_cost_per_token: 2.2e-06
+- model_name: zai-glm-4.7
+  litellm_params:
+    model: openai/zai-org/glm-4.7
+    api_base: os.environ/NANOGPT_API_BASE
+    api_key: os.environ/NANOGPT_API_KEY
+    input_cost_per_token: 4.0000000000000003e-07
+    output_cost_per_token: 1.5e-06
+- model_name: zai-glm-4.7
+  litellm_params:
+    model: openrouter/z-ai/glm-4.7
+    input_cost_per_token: 4.0e-07
+    output_cost_per_token: 1.5e-06
