@@ -301,8 +301,8 @@ model_list:
     api_key: os.environ/OPENAI_API_KEY
 - litellm_params:
     model: openrouter/openai/gpt-oss-120b
-    input_cost_per_token: 2.0e-08
-    output_cost_per_token: 1.0e-07
+    input_cost_per_token: 3.9e-08
+    output_cost_per_token: 1.9e-07
   model_name: gpt-oss-120b
 - model_name: gpt-oss-20b
   litellm_params:
@@ -310,8 +310,8 @@ model_list:
     api_key: os.environ/OPENAI_API_KEY
 - litellm_params:
     model: openrouter/openai/gpt-oss-20b
-    input_cost_per_token: 1.6e-08
-    output_cost_per_token: 6.0e-08
+    input_cost_per_token: 2.0e-08
+    output_cost_per_token: 1.0e-07
   model_name: gpt-oss-20b
 - model_name: jina-embeddings-v4
   litellm_params:
@@ -449,8 +449,8 @@ model_list:
 - model_name: or-minimax-m2.1
   litellm_params:
     model: openrouter/minimax/minimax-m2.1
-    input_cost_per_token: 1.2e-07
-    output_cost_per_token: 4.8e-07
+    input_cost_per_token: 2.8e-07
+    output_cost_per_token: 1.2e-06
 - litellm_params:
     model: openrouter/mistralai/codestral-2508
     input_cost_per_token: 3.0e-07
@@ -539,8 +539,8 @@ model_list:
   model_name: or-qwen3-vl-235b-a22b-instruct
 - litellm_params:
     model: openrouter/qwen/qwen3-vl-235b-a22b-thinking
-    input_cost_per_token: 3.0e-07
-    output_cost_per_token: 1.2e-06
+    input_cost_per_token: 4.5e-07
+    output_cost_per_token: 3.5e-06
   model_name: or-qwen3-vl-235b-a22b-thinking
 - model_name: or-qwen3-vl-30b-a3b-instruct
   litellm_params:
@@ -615,8 +615,8 @@ model_list:
   model_name: qwen3-next-80b-a3b-instruct
 - litellm_params:
     model: openrouter/qwen/qwen3-next-80b-a3b-instruct
-    input_cost_per_token: 6.0e-08
-    output_cost_per_token: 6.0e-07
+    input_cost_per_token: 9.0e-08
+    output_cost_per_token: 1.1e-06
   model_name: qwen3-next-80b-a3b-instruct
 - litellm_params:
     model: nvidia_nim/qwen/qwen3-next-80b-a3b-thinking
@@ -671,8 +671,8 @@ model_list:
   model_name: x-ai-grok-code-fast-1
 - litellm_params:
     model: openrouter/z-ai/glm-4.5-air
-    input_cost_per_token: 1.3e-07
-    output_cost_per_token: 8.5e-07
+    input_cost_per_token: 5.0e-08
+    output_cost_per_token: 2.2e-07
   model_name: zai-glm-4.5-air
 - litellm_params:
     model: openrouter/z-ai/glm-4.5-air:free
@@ -710,8 +710,8 @@ model_list:
     model: openai/zai-org/glm-4.7
     api_base: os.environ/NANOGPT_API_BASE
     api_key: os.environ/NANOGPT_API_KEY
-    input_cost_per_token: 4.0000000000000003e-07
-    output_cost_per_token: 1.5e-06
+    input_cost_per_token: 1.5e-07
+    output_cost_per_token: 8.000000000000001e-07
 - model_name: zai-glm-4.7
   litellm_params:
     model: openrouter/z-ai/glm-4.7
