@@ -16,8 +16,8 @@ router_settings:
   redis_port: 6379
 model_list:
 - litellm_params:
-    api_base: os.environ/AZURE_API_BASE_EastUS2
-    api_key: os.environ/AZURE_API_KEY_EastUS2
+    api_base: os.environ/AZURE_OPENAI_API_BASE
+    api_key: os.environ/AZURE_OPENAI_API_KEY
     model: azure/model-router
   model_name: az-model-router
 - litellm_params:
@@ -215,8 +215,8 @@ model_list:
     output_cost_per_token: 1.0e-09
   model_name: gemma-3-27b-free
 - litellm_params:
-    api_base: os.environ/AZURE_API_BASE_EastUS2
-    api_key: os.environ/AZURE_API_KEY_EastUS2
+    api_base: os.environ/AZURE_OPENAI_API_BASE
+    api_key: os.environ/AZURE_OPENAI_API_KEY
     model: azure/gpt-4.1-nano
     input_cost_per_token: 1.0e-07
     output_cost_per_token: 4.0e-07
@@ -226,8 +226,8 @@ model_list:
     model: openai/gpt-4.1-nano
     api_key: os.environ/OPENAI_API_KEY
 - litellm_params:
-    api_base: os.environ/AZURE_API_BASE_EastUS2
-    api_key: os.environ/AZURE_API_KEY_EastUS2
+    api_base: os.environ/AZURE_OPENAI_API_BASE
+    api_key: os.environ/AZURE_OPENAI_API_KEY
     model: azure/gpt-5-mini
     input_cost_per_token: 2.5e-07
     output_cost_per_token: 2.0e-06
@@ -237,8 +237,8 @@ model_list:
     model: openai/gpt-5-mini
     api_key: os.environ/OPENAI_API_KEY
 - litellm_params:
-    api_base: os.environ/AZURE_API_BASE_EastUS2
-    api_key: os.environ/AZURE_API_KEY_EastUS2
+    api_base: os.environ/AZURE_OPENAI_API_BASE
+    api_key: os.environ/AZURE_OPENAI_API_KEY
     model: azure/gpt-5-nano
     input_cost_per_token: 5.0e-08
     output_cost_per_token: 4.0e-07
