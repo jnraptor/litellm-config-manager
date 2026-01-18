@@ -449,8 +449,8 @@ model_list:
 - model_name: or-minimax-m2.1
   litellm_params:
     model: openrouter/minimax/minimax-m2.1
-    input_cost_per_token: 2.8e-07
-    output_cost_per_token: 1.2e-06
+    input_cost_per_token: 2.7e-07
+    output_cost_per_token: 1.12e-06
 - litellm_params:
     model: openrouter/mistralai/codestral-2508
     input_cost_per_token: 3.0e-07
@@ -539,8 +539,8 @@ model_list:
   model_name: or-qwen3-vl-235b-a22b-instruct
 - litellm_params:
     model: openrouter/qwen/qwen3-vl-235b-a22b-thinking
-    input_cost_per_token: 4.5e-07
-    output_cost_per_token: 3.5e-06
+    input_cost_per_token: 9.8e-07
+    output_cost_per_token: 3.95e-06
   model_name: or-qwen3-vl-235b-a22b-thinking
 - model_name: or-qwen3-vl-30b-a3b-instruct
   litellm_params:
