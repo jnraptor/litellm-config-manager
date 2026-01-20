@@ -20,12 +20,26 @@ Author: LiteLLM Config Management
 import argparse
 import logging
 import sys
+import time
 import yaml
 import requests
 from abc import ABC, abstractmethod
+from functools import lru_cache
 from typing import Dict, List, Tuple, Any, Optional, Set
 from pathlib import Path
 
+
+__all__ = [
+    'DEFAULT_CONFIG_FILE',
+    'setup_logging',
+    'costs_are_equal',
+    'adjust_cost_for_free_model',
+    'BaseModelCleaner',
+    'setup_common_args',
+    'validate_model_name_arg',
+    'fetch_models_from_api',
+    'APIClient',
+]
 
 DEFAULT_CONFIG_FILE = "config.yaml"
 
@@ -90,6 +104,93 @@ def adjust_cost_for_free_model(cost: Optional[float], free_cost: float = 1e-09) 
     if cost is None:
         return None
     return free_cost if cost == 0.0 else cost
+
+
+class APIClient:
+    """
+    HTTP client for API requests with retry logic and caching.
+    
+    Provides exponential backoff retry for transient failures and
+    optional response caching for repeated requests.
+    """
+    
+    def __init__(self, timeout: int = 30, max_retries: int = 3, 
+                 base_delay: float = 1.0, use_cache: bool = True):
+        """
+        Initialize the API client.
+        
+        Args:
+            timeout: Request timeout in seconds
+            max_retries: Maximum number of retry attempts
+            base_delay: Base delay for exponential backoff (seconds)
+            use_cache: Whether to cache responses
+        """
+        self.timeout = timeout
+        self.max_retries = max_retries
+        self.base_delay = base_delay
+        self.use_cache = use_cache
+        self.session = requests.Session()
+        self._cache: Dict[str, Any] = {}
+    
+    def _get_cache_key(self, url: str, headers: Optional[Dict[str, str]]) -> str:
+        """Generate a cache key from URL and headers."""
+        header_str = str(sorted(headers.items())) if headers else ""
+        return f"{url}|{header_str}"
+    
+    def fetch(self, url: str, headers: Optional[Dict[str, str]] = None,
+              logger: Optional[logging.Logger] = None) -> Dict[str, Any]:
+        """
+        Fetch JSON data from URL with retry logic.
+        
+        Args:
+            url: The URL to fetch
+            headers: Optional request headers
+            logger: Optional logger for debug output
+            
+        Returns:
+            Parsed JSON response
+            
+        Raises:
+            requests.RequestException: If all retries fail
+        """
+        cache_key = self._get_cache_key(url, headers)
+        
+        if self.use_cache and cache_key in self._cache:
+            if logger:
+                logger.debug(f"Using cached response for {url}")
+            return self._cache[cache_key]
+        
+        last_exception = None
+        
+        for attempt in range(self.max_retries):
+            try:
+                response = self.session.get(url, headers=headers, timeout=self.timeout)
+                response.raise_for_status()
+                data = response.json()
+                
+                if self.use_cache:
+                    self._cache[cache_key] = data
+                
+                return data
+                
+            except requests.RequestException as e:
+                last_exception = e
+                if attempt < self.max_retries - 1:
+                    delay = self.base_delay * (2 ** attempt)
+                    if logger:
+                        logger.warning(f"Request failed (attempt {attempt + 1}/{self.max_retries}): {e}")
+                        logger.warning(f"Retrying in {delay:.1f}s...")
+                    time.sleep(delay)
+        
+        raise last_exception
+    
+    def clear_cache(self):
+        """Clear the response cache."""
+        self._cache.clear()
+
+
+# Global API client instance for module-level functions
+_api_client = APIClient()
 
 
 class BaseModelCleaner(ABC):
@@ -781,10 +882,9 @@ def fetch_models_from_api(api_url: str, logger: logging.Logger,
     """
     logger.info(f"Fetching models from API: {api_url}")
     
-    response = requests.get(api_url, headers=headers, timeout=timeout)
-    response.raise_for_status()
-    
-    data = response.json()
+    # Use the global API client with retry logic
+    client = APIClient(timeout=timeout, use_cache=True)
+    data = client.fetch(api_url, headers=headers, logger=logger)
     
     if 'data' not in data:
         raise ValueError("Invalid API response format: missing 'data' field")

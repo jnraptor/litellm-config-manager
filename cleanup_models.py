@@ -25,9 +25,10 @@ import os
 import sys
 import yaml
 import requests
+import time
 from typing import Dict, List, Tuple, Any, Optional
 from pathlib import Path
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from abc import ABC, abstractmethod
 from dotenv import load_dotenv
 
@@ -35,6 +36,7 @@ from cleanup_base import (
     setup_logging,
     costs_are_equal,
     adjust_cost_for_free_model,
+    APIClient,
 )
 
 
@@ -48,11 +50,32 @@ class ProviderConfig:
     model_detection: Dict[str, Any]
     pricing: Dict[str, Any]
     model_name_prefix: str
-    model_name_cleanup: List[Dict[str, str]]
-    special_models: List[str]
+    model_name_cleanup: List[Dict[str, str]] = field(default_factory=list)
+    special_models: List[str] = field(default_factory=list)
     api_base_config: Optional[Dict[str, str]] = None
     api_key_env: Optional[str] = None
     embeddings_api_url: Optional[str] = None
+    
+    def __post_init__(self):
+        """Validate configuration after initialization."""
+        valid_detection_types = ('prefix', 'api_base')
+        detection_type = self.model_detection.get('type')
+        if detection_type not in valid_detection_types:
+            raise ValueError(
+                f"Invalid model_detection type '{detection_type}' for provider '{self.name}'. "
+                f"Must be one of: {valid_detection_types}"
+            )
+        
+        if detection_type == 'api_base' and 'value' not in self.model_detection:
+            raise ValueError(
+                f"Provider '{self.name}' uses api_base detection but missing 'value' field"
+            )
+        
+        # Ensure lists are initialized
+        if self.model_name_cleanup is None:
+            self.model_name_cleanup = []
+        if self.special_models is None:
+            self.special_models = []
 
 
 class ProviderStrategy(ABC):
@@ -148,8 +171,8 @@ class PrefixDetectionStrategy(ProviderStrategy):
 
         default_cost = self.config.pricing.get('default_cost')
         if default_cost is not None:
-            model_info['input_cost'] = default_cost
-            model_info['output_cost'] = default_cost
+            model_info['input_cost'] = float(default_cost)
+            model_info['output_cost'] = float(default_cost)
             return model_info
 
         pricing = api_model.get('pricing', {})
@@ -259,6 +282,7 @@ class ProviderManager:
         self.config_path = Path(config_path)
         self.providers: Dict[str, ProviderConfig] = {}
         self.strategies: Dict[str, ProviderStrategy] = {}
+        self._api_client = APIClient(timeout=30, max_retries=3, use_cache=True)
         self._load_providers()
 
     def _load_providers(self):
@@ -266,31 +290,54 @@ class ProviderManager:
             with open(self.config_path, 'r', encoding='utf-8') as file:
                 config_data = yaml.safe_load(file)
 
+            if not config_data or 'providers' not in config_data:
+                raise ValueError(f"Invalid provider config: missing 'providers' section")
+
             for provider_name, provider_config in config_data.get('providers', {}).items():
-                provider = ProviderConfig(**provider_config)
-                self.providers[provider_name] = provider
+                try:
+                    # Handle None values for optional list fields
+                    if provider_config.get('model_name_cleanup') is None:
+                        provider_config['model_name_cleanup'] = []
+                    if provider_config.get('special_models') is None:
+                        provider_config['special_models'] = []
+                    
+                    provider = ProviderConfig(**provider_config)
+                    self.providers[provider_name] = provider
 
-                if provider.model_detection['type'] == 'prefix':
-                    strategy = PrefixDetectionStrategy(provider)
-                elif provider.model_detection['type'] == 'api_base':
-                    strategy = ApiBaseDetectionStrategy(provider)
-                else:
-                    raise ValueError(f"Unknown model detection type: {provider.model_detection['type']}")
+                    if provider.model_detection['type'] == 'prefix':
+                        strategy = PrefixDetectionStrategy(provider)
+                    elif provider.model_detection['type'] == 'api_base':
+                        strategy = ApiBaseDetectionStrategy(provider)
+                    else:
+                        raise ValueError(f"Unknown model detection type: {provider.model_detection['type']}")
 
-                self.strategies[provider_name] = strategy
+                    self.strategies[provider_name] = strategy
+                    
+                except (TypeError, KeyError) as e:
+                    raise ValueError(f"Invalid configuration for provider '{provider_name}': {e}")
 
+        except yaml.YAMLError as e:
+            raise ValueError(f"YAML parsing error in provider configuration: {e}")
+        except FileNotFoundError:
+            raise ValueError(f"Provider configuration file not found: {self.config_path}")
         except Exception as e:
             raise ValueError(f"Error loading provider configuration: {e}")
 
     def get_provider(self, provider_name: str) -> ProviderConfig:
         if provider_name not in self.providers:
-            raise ValueError(f"Unknown provider: {provider_name}")
+            available = ', '.join(self.providers.keys())
+            raise ValueError(f"Unknown provider: {provider_name}. Available: {available}")
         return self.providers[provider_name]
 
     def get_strategy(self, provider_name: str) -> ProviderStrategy:
         if provider_name not in self.strategies:
-            raise ValueError(f"Unknown provider: {provider_name}")
+            available = ', '.join(self.strategies.keys())
+            raise ValueError(f"Unknown provider: {provider_name}. Available: {available}")
         return self.strategies[provider_name]
+
+    def get_api_client(self) -> APIClient:
+        """Get the shared API client instance."""
+        return self._api_client
 
     def list_providers(self) -> List[str]:
         return list(self.providers.keys())
@@ -407,6 +454,7 @@ class UnifiedModelCleaner:
         """Fetch available models with pricing from provider API."""
         provider = self.provider_manager.get_provider(provider_name)
         strategy = self.provider_manager.get_strategy(provider_name)
+        api_client = self.provider_manager.get_api_client()
 
         try:
             self.logger.info(f"Fetching available models from {provider.name} API...")
@@ -416,9 +464,7 @@ class UnifiedModelCleaner:
                 if api_key:
                     headers['Authorization'] = f'Bearer {api_key}'
 
-            response = requests.get(provider.api_url, headers=headers, timeout=30)
-            response.raise_for_status()
-            data = response.json()
+            data = api_client.fetch(provider.api_url, headers=headers or None, logger=self.logger)
 
             if 'data' not in data:
                 raise ValueError("Invalid API response format: missing 'data' field")
@@ -432,9 +478,12 @@ class UnifiedModelCleaner:
             # Fetch embedding models if configured
             if provider.embeddings_api_url:
                 try:
-                    response = requests.get(provider.embeddings_api_url, headers=headers, timeout=30)
-                    response.raise_for_status()
-                    embed_data = response.json()
+                    self.logger.debug(f"Fetching embedding models from {provider.name}...")
+                    embed_data = api_client.fetch(
+                        provider.embeddings_api_url, 
+                        headers=headers or None, 
+                        logger=self.logger
+                    )
                     if 'data' in embed_data:
                         for model in embed_data['data']:
                             if isinstance(model, dict) and 'id' in model:
@@ -443,6 +492,7 @@ class UnifiedModelCleaner:
                                     model_with_info['model_info'] = {'mode': 'embedding'}
                                 model_info = strategy.parse_api_model(model_with_info)
                                 available_models[model_info['id']] = model_info
+                        self.logger.debug(f"Fetched embedding models from {provider.name}")
                 except requests.RequestException as e:
                     self.logger.warning(f"Could not fetch embedding models: {e}")
 
