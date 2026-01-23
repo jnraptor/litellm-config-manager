@@ -640,12 +640,6 @@ model_list:
     model: openai/smart-task
     api_base: https://router.requesty.ai/v1
     api_key: os.environ/REQUESTY_API_KEY
-- litellm_params:
-    api_key: os.environ/TOGETHERAI_API_KEY
-    model: together_ai/deepseek-ai/DeepSeek-R1-Distill-Llama-70B-free
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
-  model_name: tgt-DeepSeek-R1-Distill-Llama-70B-free
 - model_name: tgt-Salesforce-Llama-Rank-V1
   litellm_params:
     model: together_ai/Salesforce/Llama-Rank-V1
@@ -726,7 +720,12 @@ model_list:
     output_cost_per_token: 1.5e-06
 - model_name: zai-glm-4.7-flash
   litellm_params:
-    model: openai/zai-org/glm-4.7-flash-original
+    model: openai/glm-4.7-flash
+    api_base: https://api.poe.com/v1
+    api_key: os.environ/POE_API_KEY
+- model_name: zai-glm-4.7-flash
+  litellm_params:
+    model: openai/zai-org/glm-4.7-flash:thinking
     api_base: os.environ/NANOGPT_API_BASE
     api_key: os.environ/NANOGPT_API_KEY
     input_cost_per_token: 6.999999999999999e-08
