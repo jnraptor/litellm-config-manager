@@ -720,11 +720,6 @@ model_list:
     output_cost_per_token: 1.5e-06
 - model_name: zai-glm-4.7-flash
   litellm_params:
-    model: openai/glm-4.7-flash
-    api_base: https://api.poe.com/v1
-    api_key: os.environ/POE_API_KEY
-- model_name: zai-glm-4.7-flash
-  litellm_params:
     model: openai/zai-org/glm-4.7-flash:thinking
     api_base: os.environ/NANOGPT_API_BASE
     api_key: os.environ/NANOGPT_API_KEY
