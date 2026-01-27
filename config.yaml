@@ -490,6 +490,11 @@ model_list:
     input_cost_per_token: 4.0e-07
     output_cost_per_token: 1.75e-06
   model_name: or-moonshotai-kimi-k2-thinking
+- model_name: or-moonshotai-kimi-k2.5
+  litellm_params:
+    model: openrouter/moonshotai/kimi-k2.5
+    input_cost_per_token: 6.0e-07
+    output_cost_per_token: 3.0e-06
 - model_name: or-qwen-plus-2025-07-28
   litellm_params:
     model: openrouter/qwen/qwen-plus-2025-07-28
