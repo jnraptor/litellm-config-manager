@@ -368,11 +368,6 @@ model_list:
     mode: rerank
 - model_name: moonshotai-kimi-k2.5
   litellm_params:
-    model: nvidia_nim/moonshotai/kimi-k2.5
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
-- model_name: moonshotai-kimi-k2.5
-  litellm_params:
     model: openrouter/moonshotai/kimi-k2.5
     input_cost_per_token: 5.0e-07
     output_cost_per_token: 2.8e-06
@@ -711,11 +706,6 @@ model_list:
     input_cost_per_token: 3.0e-07
     output_cost_per_token: 9.0e-07
   model_name: zai-glm-4.6v
-- model_name: zai-glm-4.7
-  litellm_params:
-    model: nvidia_nim/z-ai/glm4.7
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
 - model_name: zai-glm-4.7
   litellm_params:
     model: openai/glm-4.7
