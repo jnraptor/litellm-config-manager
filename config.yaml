@@ -371,6 +371,13 @@ model_list:
     model: openrouter/moonshotai/kimi-k2.5
     input_cost_per_token: 5.0e-07
     output_cost_per_token: 2.8e-06
+- model_name: moonshotai-kimi-k2.5
+  litellm_params:
+    model: openai/moonshotai/kimi-k2.5:thinking
+    api_base: os.environ/NANOGPT_API_BASE
+    api_key: os.environ/NANOGPT_API_KEY
+    input_cost_per_token: 6.0e-07
+    output_cost_per_token: 3.0e-06
 - model_name: nomic-embed-text
   litellm_params:
     model: infinity/nomic-ai/nomic-embed-text-v2-moe
