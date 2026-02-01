@@ -27,6 +27,7 @@ from cleanup_base import (
     fetch_models_from_api,
     adjust_cost_for_free_model,
 )
+from typing import Set
 
 
 OPENROUTER_API_URL = "https://openrouter.ai/api/v1/models"
@@ -39,6 +40,7 @@ class OpenRouterModelCleaner(BaseModelCleaner):
     PROVIDER_NAME = "OpenRouter"
     API_URL = OPENROUTER_API_URL
     MODEL_PREFIX = "openrouter/"
+    SPECIAL_MODELS: Set[str] = {"openrouter/free"}
     
     def extract_provider_models(self, config: Dict[str, Any]) -> List[Tuple[int, str, str]]:
         """Extract OpenRouter models from the configuration."""

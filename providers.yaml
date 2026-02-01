@@ -20,7 +20,7 @@ providers:
     model_name_prefix: "or-"
     model_name_cleanup:
       - replace: [["anthropic-", ""], ["meta-llama-", ""], ["google-", ""], ["mistralai-", "mistral-"], ["qwen-", ""]]
-    special_models: []
+    special_models: ["openrouter/free"]
     api_base_config: null
     api_key_env: null
 
