@@ -146,7 +146,9 @@ class OpenRouterModelCleaner(BaseModelCleaner):
     
     def get_api_model_id(self, model_id: str) -> str:
         """Extract the API model ID from the config model ID."""
-        return model_id.replace(self.MODEL_PREFIX, '')
+        if model_id.startswith(self.MODEL_PREFIX):
+            return model_id[len(self.MODEL_PREFIX):]
+        return model_id
     
     def generate_model_name(self, model_id: str, prefix: str = "or-") -> str:
         """Generate model name with or- prefix for OpenRouter models."""
