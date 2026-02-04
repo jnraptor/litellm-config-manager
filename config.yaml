@@ -16,6 +16,13 @@ router_settings:
   redis_port: 6379
 model_list:
 - litellm_params:
+    model: openai/LFM2.5-1.2B-Deepseek-3.1-Thinking-DISTILL.Q6_K
+    api_base: os.environ/LLAMA_API_BASE
+    api_key: os.environ/LLAMA_API_KEY
+    input_cost_per_token: 1.0e-09
+    output_cost_per_token: 1.0e-09
+  model_name: local-llama
+- litellm_params:
     api_base: os.environ/AZURE_OPENAI_API_BASE
     api_key: os.environ/AZURE_OPENAI_API_KEY
     model: azure/model-router
@@ -382,6 +389,8 @@ model_list:
   litellm_params:
     model: infinity/nomic-ai/nomic-embed-text-v2-moe
     api_base: http://infinity:7997
+    #model: openai/nomic-embed-text-v2-moe
+    #api_base: http://llama-embed:8080/v1
   model_info:
     mode: embedding
 - litellm_params:
