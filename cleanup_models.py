@@ -720,6 +720,32 @@ class UnifiedModelCleaner:
             if output_cost is not None:
                 self.logger.info(f"  Output cost: {output_cost}")
 
+            # Special handling for OpenRouter: check for free variant
+            if provider_name == 'openrouter':
+                free_variant_id = f"{model_id}:free"
+                if free_variant_id in available_models:
+                    if free_variant_id in existing_model_ids:
+                        self.logger.warning(f"Free variant '{free_variant_id}' already exists in configuration")
+                    else:
+                        free_model_entry = strategy.create_model_entry(free_variant_id, available_models[free_variant_id])
+                        # Use the same model name as the base model
+                        free_model_entry['model_name'] = model_name
+                        
+                        if not self.dry_run:
+                            config['model_list'].append(free_model_entry)
+                        
+                        free_full_model_id = free_model_entry['litellm_params']['model']
+                        added_models.append(free_full_model_id)
+                        existing_model_ids.append(free_variant_id)
+                        
+                        self.logger.info(f"Added free variant '{free_full_model_id}' with name '{model_name}'")
+                        free_input_cost = free_model_entry['litellm_params'].get('input_cost_per_token')
+                        free_output_cost = free_model_entry['litellm_params'].get('output_cost_per_token')
+                        if free_input_cost is not None:
+                            self.logger.info(f"  Input cost: {free_input_cost}")
+                        if free_output_cost is not None:
+                            self.logger.info(f"  Output cost: {free_output_cost}")
+
         if failed_models:
             self.logger.warning(f"Failed to add {len(failed_models)} model(s): {', '.join(failed_models)}")
         if added_models:
@@ -732,6 +758,7 @@ class UnifiedModelCleaner:
                          custom_model_name: Optional[str] = None) -> None:
         """Preview what models would be added in dry-run mode."""
         strategy = self.provider_manager.get_strategy(provider_name)
+        provider = self.provider_manager.get_provider(provider_name)
         existing_models = self.extract_provider_models(self.load_config(), provider_name)
 
         existing_model_ids = []
@@ -770,6 +797,22 @@ class UnifiedModelCleaner:
             output_cost = model_entry['litellm_params'].get('output_cost_per_token')
             if input_cost is not None and output_cost is not None:
                 self.logger.info(f"[DRY-RUN]   Input cost: {input_cost}, Output cost: {output_cost}")
+
+            # Special handling for OpenRouter: check for free variant
+            if provider_name == 'openrouter':
+                free_variant_id = f"{model_id}:free"
+                if free_variant_id in available_models:
+                    if free_variant_id in existing_model_ids:
+                        self.logger.info(f"[DRY-RUN]   Free variant '{free_variant_id}' already exists in configuration")
+                    else:
+                        free_model_entry = strategy.create_model_entry(free_variant_id, available_models[free_variant_id])
+                        # Use the same model name as the base model
+                        free_model_entry['model_name'] = model_name
+                        self.logger.info(f"[DRY-RUN]   Free variant '{free_model_entry['litellm_params']['model']}' would also be added with name '{model_name}'")
+                        free_input_cost = free_model_entry['litellm_params'].get('input_cost_per_token')
+                        free_output_cost = free_model_entry['litellm_params'].get('output_cost_per_token')
+                        if free_input_cost is not None and free_output_cost is not None:
+                            self.logger.info(f"[DRY-RUN]     Input cost: {free_input_cost}, Output cost: {free_output_cost}")
 
             previewed_additions.append(model_id)
             existing_model_ids.append(model_id)
