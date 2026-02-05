@@ -397,8 +397,8 @@ model_list:
     model: openai/hf:moonshotai/Kimi-K2.5
     api_base: os.environ/SYNTHETIC_API_BASE
     api_key: os.environ/SYNTHETIC_API_KEY
-    input_cost_per_token: 5.5e-13
-    output_cost_per_token: 2.19e-12
+    input_cost_per_token: 5.5e-07
+    output_cost_per_token: 2.19e-06
 - model_name: moonshotai-kimi-k2.5
   litellm_params:
     model: openai/moonshotai/kimi-k2.5:thinking
@@ -757,8 +757,8 @@ model_list:
     model: openai/hf:zai-org/GLM-4.7
     api_base: os.environ/SYNTHETIC_API_BASE
     api_key: os.environ/SYNTHETIC_API_KEY
-    input_cost_per_token: 5.5e-13
-    output_cost_per_token: 2.19e-12
+    input_cost_per_token: 5.5e-07
+    output_cost_per_token: 2.19e-06
 - model_name: zai-glm-4.7
   litellm_params:
     model: openai/zai-org/glm-4.7

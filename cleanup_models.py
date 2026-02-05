@@ -182,7 +182,11 @@ class PrefixDetectionStrategy(ProviderStrategy):
         input_field = self.config.pricing.get('input_field')
         if input_field and input_field in pricing:
             try:
-                input_cost = float(pricing[input_field])
+                input_value = pricing[input_field]
+                # Parse string values like "$0.00000055"
+                if isinstance(input_value, str):
+                    input_value = input_value.replace('$', '').replace(',', '')
+                input_cost = float(input_value)
                 if self.config.pricing.get('is_per_million', False):
                     input_cost = input_cost / self.config.pricing.get('divisor', 1) / 1_000_000
                 model_info['input_cost'] = input_cost
@@ -192,7 +196,11 @@ class PrefixDetectionStrategy(ProviderStrategy):
         output_field = self.config.pricing.get('output_field')
         if output_field and output_field in pricing:
             try:
-                output_cost = float(pricing[output_field])
+                output_value = pricing[output_field]
+                # Parse string values like "$0.00000219"
+                if isinstance(output_value, str):
+                    output_value = output_value.replace('$', '').replace(',', '')
+                output_cost = float(output_value)
                 if self.config.pricing.get('is_per_million', False):
                     output_cost = output_cost / self.config.pricing.get('divisor', 1) / 1_000_000
                 model_info['output_cost'] = output_cost
@@ -241,6 +249,9 @@ class ApiBaseDetectionStrategy(ProviderStrategy):
             input_value = get_nested_value(api_model, input_field)
             if input_value is not None:
                 try:
+                    # Parse string values like "$0.00000055"
+                    if isinstance(input_value, str):
+                        input_value = input_value.replace('$', '').replace(',', '')
                     input_cost = float(input_value)
                     if self.config.pricing.get('is_per_million', False):
                         input_cost = input_cost / self.config.pricing.get('divisor', 1) / 1_000_000
@@ -253,6 +264,9 @@ class ApiBaseDetectionStrategy(ProviderStrategy):
             output_value = get_nested_value(api_model, output_field)
             if output_value is not None:
                 try:
+                    # Parse string values like "$0.00000219"
+                    if isinstance(output_value, str):
+                        output_value = output_value.replace('$', '').replace(',', '')
                     output_cost = float(output_value)
                     if self.config.pricing.get('is_per_million', False):
                         output_cost = output_cost / self.config.pricing.get('divisor', 1) / 1_000_000
