@@ -40,6 +40,8 @@ class SyntheticModelCleaner(BaseModelCleaner):
     API_URL = SYNTHETIC_API_URL
     MODEL_PREFIX = "openai/"
     SPECIAL_MODELS: Set[str] = {"hf:nomic-ai/nomic-embed-text-v1.5"}
+    # Synthetic provider should have priority (order 1)
+    PROVIDER_ORDER = 1
     
     def __init__(self, config_path: str, dry_run: bool = False, verbose: bool = False):
         super().__init__(config_path, dry_run, verbose)
@@ -188,7 +190,7 @@ class SyntheticModelCleaner(BaseModelCleaner):
             
             config_models = self.extract_provider_models(config)
             invalid_models = self.validate_models(config_models, api_models)
-            config, cost_changes = self.validate_and_update_costs(config, config_models, api_models)
+            config, cost_changes = self.validate_and_update_costs(config, config_models, api_models, self.PROVIDER_ORDER)
             config, was_sorted = self.sort_model_list(config)
             
             if self.dry_run:

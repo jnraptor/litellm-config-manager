@@ -55,6 +55,7 @@ class ProviderConfig:
     api_base_config: Optional[Dict[str, str]] = None
     api_key_env: Optional[str] = None
     embeddings_api_url: Optional[str] = None
+    order: int = 2
     
     def __post_init__(self):
         """Validate configuration after initialization."""
@@ -129,7 +130,8 @@ class ProviderStrategy(ABC):
         model_entry = {
             'model_name': model_name,
             'litellm_params': {
-                'model': f"{self.config.model_prefix}{model_id}"
+                'model': f"{self.config.model_prefix}{model_id}",
+                'order': self.config.order
             }
         }
 
@@ -604,6 +606,9 @@ class UnifiedModelCleaner:
                         output_changed = True
                         change_info['changes']['output_cost'] = {'old': current_output_cost, 'new': adjusted_output_cost}
                         litellm_params['output_cost_per_token'] = adjusted_output_cost
+
+                # Update order value from provider configuration
+                litellm_params['order'] = provider.order
 
                 if input_changed or output_changed:
                     cost_changes.append(change_info)

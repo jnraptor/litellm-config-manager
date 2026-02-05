@@ -14,11 +14,13 @@ router_settings:
   redis_host: 10.10.1.1
   redis_password: ''
   redis_port: 6379
+  enable_pre_call_checks: true
 model_list:
 - litellm_params:
     api_base: os.environ/AZURE_OPENAI_API_BASE
     api_key: os.environ/AZURE_OPENAI_API_KEY
     model: azure/model-router
+    order: 2
   model_name: az-model-router
 - litellm_params:
     api_base: os.environ/AZURE_API_BASE
@@ -26,24 +28,28 @@ model_list:
     model: azure_ai/Phi-4-mini-instruct
     input_cost_per_token: 7.5e-08
     output_cost_per_token: 3e-7
+    order: 2
   model_name: az-phi-4-mini-instruct
 - model_name: baai-bge-m3
   litellm_params:
     model: nvidia_nim/baai/bge-m3
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
+    order: 2
   model_info:
     mode: embedding
 - litellm_params:
     model: openrouter/baai/bge-m3
     input_cost_per_token: 1.0e-08
     output_cost_per_token: 1.0e-09
+    order: 2
   model_name: baai-bge-m3
   model_info:
     mode: embedding
 - litellm_params:
     model: anthropic/claude-3-5-haiku-20241022
     api_key: os.environ/ANTHROPIC_API_KEY
+    order: 2
   model_name: claude-3-5-haiku
 - litellm_params:
     model: openai/anthropic/claude-3-5-haiku
@@ -51,6 +57,7 @@ model_list:
     api_key: os.environ/REQUESTY_API_KEY
     input_cost_per_token: 8.0e-07
     output_cost_per_token: 4.0e-06
+    order: 2
   model_name: claude-3-5-haiku
 - litellm_params:
     model: openai/claude-haiku-3.5
@@ -58,15 +65,18 @@ model_list:
     api_key: os.environ/POE_API_KEY
     input_cost_per_token: 6.8e-07
     output_cost_per_token: 3.4e-06
+    order: 2
   model_name: claude-3-5-haiku
 - litellm_params:
     model: openrouter/anthropic/claude-3.5-haiku
     input_cost_per_token: 8.0e-07
     output_cost_per_token: 4.0e-06
+    order: 2
   model_name: claude-3-5-haiku
 - litellm_params:
     model: anthropic/claude-haiku-4-5-20251001
     api_key: os.environ/ANTHROPIC_API_KEY
+    order: 2
   model_name: claude-haiku-4-5
 - litellm_params:
     model: openai/anthropic/claude-haiku-4-5
@@ -74,6 +84,7 @@ model_list:
     api_key: os.environ/REQUESTY_API_KEY
     input_cost_per_token: 1.0e-06
     output_cost_per_token: 5.0e-06
+    order: 2
   model_name: claude-haiku-4-5
 - litellm_params:
     model: openai/claude-haiku-4.5
@@ -81,15 +92,18 @@ model_list:
     api_key: os.environ/POE_API_KEY
     input_cost_per_token: 8.5e-07
     output_cost_per_token: 4.3e-06
+    order: 2
   model_name: claude-haiku-4-5
 - litellm_params:
     model: openrouter/anthropic/claude-haiku-4.5
     input_cost_per_token: 1.0e-06
     output_cost_per_token: 5.0e-06
+    order: 2
   model_name: claude-haiku-4-5
 - litellm_params:
     model: anthropic/claude-opus-4-5-20251101
     api_key: os.environ/ANTHROPIC_API_KEY
+    order: 2
   model_name: claude-opus-4.5
 - litellm_params:
     model: openai/anthropic/claude-opus-4-5
@@ -97,6 +111,7 @@ model_list:
     api_key: os.environ/REQUESTY_API_KEY
     input_cost_per_token: 5.0e-06
     output_cost_per_token: 2.5e-05
+    order: 2
   model_name: claude-opus-4.5
 - model_name: claude-opus-4.5
   litellm_params:
@@ -105,21 +120,25 @@ model_list:
     api_key: os.environ/NANOGPT_API_KEY
     input_cost_per_token: 4.998e-06
     output_cost_per_token: 2.5007000000000003e-05
+    order: 2
 - litellm_params:
     model: openai/claude-opus-4.5
     api_base: https://api.poe.com/v1
     api_key: os.environ/POE_API_KEY
     input_cost_per_token: 4.3e-06
     output_cost_per_token: 2.1e-05
+    order: 2
   model_name: claude-opus-4.5
 - litellm_params:
     model: openrouter/anthropic/claude-opus-4.5
     input_cost_per_token: 5.0e-06
     output_cost_per_token: 2.5e-05
+    order: 2
   model_name: claude-opus-4.5
 - litellm_params:
     model: anthropic/claude-sonnet-4-5-20250929
     api_key: os.environ/ANTHROPIC_API_KEY
+    order: 2
   model_name: claude-sonnet-4.5
 - litellm_params:
     model: openai/anthropic/claude-sonnet-4-5
@@ -127,6 +146,7 @@ model_list:
     api_key: os.environ/REQUESTY_API_KEY
     input_cost_per_token: 3.0e-06
     output_cost_per_token: 1.5e-05
+    order: 2
   model_name: claude-sonnet-4.5
 - litellm_params:
     model: openai/claude-sonnet-4.5
@@ -134,43 +154,51 @@ model_list:
     api_key: os.environ/POE_API_KEY
     input_cost_per_token: 2.6e-06
     output_cost_per_token: 1.3e-05
+    order: 2
   model_name: claude-sonnet-4.5
 - litellm_params:
     model: openrouter/anthropic/claude-sonnet-4.5
     input_cost_per_token: 3.0e-06
     output_cost_per_token: 1.5e-05
+    order: 2
   model_name: claude-sonnet-4.5
 - model_name: deepseek-v3.2
   litellm_params:
     model: nvidia_nim/deepseek-ai/deepseek-v3.2
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
+    order: 2
 - litellm_params:
     model: openrouter/deepseek/deepseek-v3.2
     input_cost_per_token: 2.5e-07
     output_cost_per_token: 3.8e-07
+    order: 2
   model_name: deepseek-v3.2
 - model_name: devstral-2512
   litellm_params:
     model: nvidia_nim/mistralai/devstral-2-123b-instruct-2512
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
+    order: 2
 - model_name: devstral-2512
   litellm_params:
     model: openrouter/mistralai/devstral-2512
     input_cost_per_token: 5.0e-08
     output_cost_per_token: 2.2e-07
+    order: 2
 - litellm_params:
     model: openai/google/gemini-2.5-flash
     input_cost_per_token: 3.0e-07
     output_cost_per_token: 2.5e-06
     api_base: https://router.requesty.ai/v1
     api_key: os.environ/REQUESTY_API_KEY
+    order: 2
   model_name: gemini-2.5-flash
 - litellm_params:
     model: openrouter/google/gemini-2.5-flash-preview-09-2025
     input_cost_per_token: 3.0e-07
     output_cost_per_token: 2.5e-06
+    order: 2
   model_name: gemini-2.5-flash
 - litellm_params:
     model: openai/google/gemini-2.5-flash-lite
@@ -178,11 +206,13 @@ model_list:
     api_key: os.environ/REQUESTY_API_KEY
     input_cost_per_token: 1.0e-07
     output_cost_per_token: 4.0e-07
+    order: 2
   model_name: gemini-2.5-flash-lite
 - litellm_params:
     model: openrouter/google/gemini-2.5-flash-lite
     input_cost_per_token: 1.0e-07
     output_cost_per_token: 4.0e-07
+    order: 2
   model_name: gemini-2.5-flash-lite
 - model_name: gemini-3-flash
   litellm_params:
@@ -191,6 +221,7 @@ model_list:
     api_key: os.environ/POE_API_KEY
     input_cost_per_token: 4.0e-07
     output_cost_per_token: 2.4e-06
+    order: 2
 - model_name: gemini-3-flash
   litellm_params:
     model: openai/google/gemini-3-flash-preview
@@ -198,6 +229,7 @@ model_list:
     api_key: os.environ/NANOGPT_API_KEY
     input_cost_per_token: 5.0e-07
     output_cost_per_token: 3.0e-06
+    order: 2
 - model_name: gemini-3-flash
   litellm_params:
     model: openai/google/gemini-3-flash-preview
@@ -205,17 +237,20 @@ model_list:
     api_key: os.environ/REQUESTY_API_KEY
     input_cost_per_token: 5.0e-07
     output_cost_per_token: 3.0e-06
+    order: 2
 - model_name: gemini-3-flash
   litellm_params:
     model: openrouter/google/gemini-3-flash-preview
     input_cost_per_token: 5.0e-07
     output_cost_per_token: 3.0e-06
+    order: 2
 - litellm_params:
     model: openai/gemini-3-pro
     api_base: https://api.poe.com/v1
     api_key: os.environ/POE_API_KEY
     input_cost_per_token: 1.6e-06
     output_cost_per_token: 9.6e-06
+    order: 2
   model_name: gemini-3-pro
 - model_name: gemini-3-pro
   litellm_params:
@@ -224,29 +259,34 @@ model_list:
     api_key: os.environ/NANOGPT_API_KEY
     input_cost_per_token: 2.0e-06
     output_cost_per_token: 1.2e-05
+    order: 2
 - litellm_params:
     model: openai/google/gemini-3-pro-preview
     api_base: https://router.requesty.ai/v1
     api_key: os.environ/REQUESTY_API_KEY
     input_cost_per_token: 2.0e-06
     output_cost_per_token: 1.2e-05
+    order: 2
   model_name: gemini-3-pro
 - litellm_params:
     model: openrouter/google/gemini-3-pro-preview
     input_cost_per_token: 2.0e-06
     output_cost_per_token: 1.2e-05
+    order: 2
   model_name: gemini-3-pro
 - model_name: gemini-embedding-001
   litellm_params:
     model: openrouter/google/gemini-embedding-001
     input_cost_per_token: 1.5e-07
     output_cost_per_token: 1.0e-09
+    order: 2
   model_info:
     mode: embedding
 - litellm_params:
     model: openrouter/google/gemma-3-27b-it:free
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
+    order: 2
   model_name: gemma-3-27b-free
 - litellm_params:
     api_base: os.environ/AZURE_OPENAI_API_BASE
@@ -254,48 +294,57 @@ model_list:
     model: azure/gpt-4.1-nano
     input_cost_per_token: 1.0e-07
     output_cost_per_token: 4.0e-07
+    order: 2
   model_name: gpt-4.1-nano
 - model_name: gpt-4.1-nano
   litellm_params:
     model: openai/gpt-4.1-nano
     api_key: os.environ/OPENAI_API_KEY
+    order: 2
 - litellm_params:
     api_base: os.environ/AZURE_OPENAI_API_BASE
     api_key: os.environ/AZURE_OPENAI_API_KEY
     model: azure/gpt-5-mini
     input_cost_per_token: 2.5e-07
     output_cost_per_token: 2.0e-06
+    order: 2
   model_name: gpt-5-mini
 - model_name: gpt-5-mini
   litellm_params:
     model: openai/gpt-5-mini
     api_key: os.environ/OPENAI_API_KEY
+    order: 2
 - litellm_params:
     api_base: os.environ/AZURE_OPENAI_API_BASE
     api_key: os.environ/AZURE_OPENAI_API_KEY
     model: azure/gpt-5-nano
     input_cost_per_token: 5.0e-08
     output_cost_per_token: 4.0e-07
+    order: 2
   model_name: gpt-5-nano
 - model_name: gpt-5-nano
   litellm_params:
     model: openai/gpt-5-nano
     api_key: os.environ/OPENAI_API_KEY
+    order: 2
 - model_name: gpt-5.1-codex-mini
   litellm_params:
     model: openai/gpt-5.1-codex-mini
     api_key: os.environ/OPENAI_API_KEY
+    order: 2
 - litellm_params:
     model: openai/gpt-5.1-codex-mini
     api_base: https://api.poe.com/v1
     api_key: os.environ/POE_API_KEY
     input_cost_per_token: 2.2e-07
     output_cost_per_token: 1.8e-06
+    order: 2
   model_name: gpt-5.1-codex-mini
 - litellm_params:
     model: openrouter/openai/gpt-5.1-codex-mini
     input_cost_per_token: 2.5e-07
     output_cost_per_token: 2.0e-06
+    order: 2
   model_name: gpt-5.1-codex-mini
 - litellm_params:
     model: openai/gpt-5.2
@@ -303,20 +352,24 @@ model_list:
     api_key: os.environ/POE_API_KEY
     input_cost_per_token: 1.6e-06
     output_cost_per_token: 1.3e-05
+    order: 2
   model_name: gpt-5.2
 - model_name: gpt-5.2
   litellm_params:
     model: openai/gpt-5.2-2025-12-11
     api_key: os.environ/OPENAI_API_KEY
+    order: 2
 - litellm_params:
     model: openrouter/openai/gpt-5.2
     input_cost_per_token: 1.75e-06
     output_cost_per_token: 1.4e-05
+    order: 2
   model_name: gpt-5.2
 - model_name: gpt-5.2-codex
   litellm_params:
     model: openai/gpt-5.2-codex
     api_key: os.environ/OPENAI_API_KEY
+    order: 2
 - model_name: gpt-5.2-codex
   litellm_params:
     model: openai/gpt-5.2-codex
@@ -324,6 +377,7 @@ model_list:
     api_key: os.environ/POE_API_KEY
     input_cost_per_token: 1.6e-06
     output_cost_per_token: 1.3e-05
+    order: 2
 - model_name: gpt-5.2-codex
   litellm_params:
     model: openai/openai/gpt-5.2-codex
@@ -331,39 +385,47 @@ model_list:
     api_key: os.environ/NANOGPT_API_KEY
     input_cost_per_token: 1.75e-06
     output_cost_per_token: 1.4e-05
+    order: 2
 - model_name: gpt-5.2-codex
   litellm_params:
     model: openrouter/openai/gpt-5.2-codex
     input_cost_per_token: 1.75e-06
     output_cost_per_token: 1.4e-05
+    order: 2
 - model_name: gpt-oss-120b
   litellm_params:
     model: openai/gpt-oss-120b
     api_key: os.environ/OPENAI_API_KEY
+    order: 2
 - litellm_params:
     model: openrouter/openai/gpt-oss-120b
     input_cost_per_token: 3.9e-08
     output_cost_per_token: 1.9e-07
+    order: 2
   model_name: gpt-oss-120b
 - model_name: gpt-oss-20b
   litellm_params:
     model: openai/gpt-oss-20b
     api_key: os.environ/OPENAI_API_KEY
+    order: 2
 - litellm_params:
     model: openrouter/openai/gpt-oss-20b
     input_cost_per_token: 2.0e-08
     output_cost_per_token: 1.0e-07
+    order: 2
   model_name: gpt-oss-20b
 - model_name: jina-embeddings-v4
   litellm_params:
     model: jina_ai/jina-embeddings-v4
     api_key: os.environ/JINA_AI_API_KEY
+    order: 2
   model_info:
     mode: embedding
 - model_name: jina-reranker-m0
   litellm_params:
     model: jina_ai/jina-reranker-m0
     api_key: os.environ/JINA_AI_API_KEY
+    order: 2
   model_info:
     mode: rerank
 - litellm_params:
@@ -372,6 +434,7 @@ model_list:
     api_key: os.environ/LLAMA_API_KEY
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
+    order: 2
   model_name: local-llama
 - model_name: minimax-m2.1
   litellm_params:
@@ -380,6 +443,7 @@ model_list:
     api_key: os.environ/SYNTHETIC_API_KEY
     input_cost_per_token: 3.0e-07
     output_cost_per_token: 1.2e-06
+    order: 1
 - model_name: minimax-m2.1
   litellm_params:
     model: openai/minimax/minimax-m2.1
@@ -387,11 +451,13 @@ model_list:
     api_key: os.environ/NANOGPT_API_KEY
     input_cost_per_token: 3.3e-07
     output_cost_per_token: 1.32e-06
+    order: 2
 - model_name: minimax-m2.1
   litellm_params:
     model: openrouter/minimax/minimax-m2.1
     input_cost_per_token: 2.7e-07
     output_cost_per_token: 9.5e-07
+    order: 2
 - model_name: moonshotai-kimi-k2.5
   litellm_params:
     model: openai/hf:moonshotai/Kimi-K2.5
@@ -399,6 +465,7 @@ model_list:
     api_key: os.environ/SYNTHETIC_API_KEY
     input_cost_per_token: 5.5e-07
     output_cost_per_token: 2.19e-06
+    order: 1
 - model_name: moonshotai-kimi-k2.5
   litellm_params:
     model: openai/moonshotai/kimi-k2.5:thinking
@@ -406,15 +473,18 @@ model_list:
     api_key: os.environ/NANOGPT_API_KEY
     input_cost_per_token: 6.0e-07
     output_cost_per_token: 3.0e-06
+    order: 2
 - model_name: moonshotai-kimi-k2.5
   litellm_params:
     model: openrouter/moonshotai/kimi-k2.5
     input_cost_per_token: 4.5e-07
     output_cost_per_token: 2.5e-06
+    order: 2
 - model_name: nomic-embed-text
   litellm_params:
     model: infinity/nomic-ai/nomic-embed-text-v2-moe
     api_base: http://infinity:7997
+    order: 2
   model_info:
     mode: embedding
 - model_name: nomic-embed-text-v1.5
@@ -422,62 +492,74 @@ model_list:
     model: openai/hf:nomic-ai/nomic-embed-text-v1.5
     api_base: os.environ/SYNTHETIC_API_BASE
     api_key: os.environ/SYNTHETIC_API_KEY
+    order: 1
   model_info:
     mode: embedding
 - litellm_params:
     model: nvidia_nim/nvidia/llama-3.3-nemotron-super-49b-v1.5
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
+    order: 2
   model_name: nvidia-llama-3.3-nemotron-super-49b-v1.5
 - litellm_params:
     model: openrouter/nvidia/llama-3.3-nemotron-super-49b-v1.5
     input_cost_per_token: 1.0e-07
     output_cost_per_token: 4.0e-07
+    order: 2
   model_name: nvidia-llama-3.3-nemotron-super-49b-v1.5
 - litellm_params:
     model: nvidia_nim/nvidia/nemotron-3-nano-30b-a3b
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
+    order: 2
   model_name: nvidia-nemotron-3-nano-30b-a3b
 - litellm_params:
     model: openrouter/nvidia/nemotron-3-nano-30b-a3b:free
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
+    order: 2
   model_name: nvidia-nemotron-3-nano-30b-a3b
 - litellm_params:
     model: nvidia_nim/nvidia/nemotron-nano-12b-v2-vl
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
+    order: 2
   model_name: nvidia-nemotron-nano-12b-v2-vl
 - litellm_params:
     model: openrouter/nvidia/nemotron-nano-12b-v2-vl
     input_cost_per_token: 2.0e-07
     output_cost_per_token: 6.0e-07
+    order: 2
   model_name: nvidia-nemotron-nano-12b-v2-vl
 - litellm_params:
     model: openrouter/nvidia/nemotron-nano-12b-v2-vl:free
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
+    order: 2
   model_name: nvidia-nemotron-nano-12b-v2-vl
 - litellm_params:
     model: nvidia_nim/nvidia/nvidia-nemotron-nano-9b-v2
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
+    order: 2
   model_name: nvidia-nemotron-nano-9b-v2
 - litellm_params:
     model: openrouter/nvidia/nemotron-nano-9b-v2
     input_cost_per_token: 4.0e-08
     output_cost_per_token: 1.6e-07
+    order: 2
   model_name: nvidia-nemotron-nano-9b-v2
 - litellm_params:
     model: openrouter/nvidia/nemotron-nano-9b-v2:free
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
+    order: 2
   model_name: nvidia-nemotron-nano-9b-v2
 - model_name: oai-text-embedding-3-small
   litellm_params:
     model: openai/oai-text-embedding-3-small
     api_key: os.environ/OPENAI_API_KEY
+    order: 2
   model_info:
     mode: embedding
 - model_name: oai-text-embedding-3-small
@@ -485,84 +567,100 @@ model_list:
     model: openrouter/openai/text-embedding-3-small
     input_cost_per_token: 2.0e-08
     output_cost_per_token: 1.0e-09
+    order: 2
   model_info:
     mode: embedding
 - litellm_params:
     model: openrouter/amazon/nova-2-lite-v1
     input_cost_per_token: 3.0e-07
     output_cost_per_token: 2.5e-06
+    order: 2
   model_name: or-amazon-nova-2-lite-v1
 - litellm_params:
     model: openrouter/arcee-ai/trinity-mini
     input_cost_per_token: 4.5e-08
     output_cost_per_token: 1.5e-07
+    order: 2
   model_name: or-arcee-ai-trinity-mini
 - litellm_params:
     model: openrouter/arcee-ai/trinity-mini:free
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
+    order: 2
   model_name: or-arcee-ai-trinity-mini
 - litellm_params:
     model: openrouter/openrouter/free
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
+    order: 2
   model_name: or-free
 - litellm_params:
     model: openrouter/meta-llama/llama-3.2-3b-instruct
     input_cost_per_token: 2.0e-08
     output_cost_per_token: 2.0e-08
+    order: 2
   model_name: or-llama-3.2-3b-instruct
 - litellm_params:
     model: openrouter/meta-llama/llama-3.2-3b-instruct:free
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
+    order: 2
   model_name: or-llama-3.2-3b-instruct
 - litellm_params:
     model: openrouter/meta-llama/llama-3.3-70b-instruct:free
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
+    order: 2
   model_name: or-llama-3.3-70b-instruct-free
 - litellm_params:
     model: openrouter/mistralai/codestral-2508
     input_cost_per_token: 3.0e-07
     output_cost_per_token: 9.0e-07
+    order: 2
   model_name: or-mistral-codestral-2508
 - model_name: or-mistral-codestral-embed-2505
   litellm_params:
     model: openrouter/mistralai/codestral-embed-2505
     input_cost_per_token: 1.5e-07
     output_cost_per_token: 1.0e-09
+    order: 2
   model_info:
     mode: embedding
 - litellm_params:
     model: openrouter/mistralai/mistral-large-2512
     input_cost_per_token: 5.0e-07
     output_cost_per_token: 1.5e-06
+    order: 2
   model_name: or-mistral-large-2512
 - litellm_params:
     model: openrouter/mistralai/mistral-small-3.2-24b-instruct
     input_cost_per_token: 6.0e-08
     output_cost_per_token: 1.8e-07
+    order: 2
   model_name: or-mistral-small-3.2-24b
 - litellm_params:
     model: openrouter/qwen/qwen3-235b-a22b-2507
     input_cost_per_token: 7.1e-08
     output_cost_per_token: 1.0e-07
+    order: 2
   model_name: or-qwen3-235b-a22b-2507
 - litellm_params:
     model: openrouter/qwen/qwen3-30b-a3b-instruct-2507
     input_cost_per_token: 8.0e-08
     output_cost_per_token: 3.3e-07
+    order: 2
   model_name: or-qwen3-30b-a3b-2507
 - litellm_params:
     model: openrouter/qwen/qwen3-30b-a3b-thinking-2507
     input_cost_per_token: 5.1e-08
     output_cost_per_token: 3.4e-07
+    order: 2
   model_name: or-qwen3-30b-a3b-thinking-2507
 - litellm_params:
     model: openrouter/qwen/qwen3-embedding-4b
     input_cost_per_token: 2.0e-08
     output_cost_per_token: 1.0e-09
+    order: 2
   model_name: or-qwen3-embedding-4b
   model_info:
     mode: embedding
@@ -570,6 +668,7 @@ model_list:
     model: openrouter/qwen/qwen3-embedding-8b
     input_cost_per_token: 1.0e-08
     output_cost_per_token: 1.0e-09
+    order: 2
   model_name: or-qwen3-embedding-8b
   model_info:
     mode: embedding
@@ -577,41 +676,49 @@ model_list:
     model: openrouter/qwen/qwen3-vl-235b-a22b-instruct
     input_cost_per_token: 2.0e-07
     output_cost_per_token: 8.8e-07
+    order: 2
   model_name: or-qwen3-vl-235b-a22b-instruct
 - litellm_params:
     model: openrouter/qwen/qwen3-vl-235b-a22b-thinking
     input_cost_per_token: 4.5e-07
     output_cost_per_token: 3.5e-06
+    order: 2
   model_name: or-qwen3-vl-235b-a22b-thinking
 - model_name: or-qwen3-vl-30b-a3b-instruct
   litellm_params:
     model: openrouter/qwen/qwen3-vl-30b-a3b-instruct
     input_cost_per_token: 1.5e-07
     output_cost_per_token: 6.0e-07
+    order: 2
 - model_name: or-qwen3-vl-30b-a3b-thinking
   litellm_params:
     model: openrouter/qwen/qwen3-vl-30b-a3b-thinking
     input_cost_per_token: 2.0e-07
     output_cost_per_token: 1.0e-06
+    order: 2
 - litellm_params:
     model: openrouter/qwen/qwen3-vl-8b-instruct
     input_cost_per_token: 8.0e-08
     output_cost_per_token: 5.0e-07
+    order: 2
   model_name: or-qwen3-vl-8b-instruct
 - litellm_params:
     model: openrouter/qwen/qwen3-vl-8b-thinking
     input_cost_per_token: 1.8e-07
     output_cost_per_token: 2.1e-06
+    order: 2
   model_name: or-qwen3-vl-8b-thinking
 - litellm_params:
     model: perplexity/sonar
     input_cost_per_token: 1.0e-06
     output_cost_per_token: 1.0e-06
+    order: 2
   model_name: pplx-sonar
 - litellm_params:
     model: perplexity/sonar-pro
     input_cost_per_token: 3.0e-06
     output_cost_per_token: 1.5e-05
+    order: 2
   model_name: pplx-sonar-pro
 - model_name: qwen3-coder-flash
   litellm_params:
@@ -620,10 +727,12 @@ model_list:
     api_key: os.environ/NANOGPT_API_KEY
     input_cost_per_token: 3.0e-07
     output_cost_per_token: 1.5e-06
+    order: 2
 - litellm_params:
     model: openrouter/qwen/qwen3-coder-flash
     input_cost_per_token: 3.0e-07
     output_cost_per_token: 1.5e-06
+    order: 2
   model_name: qwen3-coder-flash
 - model_name: qwen3-coder-next
   litellm_params:
@@ -632,11 +741,13 @@ model_list:
     api_key: os.environ/NANOGPT_API_KEY
     input_cost_per_token: 1.5e-07
     output_cost_per_token: 1.5e-06
+    order: 2
 - model_name: qwen3-coder-next
   litellm_params:
     model: openrouter/qwen/qwen3-coder-next
     input_cost_per_token: 7.0e-08
     output_cost_per_token: 3.0e-07
+    order: 2
 - model_name: qwen3-coder-plus
   litellm_params:
     model: openai/qwen/qwen3-coder-plus
@@ -644,10 +755,12 @@ model_list:
     api_key: os.environ/NANOGPT_API_KEY
     input_cost_per_token: 1.0e-06
     output_cost_per_token: 5.0e-06
+    order: 2
 - litellm_params:
     model: openrouter/qwen/qwen3-coder-plus
     input_cost_per_token: 1.0e-06
     output_cost_per_token: 5.0e-06
+    order: 2
   model_name: qwen3-coder-plus
 - model_name: qwen3-max
   litellm_params:
@@ -656,40 +769,48 @@ model_list:
     api_key: os.environ/NANOGPT_API_KEY
     input_cost_per_token: 1.2e-06
     output_cost_per_token: 6.0e-06
+    order: 2
 - model_name: qwen3-max
   litellm_params:
     model: openrouter/qwen/qwen3-max
     input_cost_per_token: 1.2e-06
     output_cost_per_token: 6.0e-06
+    order: 2
 - litellm_params:
     model: nvidia_nim/qwen/qwen3-next-80b-a3b-instruct
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
+    order: 2
   model_name: qwen3-next-80b-a3b-instruct
 - litellm_params:
     model: openrouter/qwen/qwen3-next-80b-a3b-instruct
     input_cost_per_token: 9.0e-08
     output_cost_per_token: 1.1e-06
+    order: 2
   model_name: qwen3-next-80b-a3b-instruct
 - litellm_params:
     model: nvidia_nim/qwen/qwen3-next-80b-a3b-thinking
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
+    order: 2
   model_name: qwen3-next-80b-a3b-thinking
 - litellm_params:
     model: openrouter/qwen/qwen3-next-80b-a3b-thinking
     input_cost_per_token: 1.5e-07
     output_cost_per_token: 1.2e-06
+    order: 2
   model_name: qwen3-next-80b-a3b-thinking
 - model_name: req-smart-task
   litellm_params:
     model: openai/smart-task
     api_base: https://router.requesty.ai/v1
     api_key: os.environ/REQUESTY_API_KEY
+    order: 2
 - model_name: tgt-Salesforce-Llama-Rank-V1
   litellm_params:
     model: together_ai/Salesforce/Llama-Rank-V1
     api_key: os.environ/TOGETHERAI_API_KEY
+    order: 2
   model_info:
     mode: rerank
 - model_name: vc-meituan-longcat-flash-chat
@@ -697,6 +818,7 @@ model_list:
     model: vercel_ai_gateway/meituan/longcat-flash-chat
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
+    order: 2
 - model_name: x-ai-grok-4.1-fast
   litellm_params:
     model: openai/x-ai/grok-4.1-fast
@@ -704,6 +826,7 @@ model_list:
     api_key: os.environ/NANOGPT_API_KEY
     input_cost_per_token: 2.0000000000000002e-07
     output_cost_per_token: 5.0e-07
+    order: 2
 - model_name: x-ai-grok-code-fast-1
   litellm_params:
     model: openai/x-ai/grok-code-fast-1
@@ -711,20 +834,24 @@ model_list:
     api_key: os.environ/NANOGPT_API_KEY
     input_cost_per_token: 2.0e-07
     output_cost_per_token: 1.5e-06
+    order: 2
 - litellm_params:
     model: openrouter/x-ai/grok-code-fast-1
     input_cost_per_token: 2.0e-07
     output_cost_per_token: 1.5e-06
+    order: 2
   model_name: x-ai-grok-code-fast-1
 - litellm_params:
     model: openrouter/z-ai/glm-4.5-air
     input_cost_per_token: 5.0e-08
     output_cost_per_token: 2.2e-07
+    order: 2
   model_name: zai-glm-4.5-air
 - litellm_params:
     model: openrouter/z-ai/glm-4.5-air:free
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
+    order: 2
   model_name: zai-glm-4.5-air
 - model_name: zai-glm-4.6v
   litellm_params:
@@ -733,6 +860,7 @@ model_list:
     api_key: os.environ/POE_API_KEY
     input_cost_per_token: 3.0e-07
     output_cost_per_token: 9.0e-07
+    order: 2
 - model_name: zai-glm-4.6v
   litellm_params:
     model: openai/zai-org/glm-4.6v
@@ -740,10 +868,12 @@ model_list:
     api_key: os.environ/NANOGPT_API_KEY
     input_cost_per_token: 3.0e-07
     output_cost_per_token: 9.0e-07
+    order: 2
 - litellm_params:
     model: openrouter/z-ai/glm-4.6v
     input_cost_per_token: 3.0e-07
     output_cost_per_token: 9.0e-07
+    order: 2
   model_name: zai-glm-4.6v
 - model_name: zai-glm-4.7
   litellm_params:
@@ -752,6 +882,7 @@ model_list:
     api_key: os.environ/POE_API_KEY
     input_cost_per_token: 6.0e-07
     output_cost_per_token: 2.2e-06
+    order: 2
 - model_name: zai-glm-4.7
   litellm_params:
     model: openai/hf:zai-org/GLM-4.7
@@ -759,6 +890,7 @@ model_list:
     api_key: os.environ/SYNTHETIC_API_KEY
     input_cost_per_token: 5.5e-07
     output_cost_per_token: 2.19e-06
+    order: 1
 - model_name: zai-glm-4.7
   litellm_params:
     model: openai/zai-org/glm-4.7
@@ -766,16 +898,19 @@ model_list:
     api_key: os.environ/NANOGPT_API_KEY
     input_cost_per_token: 1.5e-07
     output_cost_per_token: 8.000000000000001e-07
+    order: 2
 - model_name: zai-glm-4.7
   litellm_params:
     model: openrouter/z-ai/glm-4.7
     input_cost_per_token: 4.0e-07
     output_cost_per_token: 1.5e-06
+    order: 2
 - model_name: zai-glm-4.7-flash
   litellm_params:
     model: openai/glm-4.7-flash
     api_base: https://api.poe.com/v1
     api_key: os.environ/POE_API_KEY
+    order: 2
 - model_name: zai-glm-4.7-flash
   litellm_params:
     model: openai/zai-org/glm-4.7-flash:thinking
@@ -783,8 +918,10 @@ model_list:
     api_key: os.environ/NANOGPT_API_KEY
     input_cost_per_token: 6.999999999999999e-08
     output_cost_per_token: 4.0000000000000003e-07
+    order: 2
 - model_name: zai-glm-4.7-flash
   litellm_params:
     model: openrouter/z-ai/glm-4.7-flash
     input_cost_per_token: 7.0e-08
     output_cost_per_token: 4.0e-07
+    order: 2

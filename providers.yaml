@@ -23,6 +23,8 @@ providers:
     special_models: ["openrouter/free"]
     api_base_config: null
     api_key_env: null
+    # Order for litellm_params/order - lower values are tried first
+    order: 2
 
   requesty:
     name: "Requesty"
@@ -45,6 +47,8 @@ providers:
       url: "https://router.requesty.ai/v1"
       api_key_env: "REQUESTY_API_KEY"
     api_key_env: "REQUESTY_API_KEY"
+    # Order for litellm_params/order - lower values are tried first
+    order: 2
 
   nano_gpt:
     name: "Nano-GPT"
@@ -67,6 +71,8 @@ providers:
       url_env: "NANOGPT_API_BASE"
       api_key_env: "NANOGPT_API_KEY"
     api_key_env: "NANOGPT_API_KEY"
+    # Order for litellm_params/order - lower values are tried first
+    order: 2
 
   vercel:
     name: "Vercel AI Gateway"
@@ -88,6 +94,8 @@ providers:
     special_models: []
     api_base_config: null
     api_key_env: null
+    # Order for litellm_params/order - lower values are tried first
+    order: 2
 
   poe:
     name: "Poe"
@@ -109,6 +117,8 @@ providers:
       url: "https://api.poe.com/v1"
       api_key_env: "POE_API_KEY"
     api_key_env: "POE_API_KEY"
+    # Order for litellm_params/order - lower values are tried first
+    order: 2
 
   nvidia:
     name: "Nvidia"
@@ -132,6 +142,8 @@ providers:
     special_models: []
     api_base_config: null
     api_key_env: null
+    # Order for litellm_params/order - lower values are tried first
+    order: 2
 
   synthetic:
     name: "Synthetic"
@@ -154,6 +166,9 @@ providers:
       url_env: "SYNTHETIC_API_BASE"
       api_key_env: "SYNTHETIC_API_KEY"
     api_key_env: "SYNTHETIC_API_KEY"
+    # Order for litellm_params/order - lower values are tried first
+    # Synthetic provider should have priority (order 1)
+    order: 1
 
 # Default settings that apply to all providers unless overridden
 defaults:

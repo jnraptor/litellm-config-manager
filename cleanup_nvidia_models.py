@@ -38,6 +38,8 @@ class NvidiaModelCleaner(BaseModelCleaner):
     PROVIDER_NAME = "Nvidia"
     API_URL = NVIDIA_API_URL
     MODEL_PREFIX = "nvidia_nim/"
+    # Nvidia provider should have order 2
+    PROVIDER_ORDER = 2
     
     def extract_provider_models(self, config: Dict[str, Any]) -> List[Tuple[int, str, str]]:
         """Extract Nvidia models from the configuration."""

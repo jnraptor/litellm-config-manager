@@ -529,7 +529,8 @@ class BaseModelCleaner(ABC):
     
     def validate_and_update_costs(self, config: Dict[str, Any],
                                  config_models: List[Tuple[int, str, str]],
-                                 api_models: Dict[str, Dict[str, Any]]) -> Tuple[Dict[str, Any], List[Dict[str, Any]]]:
+                                 api_models: Dict[str, Dict[str, Any]],
+                                 provider_order: int = 2) -> Tuple[Dict[str, Any], List[Dict[str, Any]]]:
         """
         Validate and update model costs based on API pricing.
         
@@ -537,6 +538,7 @@ class BaseModelCleaner(ABC):
             config: The configuration dictionary
             config_models: List of (index, model_id, model_name) from config
             api_models: Dict of model data from API with pricing info
+            provider_order: The order value to set for models from this provider
             
         Returns:
             Tuple of (updated_config, list_of_cost_changes)
@@ -604,6 +606,9 @@ class BaseModelCleaner(ABC):
                         }
                         litellm_params['output_cost_per_token'] = adjusted_output_cost
                         self.logger.debug(f"Output cost change for {model_id}: {current_output_cost} → {adjusted_output_cost}")
+                
+                # Update order value from provider configuration
+                litellm_params['order'] = provider_order
                 
                 if input_changed or output_changed:
                     cost_changes.append(change_info)

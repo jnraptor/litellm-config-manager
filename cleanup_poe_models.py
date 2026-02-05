@@ -38,6 +38,8 @@ class PoeModelCleaner(BaseModelCleaner):
     MODEL_PREFIX = "openai/"
     API_BASE_PATTERN = "api.poe.com"
     SPECIAL_MODELS: Set[str] = set()
+    # Poe provider should have order 2
+    PROVIDER_ORDER = 2
     
     def extract_provider_models(self, config: Dict[str, Any]) -> List[Tuple[int, str, str]]:
         """Extract Poe models from the configuration."""
@@ -156,7 +158,7 @@ class PoeModelCleaner(BaseModelCleaner):
             
             config_models = self.extract_provider_models(config)
             invalid_models = self.validate_models(config_models, api_models)
-            config, cost_changes = self.validate_and_update_costs(config, config_models, api_models)
+            config, cost_changes = self.validate_and_update_costs(config, config_models, api_models, self.PROVIDER_ORDER)
             config, was_sorted = self.sort_model_list(config)
             
             if self.dry_run:

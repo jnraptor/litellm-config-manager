@@ -36,6 +36,8 @@ class VercelModelCleaner(BaseModelCleaner):
     PROVIDER_NAME = "Vercel"
     API_URL = VERCEL_API_URL
     MODEL_PREFIX = "vercel_ai_gateway/"
+    # Vercel provider should have order 2
+    PROVIDER_ORDER = 2
     
     def extract_provider_models(self, config: Dict[str, Any]) -> List[Tuple[int, str, str]]:
         """Extract Vercel AI Gateway models from the configuration."""
@@ -145,7 +147,7 @@ class VercelModelCleaner(BaseModelCleaner):
             
             config_models = self.extract_provider_models(config)
             invalid_models = self.validate_models(config_models, api_models)
-            config, cost_changes = self.validate_and_update_costs(config, config_models, api_models)
+            config, cost_changes = self.validate_and_update_costs(config, config_models, api_models, self.PROVIDER_ORDER)
             config, was_sorted = self.sort_model_list(config)
             
             if self.dry_run:
