@@ -822,9 +822,31 @@ The unified script uses a provider-based architecture with:
   - `ApiBaseDetectionStrategy`: For providers using API base detection (Requesty, Nano-GPT, Poe)
 - **UnifiedModelCleaner**: Main class that orchestrates cleanup across providers
 
-### Provider-Specific Scripts
+### Provider-Specific Scripts (Refactored)
 
-Each provider-specific script is organized into main classes with the following key methods:
+All provider-specific scripts have been refactored to use the centralized `providers.yaml` configuration file:
+
+- **ConfigDrivenModelCleaner**: Base class that loads provider configuration from `providers.yaml`
+- **ProviderConfigLoader**: Singleton loader for provider configuration
+- **Reduced Code Duplication**: ~70% reduction in script size by eliminating hardcoded values
+- **Single Source of Truth**: All provider configuration (API URLs, model prefixes, pricing fields, etc.) is in `providers.yaml`
+
+Each provider-specific script now only contains:
+- Provider-specific API response parsing logic (when needed)
+- Provider-specific business logic (e.g., OpenRouter free variants)
+- Standard `main()` function with CLI argument handling
+
+The following configuration is loaded from `providers.yaml`:
+- API URLs (including separate embeddings API for OpenRouter)
+- Model prefixes for identification
+- Model detection strategy (prefix or api_base)
+- Pricing field mappings and conversion rules
+- Model name prefixes and cleanup rules
+- Special models to exclude from validation
+- API base configuration (for providers requiring it)
+- Provider order priority
+
+Each provider-specific script is organized with the following key methods:
 
 #### Core Methods
 - `load_config()`: Safe YAML loading with error handling

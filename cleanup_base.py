@@ -10,15 +10,18 @@ cleanup scripts, including:
 - Model list sorting
 - Preview and report generation
 - Common CLI argument handling
+- Provider configuration loading from providers.yaml
 
 Usage:
     from cleanup_base import BaseModelCleaner, setup_common_args
+    from cleanup_base import ConfigDrivenModelCleaner, ProviderConfigLoader
 
 Author: LiteLLM Config Management
 """
 
 import argparse
 import logging
+import os
 import sys
 import time
 import yaml
@@ -35,6 +38,8 @@ __all__ = [
     'costs_are_equal',
     'adjust_cost_for_free_model',
     'BaseModelCleaner',
+    'ConfigDrivenModelCleaner',
+    'ProviderConfigLoader',
     'setup_common_args',
     'validate_model_name_arg',
     'fetch_models_from_api',
@@ -182,7 +187,7 @@ class APIClient:
                         logger.warning(f"Retrying in {delay:.1f}s...")
                     time.sleep(delay)
         
-        raise last_exception
+        raise last_exception if last_exception is not None else requests.RequestException("All retries failed")
     
     def clear_cache(self):
         """Clear the response cache."""
@@ -575,7 +580,7 @@ class BaseModelCleaner(ABC):
                 if api_input_cost is not None:
                     adjusted_input_cost = adjust_cost_for_free_model(api_input_cost)
                     
-                    if current_input_cost is not None:
+                    if current_input_cost is not None and adjusted_input_cost is not None:
                         if not costs_are_equal(current_input_cost, adjusted_input_cost):
                             input_changed = True
                     else:
@@ -593,7 +598,7 @@ class BaseModelCleaner(ABC):
                 if api_output_cost is not None:
                     adjusted_output_cost = adjust_cost_for_free_model(api_output_cost)
                     
-                    if current_output_cost is not None:
+                    if current_output_cost is not None and adjusted_output_cost is not None:
                         if not costs_are_equal(current_output_cost, adjusted_output_cost):
                             output_changed = True
                     else:
@@ -895,3 +900,479 @@ def fetch_models_from_api(api_url: str, logger: logging.Logger,
         raise ValueError("Invalid API response format: missing 'data' field")
     
     return data
+
+
+class ProviderConfigLoader:
+    """
+    Singleton loader for provider configuration from providers.yaml.
+    
+    Loads provider configuration once and provides access to it for all
+    config-driven model cleaners.
+    """
+    
+    _instance = None
+    _config: Dict[str, Any] = {}
+    _config_path: Optional[Path] = None
+    
+    def __new__(cls, config_path: str = "providers.yaml"):
+        """Implement singleton pattern."""
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+            cls._instance._config_path = Path(config_path)
+            cls._instance._config = {}
+            cls._instance._load_config()
+        return cls._instance
+    
+    def _load_config(self):
+        """Load provider configuration from YAML file."""
+        try:
+            config_path = self._config_path
+            if config_path is None:
+                raise ValueError("Config path not initialized")
+            
+            if not config_path.exists():
+                raise FileNotFoundError(f"Provider configuration file not found: {config_path}")
+            
+            with open(config_path, 'r', encoding='utf-8') as file:
+                config_data = yaml.safe_load(file)
+            
+            if not config_data or 'providers' not in config_data:
+                raise ValueError(f"Invalid provider config: missing 'providers' section")
+            
+            self._config = config_data
+            
+        except yaml.YAMLError as e:
+            raise ValueError(f"YAML parsing error in provider configuration: {e}")
+        except Exception as e:
+            raise ValueError(f"Error loading provider configuration: {e}")
+    
+    def get_provider_config(self, provider_name: str) -> Dict[str, Any]:
+        """
+        Get configuration for a specific provider.
+        
+        Args:
+            provider_name: Name of the provider (e.g., 'openrouter', 'requesty')
+            
+        Returns:
+            Dictionary containing provider configuration
+            
+        Raises:
+            ValueError: If provider not found in configuration
+        """
+        if not self._config:
+            self._load_config()
+        
+        providers = self._config.get('providers', {})
+        if provider_name not in providers:
+            available = ', '.join(providers.keys())
+            raise ValueError(f"Provider '{provider_name}' not found. Available: {available}")
+        
+        return providers[provider_name]
+    
+    def list_providers(self) -> List[str]:
+        """Get list of all configured provider names."""
+        if not self._config:
+            self._load_config()
+        return list(self._config.get('providers', {}).keys())
+
+
+class ConfigDrivenModelCleaner(BaseModelCleaner):
+    """
+    Base class for config-driven model cleaners.
+    
+    This class extends BaseModelCleaner by automatically loading provider
+    configuration from providers.yaml and implementing common methods based
+    on that configuration. Subclasses only need to implement provider-specific
+    API response parsing logic.
+    
+    Usage:
+        class MyProviderCleaner(ConfigDrivenModelCleaner):
+            def __init__(self, config_path, dry_run=False, verbose=False):
+                super().__init__('my_provider', config_path, dry_run, verbose)
+    """
+    
+    def __init__(self, provider_name: str, config_path: str,
+                 dry_run: bool = False, verbose: bool = False,
+                 providers_config_path: str = "providers.yaml"):
+        """
+        Initialize the config-driven cleaner.
+        
+        Args:
+            provider_name: Name of the provider (must exist in providers.yaml)
+            config_path: Path to the LiteLLM config.yaml file
+            dry_run: If True, preview changes without modifying files
+            verbose: Enable verbose logging
+            providers_config_path: Path to providers.yaml (default: "providers.yaml")
+        """
+        # Initialize base class first
+        super().__init__(config_path, dry_run, verbose)
+        
+        # Load provider configuration
+        self._provider_loader = ProviderConfigLoader(providers_config_path)
+        self.provider_config = self._provider_loader.get_provider_config(provider_name)
+        
+        # Set class attributes from configuration
+        self.PROVIDER_NAME = self.provider_config.get('name', provider_name)
+        self.API_URL = self.provider_config['api_url']
+        self.MODEL_PREFIX = self.provider_config['model_prefix']
+        self.SPECIAL_MODELS = set(self.provider_config.get('special_models', []))
+        self.PROVIDER_ORDER = self.provider_config.get('order', 2)
+        
+        # Store additional config for use in methods
+        self._model_detection = self.provider_config.get('model_detection', {})
+        self._pricing_config = self.provider_config.get('pricing', {})
+        self._model_name_prefix = self.provider_config.get('model_name_prefix', '')
+        self._model_name_cleanup = self.provider_config.get('model_name_cleanup', [])
+        self._api_base_config = self.provider_config.get('api_base_config')
+        self._api_key_env = self.provider_config.get('api_key_env')
+        self._embeddings_api_url = self.provider_config.get('embeddings_api_url')
+        
+        self.logger.debug(f"Loaded config for provider '{provider_name}': {self.PROVIDER_NAME}")
+    
+    def extract_provider_models(self, config: Dict[str, Any]) -> List[Tuple[int, str, str]]:
+        """
+        Extract models for this provider from the configuration.
+        
+        This method is implemented based on the model_detection configuration
+        from providers.yaml (either 'prefix' or 'api_base' detection).
+        """
+        provider_models = []
+        model_list = config.get('model_list', [])
+        
+        detection_type = self._model_detection.get('type')
+        
+        for index, model_entry in enumerate(model_list):
+            if not isinstance(model_entry, dict):
+                continue
+            
+            litellm_params = model_entry.get('litellm_params', {})
+            model_id = litellm_params.get('model', '')
+            
+            is_provider_model = False
+            
+            if detection_type == 'prefix':
+                # Prefix-based detection
+                if model_id.startswith(self.MODEL_PREFIX):
+                    is_provider_model = True
+            
+            elif detection_type == 'api_base':
+                # api_base-based detection
+                api_base = str(litellm_params.get('api_base', ''))
+                detection_value = self._model_detection.get('value', '')
+                prefix_match = model_id.startswith(self.MODEL_PREFIX)
+                
+                # Handle both literal strings and environment variable references
+                if detection_value.startswith('os.environ/'):
+                    # For env var references, check if the env var name is in the api_base string
+                    env_var_name = detection_value.replace('os.environ/', '')
+                    is_provider_model = env_var_name in api_base and prefix_match
+                else:
+                    # For literal strings, check if the value is contained in api_base
+                    is_provider_model = detection_value in api_base and prefix_match
+            
+            if is_provider_model:
+                model_name = model_entry.get('model_name', 'unnamed')
+                provider_models.append((index, model_id, model_name))
+                self.logger.debug(f"Found {self.PROVIDER_NAME} model: {model_id} (name: {model_name})")
+        
+        self.logger.info(f"Found {len(provider_models)} {self.PROVIDER_NAME} models in configuration")
+        return provider_models
+    
+    def fetch_available_models(self) -> Dict[str, Dict[str, Any]]:
+        """
+        Fetch available models with pricing from provider API.
+        
+        This is the main method that subclasses should override to handle
+        provider-specific API response formats.
+        """
+        try:
+            headers = self._build_api_headers()
+            data = fetch_models_from_api(self.API_URL, self.logger, headers=headers)
+            
+            available_models = {}
+            for model in data['data']:
+                if isinstance(model, dict) and 'id' in model:
+                    model_info = self.parse_api_model(model)
+                    available_models[model_info['id']] = model_info
+            
+            # Fetch embedding models if configured
+            if self._embeddings_api_url:
+                self._fetch_embedding_models(available_models, headers)
+            
+            self.logger.info(f"Fetched {len(available_models)} available models from {self.PROVIDER_NAME} API")
+            return available_models
+            
+        except Exception as e:
+            self.logger.error(f"Error fetching models from {self.PROVIDER_NAME} API: {e}")
+            raise
+    
+    def _build_api_headers(self) -> Optional[Dict[str, str]]:
+        """Build API headers including authorization if configured."""
+        headers = None
+        if self._api_key_env:
+            api_key = os.environ.get(self._api_key_env)
+            if api_key:
+                headers = {'Authorization': f'Bearer {api_key}'}
+        return headers
+    
+    def _fetch_embedding_models(self, available_models: Dict[str, Dict[str, Any]],
+                               headers: Optional[Dict[str, str]]) -> None:
+        """Fetch embedding models if provider has a separate embeddings endpoint."""
+        if not self._embeddings_api_url:
+            return
+            
+        try:
+            self.logger.debug(f"Fetching embedding models from {self.PROVIDER_NAME}...")
+            embed_data = fetch_models_from_api(self._embeddings_api_url, self.logger, headers=headers)
+            
+            if 'data' in embed_data:
+                for model in embed_data['data']:
+                    if isinstance(model, dict) and 'id' in model:
+                        model_with_info = dict(model)
+                        if 'model_info' not in model_with_info:
+                            model_with_info['model_info'] = {'mode': 'embedding'}
+                        model_info = self.parse_api_model(model_with_info)
+                        available_models[model_info['id']] = model_info
+                self.logger.debug(f"Fetched embedding models from {self.PROVIDER_NAME}")
+        except requests.RequestException as e:
+            self.logger.warning(f"Could not fetch embedding models: {e}")
+    
+    def parse_api_model(self, model: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Parse a model from the API response to extract pricing information.
+        
+        This method implements the pricing parsing logic based on the
+        pricing configuration from providers.yaml. Subclasses can override
+        this for more complex parsing requirements.
+        
+        Args:
+            model: The model dictionary from the API response
+            
+        Returns:
+            Dictionary with 'id', 'input_cost', 'output_cost', and optionally 'model_info'
+        """
+        model_info = {
+            'id': model['id'],
+            'input_cost': None,
+            'output_cost': None,
+            'model_info': model.get('model_info')
+        }
+        
+        # Check for default cost (for free providers like Nvidia)
+        default_cost = self._pricing_config.get('default_cost')
+        if default_cost is not None:
+            model_info['input_cost'] = float(default_cost)
+            model_info['output_cost'] = float(default_cost)
+            return model_info
+        
+        # Parse pricing from API response
+        pricing = model.get('pricing', {})
+        if not isinstance(pricing, dict):
+            return model_info
+        
+        input_field = self._pricing_config.get('input_field')
+        output_field = self._pricing_config.get('output_field')
+        is_per_million = self._pricing_config.get('is_per_million', False)
+        divisor = self._pricing_config.get('divisor', 1)
+        
+        # Helper function to get nested values
+        def get_nested_value(data: Dict[str, Any], field_path: str) -> Any:
+            keys = field_path.split('.')
+            current = data
+            for key in keys:
+                if isinstance(current, dict) and key in current:
+                    current = current[key]
+                else:
+                    return None
+            return current
+        
+        # Parse input cost
+        if input_field:
+            input_value = get_nested_value(model, input_field)
+            if input_value is not None:
+                try:
+                    # Parse string values like "$0.00000055"
+                    if isinstance(input_value, str):
+                        input_value = input_value.replace('$', '').replace(',', '')
+                    input_cost = float(input_value)
+                    if is_per_million:
+                        input_cost = input_cost / divisor / 1_000_000
+                    model_info['input_cost'] = input_cost
+                except (ValueError, TypeError):
+                    pass
+        
+        # Parse output cost
+        if output_field:
+            output_value = get_nested_value(model, output_field)
+            if output_value is not None:
+                try:
+                    # Parse string values like "$0.00000219"
+                    if isinstance(output_value, str):
+                        output_value = output_value.replace('$', '').replace(',', '')
+                    output_cost = float(output_value)
+                    if is_per_million:
+                        output_cost = output_cost / divisor / 1_000_000
+                    model_info['output_cost'] = output_cost
+                except (ValueError, TypeError):
+                    pass
+        
+        return model_info
+    
+    def get_api_model_id(self, model_id: str) -> str:
+        """
+        Extract the API model ID from the config model ID.
+        
+        Args:
+            model_id: The model ID from config (e.g., "openrouter/model-name")
+            
+        Returns:
+            The API model ID (e.g., "model-name")
+        """
+        if model_id.startswith(self.MODEL_PREFIX):
+            return model_id[len(self.MODEL_PREFIX):]
+        return model_id
+    
+    def generate_model_name(self, model_id: str) -> str:
+        """
+        Generate an appropriate model_name from the model ID.
+        
+        This method applies model name cleanup rules from the configuration.
+        
+        Args:
+            model_id: The API model ID
+            
+        Returns:
+            Generated model name
+        """
+        clean_id = model_id.replace('/', '-').replace(':', '-')
+        
+        # Apply cleanup rules from config
+        for cleanup_rule in self._model_name_cleanup:
+            for replace_old, replace_new in cleanup_rule.get('replace', []):
+                clean_id = clean_id.replace(replace_old, replace_new)
+        
+        model_name = f"{self._model_name_prefix}{clean_id}" if self._model_name_prefix else clean_id
+        return model_name.lower()
+    
+    def create_model_entry(self, model_id: str, api_model_info: Dict[str, Any],
+                          model_name: str) -> Dict[str, Any]:
+        """
+        Create a new model entry for the config.
+        
+        This method creates a model entry based on the provider configuration
+        from providers.yaml. Subclasses can override for special handling.
+        
+        Args:
+            model_id: The API model ID
+            api_model_info: Model info from API including costs
+            model_name: The model name to use
+            
+        Returns:
+            Dict representing the model entry for config
+        """
+        input_cost = api_model_info.get('input_cost')
+        output_cost = api_model_info.get('output_cost')
+        
+        # Apply free model handling if configured
+        if self._pricing_config.get('free_model_handling', False):
+            input_cost = adjust_cost_for_free_model(input_cost)
+            output_cost = adjust_cost_for_free_model(output_cost)
+        
+        # Use default cost if pricing is not available
+        default_cost = self._pricing_config.get('default_cost')
+        if default_cost is not None:
+            if input_cost is None:
+                input_cost = float(default_cost)
+            if output_cost is None:
+                output_cost = float(default_cost)
+        
+        entry = {
+            'model_name': model_name,
+            'litellm_params': {
+                'model': f'{self.MODEL_PREFIX}{model_id}',
+                'order': self.PROVIDER_ORDER
+            }
+        }
+        
+        # Add api_base configuration if specified
+        if self._api_base_config:
+            if 'url' in self._api_base_config:
+                entry['litellm_params']['api_base'] = self._api_base_config['url']
+            elif 'url_env' in self._api_base_config:
+                entry['litellm_params']['api_base'] = f"os.environ/{self._api_base_config['url_env']}"
+            
+            if 'api_key_env' in self._api_base_config:
+                entry['litellm_params']['api_key'] = f"os.environ/{self._api_base_config['api_key_env']}"
+        
+        # Add costs if available
+        if input_cost is not None:
+            entry['litellm_params']['input_cost_per_token'] = input_cost
+        if output_cost is not None:
+            entry['litellm_params']['output_cost_per_token'] = output_cost
+        
+        # Add model_info if present
+        model_info_section = api_model_info.get('model_info')
+        if model_info_section:
+            entry['model_info'] = model_info_section
+        
+        return entry
+    
+    def run_cleanup(self, add_models: Optional[List[str]] = None,
+                   custom_model_name: Optional[str] = None) -> int:
+        """
+        Run the complete cleanup process.
+        
+        This method provides a standard cleanup workflow that can be used
+        by most providers. Subclasses can override for special handling.
+        
+        Args:
+            add_models: Optional list of model IDs to add
+            custom_model_name: Optional custom name for single model addition
+            
+        Returns:
+            Exit code (0 for success, 1 for failure)
+        """
+        try:
+            config = self.load_config()
+            api_models = self.fetch_available_models()
+            
+            # Handle model addition
+            if add_models:
+                if self.dry_run:
+                    self.preview_add_model(add_models, api_models, custom_model_name)
+                    return 0
+                else:
+                    config, added_models = self.add_model_to_config(
+                        config, add_models, api_models, custom_model_name)
+                    if added_models:
+                        config, was_sorted = self.sort_model_list(config)
+                        self.save_config(config)
+                        self.logger.info(f"✅ Successfully added {len(added_models)} model(s)")
+                    else:
+                        self.logger.warning("⚠️ No models were added")
+                    return 0
+            
+            # Standard cleanup workflow
+            config_models = self.extract_provider_models(config)
+            invalid_models = self.validate_models(config_models, api_models)
+            config, cost_changes = self.validate_and_update_costs(
+                config, config_models, api_models, self.PROVIDER_ORDER)
+            config, was_sorted = self.sort_model_list(config)
+            
+            if self.dry_run:
+                self.preview_sort_changes(config)
+                self.preview_changes(invalid_models)
+                self.preview_cost_changes(cost_changes)
+            else:
+                if invalid_models:
+                    config = self.remove_invalid_entries(config, invalid_models)
+                
+                if invalid_models or cost_changes or was_sorted:
+                    self.save_config(config)
+            
+            self.generate_report(invalid_models, cost_changes, was_sorted)
+            return 0
+            
+        except Exception as e:
+            self.logger.error(f"Cleanup failed: {e}")
+            return 1
