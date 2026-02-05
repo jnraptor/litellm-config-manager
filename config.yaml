@@ -373,6 +373,32 @@ model_list:
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
   model_name: local-llama
+- model_name: minimax-m2.1
+  litellm_params:
+    model: openai/hf:MiniMaxAI/MiniMax-M2.1
+    api_base: os.environ/SYNTHETIC_API_BASE
+    api_key: os.environ/SYNTHETIC_API_KEY
+    input_cost_per_token: 3.0e-07
+    output_cost_per_token: 1.2e-06
+- model_name: minimax-m2.1
+  litellm_params:
+    model: openai/minimax/minimax-m2.1
+    api_base: os.environ/NANOGPT_API_BASE
+    api_key: os.environ/NANOGPT_API_KEY
+    input_cost_per_token: 3.3e-07
+    output_cost_per_token: 1.32e-06
+- model_name: minimax-m2.1
+  litellm_params:
+    model: openrouter/minimax/minimax-m2.1
+    input_cost_per_token: 2.7e-07
+    output_cost_per_token: 9.5e-07
+- model_name: moonshotai-kimi-k2.5
+  litellm_params:
+    model: openai/hf:moonshotai/Kimi-K2.5
+    api_base: os.environ/SYNTHETIC_API_BASE
+    api_key: os.environ/SYNTHETIC_API_KEY
+    input_cost_per_token: 5.5e-13
+    output_cost_per_token: 2.19e-12
 - model_name: moonshotai-kimi-k2.5
   litellm_params:
     model: openai/moonshotai/kimi-k2.5:thinking
@@ -389,6 +415,13 @@ model_list:
   litellm_params:
     model: infinity/nomic-ai/nomic-embed-text-v2-moe
     api_base: http://infinity:7997
+  model_info:
+    mode: embedding
+- model_name: nomic-embed-text-v1.5
+  litellm_params:
+    model: openai/hf:nomic-ai/nomic-embed-text-v1.5
+    api_base: os.environ/SYNTHETIC_API_BASE
+    api_key: os.environ/SYNTHETIC_API_KEY
   model_info:
     mode: embedding
 - litellm_params:
@@ -489,11 +522,6 @@ model_list:
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
   model_name: or-llama-3.3-70b-instruct-free
-- model_name: or-minimax-m2.1
-  litellm_params:
-    model: openrouter/minimax/minimax-m2.1
-    input_cost_per_token: 2.7e-07
-    output_cost_per_token: 1.1e-06
 - litellm_params:
     model: openrouter/mistralai/codestral-2508
     input_cost_per_token: 3.0e-07
@@ -519,7 +547,7 @@ model_list:
 - litellm_params:
     model: openrouter/qwen/qwen3-235b-a22b-2507
     input_cost_per_token: 7.1e-08
-    output_cost_per_token: 4.63e-07
+    output_cost_per_token: 1.0e-07
   model_name: or-qwen3-235b-a22b-2507
 - litellm_params:
     model: openrouter/qwen/qwen3-30b-a3b-instruct-2507
@@ -548,7 +576,7 @@ model_list:
 - litellm_params:
     model: openrouter/qwen/qwen3-vl-235b-a22b-instruct
     input_cost_per_token: 2.0e-07
-    output_cost_per_token: 1.2e-06
+    output_cost_per_token: 8.8e-07
   model_name: or-qwen3-vl-235b-a22b-instruct
 - litellm_params:
     model: openrouter/qwen/qwen3-vl-235b-a22b-thinking
@@ -607,8 +635,8 @@ model_list:
 - model_name: qwen3-coder-next
   litellm_params:
     model: openrouter/qwen/qwen3-coder-next
-    input_cost_per_token: 2.0e-07
-    output_cost_per_token: 1.5e-06
+    input_cost_per_token: 7.0e-08
+    output_cost_per_token: 3.0e-07
 - model_name: qwen3-coder-plus
   litellm_params:
     model: openai/qwen/qwen3-coder-plus
@@ -724,6 +752,13 @@ model_list:
     api_key: os.environ/POE_API_KEY
     input_cost_per_token: 6.0e-07
     output_cost_per_token: 2.2e-06
+- model_name: zai-glm-4.7
+  litellm_params:
+    model: openai/hf:zai-org/GLM-4.7
+    api_base: os.environ/SYNTHETIC_API_BASE
+    api_key: os.environ/SYNTHETIC_API_KEY
+    input_cost_per_token: 5.5e-13
+    output_cost_per_token: 2.19e-12
 - model_name: zai-glm-4.7
   litellm_params:
     model: openai/zai-org/glm-4.7

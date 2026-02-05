@@ -133,6 +133,28 @@ providers:
     api_base_config: null
     api_key_env: null
 
+  synthetic:
+    name: "Synthetic"
+    description: "Synthetic AI model provider"
+    api_url: "https://api.synthetic.new/openai/v1/models"
+    model_prefix: "openai/"
+    model_detection:
+      type: "api_base"
+      value: "SYNTHETIC_API_BASE"
+    pricing:
+      input_field: "pricing.prompt"
+      output_field: "pricing.completion"
+      is_per_million: false
+      free_model_handling: true
+    model_name_prefix: ""
+    model_name_cleanup:
+      - replace: [["hf:-", ""], ["zai-org-", ""]]
+    special_models: ["hf:nomic-ai/nomic-embed-text-v1.5"]
+    api_base_config:
+      url_env: "SYNTHETIC_API_BASE"
+      api_key_env: "SYNTHETIC_API_KEY"
+    api_key_env: "SYNTHETIC_API_KEY"
+
 # Default settings that apply to all providers unless overridden
 defaults:
   timeout: 30
