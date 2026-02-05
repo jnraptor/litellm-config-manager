@@ -149,10 +149,10 @@ providers:
     name: "Synthetic"
     description: "Synthetic AI model provider"
     api_url: "https://api.synthetic.new/openai/v1/models"
-    model_prefix: "openai/"
+    model_prefix: "synthetic/"
     model_detection:
-      type: "api_base"
-      value: "SYNTHETIC_API_BASE"
+      type: "prefix"
+      value: "synthetic/"
     pricing:
       input_field: "pricing.prompt"
       output_field: "pricing.completion"
@@ -160,10 +160,9 @@ providers:
       free_model_handling: true
     model_name_prefix: ""
     model_name_cleanup:
-      - replace: [["hf:-", ""], ["zai-org-", ""]]
+      - replace: [["synthetic/hf:", ""], ["zai-org-", ""]]
     special_models: ["hf:nomic-ai/nomic-embed-text-v1.5"]
     api_base_config:
-      url_env: "SYNTHETIC_API_BASE"
       api_key_env: "SYNTHETIC_API_KEY"
     api_key_env: "SYNTHETIC_API_KEY"
     # Order for litellm_params/order - lower values are tried first
