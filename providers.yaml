@@ -154,8 +154,8 @@ providers:
       type: "prefix"
       value: "synthetic/"
     pricing:
-      input_field: "pricing.prompt"
-      output_field: "pricing.completion"
+      input_field: "prompt"
+      output_field: "completion"
       is_per_million: false
       free_model_handling: true
     model_name_prefix: ""

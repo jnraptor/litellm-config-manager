@@ -179,6 +179,8 @@ model_list:
     model: synthetic/hf:deepseek-ai/DeepSeek-V3.2
     order: 1
     api_key: os.environ/SYNTHETIC_API_KEY
+    input_cost_per_token: 5.6e-07
+    output_cost_per_token: 1.68e-06
 - model_name: devstral-2512
   litellm_params:
     model: nvidia_nim/mistralai/devstral-2-123b-instruct-2512
