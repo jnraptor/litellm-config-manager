@@ -492,7 +492,8 @@ model_list:
     mode: embedding
 - model_name: nomic-embed-text-v1.5
   litellm_params:
-    model: synthetic/hf:nomic-ai/nomic-embed-text-v1.5
+    model: openai/hf:nomic-ai/nomic-embed-text-v1.5
+    api_base: os.environ/SYNTHETIC_API_BASE
     api_key: os.environ/SYNTHETIC_API_KEY
     order: 1
   model_info:
