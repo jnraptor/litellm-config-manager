@@ -177,37 +177,67 @@ class PrefixDetectionStrategy(ProviderStrategy):
             model_info['output_cost'] = float(default_cost)
             return model_info
 
+        # Helper function to get nested values using dot notation
+        def get_nested_value(data: Dict[str, Any], field_path: str) -> Any:
+            keys = field_path.split('.')
+            current = data
+            for key in keys:
+                if isinstance(current, dict) and key in current:
+                    current = current[key]
+                else:
+                    return None
+            return current
+
+        # For prefix detection, pricing comes from api_model['pricing']
+        # but the config field may be just "prompt" (e.g., OpenRouter before fix)
+        # or "pricing.prompt" (proper nested path)
         pricing = api_model.get('pricing', {})
         if not isinstance(pricing, dict):
             return model_info
 
         input_field = self.config.pricing.get('input_field')
-        if input_field and input_field in pricing:
-            try:
-                input_value = pricing[input_field]
-                # Parse string values like "$0.00000055"
-                if isinstance(input_value, str):
-                    input_value = input_value.replace('$', '').replace(',', '')
-                input_cost = float(input_value)
-                if self.config.pricing.get('is_per_million', False):
-                    input_cost = input_cost / self.config.pricing.get('divisor', 1) / 1_000_000
-                model_info['input_cost'] = input_cost
-            except (ValueError, TypeError):
-                pass
+        if input_field:
+            # Get the value from pricing or from api_model using dot notation
+            if '.' in input_field:
+                # Use dot notation from the model object
+                input_value = get_nested_value(api_model, input_field)
+            else:
+                # Look directly in pricing dict
+                input_value = pricing.get(input_field)
+
+            if input_value is not None:
+                try:
+                    # Parse string values like "$0.00000055"
+                    if isinstance(input_value, str):
+                        input_value = input_value.replace('$', '').replace(',', '')
+                    input_cost = float(input_value)
+                    if self.config.pricing.get('is_per_million', False):
+                        input_cost = input_cost / self.config.pricing.get('divisor', 1) / 1_000_000
+                    model_info['input_cost'] = input_cost
+                except (ValueError, TypeError):
+                    pass
 
         output_field = self.config.pricing.get('output_field')
-        if output_field and output_field in pricing:
-            try:
-                output_value = pricing[output_field]
-                # Parse string values like "$0.00000219"
-                if isinstance(output_value, str):
-                    output_value = output_value.replace('$', '').replace(',', '')
-                output_cost = float(output_value)
-                if self.config.pricing.get('is_per_million', False):
-                    output_cost = output_cost / self.config.pricing.get('divisor', 1) / 1_000_000
-                model_info['output_cost'] = output_cost
-            except (ValueError, TypeError):
-                pass
+        if output_field:
+            # Get the value from pricing or from api_model using dot notation
+            if '.' in output_field:
+                # Use dot notation from the model object
+                output_value = get_nested_value(api_model, output_field)
+            else:
+                # Look directly in pricing dict
+                output_value = pricing.get(output_field)
+
+            if output_value is not None:
+                try:
+                    # Parse string values like "$0.00000219"
+                    if isinstance(output_value, str):
+                        output_value = output_value.replace('$', '').replace(',', '')
+                    output_cost = float(output_value)
+                    if self.config.pricing.get('is_per_million', False):
+                        output_cost = output_cost / self.config.pricing.get('divisor', 1) / 1_000_000
+                    model_info['output_cost'] = output_cost
+                except (ValueError, TypeError):
+                    pass
 
         if 'model_info' in api_model:
             model_info['model_info'] = api_model['model_info']

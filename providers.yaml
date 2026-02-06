@@ -12,8 +12,8 @@ providers:
       type: "prefix"
       value: "openrouter/"
     pricing:
-      input_field: "prompt"
-      output_field: "completion"
+      input_field: "pricing.prompt"
+      output_field: "pricing.completion"
       is_per_million: false
       # Handle free models by converting 0.0 to 1e-09
       free_model_handling: true
@@ -154,8 +154,8 @@ providers:
       type: "prefix"
       value: "synthetic/"
     pricing:
-      input_field: "prompt"
-      output_field: "completion"
+      input_field: "pricing.prompt"
+      output_field: "pricing.completion"
       is_per_million: false
       free_model_handling: true
     model_name_prefix: ""
