@@ -60,17 +60,16 @@ model_list:
     order: 2
   model_name: claude-3-5-haiku
 - litellm_params:
-    model: openai/claude-haiku-3.5
-    api_base: https://api.poe.com/v1
-    api_key: os.environ/POE_API_KEY
-    input_cost_per_token: 6.8e-07
-    output_cost_per_token: 3.4e-06
-    order: 2
-  model_name: claude-3-5-haiku
-- litellm_params:
     model: openrouter/anthropic/claude-3.5-haiku
     input_cost_per_token: 8.0e-07
     output_cost_per_token: 4.0e-06
+    order: 2
+  model_name: claude-3-5-haiku
+- litellm_params:
+    model: poe/claude-haiku-3.5
+    api_key: os.environ/POE_API_KEY
+    input_cost_per_token: 6.8e-07
+    output_cost_per_token: 3.4e-06
     order: 2
   model_name: claude-3-5-haiku
 - litellm_params:
@@ -87,17 +86,16 @@ model_list:
     order: 2
   model_name: claude-haiku-4-5
 - litellm_params:
-    model: openai/claude-haiku-4.5
-    api_base: https://api.poe.com/v1
-    api_key: os.environ/POE_API_KEY
-    input_cost_per_token: 8.5e-07
-    output_cost_per_token: 4.3e-06
-    order: 2
-  model_name: claude-haiku-4-5
-- litellm_params:
     model: openrouter/anthropic/claude-haiku-4.5
     input_cost_per_token: 1.0e-06
     output_cost_per_token: 5.0e-06
+    order: 2
+  model_name: claude-haiku-4-5
+- litellm_params:
+    model: poe/claude-haiku-4.5
+    api_key: os.environ/POE_API_KEY
+    input_cost_per_token: 8.5e-07
+    output_cost_per_token: 4.3e-06
     order: 2
   model_name: claude-haiku-4-5
 - litellm_params:
@@ -105,28 +103,19 @@ model_list:
     api_key: os.environ/ANTHROPIC_API_KEY
     order: 2
   model_name: claude-opus-4.5
+- model_name: claude-opus-4.5
+  litellm_params:
+    model: nano-gpt/claude-opus-4-5-20251101
+    order: 2
+    api_key: os.environ/NANOGPT_API_KEY
+    input_cost_per_token: 4.998e-06
+    output_cost_per_token: 2.5007000000000003e-05
 - litellm_params:
     model: openai/anthropic/claude-opus-4-5
     api_base: https://router.requesty.ai/v1
     api_key: os.environ/REQUESTY_API_KEY
     input_cost_per_token: 5.0e-06
     output_cost_per_token: 2.5e-05
-    order: 2
-  model_name: claude-opus-4.5
-- model_name: claude-opus-4.5
-  litellm_params:
-    model: openai/claude-opus-4-5-20251101
-    api_base: os.environ/NANOGPT_API_BASE
-    api_key: os.environ/NANOGPT_API_KEY
-    input_cost_per_token: 4.998e-06
-    output_cost_per_token: 2.5007000000000003e-05
-    order: 2
-- litellm_params:
-    model: openai/claude-opus-4.5
-    api_base: https://api.poe.com/v1
-    api_key: os.environ/POE_API_KEY
-    input_cost_per_token: 4.3e-06
-    output_cost_per_token: 2.1e-05
     order: 2
   model_name: claude-opus-4.5
 - litellm_params:
@@ -136,10 +125,24 @@ model_list:
     order: 2
   model_name: claude-opus-4.5
 - litellm_params:
+    model: poe/claude-opus-4.5
+    api_key: os.environ/POE_API_KEY
+    input_cost_per_token: 4.3e-06
+    output_cost_per_token: 2.1e-05
+    order: 2
+  model_name: claude-opus-4.5
+- litellm_params:
     model: anthropic/claude-opus-4-6
     api_key: os.environ/ANTHROPIC_API_KEY
     order: 2
   model_name: claude-opus-4.6
+- model_name: claude-opus-4.6
+  litellm_params:
+    model: nano-gpt/anthropic/claude-opus-4.6
+    order: 2
+    api_key: os.environ/NANOGPT_API_KEY
+    input_cost_per_token: 4.998e-06
+    output_cost_per_token: 2.5007000000000003e-05
 - model_name: claude-opus-4.6
   litellm_params:
     model: openai/anthropic/claude-opus-4-6
@@ -150,26 +153,17 @@ model_list:
     output_cost_per_token: 2.5e-05
 - model_name: claude-opus-4.6
   litellm_params:
-    model: openai/anthropic/claude-opus-4.6
-    order: 2
-    api_base: os.environ/NANOGPT_API_BASE
-    api_key: os.environ/NANOGPT_API_KEY
-    input_cost_per_token: 4.998e-06
-    output_cost_per_token: 2.5007000000000003e-05
-- model_name: claude-opus-4.6
-  litellm_params:
-    model: openai/claude-opus-4-6
-    order: 2
-    api_base: https://api.poe.com/v1
-    api_key: os.environ/POE_API_KEY
-    input_cost_per_token: 4.3e-06
-    output_cost_per_token: 2.1e-05
-- model_name: claude-opus-4.6
-  litellm_params:
     model: openrouter/anthropic/claude-opus-4.6
     order: 2
     input_cost_per_token: 5.0e-06
     output_cost_per_token: 2.5e-05
+- model_name: claude-opus-4.6
+  litellm_params:
+    model: poe/claude-opus-4-6
+    order: 2
+    api_key: os.environ/POE_API_KEY
+    input_cost_per_token: 4.3e-06
+    output_cost_per_token: 2.1e-05
 - litellm_params:
     model: anthropic/claude-sonnet-4-5-20250929
     api_key: os.environ/ANTHROPIC_API_KEY
@@ -184,17 +178,16 @@ model_list:
     order: 2
   model_name: claude-sonnet-4.5
 - litellm_params:
-    model: openai/claude-sonnet-4.5
-    api_base: https://api.poe.com/v1
-    api_key: os.environ/POE_API_KEY
-    input_cost_per_token: 2.6e-06
-    output_cost_per_token: 1.3e-05
-    order: 2
-  model_name: claude-sonnet-4.5
-- litellm_params:
     model: openrouter/anthropic/claude-sonnet-4.5
     input_cost_per_token: 3.0e-06
     output_cost_per_token: 1.5e-05
+    order: 2
+  model_name: claude-sonnet-4.5
+- litellm_params:
+    model: poe/claude-sonnet-4.5
+    api_key: os.environ/POE_API_KEY
+    input_cost_per_token: 2.6e-06
+    output_cost_per_token: 1.3e-05
     order: 2
   model_name: claude-sonnet-4.5
 - model_name: deepseek-v3.2
@@ -258,16 +251,7 @@ model_list:
   model_name: gemini-2.5-flash-lite
 - model_name: gemini-3-flash
   litellm_params:
-    model: openai/gemini-3-flash
-    api_base: https://api.poe.com/v1
-    api_key: os.environ/POE_API_KEY
-    input_cost_per_token: 4.0e-07
-    output_cost_per_token: 2.4e-06
-    order: 2
-- model_name: gemini-3-flash
-  litellm_params:
-    model: openai/google/gemini-3-flash-preview
-    api_base: os.environ/NANOGPT_API_BASE
+    model: nano-gpt/google/gemini-3-flash-preview
     api_key: os.environ/NANOGPT_API_KEY
     input_cost_per_token: 5.0e-07
     output_cost_per_token: 3.0e-06
@@ -286,18 +270,16 @@ model_list:
     input_cost_per_token: 5.0e-07
     output_cost_per_token: 3.0e-06
     order: 2
-- litellm_params:
-    model: openai/gemini-3-pro
-    api_base: https://api.poe.com/v1
+- model_name: gemini-3-flash
+  litellm_params:
+    model: poe/gemini-3-flash
     api_key: os.environ/POE_API_KEY
-    input_cost_per_token: 1.6e-06
-    output_cost_per_token: 9.6e-06
+    input_cost_per_token: 4.0e-07
+    output_cost_per_token: 2.4e-06
     order: 2
-  model_name: gemini-3-pro
 - model_name: gemini-3-pro
   litellm_params:
-    model: openai/gemini-3-pro-preview
-    api_base: os.environ/NANOGPT_API_BASE
+    model: nano-gpt/gemini-3-pro-preview
     api_key: os.environ/NANOGPT_API_KEY
     input_cost_per_token: 2.0e-06
     output_cost_per_token: 1.2e-05
@@ -314,6 +296,13 @@ model_list:
     model: openrouter/google/gemini-3-pro-preview
     input_cost_per_token: 2.0e-06
     output_cost_per_token: 1.2e-05
+    order: 2
+  model_name: gemini-3-pro
+- litellm_params:
+    model: poe/gemini-3-pro
+    api_key: os.environ/POE_API_KEY
+    input_cost_per_token: 1.6e-06
+    output_cost_per_token: 9.6e-06
     order: 2
   model_name: gemini-3-pro
 - model_name: gemini-embedding-001
@@ -375,27 +364,18 @@ model_list:
     api_key: os.environ/OPENAI_API_KEY
     order: 2
 - litellm_params:
-    model: openai/gpt-5.1-codex-mini
-    api_base: https://api.poe.com/v1
-    api_key: os.environ/POE_API_KEY
-    input_cost_per_token: 2.2e-07
-    output_cost_per_token: 1.8e-06
-    order: 2
-  model_name: gpt-5.1-codex-mini
-- litellm_params:
     model: openrouter/openai/gpt-5.1-codex-mini
     input_cost_per_token: 2.5e-07
     output_cost_per_token: 2.0e-06
     order: 2
   model_name: gpt-5.1-codex-mini
 - litellm_params:
-    model: openai/gpt-5.2
-    api_base: https://api.poe.com/v1
+    model: poe/gpt-5.1-codex-mini
     api_key: os.environ/POE_API_KEY
-    input_cost_per_token: 1.6e-06
-    output_cost_per_token: 1.3e-05
+    input_cost_per_token: 2.2e-07
+    output_cost_per_token: 1.8e-06
     order: 2
-  model_name: gpt-5.2
+  model_name: gpt-5.1-codex-mini
 - model_name: gpt-5.2
   litellm_params:
     model: openai/gpt-5.2-2025-12-11
@@ -407,6 +387,20 @@ model_list:
     output_cost_per_token: 1.4e-05
     order: 2
   model_name: gpt-5.2
+- litellm_params:
+    model: poe/gpt-5.2
+    api_key: os.environ/POE_API_KEY
+    input_cost_per_token: 1.6e-06
+    output_cost_per_token: 1.3e-05
+    order: 2
+  model_name: gpt-5.2
+- model_name: gpt-5.2-codex
+  litellm_params:
+    model: nano-gpt/openai/gpt-5.2-codex
+    api_key: os.environ/NANOGPT_API_KEY
+    input_cost_per_token: 1.75e-06
+    output_cost_per_token: 1.4e-05
+    order: 2
 - model_name: gpt-5.2-codex
   litellm_params:
     model: openai/gpt-5.2-codex
@@ -414,25 +408,16 @@ model_list:
     order: 2
 - model_name: gpt-5.2-codex
   litellm_params:
-    model: openai/gpt-5.2-codex
-    api_base: https://api.poe.com/v1
-    api_key: os.environ/POE_API_KEY
-    input_cost_per_token: 1.6e-06
-    output_cost_per_token: 1.3e-05
-    order: 2
-- model_name: gpt-5.2-codex
-  litellm_params:
-    model: openai/openai/gpt-5.2-codex
-    api_base: os.environ/NANOGPT_API_BASE
-    api_key: os.environ/NANOGPT_API_KEY
-    input_cost_per_token: 1.75e-06
-    output_cost_per_token: 1.4e-05
-    order: 2
-- model_name: gpt-5.2-codex
-  litellm_params:
     model: openrouter/openai/gpt-5.2-codex
     input_cost_per_token: 1.75e-06
     output_cost_per_token: 1.4e-05
+    order: 2
+- model_name: gpt-5.2-codex
+  litellm_params:
+    model: poe/gpt-5.2-codex
+    api_key: os.environ/POE_API_KEY
+    input_cost_per_token: 1.6e-06
+    output_cost_per_token: 1.3e-05
     order: 2
 - model_name: gpt-oss-120b
   litellm_params:
@@ -480,8 +465,7 @@ model_list:
   model_name: local-llama
 - model_name: minimax-m2.1
   litellm_params:
-    model: openai/minimax/minimax-m2.1
-    api_base: os.environ/NANOGPT_API_BASE
+    model: nano-gpt/minimax/minimax-m2.1
     api_key: os.environ/NANOGPT_API_KEY
     input_cost_per_token: 3.3e-07
     output_cost_per_token: 1.32e-06
@@ -501,8 +485,7 @@ model_list:
     order: 1
 - model_name: moonshotai-kimi-k2.5
   litellm_params:
-    model: openai/moonshotai/kimi-k2.5:thinking
-    api_base: os.environ/NANOGPT_API_BASE
+    model: nano-gpt/moonshotai/kimi-k2.5:thinking
     api_key: os.environ/NANOGPT_API_KEY
     input_cost_per_token: 6.0e-07
     output_cost_per_token: 3.0e-06
@@ -762,8 +745,7 @@ model_list:
   model_name: pplx-sonar-pro
 - model_name: qwen3-coder-flash
   litellm_params:
-    model: openai/qwen/qwen3-coder-flash
-    api_base: os.environ/NANOGPT_API_BASE
+    model: nano-gpt/qwen/qwen3-coder-flash
     api_key: os.environ/NANOGPT_API_KEY
     input_cost_per_token: 3.0e-07
     output_cost_per_token: 1.5e-06
@@ -776,8 +758,7 @@ model_list:
   model_name: qwen3-coder-flash
 - model_name: qwen3-coder-next
   litellm_params:
-    model: openai/qwen/qwen3-coder-next
-    api_base: os.environ/NANOGPT_API_BASE
+    model: nano-gpt/qwen/qwen3-coder-next
     api_key: os.environ/NANOGPT_API_KEY
     input_cost_per_token: 1.5e-07
     output_cost_per_token: 1.5e-06
@@ -790,8 +771,7 @@ model_list:
     order: 2
 - model_name: qwen3-coder-plus
   litellm_params:
-    model: openai/qwen/qwen3-coder-plus
-    api_base: os.environ/NANOGPT_API_BASE
+    model: nano-gpt/qwen/qwen3-coder-plus
     api_key: os.environ/NANOGPT_API_KEY
     input_cost_per_token: 1.0e-06
     output_cost_per_token: 5.0e-06
@@ -804,8 +784,7 @@ model_list:
   model_name: qwen3-coder-plus
 - model_name: qwen3-max
   litellm_params:
-    model: openai/qwen/qwen3-max
-    api_base: os.environ/NANOGPT_API_BASE
+    model: nano-gpt/qwen/qwen3-max
     api_key: os.environ/NANOGPT_API_KEY
     input_cost_per_token: 1.2e-06
     output_cost_per_token: 6.0e-06
@@ -861,16 +840,14 @@ model_list:
     order: 2
 - model_name: x-ai-grok-4.1-fast
   litellm_params:
-    model: openai/x-ai/grok-4.1-fast
-    api_base: os.environ/NANOGPT_API_BASE
+    model: nano-gpt/x-ai/grok-4.1-fast
     api_key: os.environ/NANOGPT_API_KEY
     input_cost_per_token: 2.0000000000000002e-07
     output_cost_per_token: 5.0e-07
     order: 2
 - model_name: x-ai-grok-code-fast-1
   litellm_params:
-    model: openai/x-ai/grok-code-fast-1
-    api_base: os.environ/NANOGPT_API_BASE
+    model: nano-gpt/x-ai/grok-code-fast-1
     api_key: os.environ/NANOGPT_API_KEY
     input_cost_per_token: 2.0e-07
     output_cost_per_token: 1.5e-06
@@ -895,16 +872,7 @@ model_list:
   model_name: zai-glm-4.5-air
 - model_name: zai-glm-4.6v
   litellm_params:
-    model: openai/glm-4.6v
-    api_base: https://api.poe.com/v1
-    api_key: os.environ/POE_API_KEY
-    input_cost_per_token: 3.0e-07
-    output_cost_per_token: 9.0e-07
-    order: 2
-- model_name: zai-glm-4.6v
-  litellm_params:
-    model: openai/zai-org/glm-4.6v
-    api_base: os.environ/NANOGPT_API_BASE
+    model: nano-gpt/zai-org/glm-4.6v
     api_key: os.environ/NANOGPT_API_KEY
     input_cost_per_token: 3.0e-07
     output_cost_per_token: 9.0e-07
@@ -915,18 +883,16 @@ model_list:
     output_cost_per_token: 9.0e-07
     order: 2
   model_name: zai-glm-4.6v
-- model_name: zai-glm-4.7
+- model_name: zai-glm-4.6v
   litellm_params:
-    model: openai/glm-4.7
-    api_base: https://api.poe.com/v1
+    model: poe/glm-4.6v
     api_key: os.environ/POE_API_KEY
-    input_cost_per_token: 6.0e-07
-    output_cost_per_token: 2.2e-06
+    input_cost_per_token: 3.0e-07
+    output_cost_per_token: 9.0e-07
     order: 2
 - model_name: zai-glm-4.7
   litellm_params:
-    model: openai/zai-org/glm-4.7
-    api_base: os.environ/NANOGPT_API_BASE
+    model: nano-gpt/zai-org/glm-4.7
     api_key: os.environ/NANOGPT_API_KEY
     input_cost_per_token: 1.5e-07
     output_cost_per_token: 8.000000000000001e-07
@@ -939,6 +905,13 @@ model_list:
     order: 2
 - model_name: zai-glm-4.7
   litellm_params:
+    model: poe/glm-4.7
+    api_key: os.environ/POE_API_KEY
+    input_cost_per_token: 6.0e-07
+    output_cost_per_token: 2.2e-06
+    order: 2
+- model_name: zai-glm-4.7
+  litellm_params:
     model: synthetic/hf:zai-org/GLM-4.7
     api_key: os.environ/SYNTHETIC_API_KEY
     input_cost_per_token: 5.5e-07
@@ -946,14 +919,7 @@ model_list:
     order: 1
 - model_name: zai-glm-4.7-flash
   litellm_params:
-    model: openai/glm-4.7-flash
-    api_base: https://api.poe.com/v1
-    api_key: os.environ/POE_API_KEY
-    order: 2
-- model_name: zai-glm-4.7-flash
-  litellm_params:
-    model: openai/zai-org/glm-4.7-flash:thinking
-    api_base: os.environ/NANOGPT_API_BASE
+    model: nano-gpt/zai-org/glm-4.7-flash:thinking
     api_key: os.environ/NANOGPT_API_KEY
     input_cost_per_token: 6.999999999999999e-08
     output_cost_per_token: 4.0000000000000003e-07
@@ -961,6 +927,11 @@ model_list:
 - model_name: zai-glm-4.7-flash
   litellm_params:
     model: openrouter/z-ai/glm-4.7-flash
-    input_cost_per_token: 7.0e-08
+    input_cost_per_token: 6.0e-08
     output_cost_per_token: 4.0e-07
+    order: 2
+- model_name: zai-glm-4.7-flash
+  litellm_params:
+    model: poe/glm-4.7-flash
+    api_key: os.environ/POE_API_KEY
     order: 2

@@ -54,10 +54,10 @@ providers:
     name: "Nano-GPT"
     description: "Nano-GPT model provider"
     api_url: "https://nano-gpt.com/api/v1/models?detailed=true"
-    model_prefix: "openai/"
+    model_prefix: "nano-gpt/"
     model_detection:
-      type: "api_base"
-      value: "NANOGPT_API_BASE"
+      type: "prefix"
+      value: "nano-gpt/"
     pricing:
       input_field: "pricing.prompt"
       output_field: "pricing.completion"
@@ -68,7 +68,6 @@ providers:
       - replace: [["qwen-", ""]]
     special_models: []
     api_base_config:
-      url_env: "NANOGPT_API_BASE"
       api_key_env: "NANOGPT_API_KEY"
     api_key_env: "NANOGPT_API_KEY"
     # Order for litellm_params/order - lower values are tried first
@@ -101,10 +100,10 @@ providers:
     name: "Poe"
     description: "Poe model provider"
     api_url: "https://api.poe.com/v1/models"
-    model_prefix: "openai/"
+    model_prefix: "poe/"
     model_detection:
-      type: "api_base"
-      value: "api.poe.com"
+      type: "prefix"
+      value: "poe/"
     pricing:
       input_field: "pricing.prompt"
       output_field: "pricing.completion"
@@ -114,7 +113,6 @@ providers:
     model_name_cleanup: []
     special_models: []
     api_base_config:
-      url: "https://api.poe.com/v1"
       api_key_env: "POE_API_KEY"
     api_key_env: "POE_API_KEY"
     # Order for litellm_params/order - lower values are tried first
