@@ -164,13 +164,6 @@ model_list:
     order: 2
     input_cost_per_token: 5.0e-06
     output_cost_per_token: 2.5e-05
-- model_name: claude-opus-4.6
-  litellm_params:
-    model: poe/claude-opus-4-6
-    order: 2
-    api_key: os.environ/POE_API_KEY
-    input_cost_per_token: 4.3e-06
-    output_cost_per_token: 2.1e-05
 - litellm_params:
     model: anthropic/claude-sonnet-4-5-20250929
     api_key: os.environ/ANTHROPIC_API_KEY
@@ -444,8 +437,8 @@ model_list:
     order: 2
 - litellm_params:
     model: openrouter/openai/gpt-oss-20b
-    input_cost_per_token: 2.0e-08
-    output_cost_per_token: 1.0e-07
+    input_cost_per_token: 3.0e-08
+    output_cost_per_token: 1.4e-07
     order: 2
   model_name: gpt-oss-20b
 - model_name: jina-embeddings-v4
@@ -501,7 +494,7 @@ model_list:
   litellm_params:
     model: openrouter/moonshotai/kimi-k2.5
     input_cost_per_token: 4.5e-07
-    output_cost_per_token: 2.5e-06
+    output_cost_per_token: 2.25e-06
     order: 2
 - model_name: moonshotai-kimi-k2.5
   litellm_params:
@@ -873,8 +866,8 @@ model_list:
   model_name: x-ai-grok-code-fast-1
 - litellm_params:
     model: openrouter/z-ai/glm-4.5-air
-    input_cost_per_token: 5.0e-08
-    output_cost_per_token: 2.2e-07
+    input_cost_per_token: 1.3e-07
+    output_cost_per_token: 8.5e-07
     order: 2
   model_name: zai-glm-4.5-air
 - litellm_params:
