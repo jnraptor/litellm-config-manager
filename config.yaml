@@ -496,13 +496,13 @@ model_list:
     input_cost_per_token: 4.5e-07
     output_cost_per_token: 2.25e-06
     order: 2
-- model_name: moonshotai-kimi-k2.5
-  litellm_params:
-    model: synthetic/hf:moonshotai/Kimi-K2.5
-    api_key: os.environ/SYNTHETIC_API_KEY
-    input_cost_per_token: 5.5e-07
-    output_cost_per_token: 2.19e-06
-    order: 1
+#- model_name: moonshotai-kimi-k2.5
+#  litellm_params:
+#    model: synthetic/hf:moonshotai/Kimi-K2.5
+#    api_key: os.environ/SYNTHETIC_API_KEY
+#    input_cost_per_token: 5.5e-07
+#    output_cost_per_token: 2.19e-06
+#    order: 1
 - model_name: moonshotai-kimi-k2.5-1
   litellm_params:
     model: synthetic/hf:nvidia/Kimi-K2.5-NVFP4
