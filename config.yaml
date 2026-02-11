@@ -937,6 +937,14 @@ model_list:
     order: 2
 - model_name: zai-glm-5
   litellm_params:
+    model: openai/zai/GLM-5
+    order: 2
+    api_base: https://router.requesty.ai/v1
+    api_key: os.environ/REQUESTY_API_KEY
+    input_cost_per_token: 1.0e-06
+    output_cost_per_token: 3.2e-06
+- model_name: zai-glm-5
+  litellm_params:
     model: openrouter/z-ai/glm-5
     order: 2
     input_cost_per_token: 8.0e-07
