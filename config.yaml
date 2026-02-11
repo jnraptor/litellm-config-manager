@@ -496,13 +496,20 @@ model_list:
     input_cost_per_token: 4.5e-07
     output_cost_per_token: 2.25e-06
     order: 2
-- model_name: moonshotai-kimi-k2.5
+#- model_name: moonshotai-kimi-k2.5
+#  litellm_params:
+#    model: synthetic/hf:moonshotai/Kimi-K2.5
+#    api_key: os.environ/SYNTHETIC_API_KEY
+#    input_cost_per_token: 5.5e-07
+#    output_cost_per_token: 2.19e-06
+#    order: 1
+- model_name: moonshotai-kimi-k2.5-1
   litellm_params:
-    model: synthetic/hf:moonshotai/Kimi-K2.5
+    model: synthetic/hf:nvidia/Kimi-K2.5-NVFP4
+    order: 1
     api_key: os.environ/SYNTHETIC_API_KEY
     input_cost_per_token: 5.5e-07
     output_cost_per_token: 2.19e-06
-    order: 1
 - model_name: nomic-embed-text
   litellm_params:
     model: infinity/nomic-ai/nomic-embed-text-v2-moe
@@ -661,12 +668,6 @@ model_list:
     output_cost_per_token: 1.8e-07
     order: 2
   model_name: or-mistral-small-3.2-24b
-- model_name: or-openrouter-pony-alpha
-  litellm_params:
-    model: openrouter/openrouter/pony-alpha
-    order: 2
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
 - litellm_params:
     model: openrouter/qwen/qwen3-235b-a22b-2507
     input_cost_per_token: 7.1e-08
@@ -941,3 +942,17 @@ model_list:
     model: poe/glm-4.7-flash
     api_key: os.environ/POE_API_KEY
     order: 2
+- model_name: zai-glm-5
+  litellm_params:
+    model: openai/zai/GLM-5
+    order: 2
+    api_base: https://router.requesty.ai/v1
+    api_key: os.environ/REQUESTY_API_KEY
+    input_cost_per_token: 1.0e-06
+    output_cost_per_token: 3.2e-06
+- model_name: zai-glm-5
+  litellm_params:
+    model: openrouter/z-ai/glm-5
+    order: 2
+    input_cost_per_token: 8.0e-07
+    output_cost_per_token: 2.56e-06
