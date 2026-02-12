@@ -485,6 +485,13 @@ model_list:
     order: 1
 - model_name: minimax-m2.5
   litellm_params:
+    model: nano-gpt/minimax/minimax-m2.5-official
+    order: 2
+    api_key: os.environ/NANOGPT_API_KEY
+    input_cost_per_token: 3.0e-07
+    output_cost_per_token: 1.2e-06
+- model_name: minimax-m2.5
+  litellm_params:
     model: openrouter/minimax/minimax-m2.5
     order: 2
     input_cost_per_token: 3.0e-07
