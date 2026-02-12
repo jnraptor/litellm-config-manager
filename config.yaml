@@ -483,6 +483,12 @@ model_list:
     input_cost_per_token: 3.0e-07
     output_cost_per_token: 1.2e-06
     order: 1
+- model_name: minimax-m2.5
+  litellm_params:
+    model: openrouter/minimax/minimax-m2.5
+    order: 2
+    input_cost_per_token: 3.0e-07
+    output_cost_per_token: 1.2e-06
 - model_name: moonshotai-kimi-k2.5
   litellm_params:
     model: nano-gpt/moonshotai/kimi-k2.5:thinking
