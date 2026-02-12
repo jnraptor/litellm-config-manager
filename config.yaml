@@ -838,13 +838,6 @@ model_list:
     api_base: https://router.requesty.ai/v1
     api_key: os.environ/REQUESTY_API_KEY
     order: 2
-- model_name: tgt-Salesforce-Llama-Rank-V1
-  litellm_params:
-    model: together_ai/Salesforce/Llama-Rank-V1
-    api_key: os.environ/TOGETHERAI_API_KEY
-    order: 2
-  model_info:
-    mode: rerank
 - model_name: vc-meituan-longcat-flash-chat
   litellm_params:
     model: vercel_ai_gateway/meituan/longcat-flash-chat
