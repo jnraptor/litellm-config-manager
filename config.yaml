@@ -456,7 +456,7 @@ model_list:
   model_info:
     mode: rerank
 - litellm_params:
-    model: openai/LFM2.5-1.2B-Instruct
+    model: openai/LFM2.5-1.2B
     api_base: os.environ/LLAMA_API_BASE
     api_key: os.environ/LLAMA_API_KEY
     input_cost_per_token: 1.0e-09
