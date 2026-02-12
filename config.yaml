@@ -944,6 +944,14 @@ model_list:
     output_cost_per_token: 2.56e-06
 - model_name: zai-glm-5
   litellm_params:
+    model: openai/zai-org/GLM-5-FP8
+    order: 2
+    api_base: os.environ/MODAL_API_BASE
+    api_key: os.environ/MODAL_API_KEY
+    input_cost_per_token: 1.0e-09
+    output_cost_per_token: 1.0e-09
+- model_name: zai-glm-5
+  litellm_params:
     model: openai/zai/GLM-5
     order: 2
     api_base: https://router.requesty.ai/v1
@@ -963,11 +971,3 @@ model_list:
     api_key: os.environ/POE_API_KEY
     input_cost_per_token: 1.0e-06
     output_cost_per_token: 3.2e-06
-- model_name: zai-glm-5
-  litellm_params:
-    model: openai/zai-org/GLM-5-FP8
-    order: 2
-    api_base: os.environ/MODAL_API_BASE
-    api_key: os.environ/MODAL_API_KEY
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
