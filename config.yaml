@@ -487,8 +487,8 @@ model_list:
   litellm_params:
     model: nano-gpt/moonshotai/kimi-k2.5:thinking
     api_key: os.environ/NANOGPT_API_KEY
-    input_cost_per_token: 6.0e-07
-    output_cost_per_token: 3.0e-06
+    input_cost_per_token: 3.0e-07
+    output_cost_per_token: 1.8999999999999998e-06
     order: 2
 - model_name: moonshotai-kimi-k2.5
   litellm_params:
@@ -496,13 +496,6 @@ model_list:
     input_cost_per_token: 4.5e-07
     output_cost_per_token: 2.25e-06
     order: 2
-#- model_name: moonshotai-kimi-k2.5
-#  litellm_params:
-#    model: synthetic/hf:moonshotai/Kimi-K2.5
-#    api_key: os.environ/SYNTHETIC_API_KEY
-#    input_cost_per_token: 5.5e-07
-#    output_cost_per_token: 2.19e-06
-#    order: 1
 - model_name: moonshotai-kimi-k2.5-1
   litellm_params:
     model: synthetic/hf:nvidia/Kimi-K2.5-NVFP4
@@ -942,6 +935,13 @@ model_list:
     model: poe/glm-4.7-flash
     api_key: os.environ/POE_API_KEY
     order: 2
+- model_name: zai-glm-5
+  litellm_params:
+    model: nano-gpt/zai-org/glm-5
+    order: 2
+    api_key: os.environ/NANOGPT_API_KEY
+    input_cost_per_token: 8.000000000000001e-07
+    output_cost_per_token: 2.56e-06
 - model_name: zai-glm-5
   litellm_params:
     model: openai/zai/GLM-5
