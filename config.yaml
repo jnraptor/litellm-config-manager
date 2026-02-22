@@ -332,6 +332,13 @@ model_list:
     order: 2
     input_cost_per_token: 2.0e-06
     output_cost_per_token: 1.2e-05
+- model_name: gemini-3.1-pro
+  litellm_params:
+    model: poe/gemini-3.1-pro
+    order: 2
+    api_key: os.environ/POE_API_KEY
+    input_cost_per_token: 2.0e-06
+    output_cost_per_token: 1.2e-05
 - model_name: gemini-embedding-001
   litellm_params:
     model: openrouter/google/gemini-embedding-001
