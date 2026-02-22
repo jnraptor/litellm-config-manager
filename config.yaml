@@ -328,6 +328,14 @@ model_list:
     output_cost_per_token: 1.2e-05
 - model_name: gemini-3.1-pro
   litellm_params:
+    model: openai/google/gemini-3.1-pro-preview
+    order: 2
+    api_base: https://router.requesty.ai/v1
+    api_key: os.environ/REQUESTY_API_KEY
+    input_cost_per_token: 2.0e-06
+    output_cost_per_token: 1.2e-05
+- model_name: gemini-3.1-pro
+  litellm_params:
     model: openrouter/google/gemini-3.1-pro-preview
     order: 2
     input_cost_per_token: 2.0e-06
