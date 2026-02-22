@@ -321,6 +321,13 @@ model_list:
   model_name: gemini-3-pro
 - model_name: gemini-3.1-pro
   litellm_params:
+    model: nano-gpt/google/gemini-3.1-pro-preview
+    order: 2
+    api_key: os.environ/NANOGPT_API_KEY
+    input_cost_per_token: 2.0e-06
+    output_cost_per_token: 1.2e-05
+- model_name: gemini-3.1-pro
+  litellm_params:
     model: openrouter/google/gemini-3.1-pro-preview
     order: 2
     input_cost_per_token: 2.0e-06
