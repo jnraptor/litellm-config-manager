@@ -295,11 +295,13 @@ model_list:
     output_cost_per_token: 4.0e-07
     order: 2
   model_name: gpt-4.1-nano
+  model_info:
+      base_model: azure/gpt-4.1-nano
 - model_name: gpt-4.1-nano
   litellm_params:
     model: openai/gpt-4.1-nano
     api_key: os.environ/OPENAI_API_KEY
-    order: 2
+    order: 1
 - litellm_params:
     api_base: os.environ/AZURE_OPENAI_API_BASE
     api_key: os.environ/AZURE_OPENAI_API_KEY
@@ -580,7 +582,7 @@ model_list:
   litellm_params:
     model: openai/oai-text-embedding-3-small
     api_key: os.environ/OPENAI_API_KEY
-    order: 2
+    order: 1
   model_info:
     mode: embedding
 - model_name: oai-text-embedding-3-small
