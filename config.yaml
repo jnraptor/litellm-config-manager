@@ -59,14 +59,6 @@ model_list:
     input_cost_per_token: 8.000000000000001e-07
     output_cost_per_token: 4.0e-06
 - litellm_params:
-    model: openai/anthropic/claude-3-5-haiku
-    api_base: https://router.requesty.ai/v1
-    api_key: os.environ/REQUESTY_API_KEY
-    input_cost_per_token: 8.0e-07
-    output_cost_per_token: 4.0e-06
-    order: 2
-  model_name: claude-3-5-haiku
-- litellm_params:
     model: openrouter/anthropic/claude-3.5-haiku
     input_cost_per_token: 8.0e-07
     output_cost_per_token: 4.0e-06
@@ -198,7 +190,7 @@ model_list:
     order: 2
 - litellm_params:
     model: openrouter/deepseek/deepseek-v3.2
-    input_cost_per_token: 2.5e-07
+    input_cost_per_token: 2.6e-07
     output_cost_per_token: 3.8e-07
     order: 2
   model_name: deepseek-v3.2
@@ -218,8 +210,8 @@ model_list:
 - model_name: devstral-2512
   litellm_params:
     model: openrouter/mistralai/devstral-2512
-    input_cost_per_token: 5.0e-08
-    output_cost_per_token: 2.2e-07
+    input_cost_per_token: 4.0e-07
+    output_cost_per_token: 2.0e-06
     order: 2
 - litellm_params:
     model: openai/google/gemini-2.5-flash
@@ -227,12 +219,6 @@ model_list:
     output_cost_per_token: 2.5e-06
     api_base: https://router.requesty.ai/v1
     api_key: os.environ/REQUESTY_API_KEY
-    order: 2
-  model_name: gemini-2.5-flash
-- litellm_params:
-    model: openrouter/google/gemini-2.5-flash-preview-09-2025
-    input_cost_per_token: 3.0e-07
-    output_cost_per_token: 2.5e-06
     order: 2
   model_name: gemini-2.5-flash
 - litellm_params:
@@ -503,7 +489,7 @@ model_list:
     model: openrouter/minimax/minimax-m2.5
     order: 2
     input_cost_per_token: 3.0e-07
-    output_cost_per_token: 1.2e-06
+    output_cost_per_token: 1.1e-06
 - model_name: minimax-m2.5
   litellm_params:
     model: poe/minimax-m2.5
@@ -520,15 +506,15 @@ model_list:
   litellm_params:
     model: openrouter/moonshotai/kimi-k2.5
     input_cost_per_token: 4.5e-07
-    output_cost_per_token: 2.25e-06
+    output_cost_per_token: 2.2e-06
     order: 2
 - model_name: moonshotai-kimi-k2.5
   litellm_params:
     model: synthetic/hf:nvidia/Kimi-K2.5-NVFP4
     order: 1
     api_key: os.environ/SYNTHETIC_API_KEY
-    input_cost_per_token: 5.5e-07
-    output_cost_per_token: 2.19e-06
+    input_cost_per_token: 6.0e-07
+    output_cost_per_token: 3.0e-06
 - model_name: nomic-embed-text
   litellm_params:
     model: infinity/nomic-ai/nomic-embed-text-v2-moe
@@ -576,8 +562,8 @@ model_list:
   model_name: nvidia-nemotron-nano-12b-v2-vl
 - litellm_params:
     model: openrouter/nvidia/nemotron-nano-12b-v2-vl
-    input_cost_per_token: 2.0e-07
-    output_cost_per_token: 6.0e-07
+    input_cost_per_token: 7.0e-08
+    output_cost_per_token: 2.0e-07
     order: 2
   model_name: nvidia-nemotron-nano-12b-v2-vl
 - litellm_params:
@@ -695,8 +681,8 @@ model_list:
   model_name: or-qwen3-235b-a22b-2507
 - litellm_params:
     model: openrouter/qwen/qwen3-30b-a3b-instruct-2507
-    input_cost_per_token: 8.0e-08
-    output_cost_per_token: 3.3e-07
+    input_cost_per_token: 9.0e-08
+    output_cost_per_token: 3.0e-07
     order: 2
   model_name: or-qwen3-30b-a3b-2507
 - litellm_params:
@@ -792,8 +778,8 @@ model_list:
 - model_name: qwen3-coder-next
   litellm_params:
     model: openrouter/qwen/qwen3-coder-next
-    input_cost_per_token: 7.0e-08
-    output_cost_per_token: 3.0e-07
+    input_cost_per_token: 1.2e-07
+    output_cost_per_token: 7.5e-07
     order: 2
 - model_name: qwen3-coder-plus
   litellm_params:
@@ -919,8 +905,8 @@ model_list:
 - model_name: zai-glm-4.7
   litellm_params:
     model: openrouter/z-ai/glm-4.7
-    input_cost_per_token: 4.0e-07
-    output_cost_per_token: 1.5e-06
+    input_cost_per_token: 3.8e-07
+    output_cost_per_token: 1.7e-06
     order: 2
 - model_name: zai-glm-4.7
   litellm_params:
@@ -952,8 +938,8 @@ model_list:
     model: nano-gpt/zai-org/glm-5
     order: 2
     api_key: os.environ/NANOGPT_API_KEY
-    input_cost_per_token: 8.000000000000001e-07
-    output_cost_per_token: 2.56e-06
+    input_cost_per_token: 3.0e-07
+    output_cost_per_token: 2.55e-06
 - model_name: zai-glm-5
   litellm_params:
     model: nvidia_nim/z-ai/glm5
@@ -980,8 +966,8 @@ model_list:
   litellm_params:
     model: openrouter/z-ai/glm-5
     order: 2
-    input_cost_per_token: 8.0e-07
-    output_cost_per_token: 2.56e-06
+    input_cost_per_token: 9.5e-07
+    output_cost_per_token: 2.55e-06
 - model_name: zai-glm-5
   litellm_params:
     model: poe/glm-5
