@@ -191,6 +191,14 @@ model_list:
     output_cost_per_token: 1.4993999999999997e-05
 - model_name: claude-sonnet-4.6
   litellm_params:
+    model: openai/anthropic/claude-sonnet-4-6
+    order: 2
+    api_base: https://router.requesty.ai/v1
+    api_key: os.environ/REQUESTY_API_KEY
+    input_cost_per_token: 3.0e-06
+    output_cost_per_token: 1.5e-05
+- model_name: claude-sonnet-4.6
+  litellm_params:
     model: openrouter/anthropic/claude-sonnet-4.6
     order: 2
     input_cost_per_token: 3.0e-06
