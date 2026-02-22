@@ -840,6 +840,14 @@ model_list:
     output_cost_per_token: 3.6e-06
 - model_name: qwen3.5-397b-a17b
   litellm_params:
+    model: openai/alibaba/qwen3.5
+    order: 2
+    api_base: https://router.requesty.ai/v1
+    api_key: os.environ/REQUESTY_API_KEY
+    input_cost_per_token: 6.0e-07
+    output_cost_per_token: 3.6e-06
+- model_name: qwen3.5-397b-a17b
+  litellm_params:
     model: openrouter/qwen/qwen3.5-397b-a17b
     order: 2
     input_cost_per_token: 1.5e-07
