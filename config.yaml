@@ -188,6 +188,13 @@ model_list:
     order: 2
     input_cost_per_token: 3.0e-06
     output_cost_per_token: 1.5e-05
+- model_name: claude-sonnet-4.6
+  litellm_params:
+    model: poe/claude-sonnet-4.6
+    order: 2
+    api_key: os.environ/POE_API_KEY
+    input_cost_per_token: 2.6e-06
+    output_cost_per_token: 1.3e-05
 - model_name: deepseek-v3.2
   litellm_params:
     model: nvidia_nim/deepseek-ai/deepseek-v3.2
