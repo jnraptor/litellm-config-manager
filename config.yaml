@@ -833,6 +833,13 @@ model_list:
   model_name: qwen3-next-80b-a3b-thinking
 - model_name: qwen3.5-397b-a17b
   litellm_params:
+    model: nano-gpt/qwen/qwen3.5-397b-a17b-thinking
+    order: 2
+    api_key: os.environ/NANOGPT_API_KEY
+    input_cost_per_token: 6.0e-07
+    output_cost_per_token: 3.6e-06
+- model_name: qwen3.5-397b-a17b
+  litellm_params:
     model: openrouter/qwen/qwen3.5-397b-a17b
     order: 2
     input_cost_per_token: 1.5e-07
