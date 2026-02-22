@@ -47,31 +47,6 @@ model_list:
   model_info:
     mode: embedding
 - litellm_params:
-    model: anthropic/claude-3-5-haiku-20241022
-    api_key: os.environ/ANTHROPIC_API_KEY
-    order: 2
-  model_name: claude-3-5-haiku
-- model_name: claude-3-5-haiku
-  litellm_params:
-    model: nano-gpt/claude-3-5-haiku-20241022
-    order: 2
-    api_key: os.environ/NANOGPT_API_KEY
-    input_cost_per_token: 8.000000000000001e-07
-    output_cost_per_token: 4.0e-06
-- litellm_params:
-    model: openrouter/anthropic/claude-3.5-haiku
-    input_cost_per_token: 8.0e-07
-    output_cost_per_token: 4.0e-06
-    order: 2
-  model_name: claude-3-5-haiku
-- litellm_params:
-    model: poe/claude-haiku-3.5
-    api_key: os.environ/POE_API_KEY
-    input_cost_per_token: 6.8e-07
-    output_cost_per_token: 3.4e-06
-    order: 2
-  model_name: claude-3-5-haiku
-- litellm_params:
     model: anthropic/claude-haiku-4-5-20251001
     api_key: os.environ/ANTHROPIC_API_KEY
     order: 2
@@ -157,31 +132,10 @@ model_list:
     input_cost_per_token: 5.0e-06
     output_cost_per_token: 2.5e-05
 - litellm_params:
-    model: anthropic/claude-sonnet-4-5-20250929
+    model: anthropic/claude-sonnet-4-6
     api_key: os.environ/ANTHROPIC_API_KEY
     order: 2
-  model_name: claude-sonnet-4.5
-- litellm_params:
-    model: openai/anthropic/claude-sonnet-4-5
-    api_base: https://router.requesty.ai/v1
-    api_key: os.environ/REQUESTY_API_KEY
-    input_cost_per_token: 3.0e-06
-    output_cost_per_token: 1.5e-05
-    order: 2
-  model_name: claude-sonnet-4.5
-- litellm_params:
-    model: openrouter/anthropic/claude-sonnet-4.5
-    input_cost_per_token: 3.0e-06
-    output_cost_per_token: 1.5e-05
-    order: 2
-  model_name: claude-sonnet-4.5
-- litellm_params:
-    model: poe/claude-sonnet-4.5
-    api_key: os.environ/POE_API_KEY
-    input_cost_per_token: 2.6e-06
-    output_cost_per_token: 1.3e-05
-    order: 2
-  model_name: claude-sonnet-4.5
+  model_name: claude-sonnet-4.6
 - model_name: claude-sonnet-4.6
   litellm_params:
     model: nano-gpt/anthropic/claude-sonnet-4.6:thinking
@@ -291,34 +245,6 @@ model_list:
     input_cost_per_token: 4.0e-07
     output_cost_per_token: 2.4e-06
     order: 2
-- model_name: gemini-3-pro
-  litellm_params:
-    model: nano-gpt/gemini-3-pro-preview
-    api_key: os.environ/NANOGPT_API_KEY
-    input_cost_per_token: 2.0e-06
-    output_cost_per_token: 1.2e-05
-    order: 2
-- litellm_params:
-    model: openai/google/gemini-3-pro-preview
-    api_base: https://router.requesty.ai/v1
-    api_key: os.environ/REQUESTY_API_KEY
-    input_cost_per_token: 2.0e-06
-    output_cost_per_token: 1.2e-05
-    order: 2
-  model_name: gemini-3-pro
-- litellm_params:
-    model: openrouter/google/gemini-3-pro-preview
-    input_cost_per_token: 2.0e-06
-    output_cost_per_token: 1.2e-05
-    order: 2
-  model_name: gemini-3-pro
-- litellm_params:
-    model: poe/gemini-3-pro
-    api_key: os.environ/POE_API_KEY
-    input_cost_per_token: 1.6e-06
-    output_cost_per_token: 9.6e-06
-    order: 2
-  model_name: gemini-3-pro
 - model_name: gemini-3.1-pro
   litellm_params:
     model: nano-gpt/google/gemini-3.1-pro-preview
