@@ -184,6 +184,13 @@ model_list:
   model_name: claude-sonnet-4.5
 - model_name: claude-sonnet-4.6
   litellm_params:
+    model: nano-gpt/anthropic/claude-sonnet-4.6:thinking
+    order: 2
+    api_key: os.environ/NANOGPT_API_KEY
+    input_cost_per_token: 2.992e-06
+    output_cost_per_token: 1.4993999999999997e-05
+- model_name: claude-sonnet-4.6
+  litellm_params:
     model: openrouter/anthropic/claude-sonnet-4.6
     order: 2
     input_cost_per_token: 3.0e-06
