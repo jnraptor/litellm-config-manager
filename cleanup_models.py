@@ -30,6 +30,9 @@ from typing import Dict, List, Tuple, Any, Optional
 from pathlib import Path
 from dataclasses import dataclass, field
 from abc import ABC, abstractmethod
+
+# Import shared utilities from cleanup_base
+from cleanup_base import is_api_base_model
 from dotenv import load_dotenv
 
 from cleanup_base import (
@@ -252,9 +255,12 @@ class ApiBaseDetectionStrategy(ProviderStrategy):
         litellm_params = model_entry.get('litellm_params', {})
         api_base = str(litellm_params.get('api_base', ''))
         model_id = litellm_params.get('model', '')
-        api_base_match = self.config.model_detection['value'] in api_base
-        prefix_match = model_id.startswith(self.config.model_prefix)
-        return api_base_match and prefix_match
+        detection_value = self.config.model_detection.get('value', '')
+        api_base_env_var = self.config.model_detection.get('api_base_env_var')
+
+        # Use the shared utility function for api-base detection
+        return is_api_base_model(api_base, model_id, detection_value,
+                                 self.config.model_prefix, api_base_env_var)
 
     def extract_model_id(self, model_entry: Dict[str, Any]) -> Optional[str]:
         litellm_params = model_entry.get('litellm_params', {})

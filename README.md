@@ -1,6 +1,6 @@
 # LiteLLM Model Cleanup, Cost Update, and Model Addition Scripts
 
-Comprehensive Python scripts that validate models from multiple providers (OpenRouter, Requesty, Novita, Nano-GPT, Vercel AI Gateway, Poe, and Nvidia NIM) in LiteLLM configuration files against their respective APIs, remove invalid model entries, automatically update model costs to match current pricing, and provide an easy way to add new models.
+Comprehensive Python scripts that validate models from multiple providers (OpenRouter, Requesty, Novita, Nano-GPT, Vercel AI Gateway, Poe, Kilo, and Nvidia NIM) in LiteLLM configuration files against their respective APIs, remove invalid model entries, automatically update model costs to match current pricing, and provide an easy way to add new models.
 
 ## Overview
 
@@ -24,6 +24,7 @@ These scripts help maintain your LiteLLM configuration by:
 - **cleanup_nano_gpt_models.py** - Nano-GPT-specific cleanup
 - **cleanup_vercel_models.py** - Vercel AI Gateway-specific cleanup
 - **cleanup_poe_models.py** - Poe-specific cleanup
+- **cleanup_kilo_models.py** - Kilo-specific cleanup
 - **cleanup_nvidia_models.py** - Nvidia NIM-specific cleanup
 
 ## Features
@@ -265,10 +266,11 @@ python cleanup_models.py --provider openrouter --add-model gpt-4 --model-name "M
    echo "REQUESTY_API_KEY=your-requesty-api-key" >> .env
    echo "NANOGPT_API_KEY=your-nanogpt-api-key" >> .env
    ```
-   
+
    Providers that require API keys:
    - **Requesty**: Set `REQUESTY_API_KEY` environment variable
    - **Nano-GPT**: Set `NANOGPT_API_KEY` environment variable
+   - **Kilo**: Set `KILO_API_KEY` environment variable
    - **OpenRouter, Novita, Vercel, Poe, Nvidia**: No API key required for model listing
 
 ## Usage
@@ -288,6 +290,7 @@ python cleanup_novita_models.py
 python cleanup_nano_gpt_models.py
 python cleanup_vercel_models.py
 python cleanup_poe_models.py
+python cleanup_kilo_models.py
 python cleanup_nvidia_models.py
 
 # Process a specific config file
@@ -370,7 +373,7 @@ python cleanup_nvidia_models.py --dry-run --verbose
 
 | Option | Description |
 |--------|-------------|
-| `--provider PROVIDER` | Provider to process: `openrouter`, `requesty`, `novita`, `nano_gpt`, `vercel`, `poe`, `nvidia`, or `all` (required) |
+| `--provider PROVIDER` | Provider to process: `openrouter`, `requesty`, `novita`, `nano_gpt`, `vercel`, `poe`, `kilo`, `nvidia`, or `all` (required) |
 | `--config CONFIG` | Path to LiteLLM configuration file (default: `config.yaml`) |
 | `--dry-run` | Preview all changes without modifying the configuration file |
 | `--verbose` | Enable detailed logging output with cost comparison information and percentage changes |
@@ -682,6 +685,12 @@ The script identifies Nano-GPT models by looking for entries where:
 - `litellm_params.api_base` contains `NANOGPT_API_BASE`
 - Examples: `openai/nvidia/nvidia-nemotron-nano-9b-v2`, `openai/qwen/qwen3-235b-a22b-thinking-2507`
 
+### Kilo Models
+The script identifies Kilo models by looking for entries where:
+- `litellm_params.api_base` contains `os.environ/KILO_API_BASE`
+- `litellm_params.model` starts with `openai/`
+- Examples: `openai/anthropic/claude-opus-4.6`, `openai/zai-org/GLM-5-FP8`
+
 ### Nvidia NIM Models
 The script identifies Nvidia NIM models by looking for entries where:
 - `litellm_params.model` starts with `nvidia_nim/`
@@ -709,6 +718,11 @@ The script identifies Nvidia NIM models by looking for entries where:
 - The `openai/` prefix is stripped for comparison
 - Models not found in the API response are marked as invalid
 
+### Kilo Model Validation
+- Config models like `openai/anthropic/claude-opus-4.6` are compared against API models like `anthropic/claude-opus-4.6`
+- The `openai/` prefix is stripped for comparison
+- Models not found in the API response are marked as invalid
+
 ### Poe Model Validation
 - Config models like `openai/Claude-Sonnet-4.5` are compared against API models like `Claude-Sonnet-4.5`
 - The `openai/` prefix is stripped for comparison
@@ -728,6 +742,7 @@ The script identifies Nvidia NIM models by looking for entries where:
   - Nano-GPT: `pricing.prompt` and `pricing.completion` fields
   - Vercel AI Gateway: `input` and `output` fields
   - Poe: `pricing.prompt` and `pricing.completion` fields
+  - Kilo: `pricing.prompt` and `pricing.completion` fields
 - Compares `input_cost_per_token` and `output_cost_per_token` in your config with API pricing
 - **Automatically updates costs** when differences are detected
 - **Free model handling**: When API returns `0.0` for free models, the script preserves `1e-09` costs for LiteLLM compatibility
@@ -791,6 +806,7 @@ python cleanup_novita_models.py --help
 python cleanup_nano_gpt_models.py --help
 python cleanup_vercel_models.py --help
 python cleanup_poe_models.py --help
+python cleanup_kilo_models.py --help
 python cleanup_nvidia_models.py --help
 ```
 
@@ -808,7 +824,8 @@ python cleanup_nvidia_models.py --help
 10. **For Nano-GPT models**, ensure model IDs match the exact format from the Nano-GPT API (e.g., "nvidia/nvidia-nemotron-nano-9b-v2")
 11. **For Vercel AI Gateway models**, ensure model IDs match the exact format from the Vercel AI Gateway API (e.g., "alibaba/qwen-3-14b")
 12. **For Poe models**, ensure model IDs match the exact format from the Poe API (e.g., "Claude-Sonnet-4.5")
-13. **For Nvidia NIM models**, ensure model IDs match the exact format from the Nvidia API (e.g., "meta/llama-3.1-8b-instruct") - all models are free
+13. **For Kilo models**, ensure model IDs match the exact format from the Kilo API (e.g., "anthropic/claude-opus-4.6")
+14. **For Nvidia NIM models**, ensure model IDs match the exact format from the Nvidia API (e.g., "meta/llama-3.1-8b-instruct") - all models are free
 
 ## Script Architecture
 

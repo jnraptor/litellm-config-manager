@@ -1,0 +1,99 @@
+name: Cleanup Kilo Models, Update Costs, and Manage Models
+
+on:
+  workflow_dispatch:
+    inputs:
+      add_model:
+        description: 'Model ID to add (e.g., anthropic/claude-opus-4.6 or space-separated list for multiple models)'
+        required: false
+        type: string
+      model_name:
+        description: 'Custom model name (optional, only for single model addition)'
+        required: false
+        type: string
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      actions: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Check for invalid models and cost updates (dry-run)
+        env:
+          KILO_API_KEY: ${{ secrets.KILO_API_KEY }}
+        run: python cleanup_kilo_models.py --dry-run --verbose
+
+      - name: Clean up invalid models and update costs
+        env:
+          KILO_API_KEY: ${{ secrets.KILO_API_KEY }}
+        run: python cleanup_kilo_models.py --verbose
+
+      - name: Add new model (if specified)
+        if: ${{ github.event.inputs.add_model != '' }}
+        env:
+          KILO_API_KEY: ${{ secrets.KILO_API_KEY }}
+        run: |
+          echo "Adding model(s): ${{ github.event.inputs.add_model }}"
+          if [[ "${{ github.event.inputs.model_name }}" != "" ]]; then
+            echo "Using custom model name: ${{ github.event.inputs.model_name }}"
+            python cleanup_kilo_models.py --add-model "${{ github.event.inputs.add_model }}" --model-name "${{ github.event.inputs.model_name }}" --dry-run
+            python cleanup_kilo_models.py --add-model "${{ github.event.inputs.add_model }}" --model-name "${{ github.event.inputs.model_name }}"
+          else
+            python cleanup_kilo_models.py --add-model "${{ github.event.inputs.add_model }}" --dry-run
+            python cleanup_kilo_models.py --add-model "${{ github.event.inputs.add_model }}"
+          fi
+
+      - name: Check for changes
+        id: verify-changed-files
+        run: |
+          if git diff --quiet config.yaml; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Commit and push changes
+        if: steps.verify-changed-files.outputs.changed == 'true'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add config.yaml
+          git commit -m "Auto-cleanup invalid Kilo models and update costs"
+          git push
+
+      - name: Create summary
+        run: |
+          echo "## Kilo Model Management Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [[ "${{ github.event.inputs.add_model }}" != "" ]]; then
+            echo "🔧 **Manual model addition requested:** ${{ github.event.inputs.add_model }}" >> $GITHUB_STEP_SUMMARY
+            if [[ "${{ github.event.inputs.model_name }}" != "" ]]; then
+              echo "🏷️ **Custom model name:** ${{ github.event.inputs.model_name }}" >> $GITHUB_STEP_SUMMARY
+            fi
+            echo "" >> $GITHUB_STEP_SUMMARY
+          fi
+          if [[ "${{ steps.verify-changed-files.outputs.changed }}" == "true" ]]; then
+            echo "✅ Changes detected and committed to config.yaml" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "### Changes made:" >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+            git show --name-only --pretty=format:"Commit: %h%nDate: %ad%nMessage: %s%n" >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+          else
+            echo "ℹ️ No changes needed - all models are valid and costs are current" >> $GITHUB_STEP_SUMMARY
+          fi

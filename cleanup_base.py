@@ -876,30 +876,68 @@ def fetch_models_from_api(api_url: str, logger: logging.Logger,
                          timeout: int = 30) -> Dict[str, Any]:
     """
     Fetch models from an API endpoint.
-    
+
     Args:
         api_url: The API URL to fetch from
         logger: Logger instance
         headers: Optional request headers
         timeout: Request timeout in seconds
-        
+
     Returns:
         The JSON response data
-        
+
     Raises:
         requests.RequestException: If the request fails
         ValueError: If the response format is invalid
     """
     logger.info(f"Fetching models from API: {api_url}")
-    
+
     # Use the global API client with retry logic
     client = APIClient(timeout=timeout, use_cache=True)
     data = client.fetch(api_url, headers=headers, logger=logger)
-    
+
     if 'data' not in data:
         raise ValueError("Invalid API response format: missing 'data' field")
-    
+
     return data
+
+
+def is_api_base_model(api_base: str, model_id: str, detection_value: str,
+                      model_prefix: str, api_base_env_var: Optional[str] = None) -> bool:
+    """
+    Check if a model entry belongs to a provider using api_base detection.
+
+    Args:
+        api_base: The api_base value from the model entry
+        model_id: The model_id from the model entry
+        detection_value: The detection value from provider config (e.g., "router.requesty.ai")
+        model_prefix: The model prefix for this provider
+        api_base_env_var: Optional environment variable name for api-base detection
+
+    Returns:
+        True if the model belongs to this provider, False otherwise
+    """
+    prefix_match = model_id.startswith(model_prefix)
+
+    # Check prefix match first
+    if not prefix_match:
+        return False
+
+    if api_base.startswith('os.environ/'):
+        # For env var references in config, only match if api_base_env_var is configured
+        if api_base_env_var:
+            # Extract env var name from config entry (e.g., "os.environ/KILO_API_BASE")
+            env_var_name = api_base.replace('os.environ/', '')
+            return env_var_name == api_base_env_var
+        # No api_base_env_var configured, this model doesn't match this provider
+        return False
+    elif detection_value.startswith('os.environ/'):
+        # For env var references in detection value, check if the env var name is in the api_base string
+        env_var_name = detection_value.replace('os.environ/', '')
+        return env_var_name in api_base and prefix_match
+    else:
+        # For literal strings, check if the value is contained in api_base
+        return detection_value in api_base
 
 
 class ProviderConfigLoader:
@@ -1056,19 +1094,12 @@ class ConfigDrivenModelCleaner(BaseModelCleaner):
                     is_provider_model = True
             
             elif detection_type == 'api_base':
-                # api_base-based detection
+                # api_base-based detection using shared utility
                 api_base = str(litellm_params.get('api_base', ''))
                 detection_value = self._model_detection.get('value', '')
-                prefix_match = model_id.startswith(self.MODEL_PREFIX)
-                
-                # Handle both literal strings and environment variable references
-                if detection_value.startswith('os.environ/'):
-                    # For env var references, check if the env var name is in the api_base string
-                    env_var_name = detection_value.replace('os.environ/', '')
-                    is_provider_model = env_var_name in api_base and prefix_match
-                else:
-                    # For literal strings, check if the value is contained in api_base
-                    is_provider_model = detection_value in api_base and prefix_match
+                api_base_env_var = self._model_detection.get('api_base_env_var')
+                is_provider_model = is_api_base_model(api_base, model_id, detection_value,
+                                                      self.MODEL_PREFIX, api_base_env_var)
             
             if is_provider_model:
                 model_name = model_entry.get('model_name', 'unnamed')

@@ -127,6 +127,14 @@ model_list:
     output_cost_per_token: 2.5e-05
 - model_name: claude-opus-4.6
   litellm_params:
+    model: openai/anthropic/claude-opus-4.6
+    order: 1
+    api_base: https://api.kilo.ai/api/gateway
+    api_key: os.environ/KILO_API_KEY
+    input_cost_per_token: 5.0e-06
+    output_cost_per_token: 2.5e-05
+- model_name: claude-opus-4.6
+  litellm_params:
     model: openrouter/anthropic/claude-opus-4.6
     order: 2
     input_cost_per_token: 5.0e-06
@@ -287,6 +295,14 @@ model_list:
     output_cost_per_token: 1.0e-09
     order: 2
   model_name: gemma-3-27b-free
+- model_name: giga-potato
+  litellm_params:
+    model: openai/giga-potato
+    order: 1
+    api_base: https://api.kilo.ai/api/gateway
+    api_key: os.environ/KILO_API_KEY
+    input_cost_per_token: 1.0e-09
+    output_cost_per_token: 1.0e-09
 - litellm_params:
     api_base: os.environ/AZURE_OPENAI_API_BASE
     api_key: os.environ/AZURE_OPENAI_API_KEY

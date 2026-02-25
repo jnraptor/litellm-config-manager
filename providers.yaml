@@ -191,6 +191,32 @@ providers:
     # Order for litellm_params/order - lower values are tried first
     order: 2
 
+  kilo:
+    name: "Kilo"
+    description: "Kilo AI model provider"
+    api_url: "https://api.kilo.ai/api/gateway/models"
+    embeddings_api_url: null
+    model_prefix: "openai/"
+    model_detection:
+      type: "api_base"
+      value: "api.kilo.ai"
+      # For env var references, match models with this api_base env var
+      api_base_env_var: "KILO_API_BASE"
+    pricing:
+      input_field: "pricing.prompt"
+      output_field: "pricing.completion"
+      is_per_million: false
+      free_model_handling: true
+    model_name_prefix: ""
+    model_name_cleanup: []
+    special_models: []
+    api_base_config:
+      url: "https://api.kilo.ai/api/gateway"
+      api_key_env: "KILO_API_KEY"
+    api_key_env: "KILO_API_KEY"
+    # Order for litellm_params/order - lower values are tried first
+    order: 1
+
 # Default settings that apply to all providers unless overridden
 defaults:
   timeout: 30

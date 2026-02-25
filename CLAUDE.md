@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Repository Overview
 
-This is a LiteLLM configuration management repository with Python scripts for managing model configurations across multiple AI providers: OpenRouter, Requesty, Novita AI, Nano-GPT, Vercel AI Gateway, Poe, and Nvidia NIM. The main config file (`config.yaml`) contains LiteLLM model definitions with routing strategies and cost information.
+This is a LiteLLM configuration management repository with Python scripts for managing model configurations across multiple AI providers: OpenRouter, Requesty, Novita AI, Nano-GPT, Vercel AI Gateway, Poe, Kilo, and Nvidia NIM. The main config file (`config.yaml`) contains LiteLLM model definitions with routing strategies and cost information.
 
 **Key Features:**
 - Unified script (`cleanup_models.py`) for managing all providers via strategy pattern
@@ -30,6 +30,7 @@ python cleanup_models.py --provider novita [--config config.yaml] [--dry-run] [-
 python cleanup_models.py --provider nano_gpt [--config config.yaml] [--dry-run] [--verbose]
 python cleanup_models.py --provider vercel [--config config.yaml] [--dry-run] [--verbose]
 python cleanup_models.py --provider poe [--config config.yaml] [--dry-run] [--verbose]
+python cleanup_models.py --provider kilo [--config config.yaml] [--dry-run] [--verbose]
 python cleanup_models.py --provider nvidia [--config config.yaml] [--dry-run] [--verbose]
 
 # Add new models with automatic cost detection
@@ -51,6 +52,7 @@ python cleanup_novita_models.py [--config config.yaml] [--dry-run] [--verbose]
 python cleanup_nano_gpt_models.py [--config config.yaml] [--dry-run] [--verbose]
 python cleanup_vercel_models.py [--config config.yaml] [--dry-run] [--verbose]
 python cleanup_poe_models.py [--config config.yaml] [--dry-run] [--verbose]
+python cleanup_kilo_models.py [--config config.yaml] [--dry-run] [--verbose]
 python cleanup_nvidia_models.py [--config config.yaml] [--dry-run] [--verbose]
 
 # Add new models with automatic cost detection
@@ -60,6 +62,7 @@ python cleanup_novita_models.py --add-model "provider/model" [--dry-run]
 python cleanup_nano_gpt_models.py --add-model "provider/model" [--dry-run]
 python cleanup_vercel_models.py --add-model "model/name" [--dry-run]
 python cleanup_poe_models.py --add-model "Model-Name" [--dry-run]
+python cleanup_kilo_models.py --add-model "anthropic/claude-opus-4.6" [--dry-run]
 python cleanup_nvidia_models.py --add-model "meta/llama-3.1-8b-instruct" [--dry-run]
 
 # Add models with custom names (single model only)
@@ -93,6 +96,7 @@ echo "NANOGPT_API_KEY=your-key" >> .env
 **API Key Requirements:**
 - **Requesty**: Requires `REQUESTY_API_KEY` environment variable
 - **Nano-GPT**: Requires `NANOGPT_API_KEY` environment variable
+- **Kilo**: Requires `KILO_API_KEY` environment variable
 - **OpenRouter, Novita, Vercel, Poe, Nvidia**: No API key required for model listing
 
 ### Testing Workflow
@@ -129,7 +133,7 @@ python cleanup_openrouter_models.py --dry-run --verbose
 - `cleanup_models.py` - Single configurable script for all providers (~1,301 lines)
 - `providers.yaml` - Provider configuration file with API endpoints and settings
 - Strategy pattern implementation for provider-specific logic
-- Supports all providers: openrouter, requesty, novita, nano_gpt, vercel, poe, nvidia
+- Supports all providers: openrouter, requesty, novita, nano_gpt, vercel, poe, kilo, nvidia
 
 **Provider-Specific Cleanup Scripts:**
 - `cleanup_openrouter_models.py` - OpenRouter API integration (~1,138 lines)
@@ -138,6 +142,7 @@ python cleanup_openrouter_models.py --dry-run --verbose
 - `cleanup_poe_models.py` - Poe API integration (~957 lines)
 - `cleanup_vercel_models.py` - Vercel AI Gateway API integration (~623 lines)
 - `cleanup_nano_gpt_models.py` - Nano-GPT API integration (~563 lines)
+- `cleanup_kilo_models.py` - Kilo API integration (~64 lines)
 - `cleanup_nvidia_models.py` - Nvidia NIM API integration (~584 lines, free models only)
 
 **GitHub Automation:**
@@ -165,7 +170,7 @@ The `cleanup_models.py` script uses a provider-agnostic approach that centralize
 - Strategy pattern for provider-specific model detection and pricing logic
 - Supports two detection methods:
   - **Prefix-based**: Matches `litellm_params.model` prefix (OpenRouter, Novita, Vercel, Nvidia)
-  - **API-base-based**: Matches `litellm_params.api_base` URL (Requesty, Nano-GPT, Poe)
+  - **API-base-based**: Matches `litellm_params.api_base` URL (Requesty, Nano-GPT, Poe, Kilo)
 
 **Core Classes:**
 - `ProviderConfig` - Data class encapsulating provider settings from providers.yaml
@@ -180,6 +185,16 @@ The `cleanup_models.py` script uses a provider-agnostic approach that centralize
 - `fetch_provider_models()` - Fetches and caches API data with provider-specific handling
 - `parse_pricing_data()` - Extracts pricing based on provider's configuration
 - `generate_model_name()` - Generates names using provider-specific prefixes and cleanup rules
+
+**Model Identification:**
+- **OpenRouter**: `litellm_params.model` starts with `openrouter/`
+- **Requesty**: `litellm_params.api_base` contains `router.requesty.ai` and `litellm_params.model` starts with `openai/`
+- **Novita**: `litellm_params.model` starts with `novita/`
+- **Nano-GPT**: `litellm_params.model` starts with `openai/` and `litellm_params.api_base` contains `NANOGPT_API_BASE`
+- **Vercel AI Gateway**: `litellm_params.model` starts with `vercel_ai_gateway/`
+- **Poe**: `litellm_params.api_base` contains `api.poe.com` and `litellm_params.model` starts with `openai/`
+- **Kilo**: `litellm_params.api_base` contains `os.environ/KILO_API_BASE` and `litellm_params.model` starts with `openai/`
+- **Nvidia NIM**: `litellm_params.model` starts with `nvidia_nim/`
 
 **Design Pattern Benefits:**
 - Adding new providers only requires updating `providers.yaml`, no code changes needed (in most cases)
@@ -201,6 +216,7 @@ Each legacy cleanup script follows the same pattern:
 - **Nano-GPT**: `litellm_params.model` starts with `openai/` and `litellm_params.api_base` contains `NANOGPT_API_BASE`
 - **Vercel AI Gateway**: `litellm_params.model` starts with `vercel_ai_gateway/`
 - **Poe**: `litellm_params.api_base` contains `api.poe.com` and `litellm_params.model` starts with `openai/`
+- **Kilo**: `litellm_params.api_base` contains `os.environ/KILO_API_BASE` and `litellm_params.model` starts with `openai/`
 - **Nvidia NIM**: `litellm_params.model` starts with `nvidia_nim/`
 
 **Key Methods:**
@@ -266,6 +282,7 @@ Each legacy cleanup script follows the same pattern:
 - `.github/workflows/cleanup-nano-gpt-models.yml`
 - `.github/workflows/cleanup-vercel-models.yml`
 - `.github/workflows/cleanup-poe-models.yml`
+- `.github/workflows/cleanup-kilo-models.yml`
 - `.github/workflows/cleanup-nvidia-models.yml`
 
 **Schedule:** Weekly on Sundays (`0 0 * * 0`)
