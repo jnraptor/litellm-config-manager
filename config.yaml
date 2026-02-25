@@ -414,6 +414,13 @@ model_list:
     order: 2
     input_cost_per_token: 1.75e-06
     output_cost_per_token: 1.4e-05
+- model_name: gpt-5.3-codex
+  litellm_params:
+    model: poe/gpt-5.3-codex
+    order: 2
+    api_key: os.environ/POE_API_KEY
+    input_cost_per_token: 1.6e-06
+    output_cost_per_token: 1.3e-05
 - model_name: gpt-oss-120b
   litellm_params:
     model: openai/gpt-oss-120b
