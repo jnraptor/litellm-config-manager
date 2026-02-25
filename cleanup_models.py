@@ -775,8 +775,8 @@ class UnifiedModelCleaner:
             if output_cost is not None:
                 self.logger.info(f"  Output cost: {output_cost}")
 
-            # Special handling for OpenRouter: check for free variant
-            if provider_name == 'openrouter':
+            # Special handling for providers with free variants: check for free variant
+            if provider_name in ['openrouter', 'kilo']:
                 free_variant_id = f"{model_id}:free"
                 if free_variant_id in available_models:
                     if free_variant_id in existing_model_ids:
@@ -785,14 +785,14 @@ class UnifiedModelCleaner:
                         free_model_entry = strategy.create_model_entry(free_variant_id, available_models[free_variant_id])
                         # Use the same model name as the base model
                         free_model_entry['model_name'] = model_name
-                        
+
                         if not self.dry_run:
                             config['model_list'].append(free_model_entry)
-                        
+
                         free_full_model_id = free_model_entry['litellm_params']['model']
                         added_models.append(free_full_model_id)
                         existing_model_ids.append(free_variant_id)
-                        
+
                         self.logger.info(f"Added free variant '{free_full_model_id}' with name '{model_name}'")
                         free_input_cost = free_model_entry['litellm_params'].get('input_cost_per_token')
                         free_output_cost = free_model_entry['litellm_params'].get('output_cost_per_token')
@@ -853,8 +853,8 @@ class UnifiedModelCleaner:
             if input_cost is not None and output_cost is not None:
                 self.logger.info(f"[DRY-RUN]   Input cost: {input_cost}, Output cost: {output_cost}")
 
-            # Special handling for OpenRouter: check for free variant
-            if provider_name == 'openrouter':
+            # Special handling for providers with free variants: check for free variant
+            if provider_name in ['openrouter', 'kilo']:
                 free_variant_id = f"{model_id}:free"
                 if free_variant_id in available_models:
                     if free_variant_id in existing_model_ids:
