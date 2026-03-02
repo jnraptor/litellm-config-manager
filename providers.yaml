@@ -82,8 +82,8 @@ providers:
       type: "prefix"
       value: "vercel_ai_gateway/"
     pricing:
-      input_field: "input"
-      output_field: "output"
+      input_field: "pricing.input"
+      output_field: "pricing.output"
       is_per_million: false
       # Handle free models by converting 0.0 to 1e-09
       free_model_handling: true

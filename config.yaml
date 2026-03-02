@@ -709,6 +709,12 @@ model_list:
     model: poe/qwen3.5-flash
     order: 1
     api_key: os.environ/POE_API_KEY
+- model_name: qwen3.5-flash
+  litellm_params:
+    model: vercel_ai_gateway/alibaba/qwen3.5-flash
+    order: 2
+    input_cost_per_token: 1.0e-07
+    output_cost_per_token: 4.0e-07
 - model_name: qwen3.5-plus
   litellm_params:
     model: nano-gpt/qwen/qwen3.5-plus-thinking
@@ -727,6 +733,12 @@ model_list:
     model: poe/qwen3.5-plus
     order: 1
     api_key: os.environ/POE_API_KEY
+- model_name: qwen3.5-plus
+  litellm_params:
+    model: vercel_ai_gateway/alibaba/qwen3.5-plus
+    order: 2
+    input_cost_per_token: 4.0e-07
+    output_cost_per_token: 2.4e-06
 - model_name: req-smart-task
   litellm_params:
     model: openai/smart-task
@@ -851,5 +863,11 @@ model_list:
     model: poe/glm-5
     order: 1
     api_key: os.environ/POE_API_KEY
+    input_cost_per_token: 1.0e-06
+    output_cost_per_token: 3.2e-06
+- model_name: zai-glm-5
+  litellm_params:
+    model: vercel_ai_gateway/zai/glm-5
+    order: 2
     input_cost_per_token: 1.0e-06
     output_cost_per_token: 3.2e-06
