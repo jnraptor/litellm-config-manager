@@ -116,7 +116,7 @@ providers:
       api_key_env: "POE_API_KEY"
     api_key_env: "POE_API_KEY"
     # Order for litellm_params/order - lower values are tried first
-    order: 2
+    order: 1
 
   nvidia:
     name: "Nvidia"
