@@ -24,7 +24,7 @@ providers:
     api_base_config: null
     api_key_env: null
     # Order for litellm_params/order - lower values are tried first
-    order: 2
+    order: 5
 
   requesty:
     name: "Requesty"
@@ -48,7 +48,7 @@ providers:
       api_key_env: "REQUESTY_API_KEY"
     api_key_env: "REQUESTY_API_KEY"
     # Order for litellm_params/order - lower values are tried first
-    order: 2
+    order: 5
 
   nano_gpt:
     name: "Nano-GPT"
@@ -71,7 +71,7 @@ providers:
       api_key_env: "NANOGPT_API_KEY"
     api_key_env: "NANOGPT_API_KEY"
     # Order for litellm_params/order - lower values are tried first
-    order: 2
+    order: 5
 
   vercel:
     name: "Vercel AI Gateway"
@@ -94,7 +94,7 @@ providers:
     api_base_config: null
     api_key_env: null
     # Order for litellm_params/order - lower values are tried first
-    order: 2
+    order: 5
 
   poe:
     name: "Poe"
@@ -141,31 +141,7 @@ providers:
     api_base_config: null
     api_key_env: null
     # Order for litellm_params/order - lower values are tried first
-    order: 2
-
-  synthetic:
-    name: "Synthetic"
-    description: "Synthetic AI model provider"
-    api_url: "https://api.synthetic.new/openai/v1/models"
-    model_prefix: "synthetic/"
-    model_detection:
-      type: "prefix"
-      value: "synthetic/"
-    pricing:
-      input_field: "pricing.prompt"
-      output_field: "pricing.completion"
-      is_per_million: false
-      free_model_handling: true
-    model_name_prefix: ""
-    model_name_cleanup:
-      - replace: [["synthetic/hf:", ""], ["zai-org-", ""]]
-    special_models: ["hf:nomic-ai/nomic-embed-text-v1.5"]
-    api_base_config:
-      api_key_env: "SYNTHETIC_API_KEY"
-    api_key_env: "SYNTHETIC_API_KEY"
-    # Order for litellm_params/order - lower values are tried first
-    # Synthetic provider should have priority (order 1)
-    order: 1
+    order: 5
 
   novita:
     name: "Novita"
@@ -189,7 +165,7 @@ providers:
     api_base_config: null
     api_key_env: null
     # Order for litellm_params/order - lower values are tried first
-    order: 2
+    order: 5
 
   kilo:
     name: "Kilo"
