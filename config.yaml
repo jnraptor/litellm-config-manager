@@ -212,6 +212,12 @@ model_list:
     input_cost_per_token: 4.0e-07
     output_cost_per_token: 2.4e-06
     order: 1
+- model_name: gemini-3.1-flash-lite
+  litellm_params:
+    model: openrouter/google/gemini-3.1-flash-lite-preview
+    order: 2
+    input_cost_per_token: 2.5e-07
+    output_cost_per_token: 1.5e-06
 - model_name: gemini-3.1-pro
   litellm_params:
     model: nano-gpt/google/gemini-3.1-pro-preview
@@ -592,8 +598,8 @@ model_list:
   model_name: or-free
 - litellm_params:
     model: openrouter/meta-llama/llama-3.2-3b-instruct
-    input_cost_per_token: 2.0e-08
-    output_cost_per_token: 2.0e-08
+    input_cost_per_token: 5.1e-08
+    output_cost_per_token: 3.4e-07
     order: 2
   model_name: or-llama-3.2-3b-instruct
 - litellm_params:
@@ -675,8 +681,8 @@ model_list:
   litellm_params:
     model: openrouter/qwen/qwen3.5-397b-a17b
     order: 2
-    input_cost_per_token: 5.5e-07
-    output_cost_per_token: 3.5e-06
+    input_cost_per_token: 3.9e-07
+    output_cost_per_token: 2.34e-06
 - model_name: qwen3.5-397b-a17b
   litellm_params:
     model: poe/qwen3.5-397b-a17b
@@ -726,8 +732,8 @@ model_list:
   litellm_params:
     model: openrouter/qwen/qwen3.5-plus-02-15
     order: 2
-    input_cost_per_token: 4.0e-07
-    output_cost_per_token: 2.4e-06
+    input_cost_per_token: 2.6e-07
+    output_cost_per_token: 1.56e-06
 - model_name: qwen3.5-plus
   litellm_params:
     model: poe/qwen3.5-plus
@@ -856,8 +862,8 @@ model_list:
   litellm_params:
     model: openrouter/z-ai/glm-5
     order: 2
-    input_cost_per_token: 9.5e-07
-    output_cost_per_token: 2.55e-06
+    input_cost_per_token: 8.0e-07
+    output_cost_per_token: 2.56e-06
 - model_name: zai-glm-5
   litellm_params:
     model: poe/glm-5
