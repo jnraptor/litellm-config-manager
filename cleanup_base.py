@@ -270,6 +270,8 @@ class BaseModelCleaner(ABC):
         """
         Sort the model list by model_name alphabetically, then by litellm_params.order, then by litellm_params.model.
         
+        Delegates to the module-level sort_model_list() function to avoid code duplication.
+        
         Args:
             config: The configuration dictionary
             
@@ -281,33 +283,10 @@ class BaseModelCleaner(ABC):
             return config, False
         
         model_list = config['model_list']
-        
-        original_order = [
-            (m.get('model_name', 'unnamed'), m.get('litellm_params', {}).get('order', 999), m.get('litellm_params', {}).get('model', ''))
-            for m in model_list
-        ]
-        
-        sorted_model_list = sorted(
-            model_list,
-            key=lambda x: (
-                x.get('model_name', 'unnamed').lower(),
-                x.get('litellm_params', {}).get('order', 999),
-                x.get('litellm_params', {}).get('model', '').lower()
-            )
-        )
-        
-        sorted_order = [
-            (m.get('model_name', 'unnamed'), m.get('litellm_params', {}).get('order', 999), m.get('litellm_params', {}).get('model', ''))
-            for m in sorted_model_list
-        ]
-        
-        was_sorted = original_order != sorted_order
+        sorted_model_list, was_sorted = sort_model_list(model_list, self.logger)
         
         if was_sorted:
             config['model_list'] = sorted_model_list
-            self.logger.info(f"Sorted {len(model_list)} models by model_name, then by litellm_params.order, then by litellm_params.model")
-        else:
-            self.logger.info("Model list is already sorted by model_name, litellm_params.order, and litellm_params.model")
         
         return config, was_sorted
     
@@ -395,29 +374,18 @@ class BaseModelCleaner(ABC):
             return
         
         model_list = config['model_list']
-        
-        original_order = [
-            (m.get('model_name', 'unnamed'), m.get('litellm_params', {}).get('order', 999), m.get('litellm_params', {}).get('model', ''))
-            for m in model_list
-        ]
-        
-        sorted_model_list = sorted(
-            model_list,
-            key=lambda x: (
-                x.get('model_name', 'unnamed').lower(),
-                x.get('litellm_params', {}).get('order', 999),
-                x.get('litellm_params', {}).get('model', '').lower()
-            )
-        )
-        
-        sorted_order = [
-            (m.get('model_name', 'unnamed'), m.get('litellm_params', {}).get('order', 999), m.get('litellm_params', {}).get('model', ''))
-            for m in sorted_model_list
-        ]
-        
-        would_sort = original_order != sorted_order
+        sorted_model_list, would_sort = sort_model_list(model_list)
         
         if would_sort:
+            original_order = [
+                (m.get('model_name', 'unnamed'), m.get('litellm_params', {}).get('order', 999), m.get('litellm_params', {}).get('model', ''))
+                for m in model_list
+            ]
+            sorted_order = [
+                (m.get('model_name', 'unnamed'), m.get('litellm_params', {}).get('order', 999), m.get('litellm_params', {}).get('model', ''))
+                for m in sorted_model_list
+            ]
+            
             self.logger.info(f"[DRY-RUN] Would sort {len(model_list)} models by model_name, then by litellm_params.order, then by litellm_params.model")
             self.logger.info("[DRY-RUN] Current order (first 10):")
             for i, (name, order, model) in enumerate(original_order[:10]):
