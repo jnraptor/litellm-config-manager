@@ -37,6 +37,7 @@ __all__ = [
     'setup_logging',
     'costs_are_equal',
     'adjust_cost_for_free_model',
+    'sort_model_list',
     'BaseModelCleaner',
     'ConfigDrivenModelCleaner',
     'ProviderConfigLoader',
@@ -44,6 +45,7 @@ __all__ = [
     'validate_model_name_arg',
     'fetch_models_from_api',
     'APIClient',
+    'is_api_base_model',
 ]
 
 DEFAULT_CONFIG_FILE = "config.yaml"
@@ -266,7 +268,7 @@ class BaseModelCleaner(ABC):
 
     def sort_model_list(self, config: Dict[str, Any]) -> Tuple[Dict[str, Any], bool]:
         """
-        Sort the model list by model_name alphabetically, then by litellm_params.model.
+        Sort the model list by model_name alphabetically, then by litellm_params.order, then by litellm_params.model.
         
         Args:
             config: The configuration dictionary
@@ -281,7 +283,7 @@ class BaseModelCleaner(ABC):
         model_list = config['model_list']
         
         original_order = [
-            (m.get('model_name', 'unnamed'), m.get('litellm_params', {}).get('model', ''))
+            (m.get('model_name', 'unnamed'), m.get('litellm_params', {}).get('order', 999), m.get('litellm_params', {}).get('model', ''))
             for m in model_list
         ]
         
@@ -289,12 +291,13 @@ class BaseModelCleaner(ABC):
             model_list,
             key=lambda x: (
                 x.get('model_name', 'unnamed').lower(),
+                x.get('litellm_params', {}).get('order', 999),
                 x.get('litellm_params', {}).get('model', '').lower()
             )
         )
         
         sorted_order = [
-            (m.get('model_name', 'unnamed'), m.get('litellm_params', {}).get('model', ''))
+            (m.get('model_name', 'unnamed'), m.get('litellm_params', {}).get('order', 999), m.get('litellm_params', {}).get('model', ''))
             for m in sorted_model_list
         ]
         
@@ -302,9 +305,9 @@ class BaseModelCleaner(ABC):
         
         if was_sorted:
             config['model_list'] = sorted_model_list
-            self.logger.info(f"Sorted {len(model_list)} models by model_name, then by litellm_params.model")
+            self.logger.info(f"Sorted {len(model_list)} models by model_name, then by litellm_params.order, then by litellm_params.model")
         else:
-            self.logger.info("Model list is already sorted by model_name and litellm_params.model")
+            self.logger.info("Model list is already sorted by model_name, litellm_params.order, and litellm_params.model")
         
         return config, was_sorted
     
@@ -394,7 +397,7 @@ class BaseModelCleaner(ABC):
         model_list = config['model_list']
         
         original_order = [
-            (m.get('model_name', 'unnamed'), m.get('litellm_params', {}).get('model', ''))
+            (m.get('model_name', 'unnamed'), m.get('litellm_params', {}).get('order', 999), m.get('litellm_params', {}).get('model', ''))
             for m in model_list
         ]
         
@@ -402,28 +405,29 @@ class BaseModelCleaner(ABC):
             model_list,
             key=lambda x: (
                 x.get('model_name', 'unnamed').lower(),
+                x.get('litellm_params', {}).get('order', 999),
                 x.get('litellm_params', {}).get('model', '').lower()
             )
         )
         
         sorted_order = [
-            (m.get('model_name', 'unnamed'), m.get('litellm_params', {}).get('model', ''))
+            (m.get('model_name', 'unnamed'), m.get('litellm_params', {}).get('order', 999), m.get('litellm_params', {}).get('model', ''))
             for m in sorted_model_list
         ]
         
         would_sort = original_order != sorted_order
         
         if would_sort:
-            self.logger.info(f"[DRY-RUN] Would sort {len(model_list)} models by model_name, then by litellm_params.model")
+            self.logger.info(f"[DRY-RUN] Would sort {len(model_list)} models by model_name, then by litellm_params.order, then by litellm_params.model")
             self.logger.info("[DRY-RUN] Current order (first 10):")
-            for i, (name, model) in enumerate(original_order[:10]):
-                self.logger.info(f"[DRY-RUN]   {i+1:2d}. {name} ({model})")
+            for i, (name, order, model) in enumerate(original_order[:10]):
+                self.logger.info(f"[DRY-RUN]   {i+1:2d}. {name} (order={order}, {model})")
             if len(original_order) > 10:
                 self.logger.info(f"[DRY-RUN]   ... and {len(original_order) - 10} more")
             
             self.logger.info("[DRY-RUN] Would become (first 10):")
-            for i, (name, model) in enumerate(sorted_order[:10]):
-                self.logger.info(f"[DRY-RUN]   {i+1:2d}. {name} ({model})")
+            for i, (name, order, model) in enumerate(sorted_order[:10]):
+                self.logger.info(f"[DRY-RUN]   {i+1:2d}. {name} (order={order}, {model})")
             if len(sorted_order) > 10:
                 self.logger.info(f"[DRY-RUN]   ... and {len(sorted_order) - 10} more")
         else:
@@ -454,9 +458,9 @@ class BaseModelCleaner(ABC):
         
         if was_sorted:
             if self.dry_run:
-                self.logger.info("📝 [DRY-RUN] Model list would be sorted by model_name")
+                self.logger.info("📝 [DRY-RUN] Model list would be sorted by model_name, then by litellm_params.order")
             else:
-                self.logger.info("✅ Model list sorted by model_name")
+                self.logger.info("✅ Model list sorted by model_name, then by litellm_params.order")
         
         if not invalid_models and not cost_changes and not was_sorted:
             self.logger.info(f"✅ All {self.PROVIDER_NAME} models are valid with current costs and list is already sorted")
@@ -938,6 +942,42 @@ def is_api_base_model(api_base: str, model_id: str, detection_value: str,
     else:
         # For literal strings, check if the value is contained in api_base
         return detection_value in api_base
+
+
+def sort_model_list(model_list: List[Dict[str, Any]], logger: Optional[logging.Logger] = None) -> Tuple[List[Dict[str, Any]], bool]:
+   """
+   Sort the model list by model_name alphabetically, then by litellm_params.order, then by litellm_params.model.
+   
+   This is a module-level utility function that can be reused across scripts.
+   
+   Args:
+       model_list: List of model entries to sort
+       logger: Optional logger for debug output
+       
+   Returns:
+       Tuple of (sorted_model_list, was_sorted) where was_sorted indicates if changes were made
+   """
+   if not model_list:
+       if logger:
+           logger.info("No model list found or model list is empty")
+       return model_list, False
+   
+   original_order = [(m.get('model_name', 'unnamed'), m.get('litellm_params', {}).get('order', 999), m.get('litellm_params', {}).get('model', '')) for m in model_list]
+   
+   sorted_model_list = sorted(
+       model_list,
+       key=lambda x: (x.get('model_name', 'unnamed').lower(), x.get('litellm_params', {}).get('order', 999), x.get('litellm_params', {}).get('model', '').lower())
+   )
+   
+   sorted_order = [(m.get('model_name', 'unnamed'), m.get('litellm_params', {}).get('order', 999), m.get('litellm_params', {}).get('model', '')) for m in sorted_model_list]
+   was_sorted = original_order != sorted_order
+   
+   if was_sorted and logger:
+       logger.info(f"Sorted {len(model_list)} models by model_name, then by litellm_params.order, then by litellm_params.model")
+   elif logger:
+       logger.info("Model list is already sorted by model_name, litellm_params.order, and litellm_params.model")
+   
+   return sorted_model_list, was_sorted
 
 
 class ProviderConfigLoader:

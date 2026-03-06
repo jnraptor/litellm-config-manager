@@ -32,15 +32,15 @@ from dataclasses import dataclass, field
 from abc import ABC, abstractmethod
 
 # Import shared utilities from cleanup_base
-from cleanup_base import is_api_base_model
-from dotenv import load_dotenv
-
 from cleanup_base import (
+    is_api_base_model,
     setup_logging,
     costs_are_equal,
     adjust_cost_for_free_model,
     APIClient,
+    sort_model_list as base_sort_model_list,
 )
+from dotenv import load_dotenv
 
 
 @dataclass
@@ -464,21 +464,10 @@ class UnifiedModelCleaner:
             return config, False
 
         model_list = config['model_list']
-        original_order = [(m.get('model_name', 'unnamed'), m.get('litellm_params', {}).get('model', '')) for m in model_list]
-
-        sorted_model_list = sorted(
-            model_list,
-            key=lambda x: (x.get('model_name', 'unnamed').lower(), x.get('litellm_params', {}).get('model', '').lower())
-        )
-
-        sorted_order = [(m.get('model_name', 'unnamed'), m.get('litellm_params', {}).get('model', '')) for m in sorted_model_list]
-        was_sorted = original_order != sorted_order
+        sorted_model_list, was_sorted = base_sort_model_list(model_list, self.logger)
 
         if was_sorted:
             config['model_list'] = sorted_model_list
-            self.logger.info(f"Sorted {len(model_list)} models by model_name")
-        else:
-            self.logger.info("Model list is already sorted")
 
         return config, was_sorted
 
