@@ -347,6 +347,39 @@ model_list:
     api_key: os.environ/POE_API_KEY
     input_cost_per_token: 1.6e-06
     output_cost_per_token: 1.3e-05
+- model_name: gpt-5.4
+  litellm_params:
+    model: nano-gpt/openai/gpt-5.4
+    order: 5
+    api_key: os.environ/NANOGPT_API_KEY
+    input_cost_per_token: 2.5e-06
+    output_cost_per_token: 1.5e-05
+- model_name: gpt-5.4
+  litellm_params:
+    model: openai/gpt-5.4-2026-03-05
+    api_key: os.environ/OPENAI_API_KEY
+    order: 3
+- model_name: gpt-5.4
+  litellm_params:
+    model: openai/openai/gpt-5.4
+    order: 5
+    api_base: https://router.requesty.ai/v1
+    api_key: os.environ/REQUESTY_API_KEY
+    input_cost_per_token: 2.5e-06
+    output_cost_per_token: 1.5e-05
+- model_name: gpt-5.4
+  litellm_params:
+    model: openrouter/openai/gpt-5.4
+    order: 5
+    input_cost_per_token: 2.5e-06
+    output_cost_per_token: 1.5e-05
+- model_name: gpt-5.4
+  litellm_params:
+    model: poe/gpt-5.4
+    order: 3
+    api_key: os.environ/POE_API_KEY
+    input_cost_per_token: 2.2e-06
+    output_cost_per_token: 1.4e-05
 - model_name: gpt-oss-120b
   litellm_params:
     model: openai/gpt-oss-120b
@@ -628,6 +661,12 @@ model_list:
   model_name: or-qwen3-embedding-8b
   model_info:
     mode: embedding
+- model_name: qwen3.5-122b-a10b
+  litellm_params:
+    model: nvidia_nim/qwen/qwen3.5-122b-a10b
+    order: 5
+    input_cost_per_token: 1.0e-09
+    output_cost_per_token: 1.0e-09
 - model_name: qwen3.5-397b-a17b
   litellm_params:
     model: nano-gpt/qwen/qwen3.5-397b-a17b-thinking
@@ -734,39 +773,6 @@ model_list:
     output_cost_per_token: 1.0e-09
     order: 5
   model_name: zai-glm-4.5-air
-- model_name: zai-glm-4.6v
-  litellm_params:
-    model: nano-gpt/zai-org/glm-4.6v
-    api_key: os.environ/NANOGPT_API_KEY
-    input_cost_per_token: 3.0e-07
-    output_cost_per_token: 9.0e-07
-    order: 5
-- litellm_params:
-    model: openrouter/z-ai/glm-4.6v
-    input_cost_per_token: 3.0e-07
-    output_cost_per_token: 9.0e-07
-    order: 5
-  model_name: zai-glm-4.6v
-- model_name: zai-glm-4.6v
-  litellm_params:
-    model: poe/glm-4.6v
-    api_key: os.environ/POE_API_KEY
-    input_cost_per_token: 3.0e-07
-    output_cost_per_token: 9.0e-07
-    order: 3
-- model_name: zai-glm-4.7
-  litellm_params:
-    model: nano-gpt/zai-org/glm-4.7
-    api_key: os.environ/NANOGPT_API_KEY
-    input_cost_per_token: 1.5e-07
-    output_cost_per_token: 8.000000000000001e-07
-    order: 5
-- model_name: zai-glm-4.7
-  litellm_params:
-    model: openrouter/z-ai/glm-4.7
-    input_cost_per_token: 3.0e-07
-    output_cost_per_token: 1.4e-06
-    order: 5
 - model_name: zai-glm-4.7-flash
   litellm_params:
     model: nano-gpt/zai-org/glm-4.7-flash:thinking
