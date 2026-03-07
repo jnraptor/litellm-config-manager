@@ -147,7 +147,7 @@ providers:
     # Suffix added to model ID to get the free variant (e.g., "model:free")
     free_variant_suffix: ":free"
     # Order for litellm_params/order - lower values are tried first
-    order: 1
+    order: 2
 
 # Default settings that apply to all providers unless overridden
 defaults:

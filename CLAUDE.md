@@ -9,6 +9,7 @@ This is a LiteLLM configuration management repository with Python scripts for ma
 ## Development Commands
 
 ### Unified Script (Recommended)
+
 ```bash
 # Validate models, update costs, and remove invalid entries for all providers
 python cleanup_models.py --provider all [--config config.yaml] [--dry-run] [--verbose]
@@ -32,6 +33,7 @@ python cleanup_models.py --provider all --add-mapped-model glm-5 [--dry-run]
 Instead of manually adding the same model from different providers with different IDs, use `models.yaml` to define mappings:
 
 **`models.yaml` Structure:**
+
 ```yaml
 models:
   glm-5:
@@ -44,6 +46,7 @@ models:
 ```
 
 **Benefits:**
+
 - Define the model once in `models.yaml` with provider-specific IDs
 - All instances share the same `model_name` for automatic load balancing
 - Single command adds from all configured providers
@@ -51,6 +54,7 @@ models:
 - Automatically handles free variants where supported (OpenRouter, Kilo)
 
 ### Provider-Specific Scripts
+
 ```bash
 # All provider scripts support the same flags: [--config config.yaml] [--dry-run] [--verbose]
 python cleanup_openrouter_models.py [--dry-run] [--verbose]
@@ -61,12 +65,14 @@ python cleanup_openrouter_models.py --add-model model1 model2 model3 [--dry-run]
 ```
 
 ### Dependencies
+
 ```bash
 pip install -r requirements.txt
 source .venv/bin/activate  # On macOS/Linux
 ```
 
 **API Key Requirements:**
+
 - **Requesty**: `REQUESTY_API_KEY`
 - **Nano-GPT**: `NANOGPT_API_KEY`
 - **Kilo**: `KILO_API_KEY`
@@ -80,6 +86,52 @@ Always run with `--dry-run --verbose` first to preview changes:
 python cleanup_models.py --provider all --dry-run --verbose
 python cleanup_openrouter_models.py --dry-run --verbose
 ```
+
+### Running Tests
+
+The test suite uses pytest and includes coverage reporting:
+
+```bash
+# Run all tests
+pytest tests/ -v
+
+# Run tests with coverage report
+pytest tests/ -v --cov=. --cov-report=term
+
+# Run specific test file
+pytest tests/test_input_outputs.py -v
+pytest tests/test_cleanup_coverage.py -v
+
+# Run tests matching a pattern
+pytest tests/ -v -k "test_provider"
+```
+
+**Test Organization:**
+
+- `test_cleanup_base.py` — Unit tests for utility functions (costs_are_equal, APIClient, etc.)
+- `test_cleanup_coverage.py` — Tests for model validation, cost updating, model addition
+- `test_input_outputs.py` — Integration tests validating expected input/output transformations from `tests/input-and-outputs.md`
+- `test_coverage_additional.py` — Tests for UnifiedModelCleaner, file I/O, free variants, ModelMappingLoader
+
+**Adding New Tests:**
+To add a new provider test case, edit `tests/input-and-outputs.md`:
+
+````markdown
+## provider_name
+### input
+```json
+{ ... raw API response JSON ... }
+```
+### output
+```yaml
+- model_name: expected-model-name
+  litellm_params:
+    model: provider/model-id
+    order: 5
+    input_cost_per_token: 1.0e-06
+    output_cost_per_token: 3.0e-06
+```
+````
 
 ## Architecture
 
@@ -103,6 +155,7 @@ cleanup_models.py
 ### Key Components
 
 **`cleanup_base.py`** (~1545 lines) — all shared logic:
+
 - `get_nested_value(data, field_path)` — module-level utility for dot-notation dict access (e.g., `"pricing.prompt"`)
 - `costs_are_equal()` — relative-tolerance comparison for scientific notation floats
 - `BaseModelCleaner` — abstract base with YAML load/save, sort, validate, cost update, add model
@@ -111,6 +164,7 @@ cleanup_models.py
 - `create_provider_main(cleaner_class, description, epilog)` — factory that returns a `main()` function; used by all 8 provider scripts so each is ~48 lines
 
 **`providers.yaml`** — single source of truth for all provider settings:
+
 - `model_detection.type`: `"prefix"` (OpenRouter, Novita, Vercel, Nvidia, Nano-GPT) or `"api_base"` (Requesty, Poe, Kilo)
 - `pricing.input_field` / `pricing.output_field`: dot-notation paths into the API response
 - `pricing.is_per_million` + `pricing.divisor`: conversion to per-token cost
@@ -121,6 +175,7 @@ cleanup_models.py
 **`cleanup_models.py`** (~342 lines) — `UnifiedModelCleaner` delegates to per-provider `ConfigDrivenModelCleaner` instances; handles multi-provider orchestration, the `--provider all` flag, and mapped model additions via `--add-mapped-model`.
 
 **`models.yaml`** — defines canonical model mappings for simplified multi-provider addition:
+
 - Maps a canonical model key (e.g., `glm-5`) to provider-specific IDs
 - Uses a shared `display_name` across all providers for load balancing
 - Only adds models from providers listed in the mapping
@@ -128,6 +183,7 @@ cleanup_models.py
 ### Model Identification
 
 How each provider's models are detected in `config.yaml`:
+
 - **OpenRouter**: `litellm_params.model` starts with `openrouter/`
 - **Novita**: `litellm_params.model` starts with `novita/`
 - **Vercel**: `litellm_params.model` starts with `vercel_ai_gateway/`
@@ -147,6 +203,7 @@ How each provider's models are detected in `config.yaml`:
 ## Configuration Management
 
 **Model Entry Structure:**
+
 ```yaml
 - model_name: display-name
   litellm_params:

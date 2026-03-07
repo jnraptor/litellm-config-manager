@@ -67,7 +67,7 @@ model_list:
 - model_name: claude-opus-4.6
   litellm_params:
     model: openai/anthropic/claude-opus-4.6
-    order: 3
+    order: 2
     api_base: https://api.kilo.ai/api/gateway
     api_key: os.environ/KILO_API_KEY
     input_cost_per_token: 5.0e-06
@@ -196,7 +196,7 @@ model_list:
 - model_name: giga-potato
   litellm_params:
     model: openai/giga-potato
-    order: 3
+    order: 2
     api_base: https://api.kilo.ai/api/gateway
     api_key: os.environ/KILO_API_KEY
     input_cost_per_token: 1.0e-09
@@ -351,7 +351,7 @@ model_list:
 - model_name: minimax-m2.5
   litellm_params:
     model: openai/minimax/minimax-m2.5
-    order: 3
+    order: 2
     api_base: https://api.kilo.ai/api/gateway
     api_key: os.environ/KILO_API_KEY
     input_cost_per_token: 2.95e-07
@@ -359,7 +359,7 @@ model_list:
 - model_name: minimax-m2.5
   litellm_params:
     model: openai/minimax/minimax-m2.5:free
-    order: 3
+    order: 2
     api_base: https://api.kilo.ai/api/gateway
     api_key: os.environ/KILO_API_KEY
     input_cost_per_token: 1.0e-09
@@ -711,6 +711,14 @@ model_list:
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
     order: 1
+- model_name: zai-glm-5
+  litellm_params:
+    model: openai/z-ai/glm-5
+    order: 2
+    api_base: https://api.kilo.ai/api/gateway
+    api_key: os.environ/KILO_API_KEY
+    input_cost_per_token: 8.0e-07
+    output_cost_per_token: 2.56e-06
 - model_name: zai-glm-5
   litellm_params:
     model: poe/glm-5
