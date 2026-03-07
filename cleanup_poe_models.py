@@ -14,49 +14,33 @@ Usage:
 Author: Generated for LiteLLM Config Management
 """
 
-import argparse
 import sys
 
 from cleanup_base import (
     ConfigDrivenModelCleaner,
-    setup_common_args,
-    validate_model_name_arg,
+    create_provider_main,
 )
 
 
 class PoeModelCleaner(ConfigDrivenModelCleaner):
     """Cleaner for Poe models."""
-    
+
     def __init__(self, config_path: str, dry_run: bool = False, verbose: bool = False):
         """Initialize the Poe model cleaner."""
         super().__init__('poe', config_path, dry_run, verbose)
 
 
-def main():
-    """Main entry point."""
-    parser = argparse.ArgumentParser(
-        description='Validate and cleanup Poe models in LiteLLM config',
-        formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="""
+main = create_provider_main(
+    PoeModelCleaner,
+    'Validate and cleanup Poe models in LiteLLM config',
+    """
 Examples:
   %(prog)s                              # Run cleanup on default config.yaml
   %(prog)s --config my.yaml             # Run cleanup on custom config file
   %(prog)s --dry-run                    # Preview changes without modifying file
   %(prog)s --add-model Claude-Sonnet-4.5  # Add new model(s)
-        """
-    )
-    
-    setup_common_args(parser)
-    args = parser.parse_args()
-    validate_model_name_arg(args, parser)
-    
-    cleaner = PoeModelCleaner(
-        config_path=args.config,
-        dry_run=args.dry_run,
-        verbose=args.verbose
-    )
-    
-    return cleaner.run_cleanup(add_models=args.add_model, custom_model_name=args.model_name)
+    """
+)
 
 
 if __name__ == "__main__":

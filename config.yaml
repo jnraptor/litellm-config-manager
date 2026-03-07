@@ -711,8 +711,8 @@ model_list:
     model: nano-gpt/qwen3.5-flash:thinking
     order: 5
     api_key: os.environ/NANOGPT_API_KEY
-    input_cost_per_token: 1.0000000000000001e-07
-    output_cost_per_token: 4.0000000000000003e-07
+    input_cost_per_token: 9.000000000000001e-08
+    output_cost_per_token: 3.6000000000000005e-07
 - model_name: qwen3.5-flash
   litellm_params:
     model: openrouter/qwen/qwen3.5-flash-02-23
