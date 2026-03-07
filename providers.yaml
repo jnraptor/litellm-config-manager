@@ -115,7 +115,7 @@ providers:
     model_name_prefix: "nim-"
     model_name_cleanup:
       - replace: [["nvidia-", ""], ["meta-", ""], ["google-", ""], ["mistralai-", "mistral-"]]
-    special_models: []
+    special_models: ["nvidia/llama-nemotron-rerank-1b-v2"]
     api_base_config: null
     api_key_env: null
     # Order for litellm_params/order - lower values are tried first
