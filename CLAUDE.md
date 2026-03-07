@@ -22,7 +22,33 @@ python cleanup_models.py --provider nvidia --add-model meta/llama-3.1-8b-instruc
 
 # Add model with custom name (single model only)
 python cleanup_models.py --provider openrouter --add-model gpt-4 --model-name "My GPT-4" [--dry-run]
+
+# Add mapped model across multiple providers (simplified workflow)
+python cleanup_models.py --provider all --add-mapped-model glm-5 [--dry-run]
 ```
+
+### Mapped Model Addition (Multi-Provider Workflow)
+
+Instead of manually adding the same model from different providers with different IDs, use `models.yaml` to define mappings:
+
+**`models.yaml` Structure:**
+```yaml
+models:
+  glm-5:
+    display_name: "zai-glm-5"  # Common name across all providers
+    description: "GLM-5 model by Z.ai"
+    providers:
+      openrouter: z-ai/glm-5
+      requesty: zai/GLM-5
+      novita: glm-5
+```
+
+**Benefits:**
+- Define the model once in `models.yaml` with provider-specific IDs
+- All instances share the same `model_name` for automatic load balancing
+- Single command adds from all configured providers
+- Works with `--dry-run` for preview
+- Automatically handles free variants where supported (OpenRouter, Kilo)
 
 ### Provider-Specific Scripts
 ```bash
@@ -81,6 +107,7 @@ cleanup_models.py
 - `costs_are_equal()` — relative-tolerance comparison for scientific notation floats
 - `BaseModelCleaner` — abstract base with YAML load/save, sort, validate, cost update, add model
 - `ConfigDrivenModelCleaner` — reads `providers.yaml`; implements all abstract methods based on config; handles free variant logic via `_free_variant_suffix`
+- `ModelMappingLoader` — loads `models.yaml` and provides canonical model mappings for multi-provider addition
 - `create_provider_main(cleaner_class, description, epilog)` — factory that returns a `main()` function; used by all 8 provider scripts so each is ~48 lines
 
 **`providers.yaml`** — single source of truth for all provider settings:
@@ -91,7 +118,12 @@ cleanup_models.py
 - `free_variant_suffix`: `":free"` for OpenRouter and Kilo — triggers automatic `:free` variant addition when adding models
 - `special_models`: model IDs exempt from removal validation
 
-**`cleanup_models.py`** (~342 lines) — `UnifiedModelCleaner` delegates to per-provider `ConfigDrivenModelCleaner` instances; handles multi-provider orchestration and the `--provider all` flag.
+**`cleanup_models.py`** (~342 lines) — `UnifiedModelCleaner` delegates to per-provider `ConfigDrivenModelCleaner` instances; handles multi-provider orchestration, the `--provider all` flag, and mapped model additions via `--add-mapped-model`.
+
+**`models.yaml`** — defines canonical model mappings for simplified multi-provider addition:
+- Maps a canonical model key (e.g., `glm-5`) to provider-specific IDs
+- Uses a shared `display_name` across all providers for load balancing
+- Only adds models from providers listed in the mapping
 
 ### Model Identification
 

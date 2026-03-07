@@ -1,0 +1,35 @@
+# Model Mappings for LiteLLM Config
+# Define canonical model names that map to provider-specific IDs
+#
+# Usage:
+#   python cleanup_models.py --provider all --add-mapped-model glm-5
+#
+# This will add the model from all configured providers with the same display name
+
+models:
+  # Example: GLM-5 model from Z.ai
+  glm-5:
+    display_name: "zai-glm-5"  # Common display name across all providers
+    description: "GLM-5 model by Z.ai"
+    providers:
+      openrouter: z-ai/glm-5
+      requesty: zai/GLM-5
+      # Add other providers as needed:
+      # novita: glm-5
+      # kilo: z-ai/glm-5
+
+  # Example: DeepSeek V3
+  deepseek-v3:
+    display_name: "deepseek-v3"
+    description: "DeepSeek V3 model"
+    providers:
+      openrouter: deepseek/deepseek-chat
+      # requesty: deepseek/deepseek-v3
+
+  # Add your own mappings below following this format:
+  # canonical-name:
+  #   display_name: "Display Name"
+  #   description: "Optional description"
+  #   providers:
+  #     provider1: provider1/model-id
+  #     provider2: provider2/model-id
