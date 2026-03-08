@@ -9,6 +9,7 @@ litellm_settings:
     type: redis
     ttl: 600
   drop_params: true
+  modify_params: true  # Enable automatic parameter modification
 router_settings:
   routing_strategy: cost-based-routing
   redis_host: 10.10.1.1
