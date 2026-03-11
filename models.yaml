@@ -19,7 +19,7 @@ models:
       # kilo: z-ai/glm-5
 
   nemotron-3-super:
-    display_name: "nemotron-3-super"
+    display_name: "nvidia-nemotron-3-super"
     description: "nemotron-3-super-120b-a12b"
     providers:
       openrouter: nvidia/nemotron-3-super-120b-a12b:free

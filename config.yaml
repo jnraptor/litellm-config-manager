@@ -9,7 +9,7 @@ litellm_settings:
     type: redis
     ttl: 600
   drop_params: true
-  modify_params: true  # Enable automatic parameter modification
+  modify_params: true
 router_settings:
   routing_strategy: cost-based-routing
   redis_host: 10.10.1.1
@@ -124,8 +124,8 @@ model_list:
     order: 5
 - litellm_params:
     model: openrouter/deepseek/deepseek-v3.2
-    input_cost_per_token: 2.5e-07
-    output_cost_per_token: 4.0e-07
+    input_cost_per_token: 2.6e-07
+    output_cost_per_token: 3.8e-07
     order: 5
   model_name: deepseek-v3.2
 - model_name: devstral-2512
@@ -355,8 +355,8 @@ model_list:
     order: 2
     api_base: https://api.kilo.ai/api/gateway
     api_key: os.environ/KILO_API_KEY
-    input_cost_per_token: 2.95e-07
-    output_cost_per_token: 1.2e-06
+    input_cost_per_token: 2.7e-07
+    output_cost_per_token: 9.5e-07
 - model_name: minimax-m2.5
   litellm_params:
     model: openai/minimax/minimax-m2.5:free
@@ -389,8 +389,8 @@ model_list:
   litellm_params:
     model: openrouter/minimax/minimax-m2.5
     order: 5
-    input_cost_per_token: 2.95e-07
-    output_cost_per_token: 1.2e-06
+    input_cost_per_token: 2.7e-07
+    output_cost_per_token: 9.5e-07
 - model_name: moonshotai-kimi-k2.5
   litellm_params:
     model: openai/kimi-k2.5
@@ -412,18 +412,6 @@ model_list:
     input_cost_per_token: 4.5e-07
     output_cost_per_token: 2.2e-06
     order: 5
-- model_name: nemotron-3-super
-  litellm_params:
-    model: nvidia_nim/nvidia/nemotron-3-super-120b-a12b
-    order: 5
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
-- model_name: nemotron-3-super
-  litellm_params:
-    model: openrouter/nvidia/nemotron-3-super-120b-a12b:free
-    order: 5
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
 - model_name: nim-llama-nemotron-embed-1b-v2
   litellm_params:
     model: nvidia_nim/nvidia/llama-nemotron-embed-1b-v2
@@ -487,6 +475,18 @@ model_list:
     output_cost_per_token: 1.0e-09
     order: 5
   model_name: nvidia-nemotron-3-nano-30b-a3b
+- model_name: nvidia-nemotron-3-super
+  litellm_params:
+    model: nvidia_nim/nvidia/nemotron-3-super-120b-a12b
+    order: 5
+    input_cost_per_token: 1.0e-09
+    output_cost_per_token: 1.0e-09
+- model_name: nvidia-nemotron-3-super
+  litellm_params:
+    model: openrouter/nvidia/nemotron-3-super-120b-a12b:free
+    order: 5
+    input_cost_per_token: 1.0e-09
+    output_cost_per_token: 1.0e-09
 - litellm_params:
     model: nvidia_nim/nvidia/nemotron-nano-12b-v2-vl
     input_cost_per_token: 1.0e-09
@@ -730,8 +730,8 @@ model_list:
     order: 2
     api_base: https://api.kilo.ai/api/gateway
     api_key: os.environ/KILO_API_KEY
-    input_cost_per_token: 8.0e-07
-    output_cost_per_token: 2.56e-06
+    input_cost_per_token: 7.2e-07
+    output_cost_per_token: 2.3e-06
 - model_name: zai-glm-5
   litellm_params:
     model: poe/glm-5
@@ -764,8 +764,8 @@ model_list:
   litellm_params:
     model: openrouter/z-ai/glm-5
     order: 5
-    input_cost_per_token: 8.0e-07
-    output_cost_per_token: 2.56e-06
+    input_cost_per_token: 7.2e-07
+    output_cost_per_token: 2.3e-06
 - model_name: zai-glm-5
   litellm_params:
     model: vercel_ai_gateway/zai/glm-5
