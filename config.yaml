@@ -9,6 +9,7 @@ litellm_settings:
     type: redis
     ttl: 600
   drop_params: true
+  modify_params: true  # Enable automatic parameter modification
 router_settings:
   routing_strategy: cost-based-routing
   redis_host: 10.10.1.1
@@ -769,5 +770,5 @@ model_list:
   litellm_params:
     model: vercel_ai_gateway/zai/glm-5
     order: 5
-    input_cost_per_token: 1.0e-06
-    output_cost_per_token: 3.2e-06
+    input_cost_per_token: 8.0e-07
+    output_cost_per_token: 2.56e-06
