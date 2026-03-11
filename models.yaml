@@ -18,13 +18,12 @@ models:
       # novita: glm-5
       # kilo: z-ai/glm-5
 
-  # Example: DeepSeek V3
-  deepseek-v3:
-    display_name: "deepseek-v3"
-    description: "DeepSeek V3 model"
+  nemotron-3-super:
+    display_name: "nemotron-3-super"
+    description: "nemotron-3-super-120b-a12b"
     providers:
-      openrouter: deepseek/deepseek-chat
-      # requesty: deepseek/deepseek-v3
+      openrouter: nvidia/nemotron-3-super-120b-a12b:free
+      nvidia: nvidia/nemotron-3-super-120b-a12b
 
   # Add your own mappings below following this format:
   # canonical-name:
