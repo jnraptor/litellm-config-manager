@@ -24,6 +24,7 @@ models:
     providers:
       openrouter: nvidia/nemotron-3-super-120b-a12b:free
       nvidia: nvidia/nemotron-3-super-120b-a12b
+      nano_gpt: nvidia/nemotron-3-super-120b-a12b
 
   # Add your own mappings below following this format:
   # canonical-name:
