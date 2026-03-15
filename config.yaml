@@ -55,11 +55,6 @@ model_list:
     order: 3
   model_name: claude-haiku-4-5
 - litellm_params:
-    model: anthropic/claude-haiku-4-5-20251001
-    api_key: os.environ/ANTHROPIC_API_KEY
-    order: 5
-  model_name: claude-haiku-4-5
-- litellm_params:
     model: openrouter/anthropic/claude-haiku-4.5
     input_cost_per_token: 1.0e-06
     output_cost_per_token: 5.0e-06
@@ -73,11 +68,6 @@ model_list:
     api_key: os.environ/KILO_API_KEY
     input_cost_per_token: 5.0e-06
     output_cost_per_token: 2.5e-05
-- litellm_params:
-    model: anthropic/claude-opus-4-6
-    api_key: os.environ/ANTHROPIC_API_KEY
-    order: 5
-  model_name: claude-opus-4.6
 - model_name: claude-opus-4.6
   litellm_params:
     model: nano-gpt/anthropic/claude-opus-4.6
@@ -98,11 +88,6 @@ model_list:
     api_key: os.environ/POE_API_KEY
     input_cost_per_token: 2.6e-06
     output_cost_per_token: 1.3e-05
-- litellm_params:
-    model: anthropic/claude-sonnet-4-6
-    api_key: os.environ/ANTHROPIC_API_KEY
-    order: 5
-  model_name: claude-sonnet-4.6
 - model_name: claude-sonnet-4.6
   litellm_params:
     model: nano-gpt/anthropic/claude-sonnet-4.6:thinking
@@ -769,14 +754,6 @@ model_list:
   litellm_params:
     model: nvidia_nim/z-ai/glm5
     order: 5
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
-- model_name: zai-glm-5
-  litellm_params:
-    model: openai/zai-org/GLM-5-FP8
-    order: 5
-    api_base: os.environ/MODAL_API_BASE
-    api_key: os.environ/MODAL_API_KEY
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
 - model_name: zai-glm-5
