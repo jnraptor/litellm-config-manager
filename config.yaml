@@ -372,6 +372,12 @@ model_list:
     output_cost_per_token: 1.0e-09
 - model_name: minimax-m2.5
   litellm_params:
+    model: ollama_chat/minimax-m2.5:cloud
+    order: 5
+    api_base: https://ollama.com
+    api_key: os.environ/OLLAMA_API_KEY
+- model_name: minimax-m2.5
+  litellm_params:
     model: openrouter/minimax/minimax-m2.5
     order: 5
     input_cost_per_token: 2.5e-07
@@ -391,6 +397,12 @@ model_list:
     input_cost_per_token: 3.0e-07
     output_cost_per_token: 1.8999999999999998e-06
     order: 5
+- model_name: moonshotai-kimi-k2.5
+  litellm_params:
+    model: ollama_chat/kimi-k2.5:cloud
+    order: 5
+    api_base: https://ollama.com
+    api_key: os.environ/OLLAMA_API_KEY
 - model_name: moonshotai-kimi-k2.5
   litellm_params:
     model: openrouter/moonshotai/kimi-k2.5
@@ -473,6 +485,12 @@ model_list:
     order: 5
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
+- model_name: nvidia-nemotron-3-super
+  litellm_params:
+    model: ollama_chat/nemotron-3-super:cloud
+    order: 5
+    api_base: https://ollama.com
+    api_key: os.environ/OLLAMA_API_KEY
 - model_name: nvidia-nemotron-3-super
   litellm_params:
     model: openrouter/nvidia/nemotron-3-super-120b-a12b:free
@@ -682,6 +700,12 @@ model_list:
     order: 5
     input_cost_per_token: 4.0e-07
     output_cost_per_token: 2.4e-06
+- model_name: qwen3.5:397b-cloud
+  litellm_params:
+    model: ollama_chat/qwen3.5:397b-cloud
+    order: 5
+    api_base: https://ollama.com
+    api_key: os.environ/OLLAMA_API_KEY
 - model_name: vc-meituan-longcat-flash-chat
   litellm_params:
     model: vercel_ai_gateway/meituan/longcat-flash-chat
@@ -756,6 +780,12 @@ model_list:
     order: 5
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
+- model_name: zai-glm-5
+  litellm_params:
+    model: ollama_chat/glm-5:cloud
+    order: 5
+    api_base: https://ollama.com
+    api_key: os.environ/OLLAMA_API_KEY
 - model_name: zai-glm-5
   litellm_params:
     model: openrouter/z-ai/glm-5
