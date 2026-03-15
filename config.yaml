@@ -355,8 +355,8 @@ model_list:
     order: 2
     api_base: https://api.kilo.ai/api/gateway
     api_key: os.environ/KILO_API_KEY
-    input_cost_per_token: 2.7e-07
-    output_cost_per_token: 9.5e-07
+    input_cost_per_token: 2.5e-07
+    output_cost_per_token: 1.2e-06
 - model_name: minimax-m2.5
   litellm_params:
     model: openai/minimax/minimax-m2.5:free
@@ -389,8 +389,8 @@ model_list:
   litellm_params:
     model: openrouter/minimax/minimax-m2.5
     order: 5
-    input_cost_per_token: 2.7e-07
-    output_cost_per_token: 9.5e-07
+    input_cost_per_token: 2.5e-07
+    output_cost_per_token: 1.2e-06
 - model_name: moonshotai-kimi-k2.5
   litellm_params:
     model: openai/kimi-k2.5
@@ -789,5 +789,5 @@ model_list:
   litellm_params:
     model: vercel_ai_gateway/zai/glm-5
     order: 5
-    input_cost_per_token: 8.0e-07
-    output_cost_per_token: 2.56e-06
+    input_cost_per_token: 1.0e-06
+    output_cost_per_token: 3.2e-06
