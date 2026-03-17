@@ -11,7 +11,7 @@ against their current APIs and:
 5. Supports both regular and embedding models (where applicable)
 6. Supports mapped models for simplified multi-provider addition
 
-Supported providers: openrouter, requesty, novita, nano_gpt, vercel, poe, nvidia, kilo, all
+Supported providers: openrouter, requesty, novita, nano_gpt, vercel, poe, nvidia, kilo, ollama, all
 
 Usage:
     python cleanup_models.py --provider openrouter [--config config.yaml] [--dry-run] [--verbose]
@@ -38,6 +38,9 @@ from cleanup_base import (
 )
 from dotenv import load_dotenv
 
+# Import provider-specific cleaners
+from cleanup_ollama_models import OllamaModelCleaner
+
 
 class UnifiedModelCleaner:
     """
@@ -62,10 +65,15 @@ class UnifiedModelCleaner:
         self.provider_names = provider_names
 
         # Create per-provider cleaners that handle all provider-specific logic
-        self.cleaners: Dict[str, ConfigDrivenModelCleaner] = {
-            name: ConfigDrivenModelCleaner(name, config_path, dry_run, verbose)
-            for name in provider_names
-        }
+        # Use custom cleaners for providers that need special handling
+        self.cleaners: Dict[str, ConfigDrivenModelCleaner] = {}
+        for name in provider_names:
+            if name == "ollama":
+                self.cleaners[name] = OllamaModelCleaner(config_path, dry_run, verbose)
+            else:
+                self.cleaners[name] = ConfigDrivenModelCleaner(
+                    name, config_path, dry_run, verbose
+                )
 
     def load_config(self) -> Dict[str, Any]:
         """Load and parse the YAML configuration file."""
@@ -330,7 +338,7 @@ This script performs four main functions:
 3. Updates model costs when they differ from API pricing
 4. Adds one or more models to the configuration
 
-Supported providers: openrouter, requesty, nano_gpt, vercel, poe, nvidia, kilo, novita, all
+Supported providers: openrouter, requesty, nano_gpt, vercel, poe, nvidia, kilo, novita, ollama, all
 
 Examples:
   %(prog)s --provider openrouter                           # Process OpenRouter models

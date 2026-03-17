@@ -347,3 +347,34 @@
     input_cost_per_token: 8.0e-07
     output_cost_per_token: 2.56e-06
 ```
+
+## ollama
+### input
+```json
+{
+  "name": "nemotron-3-super",
+  "model": "nemotron-3-super",
+  "modified_at": "2026-03-11T00:00:00Z",
+  "size": 230500000000,
+  "digest": "da11955bb451",
+  "details": {
+    "parent_model": "",
+    "format": "",
+    "family": "",
+    "families": null,
+    "parameter_size": "",
+    "quantization_level": ""
+  }
+}
+```
+### output
+```yaml
+- model_name: nvidia-nemotron-3-super
+  litellm_params:
+    model: ollama_chat/nemotron-3-super
+    order: 5
+    api_base: https://ollama.com
+    api_key: os.environ/OLLAMA_API_KEY
+    input_cost_per_token: 1.0e-09
+    output_cost_per_token: 1.0e-09
+```

@@ -149,6 +149,31 @@ providers:
     # Order for litellm_params/order - lower values are tried first
     order: 2
 
+  ollama:
+    name: "Ollama"
+    description: "Ollama model provider for local and hosted models"
+    api_url: "https://ollama.com/api/tags"
+    model_prefix: "ollama_chat/"
+    model_detection:
+      type: "prefix"
+      value: "ollama_chat/"
+    pricing:
+      # Ollama models don't have pricing in the API
+      input_field: null
+      output_field: null
+      is_per_million: false
+      free_model_handling: true
+      default_cost: 1.0e-09
+    model_name_prefix: ""
+    model_name_cleanup: []
+    special_models: []
+    api_base_config:
+      url: "https://ollama.com"
+      api_key_env: "OLLAMA_API_KEY"
+    api_key_env: "OLLAMA_API_KEY"
+    # Order for litellm_params/order - lower values are tried first
+    order: 5
+
 # Default settings that apply to all providers unless overridden
 defaults:
   timeout: 30

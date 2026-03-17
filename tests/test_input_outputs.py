@@ -225,6 +225,31 @@ class MockCleaner(ConfigDrivenModelCleaner):
         self._embeddings_api_url = self.provider_config.get("embeddings_api_url")
         self._free_variant_suffix = self.provider_config.get("free_variant_suffix")
 
+    def parse_api_model(self, model: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Override parse_api_model to handle Ollama's different field name.
+        Ollama uses 'name' instead of 'id' for the model identifier.
+        """
+        if self.PROVIDER_NAME == "Ollama":
+            model_id = model.get("name", "")
+            model_info = {
+                "id": model_id,
+                "input_cost": None,
+                "output_cost": None,
+                "model_info": model.get("model_info"),
+            }
+
+            # Check for default cost (Ollama models don't have pricing)
+            default_cost = self._pricing_config.get("default_cost")
+            if default_cost is not None:
+                model_info["input_cost"] = float(default_cost)
+                model_info["output_cost"] = float(default_cost)
+
+            return model_info
+        else:
+            # Use parent class implementation for other providers
+            return super().parse_api_model(model)
+
 
 def run_test_case(test_case: InputOutputTestCase) -> Tuple[bool, List[str]]:
     """
@@ -247,7 +272,11 @@ def run_test_case(test_case: InputOutputTestCase) -> Tuple[bool, List[str]]:
         return False, [f"parse_api_model failed: {e}"]
 
     # Step 2: Create the model entry
-    model_id = test_case.input_data.get("id", "")
+    # Most providers use "id" field, but Ollama uses "name" field
+    if test_case.provider == "ollama":
+        model_id = test_case.input_data.get("name", "")
+    else:
+        model_id = test_case.input_data.get("id", "")
 
     # For kilo provider, the model_prefix is 'openai/', so we need the full model_id
     if test_case.provider == "kilo":
@@ -400,7 +429,8 @@ if HAVE_PYTEST:
             return get_test_cases()
 
         @pytest.mark.parametrize(
-            "provider", ["openrouter", "nano_gpt", "vercel", "poe", "nvidia", "kilo"]
+            "provider",
+            ["openrouter", "nano_gpt", "vercel", "poe", "nvidia", "kilo", "ollama"],
         )
         def test_provider_output(self, provider):
             """Test that each provider produces correct output."""
