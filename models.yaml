@@ -25,6 +25,18 @@ models:
       openrouter: nvidia/nemotron-3-super-120b-a12b:free
       nvidia: nvidia/nemotron-3-super-120b-a12b
       nano_gpt: nvidia/nemotron-3-super-120b-a12b
+      ollama: nemotron-3-super
+
+  minimax-m2.7:
+    display_name: "minimax-m2.7"
+    description: "minimax-m2.7"
+    providers:
+      openrouter: minimax/minimax-m2.7
+      kilo: minimax/minimax-m2.7
+      #nvidia: nvidia/nemotron-3-super-120b-a12b
+      nano_gpt: minimax/minimax-m2.7
+      poe: minimax-m2.7
+      ollama: minimax-m2.7
 
   # Add your own mappings below following this format:
   # canonical-name:
