@@ -305,7 +305,7 @@ model_list:
   model_info:
     mode: rerank
 - litellm_params:
-    model: openai/Qwen3.5-0.8B
+    model: openai/Qwen3.5-2B
     api_base: os.environ/LLAMA_API_BASE
     api_key: os.environ/LLAMA_API_KEY
     input_cost_per_token: 1.0e-09
@@ -461,8 +461,10 @@ model_list:
     mode: rerank
 - model_name: nomic-embed-text
   litellm_params:
-    model: infinity/nomic-ai/nomic-embed-text-v2-moe
-    api_base: http://infinity:7997
+    #model: infinity/nomic-ai/nomic-embed-text-v2-moe
+    #api_base: http://infinity:7997
+    model: ollama/nomic-embed-text-v2-moe:latest
+    api_base: http://ollama:11434
     order: 5
   model_info:
     mode: embedding
