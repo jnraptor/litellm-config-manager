@@ -37,6 +37,7 @@ models:
       nano_gpt: minimax/minimax-m2.7
       poe: minimax-m2.7
       ollama: minimax-m2.7
+      vercel: minimax/minimax-m2.7
 
   # Add your own mappings below following this format:
   # canonical-name:
