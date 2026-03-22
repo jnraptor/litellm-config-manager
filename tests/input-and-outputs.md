@@ -70,52 +70,6 @@
     output_cost_per_token: 2.56e-06
 ```
 
-## nano_gpt
-### input
-```json
-{
-  "id": "zai-org/glm-5",
-  "object": "model",
-  "created": 1770768000,
-  "owned_by": "organization-owner",
-  "name": "GLM 5",
-  "description": "GLM-5 is Zhipu's latest flagship model with advanced reasoning and instruction following. This is the open-source hosted version and it is included in the subscription.",
-  "context_length": 200000,
-  "max_output_tokens": 128000,
-  "capabilities": {
-    "vision": false,
-    "reasoning": true,
-    "tool_calling": true,
-    "parallel_tool_calls": false,
-    "structured_output": true,
-    "pdf_upload": false
-  },
-  "pricing": {
-    "prompt": 0.3,
-    "completion": 2.5500000000000003,
-    "currency": "USD",
-    "unit": "per_million_tokens"
-  },
-  "cost_estimate": 0.0034,
-  "icon_url": "/icons/Zhipu.svg",
-  "category": "More",
-  "subscription": {
-    "included": true,
-    "note": "Included in subscription"
-  }
-}
-```
-### output
-```yaml
-- model_name: zai-glm-5
-  litellm_params:
-    model: nano-gpt/zai-org/glm-5
-    order: 5
-    api_key: os.environ/NANOGPT_API_KEY
-    input_cost_per_token: 3.0e-07
-    output_cost_per_token: 2.55e-06
-```
-
 ## vercel
 ### input
 ```json

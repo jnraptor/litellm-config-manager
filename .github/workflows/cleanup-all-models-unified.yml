@@ -6,14 +6,13 @@ on:
   workflow_dispatch:
     inputs:
       provider:
-        description: 'Provider to process (all, openrouter, requesty, nano_gpt, vercel, poe, nvidia, synthetic)'
+        description: 'Provider to process (all, openrouter, requesty, vercel, poe, nvidia, synthetic)'
         required: false
         type: choice
         default: 'all'
         options:
           - all
           - openrouter
-          - nano_gpt
           - vercel
           - poe
           - nvidia
