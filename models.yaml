@@ -26,16 +26,18 @@ models:
       nvidia: nvidia/nemotron-3-super-120b-a12b
       ollama: nemotron-3-super
 
-  minimax-m2.7:
-    display_name: "minimax-m2.7"
-    description: "minimax-m2.7"
+  mimo-v2-pro:
+    display_name: "mimo-v2-pro"
+    description: "mimo-v2-pro"
     providers:
-      openrouter: minimax/minimax-m2.7
-      kilo: minimax/minimax-m2.7
+      openrouter: xiaomi/mimo-v2-pro
+      kilo: xiaomi/mimo-v2-pro
       #nvidia: nvidia/nemotron-3-super-120b-a12b
-      poe: minimax-m2.7
-      ollama: minimax-m2.7
-      vercel: minimax/minimax-m2.7
+      poe: mimo-v2-pro
+      #ollama: minimax-m2.7
+      vercel: xiaomi/mimo-v2-pro
+
+
 
   # Add your own mappings below following this format:
   # canonical-name:

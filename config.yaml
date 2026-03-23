@@ -270,6 +270,39 @@ model_list:
     output_cost_per_token: 1.0e-09
     order: 5
   model_name: local-llama
+- model_name: mimo-v2-pro
+  litellm_params:
+    model: openai/xiaomi/mimo-v2-pro
+    order: 2
+    api_base: https://api.kilo.ai/api/gateway
+    api_key: os.environ/KILO_API_KEY
+    input_cost_per_token: 1.0e-06
+    output_cost_per_token: 3.0e-06
+- model_name: mimo-v2-pro
+  litellm_params:
+    model: openai/xiaomi/mimo-v2-pro:free
+    order: 2
+    api_base: https://api.kilo.ai/api/gateway
+    api_key: os.environ/KILO_API_KEY
+    input_cost_per_token: 1.0e-09
+    output_cost_per_token: 1.0e-09
+- model_name: mimo-v2-pro
+  litellm_params:
+    model: poe/mimo-v2-pro
+    order: 3
+    api_key: os.environ/POE_API_KEY
+- model_name: mimo-v2-pro
+  litellm_params:
+    model: openrouter/xiaomi/mimo-v2-pro
+    order: 5
+    input_cost_per_token: 1.0e-06
+    output_cost_per_token: 3.0e-06
+- model_name: mimo-v2-pro
+  litellm_params:
+    model: vercel_ai_gateway/xiaomi/mimo-v2-pro
+    order: 5
+    input_cost_per_token: 1.0e-06
+    output_cost_per_token: 3.0e-06
 - model_name: minimax-m2.5
   litellm_params:
     model: anthropic/minimax-m2.5
