@@ -310,7 +310,7 @@ model_list:
 - model_name: minimax-m2.5
   litellm_params:
     model: ollama_chat/minimax-m2.5
-    order: 5
+    order: 1
     api_base: https://ollama.com
     api_key: os.environ/OLLAMA_API_KEY
     input_cost_per_token: 1.0e-09
@@ -347,7 +347,7 @@ model_list:
 - model_name: minimax-m2.7
   litellm_params:
     model: ollama_chat/minimax-m2.7
-    order: 5
+    order: 1
     api_base: https://ollama.com
     api_key: os.environ/OLLAMA_API_KEY
     input_cost_per_token: 1.0e-09
@@ -375,7 +375,7 @@ model_list:
 - model_name: moonshotai-kimi-k2.5
   litellm_params:
     model: ollama_chat/kimi-k2.5
-    order: 5
+    order: 1
     api_base: https://ollama.com
     api_key: os.environ/OLLAMA_API_KEY
     input_cost_per_token: 1.0e-09
@@ -458,7 +458,7 @@ model_list:
 - model_name: nvidia-nemotron-3-super
   litellm_params:
     model: ollama_chat/nemotron-3-super
-    order: 5
+    order: 1
     api_base: https://ollama.com
     api_key: os.environ/OLLAMA_API_KEY
     input_cost_per_token: 1.0e-09
@@ -584,7 +584,7 @@ model_list:
 - model_name: qwen3.5-397b-a17b
   litellm_params:
     model: ollama_chat/qwen3.5:397b
-    order: 5
+    order: 1
     api_base: https://ollama.com
     api_key: os.environ/OLLAMA_API_KEY
     input_cost_per_token: 1.0e-09
@@ -692,7 +692,7 @@ model_list:
 - model_name: zai-glm-5
   litellm_params:
     model: ollama_chat/glm-5
-    order: 5
+    order: 1
     api_base: https://ollama.com
     api_key: os.environ/OLLAMA_API_KEY
     input_cost_per_token: 1.0e-09

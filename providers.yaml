@@ -149,7 +149,7 @@ providers:
       api_key_env: "OLLAMA_API_KEY"
     api_key_env: "OLLAMA_API_KEY"
     # Order for litellm_params/order - lower values are tried first
-    order: 5
+    order: 1
 
 # Default settings that apply to all providers unless overridden
 defaults:
