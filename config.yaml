@@ -303,14 +303,22 @@ model_list:
     order: 5
     input_cost_per_token: 1.0e-06
     output_cost_per_token: 3.0e-06
+#- model_name: minimax-m2.5
+#  litellm_params:
+#    model: anthropic/minimax-m2.5
+#    api_base: https://opencode.ai/zen/go
+#    api_key: os.environ/OPENCODE_API_KEY
+#    input_cost_per_token: 1.0e-09
+#    output_cost_per_token: 1.0e-09
+#    order: 1
 - model_name: minimax-m2.5
   litellm_params:
-    model: anthropic/minimax-m2.5
-    api_base: https://opencode.ai/zen/go
-    api_key: os.environ/OPENCODE_API_KEY
+    model: ollama_chat/minimax-m2.5
+    order: 1
+    api_base: https://ollama.com
+    api_key: os.environ/OLLAMA_API_KEY
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
-    order: 1
 - model_name: minimax-m2.5
   litellm_params:
     model: openai/minimax/minimax-m2.5
@@ -342,26 +350,26 @@ model_list:
     output_cost_per_token: 1.0e-09
 - model_name: minimax-m2.5
   litellm_params:
-    model: ollama_chat/minimax-m2.5
+    model: openrouter/minimax/minimax-m2.5
+    order: 5
+    input_cost_per_token: 1.9e-07
+    output_cost_per_token: 1.15e-06
+#- model_name: minimax-m2.7
+#  litellm_params:
+#    model: anthropic/minimax-m2.7
+#    api_base: https://opencode.ai/zen/go
+#    api_key: os.environ/OPENCODE_API_KEY
+#    input_cost_per_token: 1.0e-09
+#    output_cost_per_token: 1.0e-09
+#    order: 1
+- model_name: minimax-m2.7
+  litellm_params:
+    model: ollama_chat/minimax-m2.7
     order: 1
     api_base: https://ollama.com
     api_key: os.environ/OLLAMA_API_KEY
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
-- model_name: minimax-m2.5
-  litellm_params:
-    model: openrouter/minimax/minimax-m2.5
-    order: 5
-    input_cost_per_token: 1.9e-07
-    output_cost_per_token: 1.15e-06
-- model_name: minimax-m2.7
-  litellm_params:
-    model: anthropic/minimax-m2.7
-    api_base: https://opencode.ai/zen/go
-    api_key: os.environ/OPENCODE_API_KEY
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
-    order: 1
 - model_name: minimax-m2.7
   litellm_params:
     model: openai/minimax/minimax-m2.7
@@ -379,14 +387,6 @@ model_list:
     output_cost_per_token: 1.2e-06
 - model_name: minimax-m2.7
   litellm_params:
-    model: ollama_chat/minimax-m2.7
-    order: 1
-    api_base: https://ollama.com
-    api_key: os.environ/OLLAMA_API_KEY
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
-- model_name: minimax-m2.7
-  litellm_params:
     model: openrouter/minimax/minimax-m2.7
     order: 5
     input_cost_per_token: 3.0e-07
@@ -399,20 +399,20 @@ model_list:
     output_cost_per_token: 1.2e-06
 - model_name: moonshotai-kimi-k2.5
   litellm_params:
-    model: openai/kimi-k2.5
-    api_base: https://opencode.ai/zen/go/v1
-    api_key: os.environ/OPENCODE_API_KEY
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
-    order: 1
-- model_name: moonshotai-kimi-k2.5
-  litellm_params:
     model: ollama_chat/kimi-k2.5
     order: 1
     api_base: https://ollama.com
     api_key: os.environ/OLLAMA_API_KEY
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
+#- model_name: moonshotai-kimi-k2.5
+#  litellm_params:
+#    model: openai/kimi-k2.5
+#    api_base: https://opencode.ai/zen/go/v1
+#    api_key: os.environ/OPENCODE_API_KEY
+#    input_cost_per_token: 1.0e-09
+#    output_cost_per_token: 1.0e-09
+#    order: 1
 - model_name: moonshotai-kimi-k2.5
   litellm_params:
     model: openrouter/moonshotai/kimi-k2.5
@@ -484,16 +484,16 @@ model_list:
   model_name: nvidia-nemotron-3-nano-30b-a3b
 - model_name: nvidia-nemotron-3-super
   litellm_params:
-    model: nvidia_nim/nvidia/nemotron-3-super-120b-a12b
-    order: 5
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
-- model_name: nvidia-nemotron-3-super
-  litellm_params:
     model: ollama_chat/nemotron-3-super
     order: 1
     api_base: https://ollama.com
     api_key: os.environ/OLLAMA_API_KEY
+    input_cost_per_token: 1.0e-09
+    output_cost_per_token: 1.0e-09
+- model_name: nvidia-nemotron-3-super
+  litellm_params:
+    model: nvidia_nim/nvidia/nemotron-3-super-120b-a12b
+    order: 5
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
 - model_name: nvidia-nemotron-3-super
@@ -603,6 +603,14 @@ model_list:
     output_cost_per_token: 1.0e-09
 - model_name: qwen3.5-397b-a17b
   litellm_params:
+    model: ollama_chat/qwen3.5:397b
+    order: 1
+    api_base: https://ollama.com
+    api_key: os.environ/OLLAMA_API_KEY
+    input_cost_per_token: 1.0e-09
+    output_cost_per_token: 1.0e-09
+- model_name: qwen3.5-397b-a17b
+  litellm_params:
     model: poe/qwen3.5-397b-a17b
     order: 3
     api_key: os.environ/POE_API_KEY
@@ -612,14 +620,6 @@ model_list:
   litellm_params:
     model: nvidia_nim/qwen/qwen3.5-397b-a17b
     order: 5
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
-- model_name: qwen3.5-397b-a17b
-  litellm_params:
-    model: ollama_chat/qwen3.5:397b
-    order: 1
-    api_base: https://ollama.com
-    api_key: os.environ/OLLAMA_API_KEY
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
 - model_name: qwen3.5-397b-a17b
@@ -695,12 +695,20 @@ model_list:
     order: 5
 - model_name: zai-glm-5
   litellm_params:
-    model: openai/glm-5
-    api_base: https://opencode.ai/zen/go/v1
-    api_key: os.environ/OPENCODE_API_KEY
+    model: ollama_chat/glm-5
+    order: 1
+    api_base: https://ollama.com
+    api_key: os.environ/OLLAMA_API_KEY
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
-    order: 1
+#- model_name: zai-glm-5
+#  litellm_params:
+#    model: openai/glm-5
+#    api_base: https://opencode.ai/zen/go/v1
+#    api_key: os.environ/OPENCODE_API_KEY
+#    input_cost_per_token: 1.0e-09
+#    output_cost_per_token: 1.0e-09
+#    order: 1
 - model_name: zai-glm-5
   litellm_params:
     model: openai/z-ai/glm-5
@@ -720,14 +728,6 @@ model_list:
   litellm_params:
     model: nvidia_nim/z-ai/glm5
     order: 5
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
-- model_name: zai-glm-5
-  litellm_params:
-    model: ollama_chat/glm-5
-    order: 1
-    api_base: https://ollama.com
-    api_key: os.environ/OLLAMA_API_KEY
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
 - model_name: zai-glm-5
