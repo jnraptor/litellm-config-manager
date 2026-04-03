@@ -289,7 +289,7 @@ model_list:
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
     order: 5
-  model_name: llama-3.3-70b-instruct-free
+  model_name: llama-3.3-70b-instruct
 - model_name: llama-3.3-8b-instruct
   litellm_params:
     model: openai/llama-3.3-8b-instruct:free
