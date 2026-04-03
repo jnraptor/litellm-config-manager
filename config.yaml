@@ -266,7 +266,7 @@ model_list:
   litellm_params:
     model: openai/llama-3.2-3b-instruct:free
     order: 5
-    api_base: https://api.apertis.ai
+    api_base: os.environ/APERTIS_API_BASE
     api_key: os.environ/APERTIS_API_KEY
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
@@ -280,7 +280,7 @@ model_list:
   litellm_params:
     model: openai/llama-3.3-70b-instruct:free
     order: 5
-    api_base: https://api.apertis.ai
+    api_base: os.environ/APERTIS_API_BASE
     api_key: os.environ/APERTIS_API_KEY
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
@@ -294,7 +294,7 @@ model_list:
   litellm_params:
     model: openai/llama-3.3-8b-instruct:free
     order: 5
-    api_base: https://api.apertis.ai
+    api_base: os.environ/APERTIS_API_BASE
     api_key: os.environ/APERTIS_API_KEY
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
@@ -540,7 +540,7 @@ model_list:
   litellm_params:
     model: openai/nemotron-3-nano-30b-a3b:free
     order: 5
-    api_base: https://api.apertis.ai
+    api_base: os.environ/APERTIS_API_BASE
     api_key: os.environ/APERTIS_API_KEY
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
@@ -568,7 +568,7 @@ model_list:
   litellm_params:
     model: openai/nemotron-3-super-120b-a12b:free
     order: 5
-    api_base: https://api.apertis.ai
+    api_base: os.environ/APERTIS_API_BASE
     api_key: os.environ/APERTIS_API_KEY
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
@@ -588,7 +588,7 @@ model_list:
   litellm_params:
     model: openai/nemotron-nano-12b-v2-vl:free
     order: 5
-    api_base: https://api.apertis.ai
+    api_base: os.environ/APERTIS_API_BASE
     api_key: os.environ/APERTIS_API_KEY
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
@@ -738,7 +738,7 @@ model_list:
   litellm_params:
     model: openai/qwen3.6-plus-preview:free
     order: 5
-    api_base: https://api.apertis.ai
+    api_base: os.environ/APERTIS_API_BASE
     api_key: os.environ/APERTIS_API_KEY
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
@@ -758,7 +758,7 @@ model_list:
   litellm_params:
     model: openai/glm-4.5-air:free
     order: 5
-    api_base: https://api.apertis.ai
+    api_base: os.environ/APERTIS_API_BASE
     api_key: os.environ/APERTIS_API_KEY
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
