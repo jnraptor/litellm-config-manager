@@ -439,7 +439,6 @@ if HAVE_PYTEST:
                 "kilo",
                 "ollama",
                 "fireworks",
-                "apertis",
             ],
         )
         def test_provider_output(self, provider):

@@ -500,14 +500,6 @@ model_list:
     output_cost_per_token: 1.0e-09
     order: 5
   model_name: nvidia-nemotron-3-nano-30b-a3b
-- model_name: nvidia-nemotron-3-nano-30b-a3b
-  litellm_params:
-    model: openai/nemotron-3-nano-30b-a3b:free
-    order: 5
-    api_base: os.environ/APERTIS_API_BASE
-    api_key: os.environ/APERTIS_API_KEY
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
 - litellm_params:
     model: openrouter/nvidia/nemotron-3-nano-30b-a3b:free
     input_cost_per_token: 1.0e-09
@@ -530,14 +522,6 @@ model_list:
     output_cost_per_token: 1.0e-09
 - model_name: nvidia-nemotron-3-super
   litellm_params:
-    model: openai/nemotron-3-super-120b-a12b:free
-    order: 5
-    api_base: os.environ/APERTIS_API_BASE
-    api_key: os.environ/APERTIS_API_KEY
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
-- model_name: nvidia-nemotron-3-super
-  litellm_params:
     model: openrouter/nvidia/nemotron-3-super-120b-a12b:free
     order: 5
     input_cost_per_token: 1.0e-09
@@ -548,14 +532,6 @@ model_list:
     output_cost_per_token: 1.0e-09
     order: 5
   model_name: nvidia-nemotron-nano-12b-v2-vl
-- model_name: nvidia-nemotron-nano-12b-v2-vl
-  litellm_params:
-    model: openai/nemotron-nano-12b-v2-vl:free
-    order: 5
-    api_base: os.environ/APERTIS_API_BASE
-    api_key: os.environ/APERTIS_API_KEY
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
 - litellm_params:
     model: openrouter/nvidia/nemotron-nano-12b-v2-vl
     input_cost_per_token: 2.0e-07
@@ -700,14 +676,6 @@ model_list:
     output_cost_per_token: 2.4e-06
 - model_name: qwen3.6-plus
   litellm_params:
-    model: openai/qwen3.6-plus-preview:free
-    order: 5
-    api_base: os.environ/APERTIS_API_BASE
-    api_key: os.environ/APERTIS_API_KEY
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
-- model_name: qwen3.6-plus
-  litellm_params:
     model: openrouter/qwen/qwen3.6-plus:free
     order: 5
     input_cost_per_token: 1.0e-09
@@ -718,14 +686,6 @@ model_list:
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
     order: 5
-- model_name: zai-glm-4.5-air
-  litellm_params:
-    model: openai/glm-4.5-air:free
-    order: 5
-    api_base: os.environ/APERTIS_API_BASE
-    api_key: os.environ/APERTIS_API_KEY
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
 - litellm_params:
     model: openrouter/z-ai/glm-4.5-air
     input_cost_per_token: 1.3e-07

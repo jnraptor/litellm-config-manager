@@ -356,25 +356,3 @@
     order: 5
     api_key: os.environ/FIREWORKS_AI_API_KEY
 ```
-
-## apertis
-### input
-```json
-{
-  "id": "glm-5",
-  "object": "model",
-  "created": 1770739200,
-  "owned_by": "z.ai"
-}
-```
-### output
-```yaml
-- model_name: zai-glm-5
-  litellm_params:
-    model: openai/glm-5
-    order: 5
-    api_base: os.environ/APERTIS_API_BASE
-    api_key: os.environ/APERTIS_API_KEY
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
-```
