@@ -362,7 +362,7 @@ model_list:
     api_base: https://api.kilo.ai/api/gateway
     api_key: os.environ/KILO_API_KEY
     input_cost_per_token: 1.18e-07
-    output_cost_per_token: 1.0e-06
+    output_cost_per_token: 9.9e-07
 - model_name: minimax-m2.5
   litellm_params:
     model: poe/minimax-m2.5
@@ -389,7 +389,7 @@ model_list:
     model: openrouter/minimax/minimax-m2.5
     order: 5
     input_cost_per_token: 1.18e-07
-    output_cost_per_token: 1.0e-06
+    output_cost_per_token: 9.9e-07
 - model_name: minimax-m2.7
   litellm_params:
     model: anthropic/minimax-m2.7
@@ -448,7 +448,7 @@ model_list:
     api_base: https://api.kilo.ai/api/gateway
     api_key: os.environ/KILO_API_KEY
     input_cost_per_token: 3.827e-07
-    output_cost_per_token: 1.909e-06
+    output_cost_per_token: 1.72e-06
 - model_name: moonshotai-kimi-k2.5
   litellm_params:
     model: poe/kimi-k2.5-fw
@@ -477,7 +477,7 @@ model_list:
   litellm_params:
     model: openrouter/moonshotai/kimi-k2.5
     input_cost_per_token: 3.827e-07
-    output_cost_per_token: 1.909e-06
+    output_cost_per_token: 1.72e-06
     order: 5
 - model_name: nim-llama-nemotron-embed-1b-v2
   litellm_params:

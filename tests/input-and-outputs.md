@@ -373,7 +373,7 @@
   litellm_params:
     model: openai/glm-5
     order: 5
-    api_base: https://api.apertis.ai
+    api_base: os.environ/APERTIS_API_BASE
     api_key: os.environ/APERTIS_API_KEY
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09

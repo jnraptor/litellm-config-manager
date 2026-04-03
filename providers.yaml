@@ -196,7 +196,7 @@ providers:
     model_name_cleanup: []
     special_models: []
     api_base_config:
-      url: "https://api.apertis.ai"
+      url_env: "APERTIS_API_BASE"
       api_key_env: "APERTIS_API_KEY"
     api_key_env: "APERTIS_API_KEY"
     # Order for litellm_params/order - lower values are tried first
