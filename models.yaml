@@ -14,7 +14,6 @@ models:
     providers:
       openrouter: z-ai/glm-5
       fireworks: accounts/fireworks/models/glm-5
-      #apertis: glm-5
       # Add other providers as needed:
       # novita: glm-5
       # kilo: z-ai/glm-5
@@ -26,7 +25,6 @@ models:
       openrouter: nvidia/nemotron-3-super-120b-a12b:free
       nvidia: nvidia/nemotron-3-super-120b-a12b
       ollama: nemotron-3-super
-      apertis: nemotron-3-super-120b-a12b:free
 
   mimo-v2-pro:
     display_name: "mimo-v2-pro"

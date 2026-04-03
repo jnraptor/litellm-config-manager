@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Repository Overview
 
-This is a LiteLLM configuration management repository with Python scripts for managing model configurations across multiple AI providers: OpenRouter, Requesty, Novita AI, Nano-GPT, Vercel AI Gateway, Poe, Kilo, and Nvidia NIM. The main config file (`config.yaml`) contains LiteLLM model definitions with routing strategies and cost information.
+This is a LiteLLM configuration management repository with Python scripts for managing model configurations across multiple AI providers: OpenRouter, Vercel AI Gateway, Poe, Kilo, Nvidia NIM, Ollama, and Fireworks. The main config file (`config.yaml`) contains LiteLLM model definitions with routing strategies and cost information.
 
 ## Development Commands
 
@@ -26,6 +26,9 @@ python cleanup_models.py --provider openrouter --add-model gpt-4 --model-name "M
 
 # Add mapped model across multiple providers (simplified workflow)
 python cleanup_models.py --provider all --add-mapped-model glm-5 [--dry-run]
+
+# List available mapped models
+grep -E "^[a-z0-9-]+:$" models.yaml | tr -d ':'
 ```
 
 ### Mapped Model Addition (Multi-Provider Workflow)
@@ -73,10 +76,9 @@ source .venv/bin/activate  # On macOS/Linux
 
 **API Key Requirements:**
 
-- **Requesty**: `REQUESTY_API_KEY`
-- **Nano-GPT**: `NANOGPT_API_KEY`
 - **Kilo**: `KILO_API_KEY`
-- **OpenRouter, Novita, Vercel, Poe, Nvidia**: No API key required for model listing
+- **OpenRouter, Novita, Vercel, Poe, Nvidia, Ollama**: No API key required for model listing
+- **Fireworks**: Uses `FIREWORKS_AI_API_KEY`, required for model listing
 
 ### Testing Workflow
 
@@ -104,6 +106,9 @@ pytest tests/test_cleanup_coverage.py -v
 
 # Run tests matching a pattern
 pytest tests/ -v -k "test_provider"
+
+# Run a single specific test
+pytest tests/test_cleanup_base.py::test_costs_are_equal -v
 ```
 
 **Test Organization:**
@@ -137,7 +142,7 @@ To add a new provider test case, edit `tests/input-and-outputs.md`:
 
 ### Class Hierarchy
 
-All logic lives in `cleanup_base.py`. The two entry points (`cleanup_models.py` and the 8 `cleanup_*_models.py` scripts) both delegate to the same base classes.
+All logic lives in `cleanup_base.py`. The two entry points (`cleanup_models.py` and the 10 `cleanup_*_models.py` scripts) both delegate to the same base classes.
 
 ```
 cleanup_base.py
@@ -145,8 +150,10 @@ cleanup_base.py
 │   └── ConfigDrivenModelCleaner       # reads providers.yaml, implements all abstract methods
 │       ├── OpenRouterModelCleaner     # cleanup_openrouter_models.py
 │       ├── KiloModelCleaner           # cleanup_kilo_models.py
-│       ├── NovitaModelCleaner         # cleanup_novita_models.py (custom parse_api_model)
-│       └── ...all other providers
+│       ├── NovitaModelCleaner         # cleanup_novita_models.py
+│       ├── OllamaModelCleaner         # cleanup_ollama_models.py (custom fetch_available_models)
+│       ├── FireworksModelCleaner      # cleanup_fireworks_models.py
+│       └── ...all other providers (follow same pattern)
 cleanup_models.py
 └── UnifiedModelCleaner               # creates one ConfigDrivenModelCleaner per provider,
                                        # delegates all operations to them
@@ -185,11 +192,10 @@ cleanup_models.py
 How each provider's models are detected in `config.yaml`:
 
 - **OpenRouter**: `litellm_params.model` starts with `openrouter/`
-- **Novita**: `litellm_params.model` starts with `novita/`
 - **Vercel**: `litellm_params.model` starts with `vercel_ai_gateway/`
 - **Nvidia NIM**: `litellm_params.model` starts with `nvidia_nim/`
-- **Nano-GPT**: `litellm_params.model` starts with `nano-gpt/`
-- **Requesty**: `litellm_params.api_base` contains `router.requesty.ai` + model starts with `openai/`
+- **Ollama**: `litellm_params.model` starts with `ollama_chat/`
+- **Fireworks**: `litellm_params.model` starts with `fireworks_ai/`
 - **Poe**: `litellm_params.api_base` contains `api.poe.com` + model starts with `openai/`
 - **Kilo**: `litellm_params.api_base` = `os.environ/KILO_API_BASE` + model starts with `openai/`
 
@@ -224,7 +230,6 @@ How each provider's models are detected in `config.yaml`:
 
 ## GitHub Actions
 
-- **Schedule:** Weekly on Sundays (`0 0 * * 0`)
 - **Manual trigger:** Workflow dispatch accepts `--add-model` and optional `--model-name`
 - **Process:** dry-run → apply (remove invalid, update costs, sort) → add model if specified → auto-commit if changed
 - Workflows: `cleanup-all-models-unified.yml` (unified) + one per provider
