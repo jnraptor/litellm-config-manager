@@ -443,6 +443,14 @@ model_list:
     order: 1
 - model_name: moonshotai-kimi-k2.5
   litellm_params:
+    model: openai/moonshotai/kimi-k2.5
+    order: 2
+    api_base: https://api.kilo.ai/api/gateway
+    api_key: os.environ/KILO_API_KEY
+    input_cost_per_token: 3.827e-07
+    output_cost_per_token: 1.909e-06
+- model_name: moonshotai-kimi-k2.5
+  litellm_params:
     model: poe/kimi-k2.5-fw
     order: 3
     api_key: os.environ/POE_API_KEY

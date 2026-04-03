@@ -44,6 +44,7 @@ models:
     description: "GLM-5 model by Z.ai"
     providers:
       openrouter: moonshotai/kimi-k2.5
+      kilo: moonshotai/kimi-k2.5
       fireworks: accounts/fireworks/models/kimi-k2p5
       ollama: kimi-k2.5
       poe: kimi-k2.5-fw
