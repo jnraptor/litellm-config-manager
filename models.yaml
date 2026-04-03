@@ -13,7 +13,8 @@ models:
     description: "GLM-5 model by Z.ai"
     providers:
       openrouter: z-ai/glm-5
-      requesty: zai/GLM-5
+      fireworks: accounts/fireworks/models/glm-5
+      #apertis: glm-5
       # Add other providers as needed:
       # novita: glm-5
       # kilo: z-ai/glm-5
@@ -25,6 +26,7 @@ models:
       openrouter: nvidia/nemotron-3-super-120b-a12b:free
       nvidia: nvidia/nemotron-3-super-120b-a12b
       ollama: nemotron-3-super
+      apertis: nemotron-3-super-120b-a12b:free
 
   mimo-v2-pro:
     display_name: "mimo-v2-pro"
@@ -37,7 +39,15 @@ models:
       #ollama: minimax-m2.7
       vercel: xiaomi/mimo-v2-pro
 
-
+  moonshotai-kimi-k2.5:
+    display_name: "moonshotai-kimi-k2.5"  # Common display name across all providers
+    description: "GLM-5 model by Z.ai"
+    providers:
+      openrouter: moonshotai/kimi-k2.5
+      fireworks: accounts/fireworks/models/kimi-k2p5
+      ollama: kimi-k2.5
+      poe: kimi-k2.5-fw
+      nvidia: moonshotai/kimi-k2.5
 
   # Add your own mappings below following this format:
   # canonical-name:

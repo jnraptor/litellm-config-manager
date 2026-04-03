@@ -430,7 +430,17 @@ if HAVE_PYTEST:
 
         @pytest.mark.parametrize(
             "provider",
-            ["openrouter", "nano_gpt", "vercel", "poe", "nvidia", "kilo", "ollama"],
+            [
+                "openrouter",
+                "nano_gpt",
+                "vercel",
+                "poe",
+                "nvidia",
+                "kilo",
+                "ollama",
+                "fireworks",
+                "apertis",
+            ],
         )
         def test_provider_output(self, provider):
             """Test that each provider produces correct output."""
