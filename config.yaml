@@ -518,6 +518,14 @@ model_list:
   model_name: nvidia-nemotron-3-nano-30b-a3b
 - model_name: nvidia-nemotron-3-super
   litellm_params:
+    model: openai/nemotron-3-super-free
+    api_base: https://opencode.ai/zen/v1
+    api_key: os.environ/OPENCODE_API_KEY
+    input_cost_per_token: 1.0e-09
+    output_cost_per_token: 1.0e-09
+    order: 1
+- model_name: nvidia-nemotron-3-super
+  litellm_params:
     model: ollama_chat/nemotron-3-super
     order: 4
     api_base: https://ollama.com
@@ -684,6 +692,14 @@ model_list:
     order: 5
     input_cost_per_token: 4.0e-07
     output_cost_per_token: 2.4e-06
+- model_name: qwen3.6-plus
+  litellm_params:
+    model: openai/qwen3.6-plus-free
+    api_base: https://opencode.ai/zen/v1
+    api_key: os.environ/OPENCODE_API_KEY
+    input_cost_per_token: 1.0e-09
+    output_cost_per_token: 1.0e-09
+    order: 1
 - model_name: qwen3.6-plus
   litellm_params:
     model: openai/qwen/qwen3.6-plus:free
