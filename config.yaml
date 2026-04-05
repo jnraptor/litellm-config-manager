@@ -443,6 +443,16 @@ model_list:
     input_cost_per_token: 3.827e-07
     output_cost_per_token: 1.72e-06
     order: 5
+- litellm_params:
+    api_base: os.environ/AZURE_OPENAI_API_BASE
+    api_key: os.environ/AZURE_OPENAI_API_KEY
+    model: azure/FW-Kimi-K2.5
+    #input_cost_per_token: 6e-07
+    #output_cost_per_token: 3e-06
+    order: 5
+  model_name: moonshotai-kimi-k2.5
+  model_info:
+    base_model: azure/kimi-k2.5
 - model_name: nim-llama-nemotron-embed-1b-v2
   litellm_params:
     model: nvidia_nim/nvidia/llama-nemotron-embed-1b-v2
