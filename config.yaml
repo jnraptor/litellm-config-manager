@@ -24,6 +24,14 @@ model_list:
     order: 5
   model_name: az-model-router
 - litellm_params:
+    api_base: os.environ/AZURE_OPENAI_API_BASE
+    api_key: os.environ/AZURE_OPENAI_API_KEY
+    model: azure/FW-Kimi-K2.5
+    input_cost_per_token: 6e-07
+    output_cost_per_token: 3e-06
+    order: 5
+  model_name: az-kimi-k2.5
+- litellm_params:
     api_base: os.environ/AZURE_API_BASE
     api_key: os.environ/AZURE_API_KEY
     model: azure_ai/Phi-4-mini-instruct
@@ -434,8 +442,6 @@ model_list:
     output_cost_per_token: 3e-06
     order: 5
   model_name: moonshotai-kimi-k2.5
-  model_info:
-    base_model: azure/kimi-k2.5
 - model_name: moonshotai-kimi-k2.5
   litellm_params:
     model: fireworks_ai/accounts/fireworks/models/kimi-k2p5
