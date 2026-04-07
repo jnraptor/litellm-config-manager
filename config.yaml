@@ -25,6 +25,8 @@ model_list:
     output_cost_per_token: 3e-06
     order: 5
   model_name: az-kimi-k2.5
+  model_info:
+    base_model: azure_ai/kimi-k2.5
 - litellm_params:
     api_base: os.environ/AZURE_AI_API_BASE_EASTUS
     api_key: os.environ/AZURE_AI_API_KEY_EASTUS
@@ -33,6 +35,8 @@ model_list:
     output_cost_per_token: 1.2e-06
     order: 5
   model_name: az-minimax-m2.5
+  model_info:
+    base_model: azure_ai/minimax-m2.5
 - litellm_params:
     api_base: os.environ/AZURE_OPENAI_API_BASE
     api_key: os.environ/AZURE_OPENAI_API_KEY
@@ -358,6 +362,16 @@ model_list:
     api_key: os.environ/OLLAMA_API_KEY
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
+- litellm_params:
+    api_base: os.environ/AZURE_AI_API_BASE_EASTUS
+    api_key: os.environ/AZURE_AI_API_KEY_EASTUS
+    model: azure_ai/FW-MiniMax-M2.5
+    input_cost_per_token: 3e-07
+    output_cost_per_token: 1.2e-06
+    order: 5
+  model_name: minimax-m2.5
+  model_info:
+    base_model: azure_ai/minimax-m2.5
 - model_name: minimax-m2.5
   litellm_params:
     model: nvidia_nim/minimaxai/minimax-m2.5
@@ -450,6 +464,8 @@ model_list:
     output_cost_per_token: 3e-06
     order: 5
   model_name: moonshotai-kimi-k2.5
+  model_info:
+    base_model: azure_ai/kimi-k2.5
 - model_name: moonshotai-kimi-k2.5
   litellm_params:
     model: fireworks_ai/accounts/fireworks/models/kimi-k2p5
@@ -728,13 +744,6 @@ model_list:
     order: 5
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
-- litellm_params:
-    api_base: os.environ/AZURE_AI_API_BASE_EASTUS
-    api_key: os.environ/AZURE_AI_API_KEY_EASTUS
-    model: azure_ai/FW-MiniMax-M2.5
-    input_cost_per_token: 3e-07
-    output_cost_per_token: 1.2e-06
-    order: 5
 - model_name: vc-meituan-longcat-flash-chat
   litellm_params:
     model: vercel_ai_gateway/meituan/longcat-flash-chat
