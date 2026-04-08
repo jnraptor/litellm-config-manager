@@ -326,7 +326,7 @@
 - model_name: nvidia-nemotron-3-super
   litellm_params:
     model: ollama_chat/nemotron-3-super
-    order: 4
+    order: 5
     api_base: https://ollama.com
     api_key: os.environ/OLLAMA_API_KEY
     input_cost_per_token: 1.0e-09
@@ -355,4 +355,24 @@
     model: fireworks_ai/accounts/fireworks/models/glm-5
     order: 5
     api_key: os.environ/FIREWORKS_AI_API_KEY
+```
+
+## opencode-zen
+### input
+```json
+{
+  "id": "glm-5.1",
+  "object": "model",
+  "created": 1775653844,
+  "owned_by": "opencode"
+}
+```
+### output
+```yaml
+- model_name: zai-glm-5.1
+  litellm_params:
+    model: openai/glm-5.1
+    api_base: https://opencode.ai/zen/v1
+    api_key: os.environ/OPENCODE_API_KEY
+    order: 5
 ```

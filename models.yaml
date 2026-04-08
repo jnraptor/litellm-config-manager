@@ -48,6 +48,31 @@ models:
       poe: kimi-k2.5-fw
       nvidia: moonshotai/kimi-k2.5
 
+  glm-5.1:
+    display_name: "zai-glm-5.1"  # Common display name across all providers
+    description: "GLM-5.1 model by Z.ai"
+    providers:
+      openrouter: z-ai/glm-5.1
+      kilo: z-ai/glm-5.1
+      fireworks: accounts/fireworks/models/glm-5p1
+      ollama: glm-5.1
+      poe: glm-5.1-fw
+      #nvidia: moonshotai/kimi-k2.5
+      vercel: zai/glm-5.1
+      opencode-zen: glm-5.1
+
+  gemma-4-31b:
+    display_name: "gemma-4-31b"
+    description: "gemma 4 model by Google"
+    providers:
+      openrouter: google/gemma-4-31b-it
+      kilo: google/gemma-4-31b-it
+      #fireworks: accounts/fireworks/models/gemma-4-31b-it
+      ollama: gemma4:31b
+      poe: gemma-4-31b
+      nvidia: google/gemma-4-31b-it
+      vercel: google/gemma-4-31b-it
+
   # Add your own mappings below following this format:
   # canonical-name:
   #   display_name: "Display Name"

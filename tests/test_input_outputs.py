@@ -439,6 +439,7 @@ if HAVE_PYTEST:
                 "kilo",
                 "ollama",
                 "fireworks",
+                "opencode-zen",
             ],
         )
         def test_provider_output(self, provider):

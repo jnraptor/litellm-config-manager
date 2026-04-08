@@ -169,6 +169,51 @@ model_list:
     order: 5
   model_info:
     mode: embedding
+- model_name: gemma-4-31b
+  litellm_params:
+    model: openai/google/gemma-4-31b-it
+    order: 2
+    api_base: https://api.kilo.ai/api/gateway
+    api_key: os.environ/KILO_API_KEY
+    input_cost_per_token: 1.4e-07
+    output_cost_per_token: 4.0e-07
+- model_name: gemma-4-31b
+  litellm_params:
+    model: poe/gemma-4-31b
+    order: 3
+    api_key: os.environ/POE_API_KEY
+- model_name: gemma-4-31b
+  litellm_params:
+    model: nvidia_nim/google/gemma-4-31b-it
+    order: 5
+    input_cost_per_token: 1.0e-09
+    output_cost_per_token: 1.0e-09
+- model_name: gemma-4-31b
+  litellm_params:
+    model: ollama_chat/gemma4:31b
+    order: 5
+    api_base: https://ollama.com
+    api_key: os.environ/OLLAMA_API_KEY
+    input_cost_per_token: 1.0e-09
+    output_cost_per_token: 1.0e-09
+- model_name: gemma-4-31b
+  litellm_params:
+    model: openrouter/google/gemma-4-31b-it
+    order: 5
+    input_cost_per_token: 1.4e-07
+    output_cost_per_token: 4.0e-07
+- model_name: gemma-4-31b
+  litellm_params:
+    model: openrouter/google/gemma-4-31b-it:free
+    order: 5
+    input_cost_per_token: 1.0e-09
+    output_cost_per_token: 1.0e-09
+- model_name: gemma-4-31b
+  litellm_params:
+    model: vercel_ai_gateway/google/gemma-4-31b-it
+    order: 5
+    input_cost_per_token: 1.4e-07
+    output_cost_per_token: 4.0e-07
 - model_name: gpt-5-nano
   litellm_params:
     model: openai/gpt-5-nano
@@ -358,14 +403,6 @@ model_list:
     api_key: os.environ/POE_API_KEY
     input_cost_per_token: 3.0e-07
     output_cost_per_token: 1.2e-06
-- model_name: minimax-m2.5
-  litellm_params:
-    model: ollama_chat/minimax-m2.5
-    order: 4
-    api_base: https://ollama.com
-    api_key: os.environ/OLLAMA_API_KEY
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
 - litellm_params:
     api_base: os.environ/AZURE_AI_API_BASE_EASTUS
     api_key: os.environ/AZURE_AI_API_KEY_EASTUS
@@ -382,6 +419,14 @@ model_list:
   litellm_params:
     model: nvidia_nim/minimaxai/minimax-m2.5
     order: 5
+    input_cost_per_token: 1.0e-09
+    output_cost_per_token: 1.0e-09
+- model_name: minimax-m2.5
+  litellm_params:
+    model: ollama_chat/minimax-m2.5
+    order: 5
+    api_base: https://ollama.com
+    api_key: os.environ/OLLAMA_API_KEY
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
 - model_name: minimax-m2.5
@@ -416,7 +461,7 @@ model_list:
 - model_name: minimax-m2.7
   litellm_params:
     model: ollama_chat/minimax-m2.7
-    order: 4
+    order: 5
     api_base: https://ollama.com
     api_key: os.environ/OLLAMA_API_KEY
     input_cost_per_token: 1.0e-09
@@ -454,14 +499,6 @@ model_list:
     model: poe/kimi-k2.5-fw
     order: 3
     api_key: os.environ/POE_API_KEY
-- model_name: moonshotai-kimi-k2.5
-  litellm_params:
-    model: ollama_chat/kimi-k2.5
-    order: 4
-    api_base: https://ollama.com
-    api_key: os.environ/OLLAMA_API_KEY
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
 - litellm_params:
     api_base: os.environ/AZURE_AI_API_BASE_EASTUS2
     api_key: os.environ/AZURE_AI_API_KEY_EASTUS2
@@ -483,6 +520,14 @@ model_list:
   litellm_params:
     model: nvidia_nim/moonshotai/kimi-k2.5
     order: 5
+    input_cost_per_token: 1.0e-09
+    output_cost_per_token: 1.0e-09
+- model_name: moonshotai-kimi-k2.5
+  litellm_params:
+    model: ollama_chat/kimi-k2.5
+    order: 5
+    api_base: https://ollama.com
+    api_key: os.environ/OLLAMA_API_KEY
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
 - model_name: moonshotai-kimi-k2.5
@@ -556,26 +601,26 @@ model_list:
   model_name: nvidia-nemotron-3-nano-30b-a3b
 - model_name: nvidia-nemotron-3-super
   litellm_params:
-    model: openai/nemotron-3-super-free
-    api_base: https://opencode.ai/zen/v1
-    api_key: os.environ/OPENCODE_API_KEY
+    model: nvidia_nim/nvidia/nemotron-3-super-120b-a12b
+    order: 5
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
-    order: 1
 - model_name: nvidia-nemotron-3-super
   litellm_params:
     model: ollama_chat/nemotron-3-super
-    order: 4
+    order: 5
     api_base: https://ollama.com
     api_key: os.environ/OLLAMA_API_KEY
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
 - model_name: nvidia-nemotron-3-super
   litellm_params:
-    model: nvidia_nim/nvidia/nemotron-3-super-120b-a12b
-    order: 5
+    model: openai/nemotron-3-super-free
+    api_base: https://opencode.ai/zen/v1
+    api_key: os.environ/OPENCODE_API_KEY
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
+    order: 5
 - model_name: nvidia-nemotron-3-super
   litellm_params:
     model: openrouter/nvidia/nemotron-3-super-120b-a12b:free
@@ -678,16 +723,16 @@ model_list:
     output_cost_per_token: 3.6e-06
 - model_name: qwen3.5-397b-a17b
   litellm_params:
-    model: ollama_chat/qwen3.5:397b
-    order: 4
-    api_base: https://ollama.com
-    api_key: os.environ/OLLAMA_API_KEY
+    model: nvidia_nim/qwen/qwen3.5-397b-a17b
+    order: 5
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
 - model_name: qwen3.5-397b-a17b
   litellm_params:
-    model: nvidia_nim/qwen/qwen3.5-397b-a17b
+    model: ollama_chat/qwen3.5:397b
     order: 5
+    api_base: https://ollama.com
+    api_key: os.environ/OLLAMA_API_KEY
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
 - model_name: qwen3.5-397b-a17b
@@ -737,21 +782,7 @@ model_list:
     api_key: os.environ/OPENCODE_API_KEY
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
-    order: 1
-- model_name: qwen3.6-plus
-  litellm_params:
-    model: openai/qwen/qwen3.6-plus:free
-    order: 2
-    api_base: https://api.kilo.ai/api/gateway
-    api_key: os.environ/KILO_API_KEY
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
-- model_name: qwen3.6-plus
-  litellm_params:
-    model: openrouter/qwen/qwen3.6-plus:free
     order: 5
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
 - model_name: vc-meituan-longcat-flash-chat
   litellm_params:
     model: vercel_ai_gateway/meituan/longcat-flash-chat
@@ -808,14 +839,6 @@ model_list:
     output_cost_per_token: 3.2e-06
 - model_name: zai-glm-5
   litellm_params:
-    model: ollama_chat/glm-5
-    order: 4
-    api_base: https://ollama.com
-    api_key: os.environ/OLLAMA_API_KEY
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
-- model_name: zai-glm-5
-  litellm_params:
     model: fireworks_ai/accounts/fireworks/models/glm-5
     order: 5
     api_key: os.environ/FIREWORKS_AI_API_KEY
@@ -823,6 +846,14 @@ model_list:
   litellm_params:
     model: nvidia_nim/z-ai/glm5
     order: 5
+    input_cost_per_token: 1.0e-09
+    output_cost_per_token: 1.0e-09
+- model_name: zai-glm-5
+  litellm_params:
+    model: ollama_chat/glm-5
+    order: 5
+    api_base: https://ollama.com
+    api_key: os.environ/OLLAMA_API_KEY
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
 - model_name: zai-glm-5
@@ -837,3 +868,46 @@ model_list:
     order: 5
     input_cost_per_token: 1.0e-06
     output_cost_per_token: 3.2e-06
+- model_name: zai-glm-5.1
+  litellm_params:
+    model: openai/glm-5.1
+    api_base: https://opencode.ai/zen/go/v1
+    api_key: os.environ/OPENCODE_API_KEY
+    input_cost_per_token: 1.0e-09
+    output_cost_per_token: 1.0e-09
+    order: 1
+- model_name: zai-glm-5.1
+  litellm_params:
+    model: openai/z-ai/glm-5.1
+    order: 2
+    api_base: https://api.kilo.ai/api/gateway
+    api_key: os.environ/KILO_API_KEY
+    input_cost_per_token: 1.26e-06
+    output_cost_per_token: 3.96e-06
+- model_name: zai-glm-5.1
+  litellm_params:
+    model: poe/glm-5.1-fw
+    order: 3
+    api_key: os.environ/POE_API_KEY
+    input_cost_per_token: 1.4e-06
+    output_cost_per_token: 4.4e-06
+- model_name: zai-glm-5.1
+  litellm_params:
+    model: ollama_chat/glm-5.1
+    order: 5
+    api_base: https://ollama.com
+    api_key: os.environ/OLLAMA_API_KEY
+    input_cost_per_token: 1.0e-09
+    output_cost_per_token: 1.0e-09
+- model_name: zai-glm-5.1
+  litellm_params:
+    model: openrouter/z-ai/glm-5.1
+    order: 5
+    input_cost_per_token: 1.26e-06
+    output_cost_per_token: 3.96e-06
+- model_name: zai-glm-5.1
+  litellm_params:
+    model: vercel_ai_gateway/zai/glm-5.1
+    order: 5
+    input_cost_per_token: 1.4e-06
+    output_cost_per_token: 4.4e-06

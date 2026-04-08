@@ -17,6 +17,8 @@ on:
           - poe
           - nvidia
           - kilo
+          - ollama
+          - opencode-zen
       add_model:
         description: 'Model ID to add (e.g., openrouter|anthropic/claude-3-5-haiku or space-separated list for multiple models)'
         required: false

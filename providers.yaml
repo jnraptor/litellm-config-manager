@@ -149,7 +149,7 @@ providers:
       api_key_env: "OLLAMA_API_KEY"
     api_key_env: "OLLAMA_API_KEY"
     # Order for litellm_params/order - lower values are tried first
-    order: 4
+    order: 5
 
   fireworks:
     name: "Fireworks"
@@ -172,6 +172,31 @@ providers:
     api_base_config:
       api_key_env: "FIREWORKS_AI_API_KEY"
     api_key_env: "FIREWORKS_AI_API_KEY"
+    # Order for litellm_params/order - lower values are tried first
+    order: 5
+
+  opencode-zen:
+    name: "OpenCode Zen"
+    description: "OpenCode Zen model provider"
+    api_url: "https://opencode.ai/zen/v1/models"
+    model_prefix: "openai/"
+    model_detection:
+      type: "api_base"
+      value: "opencode.ai/zen/v1"
+    pricing:
+      # OpenCode Zen models don't have pricing in the API
+      input_field: null
+      output_field: null
+      is_per_million: false
+      free_model_handling: true
+      default_cost: null
+    model_name_prefix: ""
+    model_name_cleanup: []
+    special_models: []
+    api_base_config:
+      url: "https://opencode.ai/zen/v1"
+      api_key_env: "OPENCODE_API_KEY"
+    api_key_env: "OPENCODE_API_KEY"
     # Order for litellm_params/order - lower values are tried first
     order: 5
 

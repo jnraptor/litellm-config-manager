@@ -338,12 +338,12 @@ This script performs four main functions:
 3. Updates model costs when they differ from API pricing
 4. Adds one or more models to the configuration
 
-Supported providers: openrouter, requesty, nano_gpt, vercel, poe, nvidia, kilo, novita, ollama, all
+Supported providers: openrouter, vercel, poe, nvidia, kilo, ollama, fireworks, opencode-zen, all
 
 Examples:
   %(prog)s --provider openrouter                           # Process OpenRouter models
   %(prog)s --provider all                                  # Process all providers
-  %(prog)s --provider requesty --add-model "model1 model2" # Add models to Requesty
+  %(prog)s --provider poe --add-model "model1 model2"      # Add models to poe
   %(prog)s --provider openrouter --dry-run --verbose       # Preview changes
 
 Mapped Model Addition (simplified multi-provider workflow):
