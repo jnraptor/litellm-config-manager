@@ -59,7 +59,7 @@ models:
       poe: glm-5.1-fw
       #nvidia: moonshotai/kimi-k2.5
       vercel: zai/glm-5.1
-      opencode-zen: glm-5.1
+      #opencode-zen: glm-5.1
 
   gemma-4-31b:
     display_name: "gemma-4-31b"
@@ -72,6 +72,18 @@ models:
       poe: gemma-4-31b
       nvidia: google/gemma-4-31b-it
       vercel: google/gemma-4-31b-it
+
+  qwen3.6-plus:
+    display_name: "qwen3.6-plus"
+    description: "Qwen 3.6 Plus model by Alibaba"
+    providers:
+      openrouter: qwen/qwen3.6-plus
+      kilo: qwen/qwen3.6-plus
+      fireworks: accounts/fireworks/models/qwen3p6-plus
+      #ollama: qwen3.6-plus
+      poe: qwen3.6-plus
+      #nvidia: alibaba/qwen3.6-plus
+      vercel: alibaba/qwen3.6-plus
 
   # Add your own mappings below following this format:
   # canonical-name:
