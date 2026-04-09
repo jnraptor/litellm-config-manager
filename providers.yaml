@@ -71,7 +71,7 @@ providers:
       api_key_env: "POE_API_KEY"
     api_key_env: "POE_API_KEY"
     # Order for litellm_params/order - lower values are tried first
-    order: 3
+    order: 5
 
   nvidia:
     name: "Nvidia"
@@ -124,7 +124,7 @@ providers:
     # Suffix added to model ID to get the free variant (e.g., "model:free")
     free_variant_suffix: ":free"
     # Order for litellm_params/order - lower values are tried first
-    order: 2
+    order: 5
 
   ollama:
     name: "Ollama"

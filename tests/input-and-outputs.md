@@ -186,7 +186,7 @@
 - model_name: zai-glm-5
   litellm_params:
     model: poe/glm-5
-    order: 3
+    order: 5
     api_key: os.environ/POE_API_KEY
     input_cost_per_token: 1.0e-06
     output_cost_per_token: 3.2e-06
@@ -295,7 +295,7 @@
 - model_name: zai-glm-5
   litellm_params:
     model: openai/z-ai/glm-5
-    order: 2
+    order: 5
     api_base: https://api.kilo.ai/api/gateway
     api_key: os.environ/KILO_API_KEY
     input_cost_per_token: 8.0e-07

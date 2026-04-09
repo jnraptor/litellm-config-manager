@@ -76,7 +76,7 @@ model_list:
     api_key: os.environ/POE_API_KEY
     input_cost_per_token: 8.5e-07
     output_cost_per_token: 4.3e-06
-    order: 3
+    order: 5
   model_name: claude-haiku-4-5
 - litellm_params:
     model: openrouter/anthropic/claude-haiku-4.5
@@ -87,7 +87,7 @@ model_list:
 - model_name: claude-opus-4.6
   litellm_params:
     model: openai/anthropic/claude-opus-4.6
-    order: 2
+    order: 5
     api_base: https://api.kilo.ai/api/gateway
     api_key: os.environ/KILO_API_KEY
     input_cost_per_token: 5.0e-06
@@ -101,7 +101,7 @@ model_list:
 - model_name: claude-sonnet-4.6
   litellm_params:
     model: poe/claude-sonnet-4.6
-    order: 3
+    order: 5
     api_key: os.environ/POE_API_KEY
     input_cost_per_token: 2.6e-06
     output_cost_per_token: 1.3e-05
@@ -138,7 +138,7 @@ model_list:
 - model_name: gemini-3.1-flash-lite
   litellm_params:
     model: poe/gemini-3.1-flash-lite
-    order: 3
+    order: 5
     api_key: os.environ/POE_API_KEY
     input_cost_per_token: 2.5e-07
     output_cost_per_token: 1.5e-06
@@ -151,7 +151,7 @@ model_list:
 - model_name: gemini-3.1-pro
   litellm_params:
     model: poe/gemini-3.1-pro
-    order: 3
+    order: 5
     api_key: os.environ/POE_API_KEY
     input_cost_per_token: 2.0e-06
     output_cost_per_token: 1.2e-05
@@ -171,16 +171,8 @@ model_list:
     mode: embedding
 - model_name: gemma-4-31b
   litellm_params:
-    model: openai/google/gemma-4-31b-it
-    order: 2
-    api_base: https://api.kilo.ai/api/gateway
-    api_key: os.environ/KILO_API_KEY
-    input_cost_per_token: 1.4e-07
-    output_cost_per_token: 4.0e-07
-- model_name: gemma-4-31b
-  litellm_params:
     model: poe/gemma-4-31b
-    order: 3
+    order: 5
     api_key: os.environ/POE_API_KEY
 - model_name: gemma-4-31b
   litellm_params:
@@ -196,6 +188,14 @@ model_list:
     api_key: os.environ/OLLAMA_API_KEY
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
+- model_name: gemma-4-31b
+  litellm_params:
+    model: openai/google/gemma-4-31b-it
+    order: 5
+    api_base: https://api.kilo.ai/api/gateway
+    api_key: os.environ/KILO_API_KEY
+    input_cost_per_token: 1.4e-07
+    output_cost_per_token: 4.0e-07
 - model_name: gemma-4-31b
   litellm_params:
     model: openrouter/google/gemma-4-31b-it
@@ -218,7 +218,7 @@ model_list:
   litellm_params:
     model: openai/gpt-5-nano
     api_key: os.environ/OPENAI_API_KEY
-    order: 3
+    order: 5
 - litellm_params:
     api_base: os.environ/AZURE_OPENAI_API_BASE
     api_key: os.environ/AZURE_OPENAI_API_KEY
@@ -233,11 +233,11 @@ model_list:
   litellm_params:
     model: openai/gpt-5.3-codex
     api_key: os.environ/OPENAI_API_KEY
-    order: 3
+    order: 5
 - model_name: gpt-5.3-codex
   litellm_params:
     model: poe/gpt-5.3-codex
-    order: 3
+    order: 5
     api_key: os.environ/POE_API_KEY
     input_cost_per_token: 1.6e-06
     output_cost_per_token: 1.3e-05
@@ -251,11 +251,11 @@ model_list:
   litellm_params:
     model: openai/gpt-5.4-2026-03-05
     api_key: os.environ/OPENAI_API_KEY
-    order: 3
+    order: 5
 - model_name: gpt-5.4
   litellm_params:
     model: poe/gpt-5.4
-    order: 3
+    order: 5
     api_key: os.environ/POE_API_KEY
     input_cost_per_token: 2.2e-06
     output_cost_per_token: 1.4e-05
@@ -269,7 +269,7 @@ model_list:
   litellm_params:
     model: openai/gpt-5.4-mini-2026-03-17
     api_key: os.environ/OPENAI_API_KEY
-    order: 3
+    order: 5
 - litellm_params:
     api_base: os.environ/AZURE_OPENAI_API_BASE
     api_key: os.environ/AZURE_OPENAI_API_KEY
@@ -284,7 +284,7 @@ model_list:
   litellm_params:
     model: openai/gpt-5.4-nano-2026-03-17
     api_key: os.environ/OPENAI_API_KEY
-    order: 3
+    order: 5
 - litellm_params:
     api_base: os.environ/AZURE_OPENAI_API_BASE
     api_key: os.environ/AZURE_OPENAI_API_KEY
@@ -299,7 +299,7 @@ model_list:
   litellm_params:
     model: openai/gpt-oss-120b
     api_key: os.environ/OPENAI_API_KEY
-    order: 3
+    order: 5
 - litellm_params:
     model: openrouter/openai/gpt-oss-120b
     input_cost_per_token: 3.9e-08
@@ -310,7 +310,7 @@ model_list:
   litellm_params:
     model: openai/gpt-oss-20b
     api_key: os.environ/OPENAI_API_KEY
-    order: 3
+    order: 5
 - litellm_params:
     model: openrouter/openai/gpt-oss-20b
     input_cost_per_token: 3.0e-08
@@ -357,17 +357,17 @@ model_list:
     order: 1
 - model_name: mimo-v2-pro
   litellm_params:
+    model: poe/mimo-v2-pro
+    order: 5
+    api_key: os.environ/POE_API_KEY
+- model_name: mimo-v2-pro
+  litellm_params:
     model: openai/xiaomi/mimo-v2-pro
-    order: 2
+    order: 5
     api_base: https://api.kilo.ai/api/gateway
     api_key: os.environ/KILO_API_KEY
     input_cost_per_token: 1.0e-06
     output_cost_per_token: 3.0e-06
-- model_name: mimo-v2-pro
-  litellm_params:
-    model: poe/mimo-v2-pro
-    order: 3
-    api_key: os.environ/POE_API_KEY
 - model_name: mimo-v2-pro
   litellm_params:
     model: openrouter/xiaomi/mimo-v2-pro
@@ -390,16 +390,8 @@ model_list:
     order: 1
 - model_name: minimax-m2.5
   litellm_params:
-    model: openai/minimax/minimax-m2.5
-    order: 2
-    api_base: https://api.kilo.ai/api/gateway
-    api_key: os.environ/KILO_API_KEY
-    input_cost_per_token: 1.18e-07
-    output_cost_per_token: 9.9e-07
-- model_name: minimax-m2.5
-  litellm_params:
     model: poe/minimax-m2.5
-    order: 3
+    order: 5
     api_key: os.environ/POE_API_KEY
     input_cost_per_token: 3.0e-07
     output_cost_per_token: 1.2e-06
@@ -431,6 +423,14 @@ model_list:
     output_cost_per_token: 1.0e-09
 - model_name: minimax-m2.5
   litellm_params:
+    model: openai/minimax/minimax-m2.5
+    order: 5
+    api_base: https://api.kilo.ai/api/gateway
+    api_key: os.environ/KILO_API_KEY
+    input_cost_per_token: 1.18e-07
+    output_cost_per_token: 9.9e-07
+- model_name: minimax-m2.5
+  litellm_params:
     model: openrouter/minimax/minimax-m2.5
     order: 5
     input_cost_per_token: 1.18e-07
@@ -445,16 +445,8 @@ model_list:
     order: 1
 - model_name: minimax-m2.7
   litellm_params:
-    model: openai/minimax/minimax-m2.7
-    order: 2
-    api_base: https://api.kilo.ai/api/gateway
-    api_key: os.environ/KILO_API_KEY
-    input_cost_per_token: 3.0e-07
-    output_cost_per_token: 1.2e-06
-- model_name: minimax-m2.7
-  litellm_params:
     model: poe/minimax-m2.7
-    order: 3
+    order: 5
     api_key: os.environ/POE_API_KEY
     input_cost_per_token: 3.0e-07
     output_cost_per_token: 1.2e-06
@@ -466,6 +458,14 @@ model_list:
     api_key: os.environ/OLLAMA_API_KEY
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
+- model_name: minimax-m2.7
+  litellm_params:
+    model: openai/minimax/minimax-m2.7
+    order: 5
+    api_base: https://api.kilo.ai/api/gateway
+    api_key: os.environ/KILO_API_KEY
+    input_cost_per_token: 3.0e-07
+    output_cost_per_token: 1.2e-06
 - model_name: minimax-m2.7
   litellm_params:
     model: openrouter/minimax/minimax-m2.7
@@ -488,16 +488,8 @@ model_list:
     order: 1
 - model_name: moonshotai-kimi-k2.5
   litellm_params:
-    model: openai/moonshotai/kimi-k2.5
-    order: 2
-    api_base: https://api.kilo.ai/api/gateway
-    api_key: os.environ/KILO_API_KEY
-    input_cost_per_token: 3.827e-07
-    output_cost_per_token: 1.72e-06
-- model_name: moonshotai-kimi-k2.5
-  litellm_params:
     model: poe/kimi-k2.5-fw
-    order: 3
+    order: 5
     api_key: os.environ/POE_API_KEY
 - litellm_params:
     api_base: os.environ/AZURE_AI_API_BASE_EASTUS2
@@ -532,6 +524,14 @@ model_list:
     output_cost_per_token: 1.0e-09
 - model_name: moonshotai-kimi-k2.5
   litellm_params:
+    model: openai/moonshotai/kimi-k2.5
+    order: 5
+    api_base: https://api.kilo.ai/api/gateway
+    api_key: os.environ/KILO_API_KEY
+    input_cost_per_token: 3.827e-07
+    output_cost_per_token: 1.72e-06
+- model_name: moonshotai-kimi-k2.5
+  litellm_params:
     model: openrouter/moonshotai/kimi-k2.5
     input_cost_per_token: 3.827e-07
     output_cost_per_token: 1.72e-06
@@ -556,7 +556,7 @@ model_list:
   litellm_params:
     model: ollama/nomic-embed-text-v2-moe:latest
     api_base: http://ollama:11434
-    order: 4
+    order: 5
   model_info:
     mode: embedding
 - litellm_params:
@@ -667,7 +667,7 @@ model_list:
   litellm_params:
     model: openai/oai-text-embedding-3-small
     api_key: os.environ/OPENAI_API_KEY
-    order: 3
+    order: 5
   model_info:
     mode: embedding
 - model_name: oai-text-embedding-3-small
@@ -717,7 +717,7 @@ model_list:
 - model_name: qwen3.5-397b-a17b
   litellm_params:
     model: poe/qwen3.5-397b-a17b
-    order: 3
+    order: 5
     api_key: os.environ/POE_API_KEY
     input_cost_per_token: 6.0e-07
     output_cost_per_token: 3.6e-06
@@ -744,7 +744,7 @@ model_list:
 - model_name: qwen3.5-flash
   litellm_params:
     model: poe/qwen3.5-flash
-    order: 3
+    order: 5
     api_key: os.environ/POE_API_KEY
 - model_name: qwen3.5-flash
   litellm_params:
@@ -761,7 +761,7 @@ model_list:
 - model_name: qwen3.5-plus
   litellm_params:
     model: poe/qwen3.5-plus
-    order: 3
+    order: 5
     api_key: os.environ/POE_API_KEY
 - model_name: qwen3.5-plus
   litellm_params:
@@ -778,7 +778,7 @@ model_list:
 - model_name: qwen3.6-plus
   litellm_params:
     model: poe/qwen3.6-plus
-    order: 3
+    order: 5
     api_key: os.environ/POE_API_KEY
 - model_name: qwen3.6-plus
   litellm_params:
@@ -822,7 +822,7 @@ model_list:
   litellm_params:
     model: poe/glm-4.7-flash
     api_key: os.environ/POE_API_KEY
-    order: 3
+    order: 5
     input_cost_per_token: 7.0e-08
     output_cost_per_token: 4.0e-07
 - model_name: zai-glm-4.7-flash
@@ -841,16 +841,8 @@ model_list:
     order: 1
 - model_name: zai-glm-5
   litellm_params:
-    model: openai/z-ai/glm-5
-    order: 2
-    api_base: https://api.kilo.ai/api/gateway
-    api_key: os.environ/KILO_API_KEY
-    input_cost_per_token: 7.2e-07
-    output_cost_per_token: 2.3e-06
-- model_name: zai-glm-5
-  litellm_params:
     model: poe/glm-5
-    order: 3
+    order: 5
     api_key: os.environ/POE_API_KEY
     input_cost_per_token: 1.0e-06
     output_cost_per_token: 3.2e-06
@@ -875,6 +867,14 @@ model_list:
     output_cost_per_token: 1.0e-09
 - model_name: zai-glm-5
   litellm_params:
+    model: openai/z-ai/glm-5
+    order: 5
+    api_base: https://api.kilo.ai/api/gateway
+    api_key: os.environ/KILO_API_KEY
+    input_cost_per_token: 7.2e-07
+    output_cost_per_token: 2.3e-06
+- model_name: zai-glm-5
+  litellm_params:
     model: openrouter/z-ai/glm-5
     order: 5
     input_cost_per_token: 7.2e-07
@@ -895,16 +895,8 @@ model_list:
     order: 1
 - model_name: zai-glm-5.1
   litellm_params:
-    model: openai/z-ai/glm-5.1
-    order: 2
-    api_base: https://api.kilo.ai/api/gateway
-    api_key: os.environ/KILO_API_KEY
-    input_cost_per_token: 1.26e-06
-    output_cost_per_token: 3.96e-06
-- model_name: zai-glm-5.1
-  litellm_params:
     model: poe/glm-5.1-fw
-    order: 3
+    order: 5
     api_key: os.environ/POE_API_KEY
     input_cost_per_token: 1.4e-06
     output_cost_per_token: 4.4e-06
@@ -923,10 +915,18 @@ model_list:
     output_cost_per_token: 1.0e-09
 - model_name: zai-glm-5.1
   litellm_params:
+    model: openai/z-ai/glm-5.1
+    order: 5
+    api_base: https://api.kilo.ai/api/gateway
+    api_key: os.environ/KILO_API_KEY
+    input_cost_per_token: 1.395e-06
+    output_cost_per_token: 4.4e-06
+- model_name: zai-glm-5.1
+  litellm_params:
     model: openrouter/z-ai/glm-5.1
     order: 5
-    input_cost_per_token: 1.26e-06
-    output_cost_per_token: 3.96e-06
+    input_cost_per_token: 1.395e-06
+    output_cost_per_token: 4.4e-06
 - model_name: zai-glm-5.1
   litellm_params:
     model: vercel_ai_gateway/zai/glm-5.1
