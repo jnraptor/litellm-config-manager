@@ -920,14 +920,14 @@ model_list:
     order: 5
     api_base: https://api.kilo.ai/api/gateway
     api_key: os.environ/KILO_API_KEY
-    input_cost_per_token: 1.395e-06
-    output_cost_per_token: 4.4e-06
+    input_cost_per_token: 1.26e-06
+    output_cost_per_token: 3.96e-06
 - model_name: zai-glm-5.1
   litellm_params:
     model: openrouter/z-ai/glm-5.1
     order: 5
-    input_cost_per_token: 1.395e-06
-    output_cost_per_token: 4.4e-06
+    input_cost_per_token: 1.26e-06
+    output_cost_per_token: 3.96e-06
 - model_name: zai-glm-5.1
   litellm_params:
     model: poe/glm-5.1-fw
