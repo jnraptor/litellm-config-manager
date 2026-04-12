@@ -225,6 +225,9 @@ class MockCleaner(ConfigDrivenModelCleaner):
         self._embeddings_api_url = self.provider_config.get("embeddings_api_url")
         self._free_variant_suffix = self.provider_config.get("free_variant_suffix")
 
+        # Load defaults from providers.yaml
+        self.defaults = providers_data.get("defaults", {})
+
     def parse_api_model(self, model: Dict[str, Any]) -> Dict[str, Any]:
         """
         Override parse_api_model to handle Ollama's different field name.

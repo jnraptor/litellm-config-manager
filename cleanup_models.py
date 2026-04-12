@@ -180,21 +180,24 @@ class UnifiedModelCleaner:
                 return 0, 0, []
 
             invalid_models = cleaner.validate_models(provider_models, api_models)
-            config, cost_changes = cleaner.validate_and_update_costs(
-                config, provider_models, api_models, cleaner.PROVIDER_ORDER
+            free_order = cleaner.defaults.get("free_order")
+            config, cost_changes, order_changed = cleaner.validate_and_update_costs(
+                config, provider_models, api_models, cleaner.PROVIDER_ORDER, free_order
             )
 
             if self.dry_run:
                 cleaner.preview_sort_changes(config)
                 cleaner.preview_changes(invalid_models)
                 cleaner.preview_cost_changes(cost_changes)
+                if order_changed:
+                    self.logger.info("[DRY-RUN] Model order values would be updated")
             else:
                 if invalid_models:
                     config = cleaner.remove_invalid_entries(config, invalid_models)
-                if was_sorted or invalid_models or cost_changes:
+                if was_sorted or invalid_models or cost_changes or order_changed:
                     self.save_config(config)
 
-            cleaner.generate_report(invalid_models, cost_changes, was_sorted)
+            cleaner.generate_report(invalid_models, cost_changes, was_sorted, order_changed)
 
             models_removed = len(invalid_models)
             models_updated = len(cost_changes)

@@ -186,7 +186,7 @@
 - model_name: zai-glm-5
   litellm_params:
     model: poe/glm-5
-    order: 5
+    order: 4
     api_key: os.environ/POE_API_KEY
     input_cost_per_token: 1.0e-06
     output_cost_per_token: 3.2e-06
@@ -207,7 +207,7 @@
 - model_name: zai-glm-5
   litellm_params:
     model: nvidia_nim/z-ai/glm5
-    order: 5
+    order: 3
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
 ```
@@ -326,7 +326,7 @@
 - model_name: nvidia-nemotron-3-super
   litellm_params:
     model: ollama_chat/nemotron-3-super
-    order: 5
+    order: 3
     api_base: https://ollama.com
     api_key: os.environ/OLLAMA_API_KEY
     input_cost_per_token: 1.0e-09

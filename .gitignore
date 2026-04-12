@@ -243,3 +243,5 @@ $RECYCLE.BIN/
 # config.yaml
 # .env
 # secrets.yaml
+
+.qwen

@@ -493,6 +493,7 @@ class BaseModelCleaner(ABC):
         invalid_models: List[Tuple[int, str, str]],
         cost_changes: Optional[List[Dict[str, Any]]] = None,
         was_sorted: bool = False,
+        order_changed: bool = False,
     ) -> None:
         """Generate a summary report of the cleanup operation."""
         if cost_changes is None:
@@ -522,6 +523,16 @@ class BaseModelCleaner(ABC):
                     f"✅ Cost updates: {len(cost_changes)} models had cost changes applied"
                 )
 
+        if order_changed:
+            if self.dry_run:
+                self.logger.info(
+                    "🔄 [DRY-RUN] Model order values would be updated to match provider config"
+                )
+            else:
+                self.logger.info(
+                    "✅ Model order values updated to match provider config"
+                )
+
         if was_sorted:
             if self.dry_run:
                 self.logger.info(
@@ -532,13 +543,13 @@ class BaseModelCleaner(ABC):
                     "✅ Model list sorted by model_name, then by litellm_params.order"
                 )
 
-        if not invalid_models and not cost_changes and not was_sorted:
+        if not invalid_models and not cost_changes and not was_sorted and not order_changed:
             self.logger.info(
                 f"✅ All {self.PROVIDER_NAME} models are valid with current costs and list is already sorted"
             )
         elif self.dry_run:
             total_changes = (
-                len(invalid_models) + len(cost_changes) + (1 if was_sorted else 0)
+                len(invalid_models) + len(cost_changes) + (1 if was_sorted else 0) + (1 if order_changed else 0)
             )
             self.logger.info(f"📋 [DRY-RUN] Total changes identified: {total_changes}")
             self.logger.info(
@@ -546,7 +557,7 @@ class BaseModelCleaner(ABC):
             )
         else:
             total_changes = (
-                len(invalid_models) + len(cost_changes) + (1 if was_sorted else 0)
+                len(invalid_models) + len(cost_changes) + (1 if was_sorted else 0) + (1 if order_changed else 0)
             )
             self.logger.info(
                 f"✅ Cleanup completed: {total_changes} total changes applied"
@@ -631,7 +642,8 @@ class BaseModelCleaner(ABC):
         config_models: List[Tuple[int, str, str]],
         api_models: Dict[str, Dict[str, Any]],
         provider_order: int = 2,
-    ) -> Tuple[Dict[str, Any], List[Dict[str, Any]]]:
+        free_order: Optional[int] = None,
+    ) -> Tuple[Dict[str, Any], List[Dict[str, Any]], bool]:
         """
         Validate and update model costs based on API pricing.
 
@@ -640,12 +652,15 @@ class BaseModelCleaner(ABC):
             config_models: List of (index, model_id, model_name) from config
             api_models: Dict of model data from API with pricing info
             provider_order: The order value to set for models from this provider
+            free_order: The order value to use for free models (cost = 1.0e-09)
 
         Returns:
-            Tuple of (updated_config, list_of_cost_changes)
+            Tuple of (updated_config, list_of_cost_changes, order_changed)
         """
         cost_changes = []
         model_list = config["model_list"]
+        free_model_cost = self.defaults.get("free_model_cost", 1.0e-09)
+        order_changed = False
 
         for index, model_id, model_name in config_models:
             api_model_id = self.get_api_model_id(model_id)
@@ -720,8 +735,25 @@ class BaseModelCleaner(ABC):
                             f"Output cost change for {model_id}: {current_output_cost} → {adjusted_output_cost}"
                         )
 
-                # Update order value from provider configuration
-                litellm_params["order"] = provider_order
+                # Determine the order to use: free_order for free models, provider_order otherwise
+                # Check if both input and output costs are equal to the free_model_cost
+                final_input_cost = litellm_params.get("input_cost_per_token")
+                final_output_cost = litellm_params.get("output_cost_per_token")
+                is_free_model = (
+                    final_input_cost is not None
+                    and final_output_cost is not None
+                    and costs_are_equal(final_input_cost, free_model_cost)
+                    and costs_are_equal(final_output_cost, free_model_cost)
+                )
+
+                if is_free_model and free_order is not None:
+                    if litellm_params.get("order") != free_order:
+                        order_changed = True
+                    litellm_params["order"] = free_order
+                else:
+                    if litellm_params.get("order") != provider_order:
+                        order_changed = True
+                    litellm_params["order"] = provider_order
 
                 if input_changed or output_changed:
                     cost_changes.append(change_info)
@@ -738,7 +770,7 @@ class BaseModelCleaner(ABC):
         else:
             self.logger.info("No cost updates needed - all costs are current")
 
-        return config, cost_changes
+        return config, cost_changes, order_changed
 
     def _log_cost_change(
         self,
@@ -1464,6 +1496,9 @@ class ConfigDrivenModelCleaner(BaseModelCleaner):
         # Initialize base class first
         super().__init__(config_path, dry_run, verbose)
 
+        # Load defaults from providers.yaml
+        self.defaults = self._load_defaults(providers_config_path)
+
         # Load provider configuration
         self._provider_loader = ProviderConfigLoader(providers_config_path)
         self.provider_config = self._provider_loader.get_provider_config(provider_name)
@@ -1488,6 +1523,23 @@ class ConfigDrivenModelCleaner(BaseModelCleaner):
         self.logger.debug(
             f"Loaded config for provider '{provider_name}': {self.PROVIDER_NAME}"
         )
+
+    def _load_defaults(self, providers_config_path: str = "providers.yaml") -> Dict[str, Any]:
+        """
+        Load default settings from providers.yaml.
+
+        Returns:
+            Dictionary containing defaults from providers.yaml
+        """
+        try:
+            providers_path = Path(providers_config_path)
+            if not providers_path.exists():
+                return {}
+            with open(providers_path, "r", encoding="utf-8") as file:
+                providers_data = yaml.safe_load(file)
+            return providers_data.get("defaults", {})
+        except Exception:
+            return {}
 
     def extract_provider_models(
         self, config: Dict[str, Any]
@@ -1771,11 +1823,22 @@ class ConfigDrivenModelCleaner(BaseModelCleaner):
             if output_cost is None:
                 output_cost = float(default_cost)
 
+        # Determine order: use free_order for free models, provider_order otherwise
+        free_model_cost = self.defaults.get("free_model_cost", 1.0e-09)
+        free_order = self.defaults.get("free_order")
+        is_free_model = (
+            input_cost is not None
+            and output_cost is not None
+            and costs_are_equal(input_cost, free_model_cost)
+            and costs_are_equal(output_cost, free_model_cost)
+        )
+        model_order = free_order if (is_free_model and free_order is not None) else self.PROVIDER_ORDER
+
         entry = {
             "model_name": model_name,
             "litellm_params": {
                 "model": f"{self.MODEL_PREFIX}{model_id}",
-                "order": self.PROVIDER_ORDER,
+                "order": model_order,
             },
         }
 
@@ -1850,8 +1913,9 @@ class ConfigDrivenModelCleaner(BaseModelCleaner):
             # Standard cleanup workflow
             config_models = self.extract_provider_models(config)
             invalid_models = self.validate_models(config_models, api_models)
-            config, cost_changes = self.validate_and_update_costs(
-                config, config_models, api_models, self.PROVIDER_ORDER
+            free_order = self.defaults.get("free_order")
+            config, cost_changes, order_changed = self.validate_and_update_costs(
+                config, config_models, api_models, self.PROVIDER_ORDER, free_order
             )
             config, was_sorted = self.sort_model_list(config)
 
@@ -1859,14 +1923,16 @@ class ConfigDrivenModelCleaner(BaseModelCleaner):
                 self.preview_sort_changes(config)
                 self.preview_changes(invalid_models)
                 self.preview_cost_changes(cost_changes)
+                if order_changed:
+                    self.logger.info("[DRY-RUN] Model order values would be updated")
             else:
                 if invalid_models:
                     config = self.remove_invalid_entries(config, invalid_models)
 
-                if invalid_models or cost_changes or was_sorted:
+                if invalid_models or cost_changes or was_sorted or order_changed:
                     self.save_config(config)
 
-            self.generate_report(invalid_models, cost_changes, was_sorted)
+            self.generate_report(invalid_models, cost_changes, was_sorted, order_changed)
             return 0
 
         except Exception as e:

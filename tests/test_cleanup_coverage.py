@@ -44,6 +44,7 @@ class MockModelCleaner(BaseModelCleaner):
         super().__init__(config_path, dry_run, verbose)
         self.PROVIDER_NAME = "TestProvider"
         self.SPECIAL_MODELS = {"special-model"}
+        self.defaults = {}
 
     def extract_provider_models(self, config):
         """Extract models from config."""
@@ -174,7 +175,7 @@ class TestCostValidation:
             "model2": {"id": "model2", "input_cost": 3e-06, "output_cost": 4e-06},
         }
 
-        updated_config, changes = cleaner.validate_and_update_costs(
+        updated_config, changes, order_changed = cleaner.validate_and_update_costs(
             sample_config, config_models, api_models, provider_order=2
         )
 
@@ -191,7 +192,7 @@ class TestCostValidation:
             "model1": {"id": "model1", "input_cost": 1.5e-06, "output_cost": 2e-06},
         }
 
-        updated_config, changes = cleaner.validate_and_update_costs(
+        updated_config, changes, order_changed = cleaner.validate_and_update_costs(
             sample_config, config_models, api_models
         )
 
@@ -213,7 +214,7 @@ class TestCostValidation:
             "model1": {"id": "model1", "input_cost": 1e-06, "output_cost": 2.5e-06},
         }
 
-        updated_config, changes = cleaner.validate_and_update_costs(
+        updated_config, changes, order_changed = cleaner.validate_and_update_costs(
             sample_config, config_models, api_models
         )
 
@@ -231,7 +232,7 @@ class TestCostValidation:
             "model1": {"id": "model1", "input_cost": 1.5e-06, "output_cost": 2.5e-06},
         }
 
-        updated_config, changes = cleaner.validate_and_update_costs(
+        updated_config, changes, order_changed = cleaner.validate_and_update_costs(
             sample_config, config_models, api_models
         )
 
@@ -257,7 +258,7 @@ class TestCostValidation:
             "model1": {"id": "model1", "input_cost": 1e-06, "output_cost": 2e-06},
         }
 
-        updated_config, changes = cleaner.validate_and_update_costs(
+        updated_config, changes, order_changed = cleaner.validate_and_update_costs(
             config, config_models, api_models
         )
 
@@ -274,7 +275,7 @@ class TestCostValidation:
         config_models = [(0, "test/model1", "model-1")]
         api_models = {}  # Empty
 
-        updated_config, changes = cleaner.validate_and_update_costs(
+        updated_config, changes, order_changed = cleaner.validate_and_update_costs(
             sample_config, config_models, api_models
         )
 

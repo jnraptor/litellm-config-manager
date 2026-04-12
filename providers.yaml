@@ -71,7 +71,7 @@ providers:
       api_key_env: "POE_API_KEY"
     api_key_env: "POE_API_KEY"
     # Order for litellm_params/order - lower values are tried first
-    order: 5
+    order: 4
 
   nvidia:
     name: "Nvidia"
@@ -208,3 +208,4 @@ defaults:
   cost_comparison_precision: 2
   # Standard free model cost for LiteLLM compatibility
   free_model_cost: 1.0e-09
+  free_order: 3
