@@ -314,7 +314,7 @@ model_list:
 - litellm_params:
     model: openrouter/openai/gpt-oss-20b
     input_cost_per_token: 3.0e-08
-    output_cost_per_token: 1.1e-07
+    output_cost_per_token: 1.4e-07
     order: 5
   model_name: gpt-oss-20b
 - model_name: jina-embeddings-v4
@@ -920,14 +920,14 @@ model_list:
     order: 5
     api_base: https://api.kilo.ai/api/gateway
     api_key: os.environ/KILO_API_KEY
-    input_cost_per_token: 1.26e-06
-    output_cost_per_token: 3.96e-06
+    input_cost_per_token: 9.5e-07
+    output_cost_per_token: 3.15e-06
 - model_name: zai-glm-5.1
   litellm_params:
     model: openrouter/z-ai/glm-5.1
     order: 5
-    input_cost_per_token: 1.26e-06
-    output_cost_per_token: 3.96e-06
+    input_cost_per_token: 9.5e-07
+    output_cost_per_token: 3.15e-06
 - model_name: zai-glm-5.1
   litellm_params:
     model: poe/glm-5.1-fw
