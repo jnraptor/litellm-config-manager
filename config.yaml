@@ -445,6 +445,12 @@ model_list:
     order: 1
 - model_name: minimax-m2.7
   litellm_params:
+    model: nvidia_nim/minimaxai/minimax-m2.7
+    order: 5
+    input_cost_per_token: 1.0e-09
+    output_cost_per_token: 1.0e-09
+- model_name: minimax-m2.7
+  litellm_params:
     model: ollama_chat/minimax-m2.7
     order: 5
     api_base: https://ollama.com
