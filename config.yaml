@@ -332,7 +332,7 @@ model_list:
   model_info:
     mode: rerank
 - litellm_params:
-    model: openai/Qwen3.5-2B
+    model: openai/Gemma-4-E2B
     api_base: os.environ/LLAMA_API_BASE
     api_key: os.environ/LLAMA_API_KEY
     input_cost_per_token: 1.0e-09
