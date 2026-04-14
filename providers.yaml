@@ -168,7 +168,8 @@ providers:
       default_cost: null
     model_name_prefix: ""
     model_name_cleanup: []
-    special_models: []
+    #special_models: []
+    special_models: ["accounts/fireworks/models/qwen3p6-plus", "accounts/fireworks/models/minimax-m2p7", "accounts/fireworks/models/minimax-m2p5"]
     api_base_config:
       api_key_env: "FIREWORKS_AI_API_KEY"
     api_key_env: "FIREWORKS_AI_API_KEY"

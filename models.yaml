@@ -79,7 +79,7 @@ models:
     providers:
       openrouter: qwen/qwen3.6-plus
       kilo: qwen/qwen3.6-plus
-      fireworks: accounts/fireworks/models/qwen3p6-plus
+      #fireworks: accounts/fireworks/models/qwen3p6-plus
       #ollama: qwen3.6-plus
       poe: qwen3.6-plus
       #nvidia: alibaba/qwen3.6-plus
