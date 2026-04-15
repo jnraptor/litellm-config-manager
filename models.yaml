@@ -85,6 +85,18 @@ models:
       #nvidia: alibaba/qwen3.6-plus
       vercel: alibaba/qwen3.6-plus
 
+  qwen3.5-plus:
+    display_name: "qwen3.5-plus"
+    description: "Qwen 3.5 Plus model by Alibaba"
+    providers:
+      openrouter: qwen/qwen3.5-plus-02-15
+      kilo: qwen/qwen3.5-plus-02-15
+      #fireworks: accounts/fireworks/models/qwen3p6-plus
+      #ollama: qwen3.6-plus
+      poe: qwen3.5-plus
+      #nvidia: alibaba/qwen3.6-plus
+      vercel: alibaba/qwen3.5-plus
+
   # Add your own mappings below following this format:
   # canonical-name:
   #   display_name: "Display Name"

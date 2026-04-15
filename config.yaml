@@ -762,41 +762,27 @@ model_list:
     api_key: os.environ/OLLAMA_API_KEY
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
-- model_name: qwen3.5-397b-a17b
+- model_name: qwen3.5-plus
   litellm_params:
-    model: poe/qwen3.5-397b-a17b
-    order: 4
-    api_key: os.environ/POE_API_KEY
-    input_cost_per_token: 6.0e-07
-    output_cost_per_token: 3.6e-06
-- model_name: qwen3.5-397b-a17b
-  litellm_params:
-    model: openrouter/qwen/qwen3.5-397b-a17b
-    order: 5
-    input_cost_per_token: 3.9e-07
-    output_cost_per_token: 2.34e-06
-- model_name: qwen3.5-flash
-  litellm_params:
-    model: poe/qwen3.5-flash
-    order: 4
-    api_key: os.environ/POE_API_KEY
-- model_name: qwen3.5-flash
-  litellm_params:
-    model: openrouter/qwen/qwen3.5-flash-02-23
-    order: 5
-    input_cost_per_token: 6.5e-08
-    output_cost_per_token: 2.6e-07
-- model_name: qwen3.5-flash
-  litellm_params:
-    model: vercel_ai_gateway/alibaba/qwen3.5-flash
-    order: 5
-    input_cost_per_token: 1.0e-07
-    output_cost_per_token: 4.0e-07
+    model: openai/qwen3.5-plus
+    api_base: https://opencode.ai/zen/go/v1
+    api_key: os.environ/OPENCODE_API_KEY
+    input_cost_per_token: 1.0e-09
+    output_cost_per_token: 1.0e-09
+    order: 1
 - model_name: qwen3.5-plus
   litellm_params:
     model: poe/qwen3.5-plus
     order: 4
     api_key: os.environ/POE_API_KEY
+- model_name: qwen3.5-plus
+  litellm_params:
+    model: openai/qwen/qwen3.5-plus-02-15
+    order: 5
+    api_base: https://api.kilo.ai/api/gateway
+    api_key: os.environ/KILO_API_KEY
+    input_cost_per_token: 2.6e-07
+    output_cost_per_token: 1.56e-06
 - model_name: qwen3.5-plus
   litellm_params:
     model: openrouter/qwen/qwen3.5-plus-02-15
@@ -809,6 +795,14 @@ model_list:
     order: 5
     input_cost_per_token: 4.0e-07
     output_cost_per_token: 2.4e-06
+- model_name: qwen3.6-plus
+  litellm_params:
+    model: openai/qwen3.6-plus
+    api_base: https://opencode.ai/zen/go/v1
+    api_key: os.environ/OPENCODE_API_KEY
+    input_cost_per_token: 1.0e-09
+    output_cost_per_token: 1.0e-09
+    order: 1
 - model_name: qwen3.6-plus
   litellm_params:
     model: poe/qwen3.6-plus
