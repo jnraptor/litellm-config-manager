@@ -245,3 +245,6 @@ $RECYCLE.BIN/
 # secrets.yaml
 
 .qwen
+.kilo
+.kilocode
+.ruff_cache
