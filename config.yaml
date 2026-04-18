@@ -74,8 +74,8 @@ model_list:
 - litellm_params:
     model: poe/claude-haiku-4.5
     api_key: os.environ/POE_API_KEY
-    input_cost_per_token: 8.6e-07
-    output_cost_per_token: 4.3e-06
+    input_cost_per_token: 8.586e-07
+    output_cost_per_token: 4.2929e-06
     order: 4
   model_name: claude-haiku-4-5
 - litellm_params:
@@ -103,8 +103,8 @@ model_list:
     model: poe/claude-sonnet-4.6
     order: 4
     api_key: os.environ/POE_API_KEY
-    input_cost_per_token: 2.6e-06
-    output_cost_per_token: 1.3e-05
+    input_cost_per_token: 2.5758e-06
+    output_cost_per_token: 1.28788e-05
 - model_name: claude-sonnet-4.6
   litellm_params:
     model: openrouter/anthropic/claude-sonnet-4.6
@@ -119,8 +119,8 @@ model_list:
     order: 3
 - litellm_params:
     model: openrouter/deepseek/deepseek-v3.2
-    input_cost_per_token: 2.6e-07
-    output_cost_per_token: 3.8e-07
+    input_cost_per_token: 2.59e-07
+    output_cost_per_token: 4.2e-07
     order: 5
   model_name: deepseek-v3.2
 - model_name: devstral-2512
@@ -140,8 +140,8 @@ model_list:
     model: poe/gemini-3.1-flash-lite
     order: 4
     api_key: os.environ/POE_API_KEY
-    input_cost_per_token: 2.5e-07
-    output_cost_per_token: 1.5e-06
+    input_cost_per_token: 2.525e-07
+    output_cost_per_token: 1.5152e-06
 - model_name: gemini-3.1-flash-lite
   litellm_params:
     model: openrouter/google/gemini-3.1-flash-lite-preview
@@ -153,8 +153,8 @@ model_list:
     model: poe/gemini-3.1-pro
     order: 4
     api_key: os.environ/POE_API_KEY
-    input_cost_per_token: 2.0e-06
-    output_cost_per_token: 1.2e-05
+    input_cost_per_token: 2.0202e-06
+    output_cost_per_token: 1.21212e-05
 - model_name: gemini-3.1-pro
   litellm_params:
     model: openrouter/google/gemini-3.1-pro-preview
@@ -234,8 +234,8 @@ model_list:
     model: poe/gpt-5.3-codex
     order: 4
     api_key: os.environ/POE_API_KEY
-    input_cost_per_token: 1.6e-06
-    output_cost_per_token: 1.3e-05
+    input_cost_per_token: 1.5909e-06
+    output_cost_per_token: 1.27273e-05
 - model_name: gpt-5.3-codex
   litellm_params:
     model: openai/gpt-5.3-codex
@@ -252,8 +252,8 @@ model_list:
     model: poe/gpt-5.4
     order: 4
     api_key: os.environ/POE_API_KEY
-    input_cost_per_token: 2.3e-06
-    output_cost_per_token: 1.4e-05
+    input_cost_per_token: 2.2727e-06
+    output_cost_per_token: 1.36364e-05
 - model_name: gpt-5.4
   litellm_params:
     model: openai/gpt-5.4-2026-03-05
@@ -415,8 +415,8 @@ model_list:
     model: poe/minimax-m2.5
     order: 4
     api_key: os.environ/POE_API_KEY
-    input_cost_per_token: 3.0e-07
-    output_cost_per_token: 1.2e-06
+    input_cost_per_token: 3.03e-07
+    output_cost_per_token: 1.2121e-06
 - litellm_params:
     api_base: os.environ/AZURE_AI_API_BASE_EASTUS
     api_key: os.environ/AZURE_AI_API_KEY_EASTUS
@@ -483,8 +483,8 @@ model_list:
     model: poe/minimax-m2.7
     order: 4
     api_key: os.environ/POE_API_KEY
-    input_cost_per_token: 3.0e-07
-    output_cost_per_token: 1.2e-06
+    input_cost_per_token: 3.03e-07
+    output_cost_per_token: 1.2121e-06
 - model_name: minimax-m2.7
   litellm_params:
     model: fireworks_ai/accounts/fireworks/models/minimax-m2p7
@@ -536,6 +536,20 @@ model_list:
     output_cost_per_token: 1.0e-09
 - model_name: moonshotai-kimi-k2.5
   litellm_params:
+    model: openai/moonshotai/kimi-k2.5
+    order: 3
+    api_base: https://api.kilo.ai/api/gateway
+    api_key: os.environ/KILO_API_KEY
+    input_cost_per_token: 1.0e-09
+    output_cost_per_token: 1.0e-09
+- model_name: moonshotai-kimi-k2.5
+  litellm_params:
+    model: openrouter/moonshotai/kimi-k2.5
+    input_cost_per_token: 1.0e-09
+    output_cost_per_token: 1.0e-09
+    order: 3
+- model_name: moonshotai-kimi-k2.5
+  litellm_params:
     model: poe/kimi-k2.5-fw
     order: 4
     api_key: os.environ/POE_API_KEY
@@ -556,20 +570,6 @@ model_list:
     model: fireworks_ai/accounts/fireworks/models/kimi-k2p5
     order: 5
     api_key: os.environ/FIREWORKS_AI_API_KEY
-- model_name: moonshotai-kimi-k2.5
-  litellm_params:
-    model: openai/moonshotai/kimi-k2.5
-    order: 5
-    api_base: https://api.kilo.ai/api/gateway
-    api_key: os.environ/KILO_API_KEY
-    input_cost_per_token: 3.827e-07
-    output_cost_per_token: 1.72e-06
-- model_name: moonshotai-kimi-k2.5
-  litellm_params:
-    model: openrouter/moonshotai/kimi-k2.5
-    input_cost_per_token: 3.827e-07
-    output_cost_per_token: 1.72e-06
-    order: 5
 - model_name: nim-llama-nemotron-embed-1b-v2
   litellm_params:
     model: nvidia_nim/nvidia/llama-nemotron-embed-1b-v2
@@ -866,8 +866,8 @@ model_list:
     model: poe/glm-4.7-flash
     api_key: os.environ/POE_API_KEY
     order: 4
-    input_cost_per_token: 7.1e-08
-    output_cost_per_token: 4.0e-07
+    input_cost_per_token: 7.07e-08
+    output_cost_per_token: 4.04e-07
 - model_name: zai-glm-4.7-flash
   litellm_params:
     model: openrouter/z-ai/glm-4.7-flash
@@ -901,8 +901,8 @@ model_list:
     model: poe/glm-5
     order: 4
     api_key: os.environ/POE_API_KEY
-    input_cost_per_token: 1.0e-06
-    output_cost_per_token: 3.2e-06
+    input_cost_per_token: 1.0101e-06
+    output_cost_per_token: 3.2323e-06
 - model_name: zai-glm-5
   litellm_params:
     model: fireworks_ai/accounts/fireworks/models/glm-5

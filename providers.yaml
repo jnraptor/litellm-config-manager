@@ -201,6 +201,30 @@ providers:
     # Order for litellm_params/order - lower values are tried first
     order: 5
 
+  requesty:
+    name: "Requesty"
+    description: "Requesty AI model provider"
+    api_url: "https://router.requesty.ai/v1/models"
+    model_prefix: "openai/"
+    model_detection:
+      type: "api_base"
+      value: "router.requesty.ai"
+    pricing:
+      input_field: "input_price"
+      output_field: "output_price"
+      is_per_million: false
+      free_model_handling: true
+    model_name_prefix: ""
+    model_name_cleanup: []
+    # Special models that should not be removed even if not found in API
+    special_models: ["smart-task"]
+    api_base_config:
+      url: "https://router.requesty.ai/v1"
+      api_key_env: "REQUESTY_API_KEY"
+    api_key_env: "REQUESTY_API_KEY"
+    # Order for litellm_params/order - lower values are tried first
+    order: 5
+
 # Default settings that apply to all providers unless overridden
 defaults:
   timeout: 30

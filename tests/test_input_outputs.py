@@ -435,7 +435,6 @@ if HAVE_PYTEST:
             "provider",
             [
                 "openrouter",
-                "nano_gpt",
                 "vercel",
                 "poe",
                 "nvidia",
@@ -443,6 +442,7 @@ if HAVE_PYTEST:
                 "ollama",
                 "fireworks",
                 "opencode-zen",
+                "requesty",
             ],
         )
         def test_provider_output(self, provider):

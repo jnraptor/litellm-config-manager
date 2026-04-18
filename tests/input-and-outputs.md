@@ -376,3 +376,39 @@
     api_key: os.environ/OPENCODE_API_KEY
     order: 5
 ```
+
+## requesty
+### input
+```json
+{
+  "api": "chat",
+  "id": "anthropic/claude-haiku-4-5",
+  "object": "model",
+  "created": 1764004371,
+  "owned_by": "system",
+  "input_price": 0.000001,
+  "caching_price": 0.00000125,
+  "cached_price": 1e-7,
+  "output_price": 0.000005,
+  "max_output_tokens": 64000,
+  "context_window": 200000,
+  "supports_caching": true,
+  "supports_vision": true,
+  "supports_computer_use": true,
+  "supports_reasoning": false,
+  "supports_image_generation": false,
+  "supports_tool_calling": true,
+  "description": "Anthropic Haiku 4.5"
+}
+```
+### output
+```yaml
+- litellm_params:
+    model: openai/anthropic/claude-haiku-4-5
+    api_base: https://router.requesty.ai/v1
+    api_key: os.environ/REQUESTY_API_KEY
+    input_cost_per_token: 1.0e-06
+    output_cost_per_token: 5.0e-06
+    order: 5
+  model_name: claude-haiku-4-5
+```
