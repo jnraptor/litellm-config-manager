@@ -57,7 +57,7 @@ models:
       fireworks: accounts/fireworks/models/glm-5p1
       ollama: glm-5.1
       poe: glm-5.1-fw
-      #nvidia: moonshotai/kimi-k2.5
+      nvidia: z-ai/glm-5.1
       vercel: zai/glm-5.1
       #opencode-zen: glm-5.1
 
