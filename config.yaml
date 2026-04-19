@@ -55,22 +55,6 @@ model_list:
     output_cost_per_token: 3e-7
     order: 5
   model_name: az-phi-4-mini-instruct
-- model_name: baai-bge-m3
-  litellm_params:
-    model: nvidia_nim/baai/bge-m3
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
-    order: 3
-  model_info:
-    mode: embedding
-- litellm_params:
-    model: openrouter/baai/bge-m3
-    input_cost_per_token: 1.0e-08
-    output_cost_per_token: 1.0e-09
-    order: 5
-  model_name: baai-bge-m3
-  model_info:
-    mode: embedding
 - litellm_params:
     model: poe/claude-haiku-4.5
     api_key: os.environ/POE_API_KEY
@@ -206,6 +190,11 @@ model_list:
     order: 5
     input_cost_per_token: 1.4e-07
     output_cost_per_token: 4.0e-07
+- model_name: gpt-5-nano
+  litellm_params:
+    model: openai/gpt-5-nano
+    api_key: os.environ/OPENAI_API_KEY
+    order: 4
 - litellm_params:
     api_base: os.environ/AZURE_OPENAI_API_BASE
     api_key: os.environ/AZURE_OPENAI_API_KEY
@@ -216,11 +205,11 @@ model_list:
   model_name: gpt-5-nano
   model_info:
     base_model: azure/gpt-5-nano
-- model_name: gpt-5-nano
+- model_name: gpt-5.3-codex
   litellm_params:
-    model: openai/gpt-5-nano
+    model: openai/gpt-5.3-codex
     api_key: os.environ/OPENAI_API_KEY
-    order: 5
+    order: 4
 - model_name: gpt-5.3-codex
   litellm_params:
     model: poe/gpt-5.3-codex
@@ -230,15 +219,15 @@ model_list:
     output_cost_per_token: 1.27273e-05
 - model_name: gpt-5.3-codex
   litellm_params:
-    model: openai/gpt-5.3-codex
-    api_key: os.environ/OPENAI_API_KEY
-    order: 5
-- model_name: gpt-5.3-codex
-  litellm_params:
     model: openrouter/openai/gpt-5.3-codex
     order: 5
     input_cost_per_token: 1.75e-06
     output_cost_per_token: 1.4e-05
+- model_name: gpt-5.4
+  litellm_params:
+    model: openai/gpt-5.4-2026-03-05
+    api_key: os.environ/OPENAI_API_KEY
+    order: 4
 - model_name: gpt-5.4
   litellm_params:
     model: poe/gpt-5.4
@@ -248,15 +237,15 @@ model_list:
     output_cost_per_token: 1.36364e-05
 - model_name: gpt-5.4
   litellm_params:
-    model: openai/gpt-5.4-2026-03-05
-    api_key: os.environ/OPENAI_API_KEY
-    order: 5
-- model_name: gpt-5.4
-  litellm_params:
     model: openrouter/openai/gpt-5.4
     order: 5
     input_cost_per_token: 2.5e-06
     output_cost_per_token: 1.5e-05
+- model_name: gpt-5.4-mini
+  litellm_params:
+    model: openai/gpt-5.4-mini-2026-03-17
+    api_key: os.environ/OPENAI_API_KEY
+    order: 4
 - litellm_params:
     api_base: os.environ/AZURE_OPENAI_API_BASE
     api_key: os.environ/AZURE_OPENAI_API_KEY
@@ -267,11 +256,11 @@ model_list:
   model_name: gpt-5.4-mini
   model_info:
     base_model: azure/gpt-5.4-mini
-- model_name: gpt-5.4-mini
+- model_name: gpt-5.4-nano
   litellm_params:
-    model: openai/gpt-5.4-mini-2026-03-17
+    model: openai/gpt-5.4-nano-2026-03-17
     api_key: os.environ/OPENAI_API_KEY
-    order: 5
+    order: 4
 - litellm_params:
     api_base: os.environ/AZURE_OPENAI_API_BASE
     api_key: os.environ/AZURE_OPENAI_API_KEY
@@ -282,16 +271,11 @@ model_list:
   model_name: gpt-5.4-nano
   model_info:
     base_model: azure/gpt-5.4-nano
-- model_name: gpt-5.4-nano
-  litellm_params:
-    model: openai/gpt-5.4-nano-2026-03-17
-    api_key: os.environ/OPENAI_API_KEY
-    order: 5
 - model_name: gpt-oss-120b
   litellm_params:
     model: openai/gpt-oss-120b
     api_key: os.environ/OPENAI_API_KEY
-    order: 5
+    order: 4
 - litellm_params:
     model: openrouter/openai/gpt-oss-120b
     input_cost_per_token: 3.9e-08
@@ -302,7 +286,7 @@ model_list:
   litellm_params:
     model: openai/gpt-oss-20b
     api_key: os.environ/OPENAI_API_KEY
-    order: 5
+    order: 4
 - litellm_params:
     model: openrouter/openai/gpt-oss-20b
     input_cost_per_token: 3.0e-08
@@ -693,7 +677,7 @@ model_list:
   litellm_params:
     model: openai/oai-text-embedding-3-small
     api_key: os.environ/OPENAI_API_KEY
-    order: 5
+    order: 4
   model_info:
     mode: embedding
 - model_name: oai-text-embedding-3-small
@@ -710,22 +694,6 @@ model_list:
     output_cost_per_token: 1.0e-09
     order: 3
   model_name: or-free
-- model_name: or-mistral-codestral-embed-2505
-  litellm_params:
-    model: openrouter/mistralai/codestral-embed-2505
-    input_cost_per_token: 1.5e-07
-    output_cost_per_token: 1.0e-09
-    order: 5
-  model_info:
-    mode: embedding
-- litellm_params:
-    model: openrouter/qwen/qwen3-embedding-4b
-    input_cost_per_token: 2.0e-08
-    output_cost_per_token: 1.0e-09
-    order: 5
-  model_name: or-qwen3-embedding-4b
-  model_info:
-    mode: embedding
 - litellm_params:
     model: openrouter/qwen/qwen3-embedding-8b
     input_cost_per_token: 1.0e-08
