@@ -807,6 +807,23 @@ model_list:
     order: 5
     input_cost_per_token: 5.0e-07
     output_cost_per_token: 3.0e-06
+- model_name: smart_router_1
+  litellm_params:
+    model: auto_router/complexity_router
+    complexity_router_config:
+      tiers:
+        SIMPLE: minimax-m2.5
+        MEDIUM: minimax-m2.7
+        COMPLEX: moonshotai-kimi-k2.5
+        REASONING: qwen3.6-plus
+    complexity_router_default_model: minimax-m2.5
+    tier_boundaries:
+      simple_medium: 0.15
+      medium_complex: 0.35
+      complex_reasoning: 0.6
+    token_thresholds:
+      simple: 15
+      complex: 400
 - model_name: step-3.5-flash-free
   litellm_params:
     model: openai/stepfun/step-3.5-flash:free
