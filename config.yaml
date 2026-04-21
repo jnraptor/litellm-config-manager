@@ -11,7 +11,7 @@ litellm_settings:
   drop_params: true
   modify_params: true
 router_settings:
-  routing_strategy: cost-based-routing
+  routing_strategy: simple-shuffle
   redis_host: 10.10.1.1
   redis_password: ''
   redis_port: 6379
@@ -61,18 +61,14 @@ model_list:
   model_info:
     base_model: azure_ai/minimax-m2.5
 - litellm_params:
-    api_base: os.environ/AZURE_OPENAI_API_BASE
-    api_key: os.environ/AZURE_OPENAI_API_KEY
-    model: azure/model-router
-    order: 5
-  model_name: az-model-router
-- litellm_params:
     api_base: os.environ/AZURE_AI_API_BASE_EASTUS
     api_key: os.environ/AZURE_AI_API_KEY_EASTUS
     model: azure_ai/Phi-4-mini-instruct
     input_cost_per_token: 7.5e-08
     output_cost_per_token: 3e-7
     order: 5
+    rpm: 25
+    tpm: 25000
   model_name: az-phi-4-mini-instruct
 - litellm_params:
     model: poe/claude-haiku-4.5
@@ -214,6 +210,8 @@ model_list:
     model: openai/gpt-5-nano
     api_key: os.environ/OPENAI_API_KEY
     order: 4
+    rpm: 500
+    tpm: 200000
 - litellm_params:
     api_base: os.environ/AZURE_OPENAI_API_BASE
     api_key: os.environ/AZURE_OPENAI_API_KEY
@@ -221,6 +219,8 @@ model_list:
     input_cost_per_token: 5.0e-08
     output_cost_per_token: 4.0e-07
     order: 5
+    rpm: 100
+    tpm: 100000
   model_name: gpt-5-nano
   model_info:
     base_model: azure/gpt-5-nano
@@ -229,6 +229,8 @@ model_list:
     model: openai/gpt-5.3-codex
     api_key: os.environ/OPENAI_API_KEY
     order: 4
+    rpm: 500
+    tpm: 500000
 - model_name: gpt-5.3-codex
   litellm_params:
     model: poe/gpt-5.3-codex
@@ -247,6 +249,8 @@ model_list:
     model: openai/gpt-5.4-2026-03-05
     api_key: os.environ/OPENAI_API_KEY
     order: 4
+    rpm: 500
+    tpm: 500000
 - model_name: gpt-5.4
   litellm_params:
     model: poe/gpt-5.4
@@ -265,6 +269,8 @@ model_list:
     model: openai/gpt-5.4-mini-2026-03-17
     api_key: os.environ/OPENAI_API_KEY
     order: 4
+    rpm: 500
+    tpm: 500000
 - litellm_params:
     api_base: os.environ/AZURE_OPENAI_API_BASE
     api_key: os.environ/AZURE_OPENAI_API_KEY
@@ -272,6 +278,8 @@ model_list:
     input_cost_per_token: 7.5e-07
     output_cost_per_token: 4.5e-06
     order: 5
+    rpm: 150
+    tpm: 150000
   model_name: gpt-5.4-mini
   model_info:
     base_model: azure/gpt-5.4-mini
@@ -280,6 +288,8 @@ model_list:
     model: openai/gpt-5.4-nano-2026-03-17
     api_key: os.environ/OPENAI_API_KEY
     order: 4
+    rpm: 500
+    tpm: 200000
 - litellm_params:
     api_base: os.environ/AZURE_OPENAI_API_BASE
     api_key: os.environ/AZURE_OPENAI_API_KEY
@@ -287,31 +297,11 @@ model_list:
     input_cost_per_token: 2.0e-07
     output_cost_per_token: 1.25e-06
     order: 5
+    rpm: 250
+    tpm: 250000
   model_name: gpt-5.4-nano
   model_info:
     base_model: azure/gpt-5.4-nano
-- model_name: gpt-oss-120b
-  litellm_params:
-    model: openai/gpt-oss-120b
-    api_key: os.environ/OPENAI_API_KEY
-    order: 4
-- litellm_params:
-    model: openrouter/openai/gpt-oss-120b
-    input_cost_per_token: 3.9e-08
-    output_cost_per_token: 1.9e-07
-    order: 5
-  model_name: gpt-oss-120b
-- model_name: gpt-oss-20b
-  litellm_params:
-    model: openai/gpt-oss-20b
-    api_key: os.environ/OPENAI_API_KEY
-    order: 4
-- litellm_params:
-    model: openrouter/openai/gpt-oss-20b
-    input_cost_per_token: 3.0e-08
-    output_cost_per_token: 1.4e-07
-    order: 5
-  model_name: gpt-oss-20b
 - model_name: jina-embeddings-v4
   litellm_params:
     model: jina_ai/jina-embeddings-v4
@@ -727,6 +717,8 @@ model_list:
     model: openai/oai-text-embedding-3-small
     api_key: os.environ/OPENAI_API_KEY
     order: 4
+    rpm: 3000
+    tpm: 1000000
   model_info:
     mode: embedding
 - model_name: oai-text-embedding-3-small
