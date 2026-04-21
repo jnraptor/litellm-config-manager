@@ -48,6 +48,17 @@ models:
       poe: kimi-k2.5-fw
       nvidia: moonshotai/kimi-k2.5
 
+  moonshotai-kimi-k2.6:
+    display_name: "moonshotai-kimi-k2.6"  # Common display name across all providers
+    description: "GLM-5 model by Z.ai"
+    providers:
+      openrouter: moonshotai/kimi-k2.6
+      kilo: moonshotai/kimi-k2.6
+      fireworks: accounts/fireworks/models/kimi-k2p6
+      ollama: kimi-k2.6
+      poe: kimi-k2.6-fw
+      nvidia: moonshotai/kimi-k2.6
+
   glm-5.1:
     display_name: "zai-glm-5.1"  # Common display name across all providers
     description: "GLM-5.1 model by Z.ai"
