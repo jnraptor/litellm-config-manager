@@ -16,6 +16,13 @@ router_settings:
   redis_password: ''
   redis_port: 6379
   enable_pre_call_checks: true
+  fallbacks:
+  - az-glm-5:
+    - zai-glm-5
+  - az-kimi-k2.5:
+    - moonshotai-kimi-k2.5
+  - az-minimax-m2.5:
+    - minimax-m2.5
 model_list:
 - litellm_params:
     api_base: os.environ/AZURE_AI_API_BASE_EASTUS2
@@ -580,14 +587,14 @@ model_list:
     order: 5
     api_base: https://api.kilo.ai/api/gateway
     api_key: os.environ/KILO_API_KEY
-    input_cost_per_token: 9.5e-07
-    output_cost_per_token: 4.0e-06
+    input_cost_per_token: 6.0e-07
+    output_cost_per_token: 2.8e-06
 - model_name: moonshotai-kimi-k2.6
   litellm_params:
     model: openrouter/moonshotai/kimi-k2.6
     order: 5
-    input_cost_per_token: 9.5e-07
-    output_cost_per_token: 4.0e-06
+    input_cost_per_token: 6.0e-07
+    output_cost_per_token: 2.8e-06
 - model_name: nim-llama-nemotron-embed-1b-v2
   litellm_params:
     model: nvidia_nim/nvidia/llama-nemotron-embed-1b-v2
@@ -842,11 +849,11 @@ model_list:
     model: auto_router/complexity_router
     complexity_router_config:
       tiers:
-        SIMPLE: minimax-m2.5
-        MEDIUM: minimax-m2.7
-        COMPLEX: moonshotai-kimi-k2.5
-        REASONING: qwen3.6-plus
-    complexity_router_default_model: minimax-m2.5
+        SIMPLE: az-minimax-m2.5
+        MEDIUM: az-kimi-k2.5
+        COMPLEX: az-glm-5
+        REASONING: gpt-5.4-mini
+    complexity_router_default_model: az-minimax-m2.5
     tier_boundaries:
       simple_medium: 0.15
       medium_complex: 0.35
@@ -947,14 +954,14 @@ model_list:
     order: 5
     api_base: https://api.kilo.ai/api/gateway
     api_key: os.environ/KILO_API_KEY
-    input_cost_per_token: 7.2e-07
-    output_cost_per_token: 2.3e-06
+    input_cost_per_token: 6.5e-07
+    output_cost_per_token: 2.08e-06
 - model_name: zai-glm-5
   litellm_params:
     model: openrouter/z-ai/glm-5
     order: 5
-    input_cost_per_token: 7.2e-07
-    output_cost_per_token: 2.3e-06
+    input_cost_per_token: 6.5e-07
+    output_cost_per_token: 2.08e-06
 - model_name: zai-glm-5
   litellm_params:
     model: vercel_ai_gateway/zai/glm-5
@@ -1003,14 +1010,14 @@ model_list:
     order: 5
     api_base: https://api.kilo.ai/api/gateway
     api_key: os.environ/KILO_API_KEY
-    input_cost_per_token: 1.05e-06
-    output_cost_per_token: 3.5e-06
+    input_cost_per_token: 6.98e-07
+    output_cost_per_token: 4.4e-06
 - model_name: zai-glm-5.1
   litellm_params:
     model: openrouter/z-ai/glm-5.1
     order: 5
-    input_cost_per_token: 1.05e-06
-    output_cost_per_token: 3.5e-06
+    input_cost_per_token: 6.98e-07
+    output_cost_per_token: 4.4e-06
 - model_name: zai-glm-5.1
   litellm_params:
     model: vercel_ai_gateway/zai/glm-5.1
