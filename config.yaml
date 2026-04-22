@@ -577,6 +577,11 @@ model_list:
     output_cost_per_token: 1.0e-09
 - model_name: moonshotai-kimi-k2.6
   litellm_params:
+    model: fireworks_ai/accounts/fireworks/models/kimi-k2p6
+    order: 5
+    api_key: os.environ/FIREWORKS_AI_API_KEY
+- model_name: moonshotai-kimi-k2.6
+  litellm_params:
     model: openai/moonshotai/kimi-k2.6
     order: 5
     api_base: https://api.kilo.ai/api/gateway
