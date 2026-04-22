@@ -851,9 +851,9 @@ model_list:
     complexity_router_config:
       tiers:
         SIMPLE: az-minimax-m2.5
-        MEDIUM: az-kimi-k2.5
-        COMPLEX: az-glm-5
-        REASONING: gpt-5.4-mini
+        MEDIUM: minimax-m2.7
+        COMPLEX: moonshotai-kimi-k2.5
+        REASONING: qwen3.6-plus
     complexity_router_default_model: az-minimax-m2.5
     tier_boundaries:
       simple_medium: 0.15
