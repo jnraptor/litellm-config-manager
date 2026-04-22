@@ -314,6 +314,12 @@ model_list:
     order: 5
   model_info:
     mode: rerank
+- model_name: ling-2.6-flash-free
+  litellm_params:
+    model: openai/ling-2.6-flash-free
+    order: 5
+    api_base: https://opencode.ai/zen/v1
+    api_key: os.environ/OPENCODE_API_KEY
 - litellm_params:
     model: openai/Gemma-4-E2B
     api_base: os.environ/LLAMA_API_BASE
@@ -575,14 +581,14 @@ model_list:
     order: 5
     api_base: https://api.kilo.ai/api/gateway
     api_key: os.environ/KILO_API_KEY
-    input_cost_per_token: 6.0e-07
-    output_cost_per_token: 2.8e-06
+    input_cost_per_token: 8.0e-07
+    output_cost_per_token: 3.5e-06
 - model_name: moonshotai-kimi-k2.6
   litellm_params:
     model: openrouter/moonshotai/kimi-k2.6
     order: 5
-    input_cost_per_token: 6.0e-07
-    output_cost_per_token: 2.8e-06
+    input_cost_per_token: 8.0e-07
+    output_cost_per_token: 3.5e-06
 - model_name: nim-llama-nemotron-embed-1b-v2
   litellm_params:
     model: nvidia_nim/nvidia/llama-nemotron-embed-1b-v2
@@ -1000,14 +1006,14 @@ model_list:
     order: 5
     api_base: https://api.kilo.ai/api/gateway
     api_key: os.environ/KILO_API_KEY
-    input_cost_per_token: 6.98e-07
-    output_cost_per_token: 4.4e-06
+    input_cost_per_token: 1.05e-06
+    output_cost_per_token: 3.5e-06
 - model_name: zai-glm-5.1
   litellm_params:
     model: openrouter/z-ai/glm-5.1
     order: 5
-    input_cost_per_token: 6.98e-07
-    output_cost_per_token: 4.4e-06
+    input_cost_per_token: 1.05e-06
+    output_cost_per_token: 3.5e-06
 - model_name: zai-glm-5.1
   litellm_params:
     model: vercel_ai_gateway/zai/glm-5.1
