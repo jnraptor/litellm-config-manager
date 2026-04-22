@@ -17,8 +17,6 @@ router_settings:
   redis_port: 6379
   enable_pre_call_checks: true
   fallbacks:
-  - az-glm-5:
-    - zai-glm-5
   - az-kimi-k2.5:
     - moonshotai-kimi-k2.5
   - az-minimax-m2.5:
@@ -27,23 +25,11 @@ model_list:
 - litellm_params:
     api_base: os.environ/AZURE_AI_API_BASE_EASTUS2
     api_key: os.environ/AZURE_AI_API_KEY_EASTUS2
-    model: azure_ai/FW-GLM-5
-    input_cost_per_token: 1.0e-06
-    output_cost_per_token: 3.2e-06
-    rpm: 25
-    tpm: 25000
-    order: 5
-  model_name: az-glm-5
-  model_info:
-    base_model: azure_ai/glm-5
-- litellm_params:
-    api_base: os.environ/AZURE_AI_API_BASE_EASTUS2
-    api_key: os.environ/AZURE_AI_API_KEY_EASTUS2
-    model: azure_ai/Kimi-K2.5
+    model: azure_ai/FW-Kimi-K2.5
     input_cost_per_token: 6e-07
     output_cost_per_token: 3e-06
-    rpm: 20
-    tpm: 20000
+    rpm: 25
+    tpm: 25000
     order: 5
   model_name: az-kimi-k2.5
   model_info:
@@ -852,7 +838,7 @@ model_list:
       tiers:
         SIMPLE: az-minimax-m2.5
         MEDIUM: minimax-m2.7
-        COMPLEX: moonshotai-kimi-k2.5
+        COMPLEX: az-kimi-k2.5
         REASONING: qwen3.6-plus
     complexity_router_default_model: az-minimax-m2.5
     tier_boundaries:
