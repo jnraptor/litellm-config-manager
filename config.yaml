@@ -35,6 +35,28 @@ model_list:
   model_info:
     base_model: azure_ai/kimi-k2.5
 - litellm_params:
+    api_base: os.environ/AZURE_AI_API_BASE_EASTUS2
+    api_key: os.environ/AZURE_AI_API_KEY_EASTUS2
+    model: azure_ai/Kimi-K2.6
+    input_cost_per_token: 9.5e-07
+    output_cost_per_token: 4e-06
+    rpm: 20
+    tpm: 20000
+    order: 5
+  model_name: az-kimi-k2.6
+  model_info:
+    base_model: azure_ai/kimi-k2.6
+- litellm_params:
+    api_base: os.environ/AZURE_AI_API_BASE_EASTUS
+    api_key: os.environ/AZURE_AI_API_KEY_EASTUS
+    model: azure_ai/MAI-Image-2e
+    rpm: 18
+    order: 5
+  model_name: az-mai-image-2e
+  model_info:
+    base_model: azure_ai/mai-image-2e
+    mode: image_generation
+- litellm_params:
     api_base: os.environ/AZURE_AI_API_BASE_EASTUS
     api_key: os.environ/AZURE_AI_API_KEY_EASTUS
     model: azure_ai/FW-MiniMax-M2.5
@@ -301,6 +323,18 @@ model_list:
     order: 4
     tpm: 100000
   model_info:
+    mode: image_generation
+- litellm_params:
+    api_base: os.environ/AZURE_OPENAI_API_BASE
+    api_key: os.environ/AZURE_OPENAI_API_KEY
+    model: azure/gpt-image-2
+    input_cost_per_token: 2.0e-07
+    output_cost_per_token: 1.25e-06
+    order: 5
+    rpm: 2
+  model_name: gpt-image-2
+  model_info:
+    base_model: azure/gpt-image-2
     mode: image_generation
 - model_name: hy3-preview-free
   litellm_params:
@@ -613,11 +647,25 @@ model_list:
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
     order: 1
+- litellm_params:
+    api_base: os.environ/AZURE_AI_API_BASE_EASTUS2
+    api_key: os.environ/AZURE_AI_API_KEY_EASTUS2
+    model: azure_ai/Kimi-K2.6
+    input_cost_per_token: 9.5e-07
+    output_cost_per_token: 4e-06
+    rpm: 20
+    tpm: 20000
+    order: 5
+  model_name: moonshotai-kimi-k2.6
+  model_info:
+    base_model: azure_ai/kimi-k2.6
 - model_name: moonshotai-kimi-k2.6
   litellm_params:
     model: fireworks_ai/accounts/fireworks/models/kimi-k2p6
     order: 5
     api_key: os.environ/FIREWORKS_AI_API_KEY
+    input_cost_per_token: 9.5e-07
+    output_cost_per_token: 4e-06
 - model_name: moonshotai-kimi-k2.6
   litellm_params:
     model: openai/moonshotai/kimi-k2.6
