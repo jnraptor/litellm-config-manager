@@ -292,6 +292,16 @@ model_list:
     api_key: os.environ/OPENAI_API_KEY
     order: 4
     tpm: 100000
+  model_info:
+    mode: image_generation
+- model_name: gpt-image-2
+  litellm_params:
+    model: openai/gpt-image-2-2026-04-21
+    api_key: os.environ/OPENAI_API_KEY
+    order: 4
+    tpm: 100000
+  model_info:
+    mode: image_generation
 - model_name: hy3-preview-free
   litellm_params:
     model: openai/tencent/hy3-preview:free
