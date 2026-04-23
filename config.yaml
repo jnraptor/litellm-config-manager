@@ -286,6 +286,12 @@ model_list:
   model_name: gpt-5.4-nano
   model_info:
     base_model: azure/gpt-5.4-nano
+- model_name: hy3-preview-free
+  litellm_params:
+    model: openai/hy3-preview-free
+    order: 5
+    api_base: https://opencode.ai/zen/v1
+    api_key: os.environ/OPENCODE_API_KEY
 - model_name: jina-embeddings-v4
   litellm_params:
     model: jina_ai/jina-embeddings-v4
