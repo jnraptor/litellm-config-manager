@@ -46,14 +46,17 @@ model_list:
   model_name: az-kimi-k2.6
   model_info:
     base_model: azure_ai/kimi-k2.6
-- litellm_params:
-    api_base: os.environ/AZURE_AI_API_BASE_EASTUS
-    api_key: os.environ/AZURE_AI_API_KEY_EASTUS
-    model: azure_ai/MAI-Image-2e
-    api_version: preview
+- model_name: az-mai-image-2e
+  litellm_params:
+    model: openai/MAI-Image-2e
+    api_base: os.environ/AZURE_MAI_API_BASE_EASTUS
+    # We pass the key into a custom header instead of using the 'api_key' param
+    headers:
+      api-key: "os.environ/AZURE_AI_API_KEY_EASTUS"
+      Content-Type: "application/json"
+    extra_body:
+      api-version: "preview"
     rpm: 18
-    order: 5
-  model_name: az-mai-image-2e
   model_info:
     base_model: azure_ai/mai-image-2e
     mode: image_generation
