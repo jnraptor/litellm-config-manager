@@ -108,6 +108,30 @@ models:
       #nvidia: alibaba/qwen3.6-plus
       vercel: alibaba/qwen3.5-plus
 
+  deepseek-v4-flash:
+    display_name: "deepseek-v4-flash"
+    description: "Deepseek v4 Flash model"
+    providers:
+      openrouter: deepseek/deepseek-v4-flash
+      kilo: deepseek/deepseek-v4-flash
+      #fireworks: accounts/fireworks/models/qwen3p6-plus
+      #ollama: qwen3.6-plus
+      #poe: qwen3.5-plus
+      #nvidia: alibaba/qwen3.6-plus
+      vercel: deepseek/deepseek-v4-flash
+
+  deepseek-v4-pro:
+    display_name: "deepseek-v4-pro"
+    description: "Deepseek v4 Pro model"
+    providers:
+      openrouter: deepseek/deepseek-v4-pro
+      kilo: deepseek/deepseek-v4-pro
+      #fireworks: accounts/fireworks/models/qwen3p6-plus
+      #ollama: qwen3.6-plus
+      #poe: qwen3.5-plus
+      #nvidia: alibaba/qwen3.6-plus
+      vercel: deepseek/deepseek-v4-pro
+
   # Add your own mappings below following this format:
   # canonical-name:
   #   display_name: "Display Name"
