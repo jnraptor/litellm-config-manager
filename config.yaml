@@ -167,14 +167,14 @@ model_list:
     order: 5
     api_base: https://api.kilo.ai/api/gateway
     api_key: os.environ/KILO_API_KEY
-    input_cost_per_token: 1.74e-06
-    output_cost_per_token: 3.48e-06
+    input_cost_per_token: 4.35e-07
+    output_cost_per_token: 8.7e-07
 - model_name: deepseek-v4-pro
   litellm_params:
     model: openrouter/deepseek/deepseek-v4-pro
     order: 5
-    input_cost_per_token: 1.74e-06
-    output_cost_per_token: 3.48e-06
+    input_cost_per_token: 4.35e-07
+    output_cost_per_token: 8.7e-07
 - model_name: deepseek-v4-pro
   litellm_params:
     model: vercel_ai_gateway/deepseek/deepseek-v4-pro
