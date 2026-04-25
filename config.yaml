@@ -21,6 +21,10 @@ router_settings:
     - moonshotai-kimi-k2.5
   - az-minimax-m2.5:
     - minimax-m2.5
+  model_group_alias:
+    haiku: deepseek-v4-flash
+    sonnet: deepseek-v4-pro
+    opus: zai-glm-5.1
 model_list:
 - litellm_params:
     api_base: os.environ/AZURE_AI_API_BASE_EASTUS2
@@ -980,9 +984,9 @@ model_list:
     complexity_router_config:
       tiers:
         SIMPLE: az-minimax-m2.5
-        MEDIUM: minimax-m2.7
+        MEDIUM: deepseek-v4-flash
         COMPLEX: az-kimi-k2.5
-        REASONING: qwen3.6-plus
+        REASONING: deepseek-v4-pro
     complexity_router_default_model: az-minimax-m2.5
     tier_boundaries:
       simple_medium: 0.15
