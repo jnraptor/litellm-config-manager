@@ -117,7 +117,7 @@ models:
       #fireworks: accounts/fireworks/models/qwen3p6-plus
       #ollama: qwen3.6-plus
       #poe: qwen3.5-plus
-      #nvidia: alibaba/qwen3.6-plus
+      nvidia: deepseek-ai/deepseek-v4-flash
       vercel: deepseek/deepseek-v4-flash
 
   deepseek-v4-pro:
@@ -129,7 +129,7 @@ models:
       #fireworks: accounts/fireworks/models/qwen3p6-plus
       #ollama: qwen3.6-plus
       #poe: qwen3.5-plus
-      #nvidia: alibaba/qwen3.6-plus
+      nvidia: deepseek-ai/deepseek-v4-pro
       vercel: deepseek/deepseek-v4-pro
 
   # Add your own mappings below following this format:

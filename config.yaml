@@ -123,6 +123,12 @@ model_list:
     order: 1
 - model_name: deepseek-v4-flash
   litellm_params:
+    model: nvidia_nim/deepseek-ai/deepseek-v4-flash
+    order: 3
+    input_cost_per_token: 1.0e-09
+    output_cost_per_token: 1.0e-09
+- model_name: deepseek-v4-flash
+  litellm_params:
     model: openai/deepseek/deepseek-v4-flash
     order: 5
     api_base: https://api.kilo.ai/api/gateway
@@ -149,6 +155,12 @@ model_list:
     input_cost_per_token: 1.74e-06
     output_cost_per_token: 3.48e-06
     order: 1
+- model_name: deepseek-v4-pro
+  litellm_params:
+    model: nvidia_nim/deepseek-ai/deepseek-v4-pro
+    order: 3
+    input_cost_per_token: 1.0e-09
+    output_cost_per_token: 1.0e-09
 - model_name: deepseek-v4-pro
   litellm_params:
     model: openai/deepseek/deepseek-v4-pro
