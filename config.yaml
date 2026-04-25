@@ -700,18 +700,6 @@ model_list:
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
     order: 1
-- litellm_params:
-    api_base: os.environ/AZURE_AI_API_BASE_EASTUS2
-    api_key: os.environ/AZURE_AI_API_KEY_EASTUS2
-    model: azure_ai/Kimi-K2.6
-    input_cost_per_token: 9.5e-07
-    output_cost_per_token: 4e-06
-    rpm: 20
-    tpm: 20000
-    order: 5
-  model_name: moonshotai-kimi-k2.6
-  model_info:
-    base_model: azure_ai/kimi-k2.6
 - model_name: moonshotai-kimi-k2.6
   litellm_params:
     model: fireworks_ai/accounts/fireworks/models/kimi-k2p6
