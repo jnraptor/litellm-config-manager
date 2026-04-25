@@ -115,8 +115,8 @@ model_list:
     order: 3
 - model_name: deepseek-v4-flash
   litellm_params:
-    model: anthropic/deepseek-v4-flash
-    api_base: https://opencode.ai/zen/go
+    model: openai/deepseek-v4-flash
+    api_base: https://opencode.ai/zen/go/v1
     api_key: os.environ/OPENCODE_API_KEY
     input_cost_per_token: 1.4e-07
     output_cost_per_token: 2.8e-07
@@ -149,8 +149,8 @@ model_list:
     output_cost_per_token: 2.8e-07
 - model_name: deepseek-v4-pro
   litellm_params:
-    model: anthropic/deepseek-v4-pro
-    api_base: https://opencode.ai/zen/go
+    model: openai/deepseek-v4-pro
+    api_base: https://opencode.ai/zen/go/v1
     api_key: os.environ/OPENCODE_API_KEY
     input_cost_per_token: 1.74e-06
     output_cost_per_token: 3.48e-06
