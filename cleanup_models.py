@@ -35,6 +35,10 @@ from cleanup_base import (
     ProviderConfigLoader,
     ModelMappingLoader,
     sort_model_list as base_sort_model_list,
+    ValidationReport,
+    ValidationSeverity,
+    ValidationIssue,
+    _print_validation_report,
 )
 from dotenv import load_dotenv
 
@@ -328,6 +332,35 @@ class UnifiedModelCleaner:
 
         return config, added_models_by_provider
 
+    def validate_config(self, config: Optional[Dict[str, Any]] = None) -> ValidationReport:
+        """
+        Validate config.yaml structure without API calls (offline).
+
+        Delegates to BaseModelCleaner.validate_config() via the first available
+        cleaner instance. BaseModelCleaner.validate_config() is provider-agnostic
+        and checks all entries structurally, including provider-specific api_key
+        checks across all configured providers.
+
+        Args:
+            config: Optional configuration dict (loads from file if not provided)
+
+        Returns:
+            ValidationReport with all found issues
+        """
+        if config is None:
+            config = self.load_config()
+
+        if not self.cleaners:
+            report = ValidationReport()
+            report.total_entries = len(config.get("model_list", []))
+            return report
+
+        # BaseModelCleaner.validate_config() is provider-agnostic;
+        # pick any cleaner to run structural validation.
+        cleaner = next(iter(self.cleaners.values()))
+        report = cleaner.validate_config(config)
+        return report
+
 
 def main():
     """Main entry point for the script."""
@@ -390,6 +423,11 @@ Mapped Model Addition (simplified multi-provider workflow):
         default="models.yaml",
         help="Path to model mappings file (default: models.yaml)",
     )
+    parser.add_argument(
+        "--validate",
+        action="store_true",
+        help="Validate config.yaml structure without API calls (offline)",
+    )
 
     args = parser.parse_args()
 
@@ -445,6 +483,11 @@ Mapped Model Addition (simplified multi-provider workflow):
             dry_run=args.dry_run,
             verbose=args.verbose,
         )
+
+        if args.validate:
+            report = cleaner.validate_config()
+            _print_validation_report(report)
+            return 1 if report.has_errors else 0
 
         # Handle mapped model addition
         if args.add_mapped_model:

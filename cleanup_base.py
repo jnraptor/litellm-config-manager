@@ -27,6 +27,8 @@ import time
 import yaml
 import requests
 from abc import ABC, abstractmethod
+from dataclasses import dataclass, field
+from enum import Enum
 from functools import lru_cache
 from typing import Dict, List, Tuple, Any, Optional, Set
 from pathlib import Path
@@ -49,6 +51,11 @@ __all__ = [
     "APIClient",
     "is_api_base_model",
     "create_provider_main",
+    "ValidationSeverity",
+    "ValidationIssue",
+    "ValidationReport",
+    "VALID_MODEL_MODES",
+    "FALLBACK_KNOWN_PREFIXES",
 ]
 
 DEFAULT_CONFIG_FILE = "config.yaml"
@@ -117,6 +124,27 @@ def adjust_cost_for_free_model(
     return free_cost if cost == 0.0 else cost
 
 
+def _is_numeric_cost(value: Any) -> bool:
+    """
+    Check if a value is a valid numeric cost, accepting strings in scientific notation.
+
+    Args:
+        value: The value to check
+
+    Returns:
+        True if the value is numeric or a parseable numeric string, False otherwise
+    """
+    if isinstance(value, (int, float)):
+        return True
+    if isinstance(value, str):
+        try:
+            float(value)
+            return True
+        except ValueError:
+            return False
+    return False
+
+
 def get_nested_value(data: Dict[str, Any], field_path: str) -> Any:
     """
     Get a value from a nested dict using dot-notation path.
@@ -136,6 +164,46 @@ def get_nested_value(data: Dict[str, Any], field_path: str) -> Any:
         else:
             return None
     return current
+
+
+class ValidationSeverity(Enum):
+    ERROR = "error"
+    WARNING = "warning"
+    INFO = "info"
+
+
+@dataclass
+class ValidationIssue:
+    severity: ValidationSeverity
+    category: str
+    entry_index: int      # 0-based index in model_list, or -1 for file-level
+    model_name: str       # from entry, or "" if N/A
+    model_id: str         # litellm_params.model, or "" if N/A
+    message: str
+    suggestion: str = ""
+
+
+@dataclass
+class ValidationReport:
+    issues: list = field(default_factory=list)
+    total_entries: int = 0
+    valid_entries: int = 0
+
+    @property
+    def has_errors(self) -> bool:
+        return any(i.severity == ValidationSeverity.ERROR for i in self.issues)
+
+
+VALID_MODEL_MODES = frozenset({
+    "chat", "completion", "embedding", "image_generation",
+    "rerank", "audio_transcription", "image"
+})
+
+FALLBACK_KNOWN_PREFIXES = frozenset({
+    "azure/", "azure_ai/", "openai/", "dashscope/",
+    "jina_ai/", "ollama/", "ollama_chat/", "anthropic/",
+    "vercel_ai_gateway/", "auto_router/"
+})
 
 
 class APIClient:
@@ -315,6 +383,293 @@ class BaseModelCleaner(ABC):
         except Exception as e:
             self.logger.error(f"Error saving configuration: {e}")
             raise
+
+    def validate_config(self, config: Optional[Dict[str, Any]] = None) -> ValidationReport:
+        """
+        Validate config.yaml structure without API calls (offline).
+
+        Checks per entry in model_list for structural issues, duplicates,
+        invalid costs, and unknown provider prefixes.
+
+        Args:
+            config: Optional configuration dict (loads from file if not provided)
+
+        Returns:
+            ValidationReport with all found issues
+        """
+        if config is None:
+            config = self.load_config()
+
+        report = ValidationReport()
+        model_list = config.get("model_list", [])
+        report.total_entries = len(model_list)
+
+        seen_entries: Dict[Tuple[str, str], int] = {}
+
+        # Load provider configs for provider-specific checks
+        try:
+            provider_loader = ProviderConfigLoader()
+            all_providers = provider_loader.list_providers()
+        except Exception:
+            provider_loader = None
+            all_providers = []
+
+        # Collect all known prefixes
+        known_prefixes = set(FALLBACK_KNOWN_PREFIXES)
+        provider_configs: Dict[str, Dict[str, Any]] = {}
+        if provider_loader:
+            for provider_name in all_providers:
+                try:
+                    pconf = provider_loader.get_provider_config(provider_name)
+                    provider_configs[provider_name] = pconf
+                    prefix = pconf.get("model_prefix", "")
+                    if prefix:
+                        known_prefixes.add(prefix)
+                except Exception:
+                    pass
+
+        for index, entry in enumerate(model_list):
+            # Check 1: Entry is a dict
+            if not isinstance(entry, dict):
+                report.issues.append(ValidationIssue(
+                    severity=ValidationSeverity.ERROR,
+                    category="type",
+                    entry_index=index,
+                    model_name="",
+                    model_id="",
+                    message=f"Entry is not a dictionary (found {type(entry).__name__})",
+                    suggestion="Convert entry to a dictionary with model_name and litellm_params",
+                ))
+                continue
+
+            model_name = entry.get("model_name", "")
+            litellm_params = entry.get("litellm_params")
+            model_id = litellm_params.get("model", "") if isinstance(litellm_params, dict) else ""
+
+            # Check 2: model_name present & string
+            if not isinstance(model_name, str) or not model_name:
+                report.issues.append(ValidationIssue(
+                    severity=ValidationSeverity.ERROR,
+                    category="model_name",
+                    entry_index=index,
+                    model_name=str(model_name) if model_name else "",
+                    model_id=model_id,
+                    message="Missing or non-string 'model_name'",
+                    suggestion="Add a valid string 'model_name' to the entry",
+                ))
+
+            # Check 3: litellm_params present & dict
+            if litellm_params is None or not isinstance(litellm_params, dict):
+                report.issues.append(ValidationIssue(
+                    severity=ValidationSeverity.ERROR,
+                    category="litellm_params",
+                    entry_index=index,
+                    model_name=model_name,
+                    model_id="",
+                    message="Missing or non-dict 'litellm_params'",
+                    suggestion="Add a valid dict 'litellm_params' to the entry",
+                ))
+                # Skip remaining checks that depend on litellm_params
+                continue
+
+            # Check 4: litellm_params.model present & non-empty
+            if not model_id:
+                report.issues.append(ValidationIssue(
+                    severity=ValidationSeverity.ERROR,
+                    category="model_id",
+                    entry_index=index,
+                    model_name=model_name,
+                    model_id="",
+                    message="Missing required field 'litellm_params.model'",
+                    suggestion="Add a provider-prefixed model ID (e.g., 'openrouter/gpt-4')",
+                ))
+                # Skip checks that need model_id
+                _skip_rest = True
+            else:
+                _skip_rest = False
+
+            if not _skip_rest:
+                # Check 5: Duplicate (model_name, model)
+                dup_key = (model_name, model_id)
+                if dup_key in seen_entries:
+                    first_index = seen_entries[dup_key]
+                    report.issues.append(ValidationIssue(
+                        severity=ValidationSeverity.ERROR,
+                        category="duplicate",
+                        entry_index=index,
+                        model_name=model_name,
+                        model_id=model_id,
+                        message=f"Duplicate entry: same model_name and model ID first seen at index #{first_index}",
+                        suggestion="Remove the duplicate entry or change model_name/model ID",
+                    ))
+                else:
+                    seen_entries[dup_key] = index
+
+                # Check 6: input_cost_per_token is numeric
+                input_cost = litellm_params.get("input_cost_per_token")
+                if input_cost is not None and not _is_numeric_cost(input_cost):
+                    report.issues.append(ValidationIssue(
+                        severity=ValidationSeverity.ERROR,
+                        category="cost",
+                        entry_index=index,
+                        model_name=model_name,
+                        model_id=model_id,
+                        message=f"input_cost_per_token is non-numeric (found {type(input_cost).__name__})",
+                        suggestion="Use a numeric value for input_cost_per_token",
+                    ))
+                elif input_cost is not None:
+                    input_cost_num = float(input_cost)
+                    # Check 8: Cost >= 0
+                    if input_cost_num < 0:
+                        report.issues.append(ValidationIssue(
+                            severity=ValidationSeverity.ERROR,
+                            category="cost",
+                            entry_index=index,
+                            model_name=model_name,
+                            model_id=model_id,
+                            message=f"input_cost_per_token is negative ({input_cost})",
+                            suggestion="Cost must be >= 0",
+                        ))
+                    # Check 9: Cost > 0.01
+                    elif input_cost_num > 0.01:
+                        report.issues.append(ValidationIssue(
+                            severity=ValidationSeverity.WARNING,
+                            category="cost",
+                            entry_index=index,
+                            model_name=model_name,
+                            model_id=model_id,
+                            message=f"input_cost_per_token is suspiciously high ({input_cost})",
+                            suggestion="Verify cost is correct (> $10 per 1000 tokens)",
+                        ))
+
+                # Check 7: output_cost_per_token is numeric
+                output_cost = litellm_params.get("output_cost_per_token")
+                if output_cost is not None and not _is_numeric_cost(output_cost):
+                    report.issues.append(ValidationIssue(
+                        severity=ValidationSeverity.ERROR,
+                        category="cost",
+                        entry_index=index,
+                        model_name=model_name,
+                        model_id=model_id,
+                        message=f"output_cost_per_token is non-numeric (found {type(output_cost).__name__})",
+                        suggestion="Use a numeric value for output_cost_per_token",
+                    ))
+                elif output_cost is not None:
+                    output_cost_num = float(output_cost)
+                    # Check 8: Cost >= 0
+                    if output_cost_num < 0:
+                        report.issues.append(ValidationIssue(
+                            severity=ValidationSeverity.ERROR,
+                            category="cost",
+                            entry_index=index,
+                            model_name=model_name,
+                            model_id=model_id,
+                            message=f"output_cost_per_token is negative ({output_cost})",
+                            suggestion="Cost must be >= 0",
+                        ))
+                    # Check 9: Cost > 0.01
+                    elif output_cost_num > 0.01:
+                        report.issues.append(ValidationIssue(
+                            severity=ValidationSeverity.WARNING,
+                            category="cost",
+                            entry_index=index,
+                            model_name=model_name,
+                            model_id=model_id,
+                            message=f"output_cost_per_token is suspiciously high ({output_cost})",
+                            suggestion="Verify cost is correct (> $10 per 1000 tokens)",
+                        ))
+
+                # Check 10: order is positive int
+                order = litellm_params.get("order")
+                if order is not None:
+                    if not isinstance(order, int) or isinstance(order, bool) or order <= 0:
+                        report.issues.append(ValidationIssue(
+                            severity=ValidationSeverity.ERROR,
+                            category="order",
+                            entry_index=index,
+                            model_name=model_name,
+                            model_id=model_id,
+                            message=f"order must be a positive integer (found {order})",
+                            suggestion="Set order to a positive integer value",
+                        ))
+
+                # Check 11: model_info.mode in VALID_MODEL_MODES
+                model_info = entry.get("model_info", {})
+                if isinstance(model_info, dict):
+                    mode = model_info.get("mode")
+                    if mode is not None and mode not in VALID_MODEL_MODES:
+                        report.issues.append(ValidationIssue(
+                            severity=ValidationSeverity.ERROR,
+                            category="mode",
+                            entry_index=index,
+                            model_name=model_name,
+                            model_id=model_id,
+                            message=f"Invalid model_info.mode '{mode}'",
+                            suggestion=f"Use one of: {', '.join(sorted(VALID_MODEL_MODES))}",
+                        ))
+
+                # Check 13: Unknown provider prefix
+                has_known_prefix = any(model_id.startswith(prefix) for prefix in known_prefixes)
+                if not has_known_prefix:
+                    report.issues.append(ValidationIssue(
+                        severity=ValidationSeverity.WARNING,
+                        category="provider_prefix",
+                        entry_index=index,
+                        model_name=model_name,
+                        model_id=model_id,
+                        message="Model ID has unknown provider prefix",
+                        suggestion="Check the model ID prefix or add the provider to providers.yaml",
+                    ))
+
+            # Check 12: Missing api_key for providers that need it
+            if provider_loader and litellm_params and isinstance(litellm_params, dict):
+                api_base = str(litellm_params.get("api_base", ""))
+                for provider_name, pconf in provider_configs.items():
+                    detection = pconf.get("model_detection", {})
+                    detection_type = detection.get("type")
+                    prefix = pconf.get("model_prefix", "")
+                    api_key_env = pconf.get("api_key_env")
+
+                    is_match = False
+                    if detection_type == "prefix":
+                        if model_id.startswith(prefix):
+                            is_match = True
+                    elif detection_type == "api_base":
+                        detection_value = detection.get("value", "")
+                        api_base_env_var = detection.get("api_base_env_var")
+                        is_match = is_api_base_model(
+                            api_base,
+                            model_id,
+                            detection_value,
+                            prefix,
+                            api_base_env_var,
+                        )
+
+                    if is_match and api_key_env:
+                        # Provider requires an API key; check if entry has api_key
+                        entry_api_key = litellm_params.get("api_key")
+                        if not entry_api_key:
+                            report.issues.append(ValidationIssue(
+                                severity=ValidationSeverity.WARNING,
+                                category="api_key",
+                                entry_index=index,
+                                model_name=model_name,
+                                model_id=model_id,
+                                message=f"Provider '{provider_name}' requires api_key but entry has none",
+                                suggestion=f"Add 'api_key' to litellm_params (e.g., 'os.environ/{api_key_env}')",
+                            ))
+                        # Only report once per entry
+                        break
+
+            # Count valid entry if no errors for this entry
+            entry_has_errors = any(
+                i.entry_index == index and i.severity == ValidationSeverity.ERROR
+                for i in report.issues
+            )
+            if not entry_has_errors:
+                report.valid_entries += 1
+
+        return report
 
     def sort_model_list(self, config: Dict[str, Any]) -> Tuple[Dict[str, Any], bool]:
         """
@@ -677,6 +1032,20 @@ class BaseModelCleaner(ABC):
                 litellm_params = model_entry.get("litellm_params", {})
                 current_input_cost = litellm_params.get("input_cost_per_token")
                 current_output_cost = litellm_params.get("output_cost_per_token")
+
+                # Normalize string costs (e.g. from YAML) to floats
+                if isinstance(current_input_cost, str):
+                    try:
+                        current_input_cost = float(current_input_cost)
+                        litellm_params["input_cost_per_token"] = current_input_cost
+                    except ValueError:
+                        current_input_cost = None
+                if isinstance(current_output_cost, str):
+                    try:
+                        current_output_cost = float(current_output_cost)
+                        litellm_params["output_cost_per_token"] = current_output_cost
+                    except ValueError:
+                        current_output_cost = None
 
                 input_changed = False
                 output_changed = False
@@ -1940,6 +2309,41 @@ class ConfigDrivenModelCleaner(BaseModelCleaner):
             return 1
 
 
+def _print_validation_report(report: ValidationReport) -> None:
+    """Print a validation report in a human-readable format."""
+    errors = [i for i in report.issues if i.severity == ValidationSeverity.ERROR]
+    warnings = [i for i in report.issues if i.severity == ValidationSeverity.WARNING]
+    infos = [i for i in report.issues if i.severity == ValidationSeverity.INFO]
+
+    if errors:
+        print(f"ERRORS ({len(errors)}):")
+        for issue in errors:
+            name_part = f"model_name='{issue.model_name}'" if issue.model_name else f"model_name=''"
+            model_part = f" [model='{issue.model_id}']" if issue.model_id else ""
+            print(f"  Entry #{issue.entry_index} ({name_part}){model_part}")
+            print(f"    - {issue.message}")
+
+    if warnings:
+        print(f"WARNINGS ({len(warnings)}):")
+        for issue in warnings:
+            name_part = f"model_name='{issue.model_name}'" if issue.model_name else f"model_name=''"
+            model_part = f" [model='{issue.model_id}']" if issue.model_id else ""
+            print(f"  Entry #{issue.entry_index} ({name_part}){model_part}")
+            print(f"    - {issue.message}")
+
+    if infos:
+        print(f"INFO ({len(infos)}):")
+        for issue in infos:
+            name_part = f"model_name='{issue.model_name}'" if issue.model_name else f"model_name=''"
+            model_part = f" [model='{issue.model_id}']" if issue.model_id else ""
+            print(f"  Entry #{issue.entry_index} ({name_part}){model_part}")
+            print(f"    - {issue.message}")
+
+    error_count = len(errors)
+    warning_count = len(warnings)
+    print(f"\nSummary: {report.total_entries} entries checked, {error_count} errors, {warning_count} warnings")
+
+
 def create_provider_main(cleaner_class, description: str, epilog: str = ""):
     """
     Factory that creates a main() function for a provider cleanup script.
@@ -1960,8 +2364,21 @@ def create_provider_main(cleaner_class, description: str, epilog: str = ""):
             epilog=epilog,
         )
         setup_common_args(parser)
+        parser.add_argument(
+            "--validate",
+            action="store_true",
+            help="Validate config.yaml structure without API calls (offline)",
+        )
         args = parser.parse_args()
         validate_model_name_arg(args, parser)
+
+        if args.validate:
+            cleaner = cleaner_class(
+                config_path=args.config, dry_run=False, verbose=args.verbose
+            )
+            report = cleaner.validate_config()
+            _print_validation_report(report)
+            return 1 if report.has_errors else 0
 
         cleaner = cleaner_class(
             config_path=args.config, dry_run=args.dry_run, verbose=args.verbose

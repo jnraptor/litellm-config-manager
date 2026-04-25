@@ -35,13 +35,15 @@ pytest tests/ -v --cov=. --cov-report=term
 - `test_cleanup_coverage.py` — Model validation and cost tests
 - `test_input_outputs.py` — Provider input/output validation
 - `test_coverage_additional.py` — UnifiedModelCleaner, file I/O, free variants
+- `test_validation.py` — Config validation (ValidationReport, validate_config, --validate CLI)
 
 ### Test Coverage
 
-Current coverage: ~63% (up from 30%)
+Current coverage: ~70% (up from 30%)
 
-- cleanup_base.py: 69%
-- All test files: >98%
+- cleanup_base.py: 73%
+- cleanup_models.py: 25%
+- All test files: >96%
 
 ## Important Files
 
@@ -49,7 +51,7 @@ Current coverage: ~63% (up from 30%)
 - **providers.yaml** — Provider configuration
 - **models.yaml** — Model mappings for multi-provider addition
 - **config.yaml** — Main LiteLLM configuration
-- **cleanup_base.py** — All shared logic (~757 lines)
+- **cleanup_base.py** — All shared logic (~942 lines)
 - **cleanup_models.py** — Unified cleanup script
 
 ## Key Classes
