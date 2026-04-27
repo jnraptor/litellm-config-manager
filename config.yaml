@@ -203,12 +203,6 @@ model_list:
     mode: image_generation
 - model_name: gemini-3.1-flash-lite
   litellm_params:
-    model: gemini/gemini-3.1-flash-lite-preview
-    order: 3
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
-- model_name: gemini-3.1-flash-lite
-  litellm_params:
     model: poe/gemini-3.1-flash-lite
     order: 4
     api_key: os.environ/POE_API_KEY
@@ -245,6 +239,13 @@ model_list:
     order: 5
     input_cost_per_token: 2.0e-06
     output_cost_per_token: 1.2e-05
+- model_name: gemini-embedding-2
+  litellm_params:
+    model: gemini/gemini-embedding-2
+    order: 3
+    input_cost_per_token: 1.0e-09
+  model_info:
+    mode: embedding
 - model_name: gemini-embedding-2
   litellm_params:
     model: vertex_ai/gemini-embedding-2
