@@ -982,7 +982,7 @@ model_list:
         SIMPLE: az-minimax-m2.5
         MEDIUM: deepseek-v4-flash
         COMPLEX: az-kimi-k2.5
-        REASONING: deepseek-v4-pro
+        REASONING: zai-glm-5.1
     complexity_router_default_model: az-minimax-m2.5
     tier_boundaries:
       simple_medium: 0.15
