@@ -48,11 +48,12 @@ Current coverage: ~70% (up from 30%)
 ## Important Files
 
 - **CLAUDE.md** — Complete project documentation
-- **providers.yaml** — Provider configuration
+- **providers.yaml** — Provider configuration (includes opencode-zen and opencode-go)
 - **models.yaml** — Model mappings for multi-provider addition
 - **config.yaml** — Main LiteLLM configuration
-- **cleanup_base.py** — All shared logic (~942 lines)
+- **cleanup_base.py** — All shared logic (~2444 lines)
 - **cleanup_models.py** — Unified cleanup script
+- **cleanup_opencode_go_models.py** — OpenCode Go provider script (multi-prefix support)
 
 ## Key Classes
 

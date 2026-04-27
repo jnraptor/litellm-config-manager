@@ -11,7 +11,7 @@ against their current APIs and:
 5. Supports both regular and embedding models (where applicable)
 6. Supports mapped models for simplified multi-provider addition
 
-Supported providers: openrouter, requesty, novita, nano_gpt, vercel, poe, nvidia, kilo, ollama, all
+Supported providers: openrouter, requesty, novita, nano_gpt, vercel, poe, nvidia, kilo, ollama, opencode-zen, opencode-go, all
 
 Usage:
     python cleanup_models.py --provider openrouter [--config config.yaml] [--dry-run] [--verbose]
@@ -374,7 +374,7 @@ This script performs four main functions:
 3. Updates model costs when they differ from API pricing
 4. Adds one or more models to the configuration
 
-Supported providers: openrouter, vercel, poe, nvidia, kilo, ollama, fireworks, opencode-zen, all
+Supported providers: openrouter, vercel, poe, nvidia, kilo, ollama, fireworks, opencode-zen, opencode-go, all
 
 Examples:
   %(prog)s --provider openrouter                           # Process OpenRouter models

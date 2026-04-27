@@ -377,6 +377,46 @@
     order: 5
 ```
 
+## opencode-go
+### input
+```json
+{
+  "id": "glm-5",
+  "object": "model",
+  "created": 1775653844,
+  "owned_by": "opencode"
+}
+```
+### output
+```yaml
+- model_name: glm-5
+  litellm_params:
+    model: openai/glm-5
+    api_base: https://opencode.ai/zen/go/v1
+    api_key: os.environ/OPENCODE_API_KEY
+    order: 1
+```
+
+## opencode-go-anthropic
+### input
+```json
+{
+  "id": "minimax-m2.5",
+  "object": "model",
+  "created": 1775653844,
+  "owned_by": "opencode"
+}
+```
+### output
+```yaml
+- model_name: minimax-m2.5
+  litellm_params:
+    model: anthropic/minimax-m2.5
+    api_base: https://opencode.ai/zen/go
+    api_key: os.environ/OPENCODE_API_KEY
+    order: 1
+```
+
 ## requesty
 ### input
 ```json

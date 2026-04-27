@@ -201,6 +201,38 @@ providers:
     # Order for litellm_params/order - lower values are tried first
     order: 5
 
+  opencode-go:
+    name: "OpenCode Go"
+    description: "OpenCode Go model provider (OpenAI and Anthropic compatible APIs)"
+    api_url: "https://opencode.ai/zen/go/v1/models"
+    model_prefix: "openai/"
+    model_detection:
+      type: "api_base"
+      value: "opencode.ai/zen/go"
+    model_prefixes:
+      - prefix: "openai/"
+        api_base: "https://opencode.ai/zen/go/v1"
+      - prefix: "dashscope/"
+        api_base: "https://opencode.ai/zen/go/v1"
+      - prefix: "anthropic/"
+        api_base: "https://opencode.ai/zen/go"
+    pricing:
+      # OpenCode Go models don't have pricing in the API
+      input_field: null
+      output_field: null
+      is_per_million: false
+      free_model_handling: true
+      default_cost: null
+    model_name_prefix: ""
+    model_name_cleanup: []
+    special_models: []
+    api_base_config:
+      url: "https://opencode.ai/zen/go/v1"
+      api_key_env: "OPENCODE_API_KEY"
+    api_key_env: "OPENCODE_API_KEY"
+    # Order for litellm_params/order - lower values are tried first
+    order: 1
+
   requesty:
     name: "Requesty"
     description: "Requesty AI model provider"

@@ -425,6 +425,9 @@ class BaseModelCleaner(ABC):
                     prefix = pconf.get("model_prefix", "")
                     if prefix:
                         known_prefixes.add(prefix)
+                    model_prefixes = pconf.get("model_prefixes", [])
+                    for mp in model_prefixes:
+                        known_prefixes.add(mp["prefix"])
                 except Exception:
                     pass
 
@@ -637,13 +640,25 @@ class BaseModelCleaner(ABC):
                     elif detection_type == "api_base":
                         detection_value = detection.get("value", "")
                         api_base_env_var = detection.get("api_base_env_var")
-                        is_match = is_api_base_model(
-                            api_base,
-                            model_id,
-                            detection_value,
-                            prefix,
-                            api_base_env_var,
-                        )
+                        provider_model_prefixes = pconf.get("model_prefixes")
+                        if provider_model_prefixes:
+                            prefix_list = [mp["prefix"] for mp in provider_model_prefixes]
+                            is_match = is_api_base_model(
+                                api_base,
+                                model_id,
+                                detection_value,
+                                prefix,
+                                api_base_env_var,
+                                model_prefixes=prefix_list,
+                            )
+                        else:
+                            is_match = is_api_base_model(
+                                api_base,
+                                model_id,
+                                detection_value,
+                                prefix,
+                                api_base_env_var,
+                            )
 
                     if is_match and api_key_env:
                         # Provider requires an API key; check if entry has api_key
@@ -1242,7 +1257,15 @@ class BaseModelCleaner(ABC):
         for model_id in model_ids:
             self.logger.info(f"Processing model: {model_id}")
 
-            model_info = self.find_model_in_api(model_id, api_models)
+            # For multi-prefix providers, strip prefix for API lookup
+            api_lookup_id = model_id
+            if self._model_prefixes:
+                for prefix_entry in self._model_prefixes:
+                    if model_id.startswith(prefix_entry["prefix"]):
+                        api_lookup_id = model_id[len(prefix_entry["prefix"]):]
+                        break
+
+            model_info = self.find_model_in_api(api_lookup_id, api_models)
             if not model_info:
                 self.logger.error(
                     f"Model '{model_id}' not found in {self.PROVIDER_NAME} API"
@@ -1250,7 +1273,7 @@ class BaseModelCleaner(ABC):
                 failed_models.append(model_id)
                 continue
 
-            if model_id in existing_model_ids:
+            if api_lookup_id in existing_model_ids:
                 self.logger.warning(
                     f"Model '{model_id}' already exists in configuration"
                 )
@@ -1258,13 +1281,13 @@ class BaseModelCleaner(ABC):
                 continue
 
             # Check for free variant (returns None if not supported/found)
-            free_variant_id = self.check_for_free_variant(model_id, api_models)
+            free_variant_id = self.check_for_free_variant(api_lookup_id, api_models)
 
-            # Generate model name
+            # Generate model name from unprefixed ID
             if custom_model_name and len(model_ids) == 1:
                 model_name = custom_model_name
             else:
-                model_name = self.generate_model_name(model_id)
+                model_name = self.generate_model_name(api_lookup_id)
 
             # Handle name conflicts
             original_name = model_name
@@ -1274,11 +1297,12 @@ class BaseModelCleaner(ABC):
                 counter += 1
 
             # Create and add base model entry
+            # Pass full model_id (may include prefix) for multi-prefix providers
             model_entry = self.create_model_entry(model_id, model_info, model_name)
 
             config["model_list"].append(model_entry)
             added_models.append(model_id)
-            existing_model_ids.append(model_id)
+            existing_model_ids.append(api_lookup_id)
             existing_names.append(model_name)
 
             self.logger.info(f"Added model '{model_id}' with name '{model_name}'")
@@ -1568,6 +1592,7 @@ def is_api_base_model(
     detection_value: str,
     model_prefix: str,
     api_base_env_var: Optional[str] = None,
+    model_prefixes: Optional[List[str]] = None,
 ) -> bool:
     """
     Check if a model entry belongs to a provider using api_base detection.
@@ -1578,11 +1603,15 @@ def is_api_base_model(
         detection_value: The detection value from provider config (e.g., "router.requesty.ai")
         model_prefix: The model prefix for this provider
         api_base_env_var: Optional environment variable name for api-base detection
+        model_prefixes: Optional list of prefixes for multi-prefix providers
 
     Returns:
         True if the model belongs to this provider, False otherwise
     """
-    prefix_match = model_id.startswith(model_prefix)
+    if model_prefixes:
+        prefix_match = any(model_id.startswith(p) for p in model_prefixes)
+    else:
+        prefix_match = model_id.startswith(model_prefix)
 
     # Check prefix match first
     if not prefix_match:
@@ -1888,6 +1917,7 @@ class ConfigDrivenModelCleaner(BaseModelCleaner):
         self._api_key_env = self.provider_config.get("api_key_env")
         self._embeddings_api_url = self.provider_config.get("embeddings_api_url")
         self._free_variant_suffix = self.provider_config.get("free_variant_suffix")
+        self._model_prefixes = self.provider_config.get("model_prefixes")
 
         self.logger.debug(
             f"Loaded config for provider '{provider_name}': {self.PROVIDER_NAME}"
@@ -1943,13 +1973,24 @@ class ConfigDrivenModelCleaner(BaseModelCleaner):
                 api_base = str(litellm_params.get("api_base", ""))
                 detection_value = self._model_detection.get("value", "")
                 api_base_env_var = self._model_detection.get("api_base_env_var")
-                is_provider_model = is_api_base_model(
-                    api_base,
-                    model_id,
-                    detection_value,
-                    self.MODEL_PREFIX,
-                    api_base_env_var,
-                )
+                if self._model_prefixes:
+                    prefix_list = [p["prefix"] for p in self._model_prefixes]
+                    is_provider_model = is_api_base_model(
+                        api_base,
+                        model_id,
+                        detection_value,
+                        self.MODEL_PREFIX,
+                        api_base_env_var,
+                        model_prefixes=prefix_list,
+                    )
+                else:
+                    is_provider_model = is_api_base_model(
+                        api_base,
+                        model_id,
+                        detection_value,
+                        self.MODEL_PREFIX,
+                        api_base_env_var,
+                    )
 
             if is_provider_model:
                 model_name = model_entry.get("model_name", "unnamed")
@@ -2129,6 +2170,11 @@ class ConfigDrivenModelCleaner(BaseModelCleaner):
         Returns:
             The API model ID (e.g., "model-name")
         """
+        if self._model_prefixes:
+            for prefix_entry in self._model_prefixes:
+                prefix = prefix_entry["prefix"]
+                if model_id.startswith(prefix):
+                    return model_id[len(prefix):]
         if model_id.startswith(self.MODEL_PREFIX):
             return model_id[len(self.MODEL_PREFIX) :]
         return model_id
@@ -2211,8 +2257,25 @@ class ConfigDrivenModelCleaner(BaseModelCleaner):
             },
         }
 
+        # For multi-prefix providers, use model_id directly if it already has a known prefix
+        if self._model_prefixes:
+            for prefix_entry in self._model_prefixes:
+                if model_id.startswith(prefix_entry["prefix"]):
+                    entry["litellm_params"]["model"] = model_id
+                    break
+
         # Add api_base configuration if specified
-        if self._api_base_config:
+        if self._model_prefixes:
+            # Multi-prefix providers: look up prefix-specific api_base
+            for prefix_entry in self._model_prefixes:
+                if model_id.startswith(prefix_entry["prefix"]):
+                    entry["litellm_params"]["api_base"] = prefix_entry["api_base"]
+                    if self._api_base_config and "api_key_env" in self._api_base_config:
+                        entry["litellm_params"]["api_key"] = (
+                            f"os.environ/{self._api_base_config['api_key_env']}"
+                        )
+                    break
+        elif self._api_base_config:
             if "url" in self._api_base_config:
                 entry["litellm_params"]["api_base"] = self._api_base_config["url"]
             elif "url_env" in self._api_base_config:

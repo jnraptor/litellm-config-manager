@@ -1,11 +1,11 @@
 # LiteLLM Model Cleanup, Cost Update, and Model Addition Scripts
 
-Comprehensive Python scripts that validate models from multiple providers (OpenRouter, Requesty, Novita, Nano-GPT, Vercel AI Gateway, Poe, Kilo, and Nvidia NIM) in LiteLLM configuration files against their respective APIs, remove invalid model entries, automatically update model costs to match current pricing, and provide an easy way to add new models.
+Comprehensive Python scripts that validate models from multiple providers (OpenRouter, Requesty, Novita, Nano-GPT, Vercel AI Gateway, Poe, Kilo, Nvidia NIM, OpenCode Zen, and OpenCode Go) in LiteLLM configuration files against their respective APIs, remove invalid model entries, automatically update model costs to match current pricing, and provide an easy way to add new models.
 
 ## Overview
 
 These scripts help maintain your LiteLLM configuration by:
-- Identifying models from multiple providers (OpenRouter, Requesty, Novita, Nano-GPT, Vercel AI Gateway, Poe, Nvidia NIM) in your `config.yaml`
+- Identifying models from multiple providers (OpenRouter, Requesty, Novita, Nano-GPT, Vercel AI Gateway, Poe, Kilo, Nvidia NIM, OpenCode Zen, OpenCode Go) in your `config.yaml`
 - Checking their validity against the current APIs
 - Removing entire model entries for invalid/deprecated models
 - **Automatically updating model costs** (`input_cost_per_token` and `output_cost_per_token`) when they differ from API pricing
@@ -26,6 +26,8 @@ These scripts help maintain your LiteLLM configuration by:
 - **cleanup_poe_models.py** - Poe-specific cleanup
 - **cleanup_kilo_models.py** - Kilo-specific cleanup
 - **cleanup_nvidia_models.py** - Nvidia NIM-specific cleanup
+- **cleanup_opencode_zen_models.py** - OpenCode Zen-specific cleanup
+- **cleanup_opencode_go_models.py** - OpenCode Go-specific cleanup (supports OpenAI and Anthropic compatible APIs)
 
 ## Features
 
@@ -242,6 +244,8 @@ python cleanup_models.py --provider openrouter --add-model gpt-4 --model-name "M
    # - cleanup_vercel_models.py
    # - cleanup_poe_models.py
    # - cleanup_nvidia_models.py
+   # - cleanup_opencode_zen_models.py
+   # - cleanup_opencode_go_models.py
    # - providers.yaml (for unified script)
    # - requirements.txt
    ```
@@ -271,6 +275,7 @@ python cleanup_models.py --provider openrouter --add-model gpt-4 --model-name "M
    - **Requesty**: Set `REQUESTY_API_KEY` environment variable
    - **Nano-GPT**: Set `NANOGPT_API_KEY` environment variable
    - **Kilo**: Set `KILO_API_KEY` environment variable
+   - **OpenCode Zen / OpenCode Go**: Set `OPENCODE_API_KEY` environment variable
    - **OpenRouter, Novita, Vercel, Poe, Nvidia**: No API key required for model listing
 
 ## Usage
@@ -292,6 +297,8 @@ python cleanup_vercel_models.py
 python cleanup_poe_models.py
 python cleanup_kilo_models.py
 python cleanup_nvidia_models.py
+python cleanup_opencode_zen_models.py                      # OpenCode Zen
+python cleanup_opencode_go_models.py                       # OpenCode Go (OpenAI + Anthropic compat)
 
 # Process a specific config file
 python cleanup_openrouter_models.py --config /path/to/your/config.yaml
@@ -373,7 +380,7 @@ python cleanup_nvidia_models.py --dry-run --verbose
 
 | Option | Description |
 |--------|-------------|
-| `--provider PROVIDER` | Provider to process: `openrouter`, `requesty`, `novita`, `nano_gpt`, `vercel`, `poe`, `kilo`, `nvidia`, or `all` (required) |
+| `--provider PROVIDER` | Provider to process: `openrouter`, `requesty`, `novita`, `nano_gpt`, `vercel`, `poe`, `kilo`, `nvidia`, `opencode-zen`, `opencode-go`, or `all` (required) |
 | `--config CONFIG` | Path to LiteLLM configuration file (default: `config.yaml`) |
 | `--dry-run` | Preview all changes without modifying the configuration file |
 | `--verbose` | Enable detailed logging output with cost comparison information and percentage changes |
@@ -696,6 +703,19 @@ The script identifies Nvidia NIM models by looking for entries where:
 - `litellm_params.model` starts with `nvidia_nim/`
 - Examples: `nvidia_nim/meta/llama-3.1-8b-instruct`, `nvidia_nim/nvidia/llama-3.1-nemotron-70b-instruct`
 
+### OpenCode Zen Models
+The script identifies OpenCode Zen models by looking for entries where:
+- `litellm_params.api_base` contains `opencode.ai/zen/v1`
+- `litellm_params.model` starts with `openai/`
+- Examples: `openai/glm-5.1`
+
+### OpenCode Go Models
+The script identifies OpenCode Go models by looking for entries where:
+- `litellm_params.api_base` contains `opencode.ai/zen/go`
+- `litellm_params.model` starts with `openai/`, `dashscope/`, or `anthropic/`
+- Examples: `openai/glm-5`, `dashscope/qwen3.6-plus`, `anthropic/minimax-m2.5`
+- Supports both OpenAI-compatible and Anthropic-compatible APIs via model prefix detection and corresponding api_base assignment
+
 ## Validation Logic
 
 ### OpenRouter Model Validation
@@ -733,6 +753,24 @@ The script identifies Nvidia NIM models by looking for entries where:
 - The `nvidia_nim/` prefix is stripped for comparison
 - Models not found in the API response are marked as invalid
 - All Nvidia NIM models are free - no pricing data in API, uses `1e-09` cost for LiteLLM compatibility
+
+### OpenCode Zen Model Validation
+- Config models like `openai/glm-5.1` are compared against API models like `glm-5.1`
+- The `openai/` prefix is stripped for comparison
+- Validated against `api_base` containing `opencode.ai/zen/v1`
+- Models not found in the API response are marked as invalid
+- No pricing data in API - no cost fields added to model entries
+
+### OpenCode Go Model Validation
+- Config models like `openai/glm-5` or `anthropic/minimax-m2.5` are compared against API models like `glm-5` or `minimax-m2.5`
+- The matching prefix (`openai/`, `dashscope/`, or `anthropic/`) is stripped for comparison
+- Validated against `api_base` containing `opencode.ai/zen/go`
+- Supports multi-prefix detection: models with `openai/`, `dashscope/`, or `anthropic/` prefix are all detected
+- Each prefix maps to the correct api_base:
+  - `openai/` and `dashscope/` → `https://opencode.ai/zen/go/v1`
+  - `anthropic/` → `https://opencode.ai/zen/go`
+- Models not found in the API response are marked as invalid
+- No pricing data in API - no cost fields added to model entries
 
 ### Cost Validation and Updates
 - The script fetches current pricing from the APIs:
@@ -808,6 +846,8 @@ python cleanup_vercel_models.py --help
 python cleanup_poe_models.py --help
 python cleanup_kilo_models.py --help
 python cleanup_nvidia_models.py --help
+python cleanup_opencode_zen_models.py --help
+python cleanup_opencode_go_models.py --help
 ```
 
 ## Best Practices
@@ -826,6 +866,7 @@ python cleanup_nvidia_models.py --help
 12. **For Poe models**, ensure model IDs match the exact format from the Poe API (e.g., "Claude-Sonnet-4.5")
 13. **For Kilo models**, ensure model IDs match the exact format from the Kilo API (e.g., "anthropic/claude-opus-4.6")
 14. **For Nvidia NIM models**, ensure model IDs match the exact format from the Nvidia API (e.g., "meta/llama-3.1-8b-instruct") - all models are free
+15. **For OpenCode Go models**, use prefixed model IDs when adding: `openai/<model>`, `dashscope/<model>`, or `anthropic/<model>` (e.g., `python cleanup_opencode_go_models.py --add-model openai/glm-5`)
 
 ## Script Architecture
 

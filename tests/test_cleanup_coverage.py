@@ -45,6 +45,7 @@ class MockModelCleaner(BaseModelCleaner):
         self.PROVIDER_NAME = "TestProvider"
         self.SPECIAL_MODELS = {"special-model"}
         self.defaults = {}
+        self._model_prefixes = None
 
     def extract_provider_models(self, config):
         """Extract models from config."""

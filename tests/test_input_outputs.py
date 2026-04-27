@@ -192,6 +192,11 @@ class MockCleaner(ConfigDrivenModelCleaner):
         self.dry_run = True
         self.verbose = False
 
+        # Map test-only provider names to actual provider names
+        actual_provider = provider_name
+        if provider_name == "opencode-go-anthropic":
+            actual_provider = "opencode-go"
+
         # Load provider configuration directly from YAML
         providers_path = Path(__file__).parent.parent / "providers.yaml"
         with open(providers_path, "r") as f:
@@ -199,17 +204,17 @@ class MockCleaner(ConfigDrivenModelCleaner):
 
         if (
             "providers" not in providers_data
-            or provider_name not in providers_data["providers"]
+            or actual_provider not in providers_data["providers"]
         ):
             available = list(providers_data.get("providers", {}).keys())
             raise ValueError(
-                f"Provider '{provider_name}' not found. Available: {', '.join(available)}"
+                f"Provider '{actual_provider}' not found. Available: {', '.join(available)}"
             )
 
-        self.provider_config = providers_data["providers"][provider_name]
+        self.provider_config = providers_data["providers"][actual_provider]
 
         # Set class attributes from configuration
-        self.PROVIDER_NAME = self.provider_config.get("name", provider_name)
+        self.PROVIDER_NAME = self.provider_config.get("name", actual_provider)
         self.API_URL = self.provider_config["api_url"]
         self.MODEL_PREFIX = self.provider_config["model_prefix"]
         self.SPECIAL_MODELS = set(self.provider_config.get("special_models", []))
@@ -224,6 +229,7 @@ class MockCleaner(ConfigDrivenModelCleaner):
         self._api_key_env = self.provider_config.get("api_key_env")
         self._embeddings_api_url = self.provider_config.get("embeddings_api_url")
         self._free_variant_suffix = self.provider_config.get("free_variant_suffix")
+        self._model_prefixes = self.provider_config.get("model_prefixes")
 
         # Load defaults from providers.yaml
         self.defaults = providers_data.get("defaults", {})
@@ -281,10 +287,14 @@ def run_test_case(test_case: InputOutputTestCase) -> Tuple[bool, List[str]]:
     else:
         model_id = test_case.input_data.get("id", "")
 
-    # For kilo provider, the model_prefix is 'openai/', so we need the full model_id
-    if test_case.provider == "kilo":
-        # Kilo uses the full model_id as is (z-ai/glm-5)
-        pass
+    # For multi-prefix providers (e.g., opencode-go), prepend the expected prefix
+    # so create_model_entry can determine the correct api_base
+    if test_case.provider in ("opencode-go", "opencode-go-anthropic"):
+        expected_model = test_case.expected_output.get("litellm_params", {}).get("model", "")
+        if "/" in expected_model:
+            expected_prefix = expected_model.split("/")[0] + "/"
+            if not model_id.startswith(expected_prefix):
+                model_id = expected_prefix + model_id
 
     expected_model_name = test_case.expected_output.get("model_name", "")
 
@@ -443,6 +453,8 @@ if HAVE_PYTEST:
                 "fireworks",
                 "opencode-zen",
                 "requesty",
+                "opencode-go",
+                "opencode-go-anthropic",
             ],
         )
         def test_provider_output(self, provider):

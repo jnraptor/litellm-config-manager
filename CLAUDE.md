@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Repository Overview
 
-This is a LiteLLM configuration management repository with Python scripts for managing model configurations across multiple AI providers: OpenRouter, Vercel AI Gateway, Poe, Kilo, Nvidia NIM, Ollama, and Fireworks. The main config file (`config.yaml`) contains LiteLLM model definitions with routing strategies and cost information.
+This is a LiteLLM configuration management repository with Python scripts for managing model configurations across multiple AI providers: OpenRouter, Vercel AI Gateway, Poe, Kilo, Nvidia NIM, Ollama, Fireworks, OpenCode Zen, and OpenCode Go. The main config file (`config.yaml`) contains LiteLLM model definitions with routing strategies and cost information.
 
 ## Development Commands
 
@@ -77,6 +77,7 @@ source .venv/bin/activate  # On macOS/Linux
 **API Key Requirements:**
 
 - **Kilo**: `KILO_API_KEY`
+- **OpenCode Zen / OpenCode Go**: `OPENCODE_API_KEY`
 - **OpenRouter, Novita, Vercel, Poe, Nvidia, Ollama**: No API key required for model listing
 - **Fireworks**: Uses `FIREWORKS_AI_API_KEY`, required for model listing
 
@@ -115,7 +116,7 @@ pytest tests/test_cleanup_base.py::test_costs_are_equal -v
 
 - `test_cleanup_base.py` — Unit tests for utility functions (costs_are_equal, APIClient, etc.)
 - `test_cleanup_coverage.py` — Tests for model validation, cost updating, model addition
-- `test_input_outputs.py` — Integration tests validating expected input/output transformations from `tests/input-and-outputs.md`
+- `test_input_outputs.py` — Integration tests validating expected input/output transformations from `tests/input-and-outputs.md` (includes `opencode-go` and `opencode-go-anthropic` test cases)
 - `test_coverage_additional.py` — Tests for UnifiedModelCleaner, file I/O, free variants, ModelMappingLoader
 
 **Adding New Tests:**
@@ -142,7 +143,7 @@ To add a new provider test case, edit `tests/input-and-outputs.md`:
 
 ### Class Hierarchy
 
-All logic lives in `cleanup_base.py`. The two entry points (`cleanup_models.py` and the 10 `cleanup_*_models.py` scripts) both delegate to the same base classes.
+All logic lives in `cleanup_base.py`. The two entry points (`cleanup_models.py` and the 11 `cleanup_*_models.py` scripts) both delegate to the same base classes.
 
 ```
 cleanup_base.py
@@ -172,12 +173,13 @@ cleanup_models.py
 
 **`providers.yaml`** — single source of truth for all provider settings:
 
-- `model_detection.type`: `"prefix"` (OpenRouter, Novita, Vercel, Nvidia, Nano-GPT) or `"api_base"` (Requesty, Poe, Kilo)
+- `model_detection.type`: `"prefix"` (OpenRouter, Novita, Vercel, Nvidia, Nano-GPT) or `"api_base"` (Requesty, Poe, Kilo, OpenCode Zen, OpenCode Go)
 - `pricing.input_field` / `pricing.output_field`: dot-notation paths into the API response
 - `pricing.is_per_million` + `pricing.divisor`: conversion to per-token cost
 - `pricing.default_cost`: used when API has no pricing (Nvidia: `1.0e-09`)
 - `free_variant_suffix`: `":free"` for OpenRouter and Kilo — triggers automatic `:free` variant addition when adding models
 - `special_models`: model IDs exempt from removal validation
+- `model_prefixes`: optional list of `{prefix, api_base}` mappings for providers that serve models under multiple prefixes (e.g., OpenCode Go with `openai/`, `dashscope/`, `anthropic/`)
 
 **`cleanup_models.py`** (~342 lines) — `UnifiedModelCleaner` delegates to per-provider `ConfigDrivenModelCleaner` instances; handles multi-provider orchestration, the `--provider all` flag, and mapped model additions via `--add-mapped-model`.
 
@@ -198,13 +200,22 @@ How each provider's models are detected in `config.yaml`:
 - **Fireworks**: `litellm_params.model` starts with `fireworks_ai/`
 - **Poe**: `litellm_params.api_base` contains `api.poe.com` + model starts with `openai/`
 - **Kilo**: `litellm_params.api_base` = `os.environ/KILO_API_BASE` + model starts with `openai/`
+- **OpenCode Zen**: `litellm_params.api_base` contains `opencode.ai/zen/v1` + model starts with `openai/`
+- **OpenCode Go**: `litellm_params.api_base` contains `opencode.ai/zen/go` + model starts with `openai/`, `dashscope/`, or `anthropic/`
+
+> **Note:** OpenCode Go is the first provider to support multiple model prefixes. The `model_prefixes` field in `providers.yaml` maps each prefix to its corresponding `api_base`:
+> - `openai/` and `dashscope/` → `https://opencode.ai/zen/go/v1`
+> - `anthropic/` → `https://opencode.ai/zen/go`
 
 ### Adding a New Provider
 
 1. Add a block to `providers.yaml` with `api_url`, `model_detection`, `pricing`, `model_name_prefix`, `model_name_cleanup`, `order`
 2. Create `cleanup_<provider>_models.py` — inherit `ConfigDrivenModelCleaner`, call `create_provider_main`
-3. Test: `python cleanup_models.py --provider <name> --dry-run --verbose`
-4. For custom pricing logic (e.g., non-standard API response format), override `parse_api_model()`
+3. For multi-prefix providers (e.g., OpenCode Go), add `model_prefixes` to `providers.yaml` — a list of `{prefix, api_base}` mappings
+4. Test: `python cleanup_models.py --provider <name> --dry-run --verbose`
+5. For custom pricing logic (e.g., non-standard API response format), override `parse_api_model()`
+
+**Multi-Prefix Support:** When a provider serves models under different API types (e.g., OpenAI-compatible and Anthropic-compatible), use the `model_prefixes` field instead of relying on a single `model_prefix`. This triggers multi-prefix detection in `is_api_base_model()`, `get_api_model_id()`, and `create_model_entry()` to correctly identify models and assign the appropriate `api_base` per prefix.
 
 ## Configuration Management
 
