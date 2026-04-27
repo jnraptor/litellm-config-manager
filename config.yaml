@@ -193,6 +193,22 @@ model_list:
     input_cost_per_token: 4.0e-07
     output_cost_per_token: 2.0e-06
     order: 5
+- model_name: gemini-3.1-flash-image-preview
+  litellm_params:
+    model: gemini/gemini-3.1-flash-image-preview
+    order: 4
+    api_key: os.environ/GEMINI_API_KEY
+    input_cost_per_token: 5.0e-07
+    output_cost_per_token: 6e-05
+  model_info:
+    mode: image_generation
+- model_name: gemini-3.1-flash-lite
+  litellm_params:
+    model: gemini/gemini-3.1-flash-lite-preview
+    order: 4
+    api_key: os.environ/GEMINI_API_KEY
+    input_cost_per_token: 2.5e-07
+    output_cost_per_token: 1.5e-06
 - model_name: gemini-3.1-flash-lite
   litellm_params:
     model: poe/gemini-3.1-flash-lite
@@ -208,6 +224,13 @@ model_list:
     output_cost_per_token: 1.5e-06
 - model_name: gemini-3.1-pro
   litellm_params:
+    model: gemini/gemini-3.1-pro-preview
+    order: 4
+    api_key: os.environ/GEMINI_API_KEY
+    input_cost_per_token: 2.0e-06
+    output_cost_per_token: 1.2e-05
+- model_name: gemini-3.1-pro
+  litellm_params:
     model: poe/gemini-3.1-pro
     order: 4
     api_key: os.environ/POE_API_KEY
@@ -219,6 +242,14 @@ model_list:
     order: 5
     input_cost_per_token: 2.0e-06
     output_cost_per_token: 1.2e-05
+- model_name: gemini-embedding-2
+  litellm_params:
+    model: gemini/gemini-embedding-2
+    order: 4
+    api_key: os.environ/GEMINI_API_KEY
+    input_cost_per_token: 2.0e-07
+  model_info:
+    mode: embedding
 - model_name: gemma-4-31b
   litellm_params:
     model: nvidia_nim/google/gemma-4-31b-it
@@ -239,6 +270,11 @@ model_list:
     order: 3
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
+- model_name: gemma-4-31b
+  litellm_params:
+    model: gemini/gemma-4-31b-it
+    api_key: os.environ/GEMINI_API_KEY
+    order: 4
 - model_name: gemma-4-31b
   litellm_params:
     model: poe/gemma-4-31b
