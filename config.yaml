@@ -203,6 +203,12 @@ model_list:
     mode: image_generation
 - model_name: gemini-3.1-flash-lite
   litellm_params:
+    model: gemini/gemini-3.1-flash-lite-preview
+    order: 3
+    input_cost_per_token: 1.0e-09
+    output_cost_per_token: 1.0e-09
+- model_name: gemini-3.1-flash-lite
+  litellm_params:
     model: poe/gemini-3.1-flash-lite
     order: 4
     api_key: os.environ/POE_API_KEY
@@ -248,6 +254,12 @@ model_list:
     mode: embedding
 - model_name: gemma-4-31b
   litellm_params:
+    model: gemini/gemma-4-31b-it
+    order: 3
+    input_cost_per_token: 1.0e-09
+    output_cost_per_token: 1.0e-09
+- model_name: gemma-4-31b
+  litellm_params:
     model: nvidia_nim/google/gemma-4-31b-it
     order: 3
     input_cost_per_token: 1.0e-09
@@ -271,10 +283,6 @@ model_list:
     model: poe/gemma-4-31b
     order: 4
     api_key: os.environ/POE_API_KEY
-- model_name: gemma-4-31b
-  litellm_params:
-    model: vertex_ai/gemma-4-31b-it
-    order: 4
 - model_name: gemma-4-31b
   litellm_params:
     model: openai/google/gemma-4-31b-it

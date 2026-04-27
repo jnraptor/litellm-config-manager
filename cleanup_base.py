@@ -202,7 +202,7 @@ VALID_MODEL_MODES = frozenset({
 FALLBACK_KNOWN_PREFIXES = frozenset({
     "azure/", "azure_ai/", "openai/", "dashscope/",
     "jina_ai/", "ollama/", "ollama_chat/", "anthropic/",
-    "vercel_ai_gateway/", "auto_router/"
+    "vercel_ai_gateway/", "auto_router/", "gemini/", "vertex_ai/"
 })
 
 
