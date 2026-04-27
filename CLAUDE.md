@@ -43,9 +43,8 @@ models:
     display_name: "zai-glm-5"  # Common name across all providers
     description: "GLM-5 model by Z.ai"
     providers:
-      openrouter: z-ai/glm-5
-      requesty: zai/GLM-5
-      novita: glm-5
+       openrouter: z-ai/glm-5
+       requesty: zai/GLM-5
 ```
 
 **Benefits:**
@@ -78,7 +77,7 @@ source .venv/bin/activate  # On macOS/Linux
 
 - **Kilo**: `KILO_API_KEY`
 - **OpenCode Zen / OpenCode Go**: `OPENCODE_API_KEY`
-- **OpenRouter, Novita, Vercel, Poe, Nvidia, Ollama**: No API key required for model listing
+- **OpenRouter, Vercel, Poe, Nvidia, Ollama**: No API key required for model listing
 - **Fireworks**: Uses `FIREWORKS_AI_API_KEY`, required for model listing
 
 ### Testing Workflow
@@ -151,7 +150,6 @@ cleanup_base.py
 │   └── ConfigDrivenModelCleaner       # reads providers.yaml, implements all abstract methods
 │       ├── OpenRouterModelCleaner     # cleanup_openrouter_models.py
 │       ├── KiloModelCleaner           # cleanup_kilo_models.py
-│       ├── NovitaModelCleaner         # cleanup_novita_models.py
 │       ├── OllamaModelCleaner         # cleanup_ollama_models.py (custom fetch_available_models)
 │       ├── FireworksModelCleaner      # cleanup_fireworks_models.py
 │       └── ...all other providers (follow same pattern)
@@ -173,7 +171,7 @@ cleanup_models.py
 
 **`providers.yaml`** — single source of truth for all provider settings:
 
-- `model_detection.type`: `"prefix"` (OpenRouter, Novita, Vercel, Nvidia, Nano-GPT) or `"api_base"` (Requesty, Poe, Kilo, OpenCode Zen, OpenCode Go)
+- `model_detection.type`: `"prefix"` (OpenRouter, Vercel, Nvidia) or `"api_base"` (Requesty, Poe, Kilo, OpenCode Zen, OpenCode Go)
 - `pricing.input_field` / `pricing.output_field`: dot-notation paths into the API response
 - `pricing.is_per_million` + `pricing.divisor`: conversion to per-token cost
 - `pricing.default_cost`: used when API has no pricing (Nvidia: `1.0e-09`)

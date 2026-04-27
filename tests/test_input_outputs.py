@@ -39,7 +39,6 @@ Adding New Test Cases:
 
 Test Coverage:
     - openrouter: Tests pricing extraction from pricing.prompt/pricing.completion
-    - nano_gpt: Tests per-million token pricing conversion
     - vercel: Tests pricing.input/pricing.output field extraction
     - poe: Tests standard prompt/completion pricing
     - nvidia: Tests default cost handling for free models

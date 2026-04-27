@@ -11,7 +11,7 @@ against their current APIs and:
 5. Supports both regular and embedding models (where applicable)
 6. Supports mapped models for simplified multi-provider addition
 
-Supported providers: openrouter, requesty, novita, nano_gpt, vercel, poe, nvidia, kilo, ollama, opencode-zen, opencode-go, all
+Supported providers: openrouter, requesty, vercel, poe, nvidia, kilo, ollama, opencode-zen, opencode-go, all
 
 Usage:
     python cleanup_models.py --provider openrouter [--config config.yaml] [--dry-run] [--verbose]

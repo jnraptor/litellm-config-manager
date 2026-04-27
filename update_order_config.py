@@ -125,10 +125,6 @@ def determine_provider_for_model(model_entry: Dict[str, Any],
     if 'api.poe.com' in api_base:
         return 'poe'
     
-    # Check for nano_gpt provider (order 2)
-    if 'NANOGPT_API_BASE' in api_base:
-        return 'nano_gpt'
-    
     # Default to order 2 if provider cannot be determined
     logger.debug(f"Could not determine provider for model: {model_id}")
     return None

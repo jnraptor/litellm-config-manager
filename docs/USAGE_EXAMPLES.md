@@ -1,6 +1,6 @@
 # Usage Examples
 
-This document provides practical examples of using the OpenRouter, Requesty, and Novita Model Cleanup, Cost Update, and Model Addition Scripts.
+This document provides practical examples of using the OpenRouter and Requesty Model Cleanup, Cost Update, and Model Addition Scripts.
 
 ## Quick Start
 
@@ -14,9 +14,6 @@ python cleanup_openrouter_models.py --dry-run --verbose
 
 # For Requesty models
 python cleanup_requesty_models.py --dry-run --verbose
-
-# For Novita models
-python cleanup_novita_models.py --dry-run --verbose
 ```
 
 ### 2. Apply Changes
@@ -29,9 +26,6 @@ python cleanup_openrouter_models.py
 
 # For Requesty models
 python cleanup_requesty_models.py
-
-# For Novita models
-python cleanup_novita_models.py
 ```
 
 ## Common Scenarios
@@ -52,11 +46,6 @@ python cleanup_openrouter_models.py --add-model "meta-llama/llama-3.2-1b-instruc
 python cleanup_requesty_models.py --add-model "coding/gemini-2.5-flash" --dry-run
 # Review the output, then add it:
 python cleanup_requesty_models.py --add-model "coding/gemini-2.5-flash"
-
-# Add a new Novita model with preview first
-python cleanup_novita_models.py --add-model "deepseek/deepseek-v3-0324" --dry-run
-# Review the output, then add it:
-python cleanup_novita_models.py --add-model "deepseek/deepseek-v3-0324"
 ```
 
 ### Scenario 2: Regular Maintenance
@@ -71,11 +60,6 @@ python cleanup_openrouter_models.py
 python cleanup_requesty_models.py --dry-run
 # Review the output (model removals + cost updates), then:
 python cleanup_requesty_models.py
-
-# Weekly cleanup and cost sync routine for Novita
-python cleanup_novita_models.py --dry-run
-# Review the output (model removals + cost updates), then:
-python cleanup_novita_models.py
 ```
 
 ### Scenario 3: Custom Config File
@@ -91,10 +75,6 @@ python cleanup_openrouter_models.py --config /path/to/my-litellm-config.yaml --a
 # Same for Requesty
 python cleanup_requesty_models.py --config /path/to/my-litellm-config.yaml --dry-run
 python cleanup_requesty_models.py --config /path/to/my-litellm-config.yaml
-
-# Same for Novita
-python cleanup_novita_models.py --config /path/to/my-litellm-config.yaml --dry-run
-python cleanup_novita_models.py --config /path/to/my-litellm-config.yaml
 ```
 
 ### Scenario 4: Debugging Issues
@@ -110,9 +90,7 @@ python cleanup_openrouter_models.py --add-model "some/model-id" --verbose --dry-
 python cleanup_requesty_models.py --verbose --dry-run
 python cleanup_requesty_models.py --add-model "coding/some-model" --verbose --dry-run
 
-# Same for Novita
-python cleanup_novita_models.py --verbose --dry-run
-python cleanup_novita_models.py --add-model "deepseek/some-model" --verbose --dry-run
+
 ```
 
 ### Scenario 5: Cost-Only Monitoring
@@ -123,9 +101,6 @@ python cleanup_openrouter_models.py --dry-run --verbose | grep -E "(Cost update|
 
 # Same for Requesty
 python cleanup_requesty_models.py --dry-run --verbose | grep -E "(Cost update|Input cost|Output cost)"
-
-# Same for Novita
-python cleanup_novita_models.py --dry-run --verbose | grep -E "(Cost update|Input cost|Output cost)"
 ```
 
 ### Scenario 6: Automated Scripts
@@ -173,15 +148,7 @@ read
 echo "Applying model cleanup and cost updates..."
 python cleanup_requesty_models.py --verbose
 
-# Same for Novita
-echo "Checking for invalid Novita models and cost updates..."
-python cleanup_novita_models.py --dry-run --verbose
 
-echo "Press Enter to continue with cleanup and cost updates, or Ctrl+C to cancel"
-read
-
-echo "Applying model cleanup and cost updates..."
-python cleanup_novita_models.py --verbose
 ```
 
 ## Expected Output Scenarios
@@ -521,7 +488,6 @@ python -c "import yaml; yaml.safe_load(open('config.yaml'))"
 
 - The script typically processes 20-30 OpenRouter models in under 5 seconds
 - The script typically processes 4-10 Requesty models in under 3 seconds
-- The script typically processes 2-5 Novita models in under 3 seconds
 - API calls are cached during a single run and include both model validation and pricing data
 - Network latency affects total runtime (usually 1-3 seconds for API call)
 - YAML parsing and writing is very fast for typical config sizes
@@ -529,9 +495,9 @@ python -c "import yaml; yaml.safe_load(open('config.yaml'))"
 
 ## Cost Update Benefits
 
-- **Automatic cost synchronization**: No manual tracking of OpenRouter/Requesty/Novita price changes
+- **Automatic cost synchronization**: No manual tracking of provider price changes
 - **Significant savings**: Recent tests showed cost reductions of 70-90% for some models
 - **Transparency**: Clear percentage-based logging shows exactly what changed
 - **Safety**: Free models are handled correctly to maintain LiteLLM compatibility
 - **Provider flexibility**: Requesty script maintains model names to enable load balancing across providers
-- **Accurate pricing conversion**: Novita script properly converts per-million token pricing to per-token costs
+- **Accurate pricing conversion**: Handles per-million token pricing conversion where applicable

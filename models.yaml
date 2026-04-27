@@ -15,7 +15,6 @@ models:
       openrouter: z-ai/glm-5
       fireworks: accounts/fireworks/models/glm-5
       # Add other providers as needed:
-      # novita: glm-5
       # kilo: z-ai/glm-5
 
   nemotron-3-super:

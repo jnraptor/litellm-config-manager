@@ -367,7 +367,6 @@ class TestModelMappingLoader:
                     "providers": {
                         "openrouter": "z-ai/glm-5",
                         "kilo": "z-ai/glm-5",
-                        "nano_gpt": "zai-org/glm-5",
                         "vercel": "zai/glm-5",
                         "poe": "glm-5",
                         "nvidia": "z-ai/glm5",
@@ -379,7 +378,6 @@ class TestModelMappingLoader:
                     "providers": {
                         "openrouter": "anthropic/claude-opus-4.6",
                         "kilo": "anthropic/claude-opus-4.6",
-                        "nano_gpt": "anthropic/claude-opus-4.6",
                     },
                 },
             }
@@ -520,7 +518,6 @@ class TestIntegration:
                     "display_name": "test-model",
                     "providers": {
                         "openrouter": "vendor/test-model",
-                        "nano_gpt": "vendor/test-model",
                     },
                 }
             }
@@ -535,7 +532,6 @@ class TestIntegration:
 
         assert model_mapping is not None
         assert "openrouter" in model_mapping["providers"]
-        assert "nano_gpt" in model_mapping["providers"]
         assert model_mapping["providers"]["openrouter"] == "vendor/test-model"
 
 
