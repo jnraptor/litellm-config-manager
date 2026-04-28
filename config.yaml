@@ -770,18 +770,6 @@ model_list:
     order: 5
     input_cost_per_token: 7.448e-07
     output_cost_per_token: 4.655e-06
-- model_name: nemotron-3-nano-omni
-  litellm_params:
-    model: nvidia_nim/nvidia/nemotron-3-nano-omni-30b-a3b-reasoning
-    order: 3
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
-- model_name: nemotron-3-nano-omni
-  litellm_params:
-    model: openrouter/nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free
-    order: 3
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
 - model_name: nim-llama-nemotron-embed-1b-v2
   litellm_params:
     model: nvidia_nim/nvidia/llama-nemotron-embed-1b-v2
@@ -833,18 +821,18 @@ model_list:
     output_cost_per_token: 1.0e-09
   model_info:
     mode: embedding
-- litellm_params:
-    model: nvidia_nim/nvidia/nemotron-3-nano-30b-a3b
+- model_name: nvidia-nemotron-3-nano-omni
+  litellm_params:
+    model: nvidia_nim/nvidia/nemotron-3-nano-omni-30b-a3b-reasoning
+    order: 3
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
+- model_name: nvidia-nemotron-3-nano-omni
+  litellm_params:
+    model: openrouter/nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free
     order: 3
-  model_name: nvidia-nemotron-3-nano-30b-a3b
-- litellm_params:
-    model: openrouter/nvidia/nemotron-3-nano-30b-a3b:free
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
-    order: 3
-  model_name: nvidia-nemotron-3-nano-30b-a3b
 - model_name: nvidia-nemotron-3-super
   litellm_params:
     model: nvidia_nim/nvidia/nemotron-3-super-120b-a12b
@@ -873,42 +861,6 @@ model_list:
     order: 3
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
-- litellm_params:
-    model: nvidia_nim/nvidia/nemotron-nano-12b-v2-vl
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
-    order: 3
-  model_name: nvidia-nemotron-nano-12b-v2-vl
-- litellm_params:
-    model: openrouter/nvidia/nemotron-nano-12b-v2-vl:free
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
-    order: 3
-  model_name: nvidia-nemotron-nano-12b-v2-vl
-- litellm_params:
-    model: openrouter/nvidia/nemotron-nano-12b-v2-vl
-    input_cost_per_token: 2.0e-07
-    output_cost_per_token: 6.0e-07
-    order: 5
-  model_name: nvidia-nemotron-nano-12b-v2-vl
-- litellm_params:
-    model: nvidia_nim/nvidia/nvidia-nemotron-nano-9b-v2
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
-    order: 3
-  model_name: nvidia-nemotron-nano-9b-v2
-- litellm_params:
-    model: openrouter/nvidia/nemotron-nano-9b-v2:free
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
-    order: 3
-  model_name: nvidia-nemotron-nano-9b-v2
-- litellm_params:
-    model: openrouter/nvidia/nemotron-nano-9b-v2
-    input_cost_per_token: 4.0e-08
-    output_cost_per_token: 1.6e-07
-    order: 5
-  model_name: nvidia-nemotron-nano-9b-v2
 - model_name: oai-text-embedding-3-small
   litellm_params:
     model: openai/oai-text-embedding-3-small
