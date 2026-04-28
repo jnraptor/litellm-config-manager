@@ -25,6 +25,14 @@ models:
       nvidia: nvidia/nemotron-3-super-120b-a12b
       ollama: nemotron-3-super
 
+  nemotron-3-nano-omni:
+    display_name: "nemotron-3-nano-omni"
+    description: "Nemotron 3 Nano Omni is an omni-modal reasoning model that understands images, video, speech, text."
+    providers:
+      openrouter: nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free
+      nvidia: nvidia/nemotron-3-nano-omni-30b-a3b-reasoning
+      #ollama: nemotron-3-super
+
   mimo-v2-pro:
     display_name: "mimo-v2-pro"
     description: "mimo-v2-pro"
@@ -125,7 +133,7 @@ models:
     providers:
       openrouter: deepseek/deepseek-v4-pro
       kilo: deepseek/deepseek-v4-pro
-      #fireworks: accounts/fireworks/models/qwen3p6-plus
+      fireworks: accounts/fireworks/models/deepseek-v4-pro
       #ollama: qwen3.6-plus
       #poe: qwen3.5-plus
       nvidia: deepseek-ai/deepseek-v4-pro

@@ -770,6 +770,18 @@ model_list:
     order: 5
     input_cost_per_token: 7.448e-07
     output_cost_per_token: 4.655e-06
+- model_name: nemotron-3-nano-omni
+  litellm_params:
+    model: nvidia_nim/nvidia/nemotron-3-nano-omni-30b-a3b-reasoning
+    order: 3
+    input_cost_per_token: 1.0e-09
+    output_cost_per_token: 1.0e-09
+- model_name: nemotron-3-nano-omni
+  litellm_params:
+    model: openrouter/nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free
+    order: 3
+    input_cost_per_token: 1.0e-09
+    output_cost_per_token: 1.0e-09
 - model_name: nim-llama-nemotron-embed-1b-v2
   litellm_params:
     model: nvidia_nim/nvidia/llama-nemotron-embed-1b-v2
