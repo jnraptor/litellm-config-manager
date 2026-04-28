@@ -134,7 +134,7 @@ class TestValidationConstants:
         expected = {
             "azure/", "azure_ai/", "openai/", "dashscope/",
             "jina_ai/", "ollama/", "ollama_chat/", "anthropic/",
-            "vercel_ai_gateway/", "auto_router/"
+            "vercel_ai_gateway/", "auto_router/", "gemini/", "vertex_ai/"
         }
         assert FALLBACK_KNOWN_PREFIXES == expected
 
