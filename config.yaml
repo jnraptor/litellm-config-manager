@@ -163,6 +163,13 @@ model_list:
     output_cost_per_token: 1.0e-09
 - model_name: deepseek-v4-pro
   litellm_params:
+    model: fireworks_ai/accounts/fireworks/models/deepseek-v4-pro
+    order: 5
+    api_key: os.environ/FIREWORKS_AI_API_KEY
+    input_cost_per_token: 1.74e-06
+    output_cost_per_token: 3.48e-06
+- model_name: deepseek-v4-pro
+  litellm_params:
     model: openai/deepseek/deepseek-v4-pro
     order: 5
     api_base: https://api.kilo.ai/api/gateway
