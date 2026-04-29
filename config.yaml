@@ -689,6 +689,12 @@ model_list:
     order: 5
     input_cost_per_token: 3.0e-07
     output_cost_per_token: 1.2e-06
+- model_name: mistral-medium-3.5-128b
+  litellm_params:
+    model: nvidia_nim/mistralai/mistral-medium-3.5-128b
+    order: 3
+    input_cost_per_token: 1.0e-09
+    output_cost_per_token: 1.0e-09
 - model_name: moonshotai-kimi-k2.5
   litellm_params:
     model: openai/kimi-k2.5
