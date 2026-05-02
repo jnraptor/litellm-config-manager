@@ -129,6 +129,13 @@ model_list:
     output_cost_per_token: 1.0e-09
 - model_name: deepseek-v4-flash
   litellm_params:
+    model: poe/deepseek-v4-flash-el
+    order: 4
+    api_key: os.environ/POE_API_KEY
+    input_cost_per_token: 1.394e-07
+    output_cost_per_token: 2.778e-07
+- model_name: deepseek-v4-flash
+  litellm_params:
     model: openai/deepseek/deepseek-v4-flash
     order: 5
     api_base: https://api.kilo.ai/api/gateway
@@ -161,6 +168,13 @@ model_list:
     order: 3
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
+- model_name: deepseek-v4-pro
+  litellm_params:
+    model: poe/deepseek-v4-pro-el
+    order: 4
+    api_key: os.environ/POE_API_KEY
+    input_cost_per_token: 1.6667e-06
+    output_cost_per_token: 3.3343e-06
 - model_name: deepseek-v4-pro
   litellm_params:
     model: fireworks_ai/accounts/fireworks/models/deepseek-v4-pro
@@ -472,24 +486,10 @@ model_list:
     mode: rerank
 - model_name: ling-2.6-flash-free
   litellm_params:
-    model: openai/inclusionai/ling-2.6-flash:free
-    order: 3
-    api_base: https://api.kilo.ai/api/gateway
-    api_key: os.environ/KILO_API_KEY
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
-- model_name: ling-2.6-flash-free
-  litellm_params:
     model: openai/ling-2.6-flash-free
     order: 3
     api_base: https://opencode.ai/zen/v1
     api_key: os.environ/OPENCODE_API_KEY
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
-- model_name: ling-2.6-flash-free
-  litellm_params:
-    model: openrouter/inclusionai/ling-2.6-flash:free
-    order: 3
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
 - litellm_params:
@@ -705,12 +705,6 @@ model_list:
     order: 1
 - model_name: moonshotai-kimi-k2.5
   litellm_params:
-    model: nvidia_nim/moonshotai/kimi-k2.5
-    order: 3
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
-- model_name: moonshotai-kimi-k2.5
-  litellm_params:
     model: poe/kimi-k2.5-fw
     order: 4
     api_key: os.environ/POE_API_KEY
@@ -757,6 +751,12 @@ model_list:
     order: 1
 - model_name: moonshotai-kimi-k2.6
   litellm_params:
+    model: nvidia_nim/moonshotai/kimi-k2.6
+    order: 3
+    input_cost_per_token: 1.0e-09
+    output_cost_per_token: 1.0e-09
+- model_name: moonshotai-kimi-k2.6
+  litellm_params:
     model: fireworks_ai/accounts/fireworks/models/kimi-k2p6
     order: 5
     api_key: os.environ/FIREWORKS_AI_API_KEY
@@ -768,14 +768,14 @@ model_list:
     order: 5
     api_base: https://api.kilo.ai/api/gateway
     api_key: os.environ/KILO_API_KEY
-    input_cost_per_token: 7.448e-07
-    output_cost_per_token: 4.655e-06
+    input_cost_per_token: 7.4e-07
+    output_cost_per_token: 3.49e-06
 - model_name: moonshotai-kimi-k2.6
   litellm_params:
     model: openrouter/moonshotai/kimi-k2.6
     order: 5
-    input_cost_per_token: 7.448e-07
-    output_cost_per_token: 4.655e-06
+    input_cost_per_token: 7.4e-07
+    output_cost_per_token: 3.49e-06
 - model_name: nim-llama-nemotron-embed-1b-v2
   litellm_params:
     model: nvidia_nim/nvidia/llama-nemotron-embed-1b-v2

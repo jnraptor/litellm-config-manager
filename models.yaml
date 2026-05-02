@@ -62,7 +62,7 @@ models:
       openrouter: moonshotai/kimi-k2.6
       kilo: moonshotai/kimi-k2.6
       fireworks: accounts/fireworks/models/kimi-k2p6
-      ollama: kimi-k2.6
+      #ollama: kimi-k2.6
       poe: kimi-k2.6-fw
       nvidia: moonshotai/kimi-k2.6
 
@@ -123,7 +123,7 @@ models:
       kilo: deepseek/deepseek-v4-flash
       #fireworks: accounts/fireworks/models/qwen3p6-plus
       #ollama: qwen3.6-plus
-      #poe: qwen3.5-plus
+      poe: deepseek-v4-flash-el
       nvidia: deepseek-ai/deepseek-v4-flash
       vercel: deepseek/deepseek-v4-flash
 
@@ -135,7 +135,7 @@ models:
       kilo: deepseek/deepseek-v4-pro
       fireworks: accounts/fireworks/models/deepseek-v4-pro
       #ollama: qwen3.6-plus
-      #poe: qwen3.5-plus
+      poe: deepseek-v4-pro-el
       nvidia: deepseek-ai/deepseek-v4-pro
       vercel: deepseek/deepseek-v4-pro
 
