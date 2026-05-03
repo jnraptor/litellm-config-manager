@@ -80,6 +80,21 @@ model_list:
     output_cost_per_token: 5.0e-06
     order: 5
   model_name: claude-haiku-4-5
+- model_name: claude-haiku-4.5
+  litellm_params:
+    model: openai/anthropic/claude-haiku-4.5
+    order: 5
+    api_base: https://api.kilo.ai/api/gateway
+    api_key: os.environ/KILO_API_KEY
+    input_cost_per_token: 1.0e-06
+    output_cost_per_token: 5.0e-06
+- model_name: claude-opus-4.6
+  litellm_params:
+    model: poe/claude-opus-4.6
+    order: 4
+    api_key: os.environ/POE_API_KEY
+    input_cost_per_token: 4.2929e-06
+    output_cost_per_token: 2.14646e-05
 - model_name: claude-opus-4.6
   litellm_params:
     model: openai/anthropic/claude-opus-4.6
@@ -103,16 +118,18 @@ model_list:
     output_cost_per_token: 1.28788e-05
 - model_name: claude-sonnet-4.6
   litellm_params:
+    model: openai/anthropic/claude-sonnet-4.6
+    order: 5
+    api_base: https://api.kilo.ai/api/gateway
+    api_key: os.environ/KILO_API_KEY
+    input_cost_per_token: 3.0e-06
+    output_cost_per_token: 1.5e-05
+- model_name: claude-sonnet-4.6
+  litellm_params:
     model: openrouter/anthropic/claude-sonnet-4.6
     order: 5
     input_cost_per_token: 3.0e-06
     output_cost_per_token: 1.5e-05
-- model_name: deepseek-v3.2
-  litellm_params:
-    model: nvidia_nim/deepseek-ai/deepseek-v3.2
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
-    order: 3
 - model_name: deepseek-v4-flash
   litellm_params:
     model: openai/deepseek-v4-flash
@@ -202,18 +219,6 @@ model_list:
     order: 5
     input_cost_per_token: 4.35e-07
     output_cost_per_token: 8.7e-07
-- model_name: devstral-2512
-  litellm_params:
-    model: nvidia_nim/mistralai/devstral-2-123b-instruct-2512
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
-    order: 3
-- model_name: devstral-2512
-  litellm_params:
-    model: openrouter/mistralai/devstral-2512
-    input_cost_per_token: 4.0e-07
-    output_cost_per_token: 2.0e-06
-    order: 5
 - model_name: gemini-3.1-flash-image-preview
   litellm_params:
     model: vertex_ai/gemini-3.1-flash-image-preview
@@ -450,26 +455,6 @@ model_list:
   model_info:
     base_model: azure/gpt-image-2
     mode: image_generation
-- model_name: hy3-preview-free
-  litellm_params:
-    model: openai/tencent/hy3-preview:free
-    order: 3
-    api_base: https://api.kilo.ai/api/gateway
-    api_key: os.environ/KILO_API_KEY
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
-- model_name: hy3-preview-free
-  litellm_params:
-    model: openrouter/tencent/hy3-preview:free
-    order: 3
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
-- model_name: hy3-preview-free
-  litellm_params:
-    model: openai/hy3-preview-free
-    order: 5
-    api_base: https://opencode.ai/zen/v1
-    api_key: os.environ/OPENCODE_API_KEY
 - model_name: jina-embeddings-v4
   litellm_params:
     model: jina_ai/jina-embeddings-v4
@@ -484,14 +469,6 @@ model_list:
     order: 5
   model_info:
     mode: rerank
-- model_name: ling-2.6-flash-free
-  litellm_params:
-    model: openai/ling-2.6-flash-free
-    order: 3
-    api_base: https://opencode.ai/zen/v1
-    api_key: os.environ/OPENCODE_API_KEY
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
 - litellm_params:
     model: openai/Gemma-4-E2B
     api_base: os.environ/LLAMA_API_BASE
@@ -799,18 +776,6 @@ model_list:
     order: 5
   model_info:
     mode: embedding
-- litellm_params:
-    model: nvidia_nim/nvidia/llama-3.3-nemotron-super-49b-v1.5
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
-    order: 3
-  model_name: nvidia-llama-3.3-nemotron-super-49b-v1.5
-- litellm_params:
-    model: openrouter/nvidia/llama-3.3-nemotron-super-49b-v1.5
-    input_cost_per_token: 1.0e-07
-    output_cost_per_token: 4.0e-07
-    order: 5
-  model_name: nvidia-llama-3.3-nemotron-super-49b-v1.5
 - model_name: nvidia-llama-nemotron-embed-vl-1b-v2
   litellm_params:
     model: nvidia_nim/nvidia/llama-nemotron-embed-vl-1b-v2
@@ -904,20 +869,6 @@ model_list:
     order: 3
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
-- model_name: qwen3.5-397b-a17b
-  litellm_params:
-    model: nvidia_nim/qwen/qwen3.5-397b-a17b
-    order: 3
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
-- model_name: qwen3.5-397b-a17b
-  litellm_params:
-    model: ollama_chat/qwen3.5:397b
-    order: 3
-    api_base: https://ollama.com
-    api_key: os.environ/OLLAMA_API_KEY
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
 - model_name: qwen3.5-plus
   litellm_params:
     model: dashscope/qwen3.5-plus
@@ -1008,45 +959,6 @@ model_list:
     token_thresholds:
       simple: 15
       complex: 400
-- model_name: step-3.5-flash-free
-  litellm_params:
-    model: openai/stepfun/step-3.5-flash:free
-    order: 3
-    api_base: https://api.kilo.ai/api/gateway
-    api_key: os.environ/KILO_API_KEY
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
-- model_name: vc-meituan-longcat-flash-chat
-  litellm_params:
-    model: vercel_ai_gateway/meituan/longcat-flash-chat
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
-    order: 3
-- litellm_params:
-    model: openrouter/z-ai/glm-4.5-air:free
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
-    order: 3
-  model_name: zai-glm-4.5-air
-- litellm_params:
-    model: openrouter/z-ai/glm-4.5-air
-    input_cost_per_token: 1.3e-07
-    output_cost_per_token: 8.5e-07
-    order: 5
-  model_name: zai-glm-4.5-air
-- model_name: zai-glm-4.7-flash
-  litellm_params:
-    model: poe/glm-4.7-flash
-    api_key: os.environ/POE_API_KEY
-    order: 4
-    input_cost_per_token: 7.07e-08
-    output_cost_per_token: 4.04e-07
-- model_name: zai-glm-4.7-flash
-  litellm_params:
-    model: openrouter/z-ai/glm-4.7-flash
-    input_cost_per_token: 6.0e-08
-    output_cost_per_token: 4.0e-07
-    order: 5
 - model_name: zai-glm-5
   litellm_params:
     model: openai/glm-5
