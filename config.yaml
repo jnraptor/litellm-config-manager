@@ -293,14 +293,6 @@ model_list:
     output_cost_per_token: 1.0e-09
 - model_name: gemma-4-31b
   litellm_params:
-    model: ollama_chat/gemma4:31b
-    order: 3
-    api_base: https://ollama.com
-    api_key: os.environ/OLLAMA_API_KEY
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
-- model_name: gemma-4-31b
-  litellm_params:
     model: openrouter/google/gemma-4-31b-it:free
     order: 3
     input_cost_per_token: 1.0e-09
@@ -550,14 +542,6 @@ model_list:
     output_cost_per_token: 1.0e-09
 - model_name: minimax-m2.5
   litellm_params:
-    model: ollama_chat/minimax-m2.5
-    order: 3
-    api_base: https://ollama.com
-    api_key: os.environ/OLLAMA_API_KEY
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
-- model_name: minimax-m2.5
-  litellm_params:
     model: openai/minimax-m2.5-free
     order: 3
     api_base: https://opencode.ai/zen/v1
@@ -622,14 +606,6 @@ model_list:
   litellm_params:
     model: nvidia_nim/minimaxai/minimax-m2.7
     order: 3
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
-- model_name: minimax-m2.7
-  litellm_params:
-    model: ollama_chat/minimax-m2.7
-    order: 3
-    api_base: https://ollama.com
-    api_key: os.environ/OLLAMA_API_KEY
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
 - model_name: minimax-m2.7
@@ -808,14 +784,6 @@ model_list:
   litellm_params:
     model: nvidia_nim/nvidia/nemotron-3-super-120b-a12b
     order: 3
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
-- model_name: nvidia-nemotron-3-super
-  litellm_params:
-    model: ollama_chat/nemotron-3-super
-    order: 3
-    api_base: https://ollama.com
-    api_key: os.environ/OLLAMA_API_KEY
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
 - model_name: nvidia-nemotron-3-super
