@@ -174,7 +174,7 @@ providers:
       api_key_env: "FIREWORKS_AI_API_KEY"
     api_key_env: "FIREWORKS_AI_API_KEY"
     # Order for litellm_params/order - lower values are tried first
-    order: 5
+    order: 4
 
   opencode-zen:
     name: "OpenCode Zen"
