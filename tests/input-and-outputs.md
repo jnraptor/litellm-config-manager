@@ -353,7 +353,7 @@
 - model_name: zai-glm-5
   litellm_params:
     model: fireworks_ai/accounts/fireworks/models/glm-5
-    order: 5
+    order: 4
     api_key: os.environ/FIREWORKS_AI_API_KEY
 ```
 
