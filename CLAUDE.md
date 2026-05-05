@@ -146,6 +146,8 @@ All logic lives in `cleanup_base.py`. The two entry points (`cleanup_models.py` 
 
 ```
 cleanup_base.py
+├── APIClient                          # HTTP fetch with retry and caching
+├── ModelsDevClient                    # fetches cost data from models.dev/api.json
 ├── BaseModelCleaner (abstract)        # load/save config, sort, validate, cost update
 │   └── ConfigDrivenModelCleaner       # reads providers.yaml, implements all abstract methods
 │       ├── OpenRouterModelCleaner     # cleanup_openrouter_models.py
@@ -164,8 +166,10 @@ cleanup_models.py
 
 - `get_nested_value(data, field_path)` — module-level utility for dot-notation dict access (e.g., `"pricing.prompt"`)
 - `costs_are_equal()` — relative-tolerance comparison for scientific notation floats
+- `APIClient` — HTTP fetch with retry logic and response caching
+- `ModelsDevClient` — fetches and caches cost data from `https://models.dev/api.json`; provides per-token costs for providers whose own APIs don't include pricing (e.g., Fireworks, OpenCode Zen, OpenCode Go)
 - `BaseModelCleaner` — abstract base with YAML load/save, sort, validate, cost update, add model
-- `ConfigDrivenModelCleaner` — reads `providers.yaml`; implements all abstract methods based on config; handles free variant logic via `_free_variant_suffix`
+- `ConfigDrivenModelCleaner` — reads `providers.yaml`; implements all abstract methods based on config; handles free variant logic via `_free_variant_suffix`; falls back to `ModelsDevClient` for pricing when `pricing.models_dev_id` is configured
 - `ModelMappingLoader` — loads `models.yaml` and provides canonical model mappings for multi-provider addition
 - `create_provider_main(cleaner_class, description, epilog)` — factory that returns a `main()` function; used by all 8 provider scripts so each is ~48 lines
 
@@ -175,6 +179,7 @@ cleanup_models.py
 - `pricing.input_field` / `pricing.output_field`: dot-notation paths into the API response
 - `pricing.is_per_million` + `pricing.divisor`: conversion to per-token cost
 - `pricing.default_cost`: used when API has no pricing (Nvidia: `1.0e-09`)
+- `pricing.models_dev_id`: maps to a provider ID in `models.dev/api.json` for cost augmentation; used when provider API has no pricing (e.g., `"fireworks-ai"`, `"opencode"`, `"opencode-go"`)
 - `free_variant_suffix`: `":free"` for OpenRouter and Kilo — triggers automatic `:free` variant addition when adding models
 - `special_models`: model IDs exempt from removal validation
 - `model_prefixes`: optional list of `{prefix, api_base}` mappings for providers that serve models under multiple prefixes (e.g., OpenCode Go with `openai/`, `dashscope/`, `anthropic/`)

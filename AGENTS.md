@@ -36,12 +36,13 @@ pytest tests/ -v --cov=. --cov-report=term
 - `test_input_outputs.py` — Provider input/output validation
 - `test_coverage_additional.py` — UnifiedModelCleaner, file I/O, free variants
 - `test_validation.py` — Config validation (ValidationReport, validate_config, --validate CLI)
+- `test_models_dev.py` — ModelsDevClient and models.dev cost augmentation tests
 
 ### Test Coverage
 
-Current coverage: ~70% (up from 30%)
+Current coverage: ~72%
 
-- cleanup_base.py: 73%
+- cleanup_base.py: 74%
 - cleanup_models.py: 25%
 - All test files: >96%
 
@@ -61,5 +62,6 @@ Current coverage: ~70% (up from 30%)
 - `ConfigDrivenModelCleaner` — Provider-specific implementation
 - `UnifiedModelCleaner` — Multi-provider orchestration
 - `ModelMappingLoader` — Loads model mappings from models.yaml
+- `ModelsDevClient` — Fetches cost data from models.dev API for providers without pricing
 
 For full details, see [CLAUDE.md](./CLAUDE.md).

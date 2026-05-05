@@ -166,6 +166,8 @@ providers:
       is_per_million: false
       free_model_handling: true
       default_cost: null
+      # Augment costs from models.dev API when provider API has no pricing
+      models_dev_id: "fireworks-ai"
     model_name_prefix: ""
     model_name_cleanup: []
     #special_models: []
@@ -191,6 +193,8 @@ providers:
       is_per_million: false
       free_model_handling: true
       default_cost: null
+      # Augment costs from models.dev API when provider API has no pricing
+      models_dev_id: "opencode"
     model_name_prefix: ""
     model_name_cleanup: []
     special_models: []
@@ -223,6 +227,8 @@ providers:
       is_per_million: false
       free_model_handling: true
       default_cost: null
+      # Augment costs from models.dev API when provider API has no pricing
+      models_dev_id: "opencode-go"
     model_name_prefix: ""
     model_name_cleanup: []
     special_models: []

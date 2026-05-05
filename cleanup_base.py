@@ -49,6 +49,7 @@ __all__ = [
     "validate_model_name_arg",
     "fetch_models_from_api",
     "APIClient",
+    "ModelsDevClient",
     "is_api_base_model",
     "create_provider_main",
     "ValidationSeverity",
@@ -306,6 +307,102 @@ class APIClient:
 
 # Global API client instance for module-level functions
 _api_client = APIClient()
+
+
+class ModelsDevClient:
+    """
+    Client for fetching model cost data from models.dev API.
+
+    Provides a fallback cost source for providers whose own API endpoints
+    don't include pricing information (e.g., Fireworks, OpenCode Zen, OpenCode Go).
+
+    The models.dev API returns costs per million tokens. This client converts
+    them to per-token costs (dividing by 1,000,000) for compatibility with
+    LiteLLM's input_cost_per_token / output_cost_per_token format.
+
+    Usage:
+        client = ModelsDevClient()
+        input_cost, output_cost = client.get_model_cost(
+            "fireworks-ai", "accounts/fireworks/models/deepseek-v4-pro"
+        )
+    """
+
+    MODELS_DEV_URL = "https://models.dev/api.json"
+
+    def __init__(self):
+        """Initialize the models.dev client with lazy loading."""
+        self._data: Optional[Dict[str, Any]] = None
+        self._api_client = APIClient(timeout=60)
+        self._load_failed = False
+
+    def _ensure_loaded(self, logger: Optional[logging.Logger] = None) -> None:
+        """Fetch and cache the models.dev API data if not already loaded."""
+        if self._data is not None or self._load_failed:
+            return
+
+        try:
+            if logger:
+                logger.debug("Fetching cost data from models.dev API...")
+            self._data = self._api_client.fetch(self.MODELS_DEV_URL, logger=logger)
+            if logger:
+                logger.debug(
+                    f"Loaded models.dev data with {len(self._data)} providers"
+                )
+        except Exception as e:
+            self._load_failed = True
+            if logger:
+                logger.warning(
+                    f"Could not fetch models.dev API data: {e}. "
+                    f"Cost augmentation from models.dev will be unavailable."
+                )
+
+    def get_model_cost(
+        self,
+        provider_id: str,
+        model_id: str,
+        logger: Optional[logging.Logger] = None,
+    ) -> Tuple[Optional[float], Optional[float]]:
+        """
+        Get per-token cost for a model from models.dev.
+
+        Args:
+            provider_id: The models.dev provider ID (e.g., "fireworks-ai")
+            model_id: The model ID as used by the provider (e.g.,
+                      "accounts/fireworks/models/deepseek-v4-pro")
+            logger: Optional logger for debug output
+
+        Returns:
+            Tuple of (input_cost_per_token, output_cost_per_token).
+            Returns (None, None) if not found or API unavailable.
+        """
+        self._ensure_loaded(logger)
+
+        if self._data is None:
+            return None, None
+
+        provider = self._data.get(provider_id, {})
+        models = provider.get("models", {})
+        model = models.get(model_id, {})
+        cost = model.get("cost", {})
+
+        input_cost = cost.get("input")
+        output_cost = cost.get("output")
+
+        if input_cost is not None:
+            input_cost = float(input_cost) / 1_000_000
+        if output_cost is not None:
+            output_cost = float(output_cost) / 1_000_000
+
+        return input_cost, output_cost
+
+    def clear_cache(self) -> None:
+        """Clear cached data, allowing a fresh fetch on next access."""
+        self._data = None
+        self._load_failed = False
+
+
+# Global models.dev client instance (shared across all cleaners)
+_models_dev_client = ModelsDevClient()
 
 
 class BaseModelCleaner(ABC):
@@ -1919,6 +2016,9 @@ class ConfigDrivenModelCleaner(BaseModelCleaner):
         self._free_variant_suffix = self.provider_config.get("free_variant_suffix")
         self._model_prefixes = self.provider_config.get("model_prefixes")
 
+        # models.dev cost augmentation (for providers without pricing in their API)
+        self._models_dev_id = self._pricing_config.get("models_dev_id")
+
         self.logger.debug(
             f"Loaded config for provider '{provider_name}': {self.PROVIDER_NAME}"
         )
@@ -2157,6 +2257,23 @@ class ConfigDrivenModelCleaner(BaseModelCleaner):
                     model_info["output_cost"] = output_cost
                 except (ValueError, TypeError):
                     pass
+
+        # Fallback to models.dev if provider API has no pricing
+        if (
+            model_info["input_cost"] is None
+            and model_info["output_cost"] is None
+            and self._models_dev_id
+        ):
+            dev_input, dev_output = _models_dev_client.get_model_cost(
+                self._models_dev_id, model["id"], self.logger
+            )
+            if dev_input is not None or dev_output is not None:
+                model_info["input_cost"] = dev_input
+                model_info["output_cost"] = dev_output
+                self.logger.debug(
+                    f"Cost from models.dev for {model['id']}: "
+                    f"input={dev_input}, output={dev_output}"
+                )
 
         return model_info
 

@@ -50,6 +50,7 @@ import re
 import sys
 from pathlib import Path
 from typing import Dict, List, Tuple, Any, Optional
+from unittest.mock import patch, Mock
 import yaml
 
 # Add parent directory to path to import cleanup_base
@@ -229,6 +230,7 @@ class MockCleaner(ConfigDrivenModelCleaner):
         self._embeddings_api_url = self.provider_config.get("embeddings_api_url")
         self._free_variant_suffix = self.provider_config.get("free_variant_suffix")
         self._model_prefixes = self.provider_config.get("model_prefixes")
+        self._models_dev_id = self._pricing_config.get("models_dev_id")
 
         # Load defaults from providers.yaml
         self.defaults = providers_data.get("defaults", {})
@@ -274,8 +276,13 @@ def run_test_case(test_case: InputOutputTestCase) -> Tuple[bool, List[str]]:
         return False, [f"Failed to create MockCleaner: {e}"]
 
     # Step 1: Parse the API model
+    # Mock _models_dev_client to prevent live API calls during tests.
+    # These tests validate provider-specific parsing, not models.dev augmentation.
+    mock_client = Mock()
+    mock_client.get_model_cost.return_value = (None, None)
     try:
-        parsed_model = cleaner.parse_api_model(test_case.input_data)
+        with patch("cleanup_base._models_dev_client", mock_client):
+            parsed_model = cleaner.parse_api_model(test_case.input_data)
     except Exception as e:
         return False, [f"parse_api_model failed: {e}"]
 
