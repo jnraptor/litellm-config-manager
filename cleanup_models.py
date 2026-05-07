@@ -10,6 +10,7 @@ against their current APIs and:
 4. Adds new models when requested
 5. Supports both regular and embedding models (where applicable)
 6. Supports mapped models for simplified multi-provider addition
+7. Supports deleting models by model_name from the configuration
 
 Supported providers: openrouter, requesty, vercel, poe, nvidia, kilo, ollama, opencode-zen, opencode-go, all
 
@@ -18,6 +19,7 @@ Usage:
     python cleanup_models.py --provider all [--config config.yaml] [--dry-run] [--verbose]
     python cleanup_models.py --provider requesty --add-model "model1 model2"
     python cleanup_models.py --provider all --add-mapped-model glm-5 [--dry-run]
+    python cleanup_models.py --provider all --delete-model "model_name" [--dry-run]
 
 Author: Unified script for LiteLLM Config Management
 """
@@ -332,6 +334,33 @@ class UnifiedModelCleaner:
 
         return config, added_models_by_provider
 
+    def delete_model_from_config(
+        self,
+        config: Dict[str, Any],
+        model_names: List[str],
+    ) -> Tuple[Dict[str, Any], int]:
+        """Remove all entries matching the given model_names."""
+        model_list = config.get("model_list", [])
+        original_count = len(model_list)
+        model_names_set = set(model_names)
+
+        new_model_list = [
+            entry for entry in model_list
+            if entry.get("model_name") not in model_names_set
+        ]
+
+        removed = original_count - len(new_model_list)
+        config["model_list"] = new_model_list
+
+        for name in model_names:
+            count = sum(1 for entry in model_list if entry.get("model_name") == name)
+            if count == 0:
+                self.logger.warning(f"Model '{name}' not found in configuration")
+            else:
+                self.logger.info(f"Removed {count} entry(s) for model '{name}'")
+
+        return config, removed
+
     def validate_config(self, config: Optional[Dict[str, Any]] = None) -> ValidationReport:
         """
         Validate config.yaml structure without API calls (offline).
@@ -368,11 +397,12 @@ def main():
         description="Clean up invalid models, update costs, sort model list, and add new models in LiteLLM configuration",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
-This script performs four main functions:
+ This script performs five main functions:
 1. Sorts the model list alphabetically by model_name
 2. Validates models against the current API and removes invalid entries
 3. Updates model costs when they differ from API pricing
 4. Adds one or more models to the configuration
+5. Deletes models by model_name from the configuration
 
 Supported providers: openrouter, vercel, poe, nvidia, kilo, ollama, fireworks, opencode-zen, opencode-go, all
 
@@ -381,6 +411,7 @@ Examples:
   %(prog)s --provider all                                  # Process all providers
   %(prog)s --provider poe --add-model "model1 model2"      # Add models to poe
   %(prog)s --provider openrouter --dry-run --verbose       # Preview changes
+  %(prog)s --provider all --delete-model "model1 model2"   # Delete models by name
 
 Mapped Model Addition (simplified multi-provider workflow):
   %(prog)s --provider all --add-mapped-model glm-5         # Add glm-5 from all providers
@@ -422,6 +453,11 @@ Mapped Model Addition (simplified multi-provider workflow):
         "--models-config",
         default="models.yaml",
         help="Path to model mappings file (default: models.yaml)",
+    )
+    parser.add_argument(
+        "--delete-model",
+        nargs="+",
+        help="Delete one or more models by model_name from the configuration",
     )
     parser.add_argument(
         "--validate",
@@ -488,6 +524,23 @@ Mapped Model Addition (simplified multi-provider workflow):
             report = cleaner.validate_config()
             _print_validation_report(report)
             return 1 if report.has_errors else 0
+
+        # Handle model deletion
+        if args.delete_model:
+            config = cleaner.load_config()
+            _, removed = cleaner.delete_model_from_config(config, args.delete_model)
+            if not args.dry_run:
+                cleaner.save_config(config)
+            print(f"\n{'=' * 60}")
+            print(f"Model Deletion Summary")
+            print(f"{'=' * 60}")
+            print(f"Requested: {', '.join(args.delete_model)}")
+            print(f"Removed: {removed} entries")
+            if args.dry_run:
+                print(f"\nDRY RUN: No actual changes were made")
+            else:
+                print(f"\nConfiguration saved successfully")
+            return 0
 
         # Handle mapped model addition
         if args.add_mapped_model:

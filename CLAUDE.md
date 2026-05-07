@@ -27,6 +27,9 @@ python cleanup_models.py --provider openrouter --add-model gpt-4 --model-name "M
 # Add mapped model across multiple providers (simplified workflow)
 python cleanup_models.py --provider all --add-mapped-model glm-5 [--dry-run]
 
+# Delete models by model_name
+python cleanup_models.py --provider all --delete-model "model_name" [--dry-run]
+
 # List available mapped models
 grep -E "^[a-z0-9-]+:$" models.yaml | tr -d ':'
 ```
@@ -184,7 +187,7 @@ cleanup_models.py
 - `special_models`: model IDs exempt from removal validation
 - `model_prefixes`: optional list of `{prefix, api_base}` mappings for providers that serve models under multiple prefixes (e.g., OpenCode Go with `openai/`, `dashscope/`, `anthropic/`)
 
-**`cleanup_models.py`** (~342 lines) — `UnifiedModelCleaner` delegates to per-provider `ConfigDrivenModelCleaner` instances; handles multi-provider orchestration, the `--provider all` flag, and mapped model additions via `--add-mapped-model`.
+**`cleanup_models.py`** — `UnifiedModelCleaner` delegates to per-provider `ConfigDrivenModelCleaner` instances; handles multi-provider orchestration, the `--provider all` flag, model deletion via `--delete-model`, and mapped model additions via `--add-mapped-model`.
 
 **`models.yaml`** — defines canonical model mappings for simplified multi-provider addition:
 

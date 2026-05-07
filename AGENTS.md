@@ -60,7 +60,7 @@ Current coverage: ~72%
 
 - `BaseModelCleaner` — Abstract base for config operations
 - `ConfigDrivenModelCleaner` — Provider-specific implementation
-- `UnifiedModelCleaner` — Multi-provider orchestration
+- `UnifiedModelCleaner` — Multi-provider orchestration (cleanup, add mapped models, delete models by name)
 - `ModelMappingLoader` — Loads model mappings from models.yaml
 - `ModelsDevClient` — Fetches cost data from models.dev API for providers without pricing
 

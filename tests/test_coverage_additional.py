@@ -133,6 +133,88 @@ class TestCleanupModelsUnifiedScript:
         assert len(cleaner.cleaners) == 1
         assert "openrouter" in cleaner.cleaners
 
+    def test_delete_model_from_config_removes_entries(self, tmp_path):
+        """Test delete_model_from_config removes matching entries by model_name."""
+        from cleanup_models import UnifiedModelCleaner
+
+        config_content = {
+            "model_list": [
+                {"model_name": "model-a", "litellm_params": {"model": "openai/model-a"}},
+                {"model_name": "model-b", "litellm_params": {"model": "openai/model-b"}},
+                {"model_name": "model-a", "litellm_params": {"model": "openai/model-a-v2"}},
+            ],
+        }
+        config_file = tmp_path / "config.yaml"
+        with open(config_file, "w") as f:
+            yaml.dump(config_content, f)
+
+        cleaner = UnifiedModelCleaner(
+            config_path=str(config_file),
+            provider_names=["openrouter"],
+            dry_run=True,
+        )
+        config = cleaner.load_config()
+        updated_config, removed = cleaner.delete_model_from_config(config, ["model-a"])
+
+        assert removed == 2
+        remaining = [e["model_name"] for e in updated_config["model_list"]]
+        assert "model-a" not in remaining
+        assert len(updated_config["model_list"]) == 1
+        assert remaining == ["model-b"]
+
+    def test_delete_nonexistent_model_warns(self, tmp_path, caplog):
+        """Test delete_model_from_config warns when model not found."""
+        from cleanup_models import UnifiedModelCleaner
+
+        config_content = {
+            "model_list": [
+                {"model_name": "model-a", "litellm_params": {"model": "openai/model-a"}},
+            ],
+        }
+        config_file = tmp_path / "config.yaml"
+        with open(config_file, "w") as f:
+            yaml.dump(config_content, f)
+
+        cleaner = UnifiedModelCleaner(
+            config_path=str(config_file),
+            provider_names=["openrouter"],
+            dry_run=True,
+        )
+        config = cleaner.load_config()
+
+        with caplog.at_level(logging.WARNING):
+            _, removed = cleaner.delete_model_from_config(config, ["nonexistent"])
+
+        assert removed == 0
+        assert "not found in configuration" in caplog.text
+
+    def test_delete_multiple_models(self, tmp_path):
+        """Test delete_model_from_config removes multiple model names at once."""
+        from cleanup_models import UnifiedModelCleaner
+
+        config_content = {
+            "model_list": [
+                {"model_name": "model-a", "litellm_params": {"model": "openai/model-a"}},
+                {"model_name": "model-b", "litellm_params": {"model": "openai/model-b"}},
+                {"model_name": "model-c", "litellm_params": {"model": "openai/model-c"}},
+            ],
+        }
+        config_file = tmp_path / "config.yaml"
+        with open(config_file, "w") as f:
+            yaml.dump(config_content, f)
+
+        cleaner = UnifiedModelCleaner(
+            config_path=str(config_file),
+            provider_names=["openrouter"],
+            dry_run=True,
+        )
+        config = cleaner.load_config()
+        _, removed = cleaner.delete_model_from_config(config, ["model-a", "model-c"])
+
+        assert removed == 2
+        remaining = [e["model_name"] for e in config["model_list"]]
+        assert remaining == ["model-b"]
+
 
 # ==============================================================================
 # 2. File I/O and save operations tests

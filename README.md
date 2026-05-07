@@ -12,6 +12,7 @@ Comprehensive Python scripts that validate models from multiple providers (OpenR
 - **Custom model naming** when adding single models
 - **Sorts model lists** alphabetically
 - **Mapped model addition** — add the same model across multiple providers with one command via `models.yaml`
+- **Model deletion** — remove models by `model_name` from the configuration
 - Provides detailed logging with percentage-based cost change information
 - Supports dry-run capabilities for safe previewing
 
@@ -29,6 +30,9 @@ python cleanup_models.py --provider openrouter --add-model mistralai/mistral-med
 
 # Add the same model across all configured providers
 python cleanup_models.py --provider all --add-mapped-model glm-5
+
+# Delete models by model_name
+python cleanup_models.py --provider all --delete-model "model-a" "model-b" --dry-run
 
 # Apply changes (remove --dry-run)
 python cleanup_models.py --provider all
@@ -81,6 +85,7 @@ python cleanup_models.py --provider requesty --config my-config.yaml
 python cleanup_models.py --provider all --add-model model1 model2  # Add to all providers
 python cleanup_models.py --provider all --add-mapped-model glm-5  # Add mapped model
 python cleanup_models.py --provider openrouter --add-model gpt-4 --model-name "My GPT-4"
+python cleanup_models.py --provider all --delete-model "model_name" --dry-run  # Preview deletion
 python cleanup_models.py --provider all --dry-run          # Preview only
 ```
 
@@ -136,6 +141,7 @@ python cleanup_models.py --provider all --add-mapped-model glm-5
 | `--dry-run` | Preview changes without modifying the file |
 | `--verbose` | Detailed logging with cost comparison and percentage changes |
 | `--add-model MODEL_ID [MODEL_ID ...]` | Add one or more models (space-separated) |
+| `--delete-model NAME [NAME ...]` | Delete one or more models by `model_name` |
 | `--add-mapped-model NAME` | Add a model defined in `models.yaml` across all providers |
 | `--model-name NAME` | Custom name for single-model additions |
 
