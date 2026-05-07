@@ -33,16 +33,27 @@ models:
       nvidia: nvidia/nemotron-3-nano-omni-30b-a3b-reasoning
       #ollama: nemotron-3-super
 
-  mimo-v2-pro:
-    display_name: "mimo-v2-pro"
-    description: "mimo-v2-pro"
+  mimo-v2.5:
+    display_name: "mimo-v2.5"
+    description: "mimo-v2.5"
     providers:
-      openrouter: xiaomi/mimo-v2-pro
-      kilo: xiaomi/mimo-v2-pro
+      openrouter: xiaomi/mimo-v2.5
+      kilo: xiaomi/mimo-v2.5
       #nvidia: nvidia/nemotron-3-super-120b-a12b
-      poe: mimo-v2-pro
+      poe: mimo-v2.5
       #ollama: minimax-m2.7
-      vercel: xiaomi/mimo-v2-pro
+      vercel: xiaomi/mimo-v2.5
+
+  mimo-v2.5-pro:
+    display_name: "mimo-v2.5-pro"
+    description: "mimo-v2.5-pro"
+    providers:
+      openrouter: xiaomi/mimo-v2.5-pro
+      kilo: xiaomi/mimo-v2.5-pro
+      #nvidia: nvidia/nemotron-3-super-120b-a12b
+      poe: mimo-v2.5-pro
+      #ollama: minimax-m2.7
+      vercel: xiaomi/mimo-v2.5-pro
 
   moonshotai-kimi-k2.5:
     display_name: "moonshotai-kimi-k2.5"  # Common display name across all providers
