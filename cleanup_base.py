@@ -197,7 +197,7 @@ class ValidationReport:
 
 VALID_MODEL_MODES = frozenset({
     "chat", "completion", "embedding", "image_generation",
-    "rerank", "audio_transcription", "image"
+    "rerank", "audio_transcription", "image", "ocr"
 })
 
 FALLBACK_KNOWN_PREFIXES = frozenset({

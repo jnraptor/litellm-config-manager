@@ -126,7 +126,7 @@ class TestValidationConstants:
     def test_valid_model_modes(self):
         expected = {
             "chat", "completion", "embedding", "image_generation",
-            "rerank", "audio_transcription", "image"
+            "rerank", "audio_transcription", "image", "ocr"
         }
         assert VALID_MODEL_MODES == expected
 
