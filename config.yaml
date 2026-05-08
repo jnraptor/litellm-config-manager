@@ -244,13 +244,13 @@ model_list:
     output_cost_per_token: 1.5152e-06
 - model_name: gemini-3.1-flash-lite
   litellm_params:
-    model: vertex_ai/gemini-3.1-flash-lite-preview
+    model: vertex_ai/gemini-3.1-flash-lite
     order: 4
     input_cost_per_token: 2.5e-07
     output_cost_per_token: 1.5e-06
 - model_name: gemini-3.1-flash-lite
   litellm_params:
-    model: openrouter/google/gemini-3.1-flash-lite-preview
+    model: openrouter/google/gemini-3.1-flash-lite
     order: 5
     input_cost_per_token: 2.5e-07
     output_cost_per_token: 1.5e-06
@@ -647,13 +647,13 @@ model_list:
     order: 5
     api_base: https://api.kilo.ai/api/gateway
     api_key: os.environ/KILO_API_KEY
-    input_cost_per_token: 3.0e-07
+    input_cost_per_token: 2.99e-07
     output_cost_per_token: 1.2e-06
 - model_name: minimax-m2.7
   litellm_params:
     model: openrouter/minimax/minimax-m2.7
     order: 5
-    input_cost_per_token: 3.0e-07
+    input_cost_per_token: 2.99e-07
     output_cost_per_token: 1.2e-06
 - model_name: minimax-m2.7
   litellm_params:
