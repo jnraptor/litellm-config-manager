@@ -154,6 +154,14 @@ model_list:
     output_cost_per_token: 1.0e-09
 - model_name: deepseek-v4-flash
   litellm_params:
+    model: openai/deepseek-v4-flash-free
+    order: 3
+    api_base: https://opencode.ai/zen/v1
+    api_key: os.environ/OPENCODE_API_KEY
+    input_cost_per_token: 1.0e-09
+    output_cost_per_token: 1.0e-09
+- model_name: deepseek-v4-flash
+  litellm_params:
     model: poe/deepseek-v4-flash-el
     order: 4
     api_key: os.environ/POE_API_KEY
@@ -316,14 +324,14 @@ model_list:
     order: 5
     api_base: https://api.kilo.ai/api/gateway
     api_key: os.environ/KILO_API_KEY
-    input_cost_per_token: 1.3e-07
-    output_cost_per_token: 3.8e-07
+    input_cost_per_token: 1.2e-07
+    output_cost_per_token: 3.7e-07
 - model_name: gemma-4-31b
   litellm_params:
     model: openrouter/google/gemma-4-31b-it
     order: 5
-    input_cost_per_token: 1.3e-07
-    output_cost_per_token: 3.8e-07
+    input_cost_per_token: 1.2e-07
+    output_cost_per_token: 3.7e-07
 - model_name: gemma-4-31b
   litellm_params:
     model: vercel_ai_gateway/google/gemma-4-31b-it
@@ -555,12 +563,6 @@ model_list:
     order: 1
 - model_name: minimax-m2.5
   litellm_params:
-    model: nvidia_nim/minimaxai/minimax-m2.5
-    order: 3
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
-- model_name: minimax-m2.5
-  litellm_params:
     model: openai/minimax-m2.5-free
     order: 3
     api_base: https://opencode.ai/zen/v1
@@ -629,13 +631,6 @@ model_list:
     output_cost_per_token: 1.0e-09
 - model_name: minimax-m2.7
   litellm_params:
-    model: fireworks_ai/accounts/fireworks/models/minimax-m2p7
-    order: 4
-    api_key: os.environ/FIREWORKS_AI_API_KEY
-    input_cost_per_token: 3.0e-07
-    output_cost_per_token: 1.2e-06
-- model_name: minimax-m2.7
-  litellm_params:
     model: poe/minimax-m2.7
     order: 4
     api_key: os.environ/POE_API_KEY
@@ -647,13 +642,13 @@ model_list:
     order: 5
     api_base: https://api.kilo.ai/api/gateway
     api_key: os.environ/KILO_API_KEY
-    input_cost_per_token: 2.99e-07
+    input_cost_per_token: 2.0e-07
     output_cost_per_token: 1.2e-06
 - model_name: minimax-m2.7
   litellm_params:
     model: openrouter/minimax/minimax-m2.7
     order: 5
-    input_cost_per_token: 2.99e-07
+    input_cost_per_token: 2.0e-07
     output_cost_per_token: 1.2e-06
 - model_name: minimax-m2.7
   litellm_params:
@@ -693,13 +688,13 @@ model_list:
     order: 5
     api_base: https://api.kilo.ai/api/gateway
     api_key: os.environ/KILO_API_KEY
-    input_cost_per_token: 4.4e-07
-    output_cost_per_token: 2.0e-06
+    input_cost_per_token: 4.0e-07
+    output_cost_per_token: 1.98e-06
 - model_name: moonshotai-kimi-k2.5
   litellm_params:
     model: openrouter/moonshotai/kimi-k2.5
-    input_cost_per_token: 4.4e-07
-    output_cost_per_token: 2.0e-06
+    input_cost_per_token: 4.0e-07
+    output_cost_per_token: 1.98e-06
     order: 5
 - model_name: moonshotai-kimi-k2.6
   litellm_params:
@@ -740,13 +735,13 @@ model_list:
     order: 5
     api_base: https://api.kilo.ai/api/gateway
     api_key: os.environ/KILO_API_KEY
-    input_cost_per_token: 7.5e-07
+    input_cost_per_token: 7.4e-07
     output_cost_per_token: 3.5e-06
 - model_name: moonshotai-kimi-k2.6
   litellm_params:
     model: openrouter/moonshotai/kimi-k2.6
     order: 5
-    input_cost_per_token: 7.5e-07
+    input_cost_per_token: 7.4e-07
     output_cost_per_token: 3.5e-06
 - model_name: nim-llama-nemotron-embed-1b-v2
   litellm_params:
@@ -1060,14 +1055,14 @@ model_list:
     order: 5
     api_base: https://api.kilo.ai/api/gateway
     api_key: os.environ/KILO_API_KEY
-    input_cost_per_token: 1.05e-06
-    output_cost_per_token: 3.5e-06
+    input_cost_per_token: 9.8e-07
+    output_cost_per_token: 3.08e-06
 - model_name: zai-glm-5.1
   litellm_params:
     model: openrouter/z-ai/glm-5.1
     order: 5
-    input_cost_per_token: 1.05e-06
-    output_cost_per_token: 3.5e-06
+    input_cost_per_token: 9.8e-07
+    output_cost_per_token: 3.08e-06
 - model_name: zai-glm-5.1
   litellm_params:
     model: vercel_ai_gateway/zai/glm-5.1
