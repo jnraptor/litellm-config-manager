@@ -64,6 +64,7 @@ providers:
       output_field: "pricing.completion"
       is_per_million: false
       free_model_handling: true
+      models_dev_id: "poe"
     model_name_prefix: "poe-"
     model_name_cleanup: []
     special_models: []
