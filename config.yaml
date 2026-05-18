@@ -946,14 +946,6 @@ model_list:
     order: 5
     input_cost_per_token: 5.0e-07
     output_cost_per_token: 3.0e-06
-- model_name: ring-2.6
-  litellm_params:
-    model: openai/ring-2.6-1t-free
-    order: 3
-    api_base: https://opencode.ai/zen/v1
-    api_key: os.environ/OPENCODE_API_KEY
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
 - model_name: smart_router_1
   litellm_params:
     model: auto_router/complexity_router
@@ -979,19 +971,6 @@ model_list:
     input_cost_per_token: 1.0e-06
     output_cost_per_token: 3.2e-06
     order: 1
-- model_name: zai-glm-5
-  litellm_params:
-    model: nvidia_nim/z-ai/glm5
-    order: 3
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
-- model_name: zai-glm-5
-  litellm_params:
-    model: fireworks_ai/accounts/fireworks/models/glm-5
-    order: 4
-    api_key: os.environ/FIREWORKS_AI_API_KEY
-    input_cost_per_token: 1.0e-06
-    output_cost_per_token: 3.2e-06
 - model_name: zai-glm-5
   litellm_params:
     model: poe/glm-5
