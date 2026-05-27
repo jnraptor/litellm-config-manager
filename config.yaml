@@ -162,7 +162,7 @@ model_list:
     output_cost_per_token: 1.0e-09
 - model_name: deepseek-v4-flash
   litellm_params:
-    model: accounts/fireworks/models/deepseek-v4-flash
+    model: fireworks_ai/accounts/fireworks/models/deepseek-v4-flash
     order: 4
     api_key: os.environ/FIREWORKS_AI_API_KEY
     input_cost_per_token: 1.4e-07
