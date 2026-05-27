@@ -132,7 +132,7 @@ models:
     providers:
       openrouter: deepseek/deepseek-v4-flash
       kilo: deepseek/deepseek-v4-flash
-      #fireworks: accounts/fireworks/models/qwen3p6-plus
+      fireworks: accounts/fireworks/models/deepseek-v4-flash
       #ollama: qwen3.6-plus
       poe: deepseek-v4-flash-el
       nvidia: deepseek-ai/deepseek-v4-flash
@@ -149,6 +149,45 @@ models:
       poe: deepseek-v4-pro-el
       nvidia: deepseek-ai/deepseek-v4-pro
       vercel: deepseek/deepseek-v4-pro
+
+  qwen3.7-max:
+    display_name: "qwen3.7-max"
+    description: "Qwen3.7-Max"
+    providers:
+      openrouter: qwen/qwen3.7-max
+      kilo: qwen/qwen3.7-max
+      #fireworks: accounts/fireworks/models/deepseek-v4-pro
+      #ollama: qwen3.6-plus
+      poe: qwen3.7-max-t
+      nvidia: #deepseek-ai/deepseek-v4-pro
+      vercel: alibaba/qwen3.7-max
+      opencode-go: anthropic/qwen3.7-max
+
+  gemini-3.1-flash-lite:
+    display_name: "gemini-3.1-flash-lite"
+    description: "Gemini 3.1 Flash Lite"
+    providers:
+      openrouter: google/gemini-3.1-flash-lite
+      kilo: google/gemini-3.1-flash-lite
+      #fireworks: accounts/fireworks/models/deepseek-v4-pro
+      #ollama: qwen3.6-plus
+      poe: gemini-3.1-flash-lite
+      nvidia: #deepseek-ai/deepseek-v4-pro
+      vercel: google/gemini-3.1-flash-lite
+      #opencode-go: anthropic/qwen3.7-max
+
+  gemini-3.5-flash:
+    display_name: "gemini-3.5-flash"
+    description: "Gemini 3.5 Flash"
+    providers:
+      openrouter: google/gemini-3.5-flash
+      kilo: google/gemini-3.5-flash
+      #fireworks: accounts/fireworks/models/deepseek-v4-pro
+      #ollama: qwen3.6-plus
+      poe: gemini-3.5-flash
+      nvidia: #deepseek-ai/deepseek-v4-pro
+      vercel: google/gemini-3.5-flash
+      #opencode-go: anthropic/qwen3.7-max
 
   # Add your own mappings below following this format:
   # canonical-name:
