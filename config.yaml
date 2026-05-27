@@ -946,6 +946,14 @@ model_list:
     order: 5
     input_cost_per_token: 5.0e-07
     output_cost_per_token: 3.0e-06
+- model_name: qwen3.7-max
+  litellm_params:
+    model: anthropic/qwen3.7-max
+    order: 1
+    api_base: https://opencode.ai/zen/go
+    api_key: os.environ/OPENCODE_API_KEY
+    input_cost_per_token: 2.5e-06
+    output_cost_per_token: 7.5e-06
 - model_name: smart_router_1
   litellm_params:
     model: auto_router/complexity_router
