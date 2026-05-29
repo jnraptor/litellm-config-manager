@@ -498,8 +498,8 @@ model_list:
     model: openai/mimo-v2.5
     api_base: https://opencode.ai/zen/go/v1
     api_key: os.environ/OPENCODE_API_KEY
-    input_cost_per_token: 4.0000000000000003e-07
-    output_cost_per_token: 2.0e-06
+    input_cost_per_token: 1.4e-07
+    output_cost_per_token: 2.8e-07
     order: 1
 - model_name: mimo-v2.5
   litellm_params:
@@ -531,8 +531,8 @@ model_list:
     model: openai/mimo-v2.5-pro
     api_base: https://opencode.ai/zen/go/v1
     api_key: os.environ/OPENCODE_API_KEY
-    input_cost_per_token: 1.0e-06
-    output_cost_per_token: 3.0e-06
+    input_cost_per_token: 1.74e-06
+    output_cost_per_token: 3.48e-06
     order: 1
 - model_name: mimo-v2.5-pro
   litellm_params:
