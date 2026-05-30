@@ -114,18 +114,6 @@ models:
       #nvidia: alibaba/qwen3.6-plus
       vercel: alibaba/qwen3.6-plus
 
-  qwen3.5-plus:
-    display_name: "qwen3.5-plus"
-    description: "Qwen 3.5 Plus model by Alibaba"
-    providers:
-      openrouter: qwen/qwen3.5-plus-02-15
-      kilo: qwen/qwen3.5-plus-02-15
-      #fireworks: accounts/fireworks/models/qwen3p6-plus
-      #ollama: qwen3.6-plus
-      poe: qwen3.5-plus
-      #nvidia: alibaba/qwen3.6-plus
-      vercel: alibaba/qwen3.5-plus
-
   deepseek-v4-flash:
     display_name: "deepseek-v4-flash"
     description: "Deepseek v4 Flash model"
@@ -162,19 +150,6 @@ models:
       nvidia: #deepseek-ai/deepseek-v4-pro
       vercel: alibaba/qwen3.7-max
       opencode-go: anthropic/qwen3.7-max
-
-  gemini-3.1-flash-lite:
-    display_name: "gemini-3.1-flash-lite"
-    description: "Gemini 3.1 Flash Lite"
-    providers:
-      openrouter: google/gemini-3.1-flash-lite
-      kilo: google/gemini-3.1-flash-lite
-      #fireworks: accounts/fireworks/models/deepseek-v4-pro
-      #ollama: qwen3.6-plus
-      poe: gemini-3.1-flash-lite
-      nvidia: #deepseek-ai/deepseek-v4-pro
-      vercel: google/gemini-3.1-flash-lite
-      #opencode-go: anthropic/qwen3.7-max
 
   gemini-3.5-flash:
     display_name: "gemini-3.5-flash"
