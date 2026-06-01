@@ -136,7 +136,6 @@ models:
       vercel: anthropic/claude-opus-4.8
       poe: claude-opus-4.8
       kilo: anthropic/claude-opus-4.8
-      #opencode-zen: claude-opus-4-8
   claude-sonnet-4-6:
     display_name: claude-sonnet-4-6
     description: ''
@@ -145,5 +144,11 @@ models:
       vercel: anthropic/claude-sonnet-4.6
       poe: claude-sonnet-4.6
       kilo: anthropic/claude-sonnet-4.6
-      #opencode-zen: claude-sonnet-4-6
-      #requesty: anthropic/claude-sonnet-4-6
+  step-3.7-flash:
+    display_name: step-3.7-flash
+    description: ''
+    providers:
+      openrouter: stepfun/step-3.7-flash
+      vercel: stepfun/step-3.7-flash
+      nvidia: stepfun-ai/step-3.7-flash
+      kilo: stepfun/step-3.7-flash

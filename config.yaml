@@ -956,6 +956,40 @@ model_list:
     token_thresholds:
       simple: 15
       complex: 400
+- model_name: step-3.7-flash
+  litellm_params:
+    model: nvidia_nim/stepfun-ai/step-3.7-flash
+    order: 3
+    input_cost_per_token: 1.0e-09
+    output_cost_per_token: 1.0e-09
+- model_name: step-3.7-flash
+  litellm_params:
+    model: openai/stepfun/step-3.7-flash:free
+    order: 3
+    api_base: https://api.kilo.ai/api/gateway
+    api_key: os.environ/KILO_API_KEY
+    input_cost_per_token: 1.0e-09
+    output_cost_per_token: 1.0e-09
+- model_name: step-3.7-flash
+  litellm_params:
+    model: openai/stepfun/step-3.7-flash
+    order: 5
+    api_base: https://api.kilo.ai/api/gateway
+    api_key: os.environ/KILO_API_KEY
+    input_cost_per_token: 2.0e-07
+    output_cost_per_token: 1.15e-06
+- model_name: step-3.7-flash
+  litellm_params:
+    model: openrouter/stepfun/step-3.7-flash
+    order: 5
+    input_cost_per_token: 2.0e-07
+    output_cost_per_token: 1.15e-06
+- model_name: step-3.7-flash
+  litellm_params:
+    model: vercel_ai_gateway/stepfun/step-3.7-flash
+    order: 5
+    input_cost_per_token: 2.0e-07
+    output_cost_per_token: 1.15e-06
 - model_name: zai-glm-5
   litellm_params:
     model: openai/glm-5
@@ -984,7 +1018,7 @@ model_list:
     model: openrouter/z-ai/glm-5
     order: 5
     input_cost_per_token: 6.0e-07
-    output_cost_per_token: 1.92e-06
+    output_cost_per_token: 2.08e-06
 - model_name: zai-glm-5
   litellm_params:
     model: vercel_ai_gateway/zai/glm-5
