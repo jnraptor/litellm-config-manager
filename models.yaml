@@ -164,6 +164,19 @@ models:
       vercel: google/gemini-3.5-flash
       #opencode-go: anthropic/qwen3.7-max
 
+  minimax-m3:
+    display_name: "minimax-m3"
+    description: "Minimax M3"
+    providers:
+      openrouter: minimax/minimax-m3
+      kilo: minimax/minimax-m3
+      #fireworks: accounts/fireworks/models/deepseek-v4-pro
+      #ollama: qwen3.6-plus
+      #poe: qwen3.7-max-t
+      nvidia: #deepseek-ai/deepseek-v4-pro
+      vercel: minimax/minimax-m3
+      opencode-go: anthropic/minimax-m3
+
   # Add your own mappings below following this format:
   # canonical-name:
   #   display_name: "Display Name"
