@@ -30,6 +30,9 @@ python cleanup_models.py --provider all --add-mapped-model glm-5 [--dry-run]
 # Delete models by model_name
 python cleanup_models.py --provider all --delete-model "model_name" [--dry-run]
 
+# Auto-populate models.yaml by fuzzy-matching a model across providers
+python populate_models.py minimax-m3 [--dry-run] [--force] [--provider openrouter,kilo]
+
 # List available mapped models
 grep -E "^[a-z0-9-]+:$" models.yaml | tr -d ':'
 ```
@@ -57,6 +60,46 @@ models:
 - Single command adds from all configured providers
 - Works with `--dry-run` for preview
 - Automatically handles free variants where supported (OpenRouter, Kilo)
+
+### Auto-Populating `models.yaml` (`populate_models.py`)
+
+Manually searching every provider's API for a new model is tedious, and
+providers often use different naming conventions for the same model
+(`glm-5.1` vs `glm-5-1` vs `glm-5p1`, or `minimax/minimax-m3` vs
+`anthropic/minimax-m3`). `populate_models.py` fetches the model list from
+every provider in `providers.yaml` and uses **tiered fuzzy matching** to find
+the best match for a canonical key, writing the results back into
+`models.yaml` (missing providers are left as commented-out entries).
+
+```bash
+# Dry-run preview
+python populate_models.py minimax-m3 --dry-run
+
+# Apply
+python populate_models.py glm-5.1
+
+# Limit to specific providers
+python populate_models.py minimax-m3 --provider openrouter,kilo,vercel
+
+# Overwrite an existing entry
+python populate_models.py minimax-m3 --force
+
+# Leave a pre-existing entry alone
+python populate_models.py minimax-m3 --skip-existing
+```
+
+**Matching tiers** (highest score wins regardless of API order):
+
+1. `1.00` — exact id match
+2. `0.90` — id matches after stripping a vendor prefix (e.g. `z-ai/glm-5.1` ↔ `glm-5.1`)
+3. `0.85` — normalized forms equal (case, separators, `p`-as-point)
+4. `0.75` — normalized forms equal with one trailing suffix stripped (`:free`, `-fw`, `-el`, `-t`, `-it`)
+5. `0.60` — substring fallback (only used when no better match exists; requires key to be a substantial portion of the api id)
+
+`populate_models.py` rewrites the entire `models.yaml` file (via
+`yaml.dump`), so any hand-written comments will be lost. A `.yaml.backup` is
+written before each save. See `tests/test_populate_models.py` for the full
+matching test matrix.
 
 ### Provider-Specific Scripts
 
@@ -120,6 +163,7 @@ pytest tests/test_cleanup_base.py::test_costs_are_equal -v
 - `test_cleanup_coverage.py` — Tests for model validation, cost updating, model addition
 - `test_input_outputs.py` — Integration tests validating expected input/output transformations from `tests/input-and-outputs.md` (includes `opencode-go` and `opencode-go-anthropic` test cases)
 - `test_coverage_additional.py` — Tests for UnifiedModelCleaner, file I/O, free variants, ModelMappingLoader
+- `test_populate_models.py` — Tests for `populate_models.py` fuzzy matching tiers, `_format_model_block` / `_replace_model_block` YAML editing, `ModelMappingLoader.save()`, and `ModelsPopulator` end-to-end
 
 **Adding New Tests:**
 To add a new provider test case, edit `tests/input-and-outputs.md`:
@@ -161,6 +205,9 @@ cleanup_base.py
 cleanup_models.py
 └── UnifiedModelCleaner               # creates one ConfigDrivenModelCleaner per provider,
                                        # delegates all operations to them
+populate_models.py
+└── ModelsPopulator                    # fuzzy-matches a model key across providers and
+                                       # writes results to models.yaml (full rewrite)
 ```
 
 ### Key Components
@@ -173,7 +220,8 @@ cleanup_models.py
 - `ModelsDevClient` — fetches and caches cost data from `https://models.dev/api.json`; provides per-token costs for providers whose own APIs don't include pricing (e.g., Fireworks, OpenCode Zen, OpenCode Go)
 - `BaseModelCleaner` — abstract base with YAML load/save, sort, validate, cost update, add model
 - `ConfigDrivenModelCleaner` — reads `providers.yaml`; implements all abstract methods based on config; handles free variant logic via `_free_variant_suffix`; falls back to `ModelsDevClient` for pricing when `pricing.models_dev_id` is configured
-- `ModelMappingLoader` — loads `models.yaml` and provides canonical model mappings for multi-provider addition
+- `ModelMappingLoader` — loads and saves `models.yaml`; `save()` rewrites the whole file via `yaml.dump` (hand-written comments will be lost)
+- `ModelsPopulator` (`populate_models.py`) — fuzzy-matches a model key across all configured providers and writes the resulting mappings to `models.yaml` (via `ModelMappingLoader.save()`)
 - `create_provider_main(cleaner_class, description, epilog)` — factory that returns a `main()` function; used by all 8 provider scripts so each is ~48 lines
 
 **`providers.yaml`** — single source of truth for all provider settings:

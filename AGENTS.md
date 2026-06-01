@@ -37,6 +37,7 @@ pytest tests/ -v --cov=. --cov-report=term
 - `test_coverage_additional.py` — UnifiedModelCleaner, file I/O, free variants
 - `test_validation.py` — Config validation (ValidationReport, validate_config, --validate CLI)
 - `test_models_dev.py` — ModelsDevClient and models.dev cost augmentation tests
+- `test_populate_models.py` — populate_models.py fuzzy matching and YAML block editing
 
 ### Test Coverage
 
@@ -55,13 +56,15 @@ Current coverage: ~72%
 - **cleanup_base.py** — All shared logic (~2444 lines)
 - **cleanup_models.py** — Unified cleanup script
 - **cleanup_opencode_go_models.py** — OpenCode Go provider script (multi-prefix support)
+- **populate_models.py** — Auto-populate `models.yaml` with a model across all providers using fuzzy matching
 
 ## Key Classes
 
 - `BaseModelCleaner` — Abstract base for config operations
 - `ConfigDrivenModelCleaner` — Provider-specific implementation
 - `UnifiedModelCleaner` — Multi-provider orchestration (cleanup, add mapped models, delete models by name)
-- `ModelMappingLoader` — Loads model mappings from models.yaml
+- `ModelMappingLoader` — Loads and saves model mappings from `models.yaml` (full rewrite via `yaml.dump`)
 - `ModelsDevClient` — Fetches cost data from models.dev API for providers without pricing
+- `ModelsPopulator` — Populates `models.yaml` for a single model key across all providers
 
 For full details, see [CLAUDE.md](./CLAUDE.md).

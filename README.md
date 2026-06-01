@@ -13,6 +13,7 @@ Comprehensive Python scripts that validate models from multiple providers (OpenR
 - **Sorts model lists** alphabetically
 - **Mapped model addition** — add the same model across multiple providers with one command via `models.yaml`
 - **Model deletion** — remove models by `model_name` from the configuration
+- **Auto-populate `models.yaml`** — fuzzy-match a model across all providers and update mappings in one shot
 - Provides detailed logging with percentage-based cost change information
 - Supports dry-run capabilities for safe previewing
 
@@ -33,6 +34,9 @@ python cleanup_models.py --provider all --add-mapped-model glm-5
 
 # Delete models by model_name
 python cleanup_models.py --provider all --delete-model "model-a" "model-b" --dry-run
+
+# Auto-populate models.yaml by fuzzy-matching a model across all providers
+python populate_models.py minimax-m3 --dry-run
 
 # Apply changes (remove --dry-run)
 python cleanup_models.py --provider all
@@ -63,6 +67,7 @@ python cleanup_models.py --provider all
 | Script | Purpose |
 |--------|---------|
 | `cleanup_models.py` | Unified script — process all providers or specific ones |
+| `populate_models.py` | Auto-populate `models.yaml` by fuzzy-matching a model across providers |
 | `cleanup_openrouter_models.py` | OpenRouter-specific |
 | `cleanup_requesty_models.py` | Requesty-specific |
 | `cleanup_vercel_models.py` | Vercel AI Gateway-specific |
@@ -132,6 +137,44 @@ Then add with one command:
 python cleanup_models.py --provider all --add-mapped-model glm-5
 ```
 
+### Auto-Populating `models.yaml` (`populate_models.py`)
+
+Manually looking up a new model across every provider is tedious, and providers
+often use different naming conventions for the same underlying model (e.g.
+`glm-5.1` vs `glm-5-1` vs `glm-5p1`, or `minimax/minimax-m3` vs `anthropic/minimax-m3`).
+`populate_models.py` fetches the model list from every provider defined in
+`providers.yaml` and uses tiered fuzzy matching to find the best match for a
+canonical model key, writing the results back into `models.yaml`.
+
+```bash
+# Populate (dry-run) — previews matches, does not write
+python populate_models.py minimax-m3 --dry-run
+
+# Apply
+python populate_models.py glm-5.1
+
+# Limit the search to specific providers
+python populate_models.py minimax-m3 --provider openrouter,kilo,vercel
+
+# Overwrite an existing entry
+python populate_models.py minimax-m3 --force
+
+# Leave a pre-existing entry alone
+python populate_models.py minimax-m3 --skip-existing
+```
+
+Matching tiers (highest score wins regardless of API order):
+
+1. `1.00` — exact id match
+2. `0.90` — id matches with a vendor prefix stripped (e.g. `z-ai/glm-5.1` ↔ `glm-5.1`)
+3. `0.85` — normalized forms are equal (case, separators, `p`-as-point)
+4. `0.75` — normalized forms equal with one trailing suffix stripped (`:free`, `-fw`, `-el`, `-t`, `-it`)
+5. `0.60` — substring fallback (only used when no better match exists)
+
+`populate_models.py` rewrites the entire `models.yaml` file (via `yaml.dump`),
+so any hand-written comments in it will be lost. A `.yaml.backup` is written
+before each save.
+
 ### Command-Line Options
 
 | Option | Description |
@@ -144,6 +187,22 @@ python cleanup_models.py --provider all --add-mapped-model glm-5
 | `--delete-model NAME [NAME ...]` | Delete one or more models by `model_name` |
 | `--add-mapped-model NAME` | Add a model defined in `models.yaml` across all providers |
 | `--model-name NAME` | Custom name for single-model additions |
+
+### `populate_models.py` Options
+
+| Option | Description |
+|--------|-------------|
+| `MODEL_KEY` (positional) | Canonical model key to look up (e.g. `minimax-m3`, `glm-5.1`) |
+| `--display-name NAME` | Display name (default: `MODEL_KEY`) |
+| `--description TEXT` | Description for the entry |
+| `--provider a,b,c` | Limit search to specific providers (default: all in `providers.yaml`) |
+| `--providers-config PATH` | Path to `providers.yaml` (default: `providers.yaml`) |
+| `--models-config PATH` | Path to `models.yaml` (default: `models.yaml`) |
+| `--config PATH` | Path to `config.yaml` (used to instantiate cleaners) |
+| `--dry-run` | Preview without writing |
+| `--verbose` | Verbose logging |
+| `--force` | Overwrite an existing `models.yaml` entry |
+| `--skip-existing` | Don't touch a pre-existing entry |
 
 ## Features
 

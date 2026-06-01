@@ -96,24 +96,30 @@ model_list:
     output_cost_per_token: 5.0e-06
     order: 5
   model_name: claude-haiku-4-5
-- model_name: claude-opus-4-6
+- model_name: claude-opus-4-8
   litellm_params:
-    model: poe/claude-opus-4.6
+    model: poe/claude-opus-4.8
     order: 4
     api_key: os.environ/POE_API_KEY
     input_cost_per_token: 4.2929e-06
     output_cost_per_token: 2.14646e-05
-- model_name: claude-opus-4-6
+- model_name: claude-opus-4-8
   litellm_params:
-    model: openai/anthropic/claude-opus-4.6
+    model: openai/anthropic/claude-opus-4.8
     order: 5
     api_base: https://api.kilo.ai/api/gateway
     api_key: os.environ/KILO_API_KEY
     input_cost_per_token: 5.0e-06
     output_cost_per_token: 2.5e-05
-- model_name: claude-opus-4-6
+- model_name: claude-opus-4-8
   litellm_params:
-    model: openrouter/anthropic/claude-opus-4.6
+    model: openrouter/anthropic/claude-opus-4.8
+    order: 5
+    input_cost_per_token: 5.0e-06
+    output_cost_per_token: 2.5e-05
+- model_name: claude-opus-4-8
+  litellm_params:
+    model: vercel_ai_gateway/anthropic/claude-opus-4.8
     order: 5
     input_cost_per_token: 5.0e-06
     output_cost_per_token: 2.5e-05
@@ -135,6 +141,12 @@ model_list:
 - model_name: claude-sonnet-4-6
   litellm_params:
     model: openrouter/anthropic/claude-sonnet-4.6
+    order: 5
+    input_cost_per_token: 3.0e-06
+    output_cost_per_token: 1.5e-05
+- model_name: claude-sonnet-4-6
+  litellm_params:
+    model: vercel_ai_gateway/anthropic/claude-sonnet-4.6
     order: 5
     input_cost_per_token: 3.0e-06
     output_cost_per_token: 1.5e-05
@@ -611,6 +623,14 @@ model_list:
     api_key: os.environ/OPENCODE_API_KEY
     input_cost_per_token: 6.0e-07
     output_cost_per_token: 2.4e-06
+- model_name: minimax-m3
+  litellm_params:
+    model: openai/minimax-m3-free
+    order: 3
+    api_base: https://opencode.ai/zen/v1
+    api_key: os.environ/OPENCODE_API_KEY
+    input_cost_per_token: 1.0e-09
+    output_cost_per_token: 1.0e-09
 - model_name: minimax-m3
   litellm_params:
     model: openai/minimax/minimax-m3

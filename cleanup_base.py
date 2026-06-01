@@ -1870,6 +1870,13 @@ class ProviderConfigLoader:
             self._load_config()
         return list(self._config.get("providers", {}).keys())
 
+    @classmethod
+    def reset(cls) -> None:
+        """Reset the singleton (used by tests that load a temp config)."""
+        cls._instance = None
+        cls._config = {}
+        cls._config_path = None
+
 
 class ModelMappingLoader:
     """
@@ -1889,6 +1896,7 @@ class ModelMappingLoader:
         """
         self._config_path = Path(config_path)
         self._config: Dict[str, Any] = {}
+        self._logger = setup_logging(False, "ModelMappingLoader")
         self._load_config()
 
     def _load_config(self):
@@ -1904,10 +1912,9 @@ class ModelMappingLoader:
 
             if not config_data:
                 self._config = {"models": {}}
-            elif "models" not in config_data:
-                raise ValueError(
-                    f"Invalid model mappings config: missing 'models' section"
-                )
+            elif "models" not in config_data or config_data.get("models") is None:
+                # 'models' is missing or empty (e.g. "models:\n")
+                self._config = {"models": {}}
             else:
                 self._config = config_data
 
@@ -1953,6 +1960,71 @@ class ModelMappingLoader:
 
         providers = mapping.get("providers", {})
         return providers.get(provider_name)
+
+    def update_model_mapping(
+        self,
+        model_key: str,
+        mapping_data: Dict[str, Any],
+    ) -> None:
+        """
+        Update or insert a model mapping in memory.
+
+        Does not write to disk; call save() to persist.
+
+        Args:
+            model_key: The canonical model key
+            mapping_data: Dict with 'display_name', 'description', and 'providers'
+        """
+        if "models" not in self._config:
+            self._config["models"] = {}
+        self._config["models"][model_key] = mapping_data
+
+    def save(
+        self,
+        model_key: str,
+        mapping_data: Dict[str, Any],
+        dry_run: bool = False,
+    ) -> None:
+        """
+        Persist a single model mapping to models.yaml.
+
+        Updates the in-memory cache and rewrites the entire file via
+        ``yaml.dump``. Note that this is a full-file rewrite, so any
+        hand-written comments in ``models.yaml`` will be lost. Use
+        ``update_model_mapping()`` if you only want to mutate the cache
+        in memory.
+
+        Args:
+            model_key: The canonical model key to write
+            mapping_data: Dict with 'display_name', 'description', and 'providers'
+            dry_run: If True, log the action but do not write the file
+        """
+        self.update_model_mapping(model_key, mapping_data)
+
+        if dry_run:
+            self._logger.info(
+                f"DRY RUN: Would write '{model_key}' to {self._config_path}"
+            )
+            return
+
+        if self._config_path.exists():
+            backup_path = self._config_path.with_suffix(
+                self._config_path.suffix + ".backup"
+            )
+            backup_path.write_text(
+                self._config_path.read_text(encoding="utf-8"),
+                encoding="utf-8",
+            )
+
+        with open(self._config_path, "w", encoding="utf-8") as f:
+            yaml.dump(
+                self._config,
+                f,
+                default_flow_style=False,
+                sort_keys=False,
+                allow_unicode=True,
+                width=1000,
+            )
 
 
 class ConfigDrivenModelCleaner(BaseModelCleaner):

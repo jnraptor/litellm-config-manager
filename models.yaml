@@ -1,63 +1,42 @@
-# Model Mappings for LiteLLM Config
-# Define canonical model names that map to provider-specific IDs
-#
-# Usage:
-#   python cleanup_models.py --provider all --add-mapped-model glm-5
-#
-# This will add the model from all configured providers with the same display name
-
 models:
-  # Example: GLM-5 model from Z.ai
   glm-5:
-    display_name: "zai-glm-5"  # Common display name across all providers
-    description: "GLM-5 model by Z.ai"
+    display_name: zai-glm-5
+    description: GLM-5 model by Z.ai
     providers:
       openrouter: z-ai/glm-5
       fireworks: accounts/fireworks/models/glm-5
-      # Add other providers as needed:
-      # kilo: z-ai/glm-5
-
   nemotron-3-super:
-    display_name: "nvidia-nemotron-3-super"
-    description: "nemotron-3-super-120b-a12b"
+    display_name: nvidia-nemotron-3-super
+    description: nemotron-3-super-120b-a12b
     providers:
       openrouter: nvidia/nemotron-3-super-120b-a12b:free
       nvidia: nvidia/nemotron-3-super-120b-a12b
       ollama: nemotron-3-super
-
   nemotron-3-nano-omni:
-    display_name: "nemotron-3-nano-omni"
-    description: "Nemotron 3 Nano Omni is an omni-modal reasoning model that understands images, video, speech, text."
+    display_name: nemotron-3-nano-omni
+    description: Nemotron 3 Nano Omni is an omni-modal reasoning model that understands images, video, speech, text.
     providers:
       openrouter: nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free
       nvidia: nvidia/nemotron-3-nano-omni-30b-a3b-reasoning
-      #ollama: nemotron-3-super
-
   mimo-v2.5:
-    display_name: "mimo-v2.5"
-    description: "mimo-v2.5"
+    display_name: mimo-v2.5
+    description: mimo-v2.5
     providers:
       openrouter: xiaomi/mimo-v2.5
       kilo: xiaomi/mimo-v2.5
-      #nvidia: nvidia/nemotron-3-super-120b-a12b
       poe: mimo-v2.5
-      #ollama: minimax-m2.7
       vercel: xiaomi/mimo-v2.5
-
   mimo-v2.5-pro:
-    display_name: "mimo-v2.5-pro"
-    description: "mimo-v2.5-pro"
+    display_name: mimo-v2.5-pro
+    description: mimo-v2.5-pro
     providers:
       openrouter: xiaomi/mimo-v2.5-pro
       kilo: xiaomi/mimo-v2.5-pro
-      #nvidia: nvidia/nemotron-3-super-120b-a12b
       poe: mimo-v2.5-pro
-      #ollama: minimax-m2.7
       vercel: xiaomi/mimo-v2.5-pro
-
   moonshotai-kimi-k2.5:
-    display_name: "moonshotai-kimi-k2.5"  # Common display name across all providers
-    description: "GLM-5 model by Z.ai"
+    display_name: moonshotai-kimi-k2.5
+    description: GLM-5 model by Z.ai
     providers:
       openrouter: moonshotai/kimi-k2.5
       kilo: moonshotai/kimi-k2.5
@@ -65,21 +44,18 @@ models:
       ollama: kimi-k2.5
       poe: kimi-k2.5-fw
       nvidia: moonshotai/kimi-k2.5
-
   moonshotai-kimi-k2.6:
-    display_name: "moonshotai-kimi-k2.6"  # Common display name across all providers
-    description: "GLM-5 model by Z.ai"
+    display_name: moonshotai-kimi-k2.6
+    description: GLM-5 model by Z.ai
     providers:
       openrouter: moonshotai/kimi-k2.6
       kilo: moonshotai/kimi-k2.6
       fireworks: accounts/fireworks/models/kimi-k2p6
-      #ollama: kimi-k2.6
       poe: kimi-k2.6-fw
       nvidia: moonshotai/kimi-k2.6
-
   glm-5.1:
-    display_name: "zai-glm-5.1"  # Common display name across all providers
-    description: "GLM-5.1 model by Z.ai"
+    display_name: zai-glm-5.1
+    description: GLM-5.1 model by Z.ai
     providers:
       openrouter: z-ai/glm-5.1
       kilo: z-ai/glm-5.1
@@ -88,99 +64,86 @@ models:
       poe: glm-5.1-fw
       nvidia: z-ai/glm-5.1
       vercel: zai/glm-5.1
-      #opencode-zen: glm-5.1
-
   gemma-4-31b:
-    display_name: "gemma-4-31b"
-    description: "gemma 4 model by Google"
+    display_name: gemma-4-31b
+    description: gemma 4 model by Google
     providers:
       openrouter: google/gemma-4-31b-it
       kilo: google/gemma-4-31b-it
-      #fireworks: accounts/fireworks/models/gemma-4-31b-it
       ollama: gemma4:31b
       poe: gemma-4-31b
       nvidia: google/gemma-4-31b-it
       vercel: google/gemma-4-31b-it
-
   qwen3.6-plus:
-    display_name: "qwen3.6-plus"
-    description: "Qwen 3.6 Plus model by Alibaba"
+    display_name: qwen3.6-plus
+    description: Qwen 3.6 Plus model by Alibaba
     providers:
       openrouter: qwen/qwen3.6-plus
       kilo: qwen/qwen3.6-plus
-      #fireworks: accounts/fireworks/models/qwen3p6-plus
-      #ollama: qwen3.6-plus
       poe: qwen3.6-plus
-      #nvidia: alibaba/qwen3.6-plus
       vercel: alibaba/qwen3.6-plus
-
   deepseek-v4-flash:
-    display_name: "deepseek-v4-flash"
-    description: "Deepseek v4 Flash model"
+    display_name: deepseek-v4-flash
+    description: Deepseek v4 Flash model
     providers:
       openrouter: deepseek/deepseek-v4-flash
       kilo: deepseek/deepseek-v4-flash
       fireworks: accounts/fireworks/models/deepseek-v4-flash
-      #ollama: qwen3.6-plus
       poe: deepseek-v4-flash-el
       nvidia: deepseek-ai/deepseek-v4-flash
       vercel: deepseek/deepseek-v4-flash
-
   deepseek-v4-pro:
-    display_name: "deepseek-v4-pro"
-    description: "Deepseek v4 Pro model"
+    display_name: deepseek-v4-pro
+    description: Deepseek v4 Pro model
     providers:
       openrouter: deepseek/deepseek-v4-pro
       kilo: deepseek/deepseek-v4-pro
       fireworks: accounts/fireworks/models/deepseek-v4-pro
-      #ollama: qwen3.6-plus
       poe: deepseek-v4-pro-el
       nvidia: deepseek-ai/deepseek-v4-pro
       vercel: deepseek/deepseek-v4-pro
-
   qwen3.7-max:
-    display_name: "qwen3.7-max"
-    description: "Qwen3.7-Max"
+    display_name: qwen3.7-max
+    description: Qwen3.7-Max
     providers:
       openrouter: qwen/qwen3.7-max
       kilo: qwen/qwen3.7-max
-      #fireworks: accounts/fireworks/models/deepseek-v4-pro
-      #ollama: qwen3.6-plus
       poe: qwen3.7-max-t
-      nvidia: #deepseek-ai/deepseek-v4-pro
       vercel: alibaba/qwen3.7-max
       opencode-go: anthropic/qwen3.7-max
-
   gemini-3.5-flash:
-    display_name: "gemini-3.5-flash"
-    description: "Gemini 3.5 Flash"
+    display_name: gemini-3.5-flash
+    description: Gemini 3.5 Flash
     providers:
       openrouter: google/gemini-3.5-flash
       kilo: google/gemini-3.5-flash
-      #fireworks: accounts/fireworks/models/deepseek-v4-pro
-      #ollama: qwen3.6-plus
       poe: gemini-3.5-flash
-      nvidia: #deepseek-ai/deepseek-v4-pro
       vercel: google/gemini-3.5-flash
-      #opencode-go: anthropic/qwen3.7-max
-
   minimax-m3:
-    display_name: "minimax-m3"
-    description: "Minimax M3"
+    display_name: minimax-m3
+    description: Minimax M3
     providers:
-      openrouter: minimax/minimax-m3
       kilo: minimax/minimax-m3
-      #fireworks: accounts/fireworks/models/deepseek-v4-pro
-      #ollama: qwen3.6-plus
-      #poe: qwen3.7-max-t
-      nvidia: #deepseek-ai/deepseek-v4-pro
+      opencode-go: minimax-m3
+      opencode-zen: minimax-m3-free
+      openrouter: minimax/minimax-m3
       vercel: minimax/minimax-m3
-      opencode-go: anthropic/minimax-m3
-
-  # Add your own mappings below following this format:
-  # canonical-name:
-  #   display_name: "Display Name"
-  #   description: "Optional description"
-  #   providers:
-  #     provider1: provider1/model-id
-  #     provider2: provider2/model-id
+  claude-opus-4-8:
+    display_name: claude-opus-4-8
+    description: ''
+    providers:
+      openrouter: anthropic/claude-opus-4.8
+      vercel: anthropic/claude-opus-4.8
+      poe: claude-opus-4.8
+      kilo: anthropic/claude-opus-4.8
+      #opencode-zen: claude-opus-4-8
+  claude-sonnet-4-6:
+    display_name: claude-sonnet-4-6
+    description: ''
+    providers:
+      openrouter: anthropic/claude-sonnet-4.6
+      vercel: anthropic/claude-sonnet-4.6
+      poe: claude-sonnet-4.6
+      kilo: anthropic/claude-sonnet-4.6
+      #opencode-zen: claude-sonnet-4-6
+      #requesty: anthropic/claude-sonnet-4-6
