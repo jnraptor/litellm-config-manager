@@ -192,8 +192,8 @@ model_list:
     order: 5
     api_base: https://api.kilo.ai/api/gateway
     api_key: os.environ/KILO_API_KEY
-    input_cost_per_token: 1.34e-07
-    output_cost_per_token: 2.68e-07
+    input_cost_per_token: 2.0e-07
+    output_cost_per_token: 4.0e-07
 - model_name: deepseek-v4-flash
   litellm_params:
     model: openrouter/deepseek/deepseek-v4-flash
@@ -240,8 +240,8 @@ model_list:
     order: 5
     api_base: https://api.kilo.ai/api/gateway
     api_key: os.environ/KILO_API_KEY
-    input_cost_per_token: 1.608e-06
-    output_cost_per_token: 3.216e-06
+    input_cost_per_token: 2.4e-06
+    output_cost_per_token: 4.8e-06
 - model_name: deepseek-v4-pro
   litellm_params:
     model: openrouter/deepseek/deepseek-v4-pro
@@ -637,8 +637,8 @@ model_list:
     order: 5
     api_base: https://api.kilo.ai/api/gateway
     api_key: os.environ/KILO_API_KEY
-    input_cost_per_token: 3.0e-07
-    output_cost_per_token: 1.2e-06
+    input_cost_per_token: 6.0e-07
+    output_cost_per_token: 2.4e-06
 - model_name: minimax-m3
   litellm_params:
     model: openrouter/minimax/minimax-m3
@@ -683,8 +683,8 @@ model_list:
     order: 5
     api_base: https://api.kilo.ai/api/gateway
     api_key: os.environ/KILO_API_KEY
-    input_cost_per_token: 5.7e-07
-    output_cost_per_token: 2.85e-06
+    input_cost_per_token: 6.0e-07
+    output_cost_per_token: 3.0e-06
 - model_name: moonshotai-kimi-k2.5
   litellm_params:
     model: openrouter/moonshotai/kimi-k2.5
@@ -1018,7 +1018,7 @@ model_list:
     model: openrouter/z-ai/glm-5
     order: 5
     input_cost_per_token: 6.0e-07
-    output_cost_per_token: 2.08e-06
+    output_cost_per_token: 1.92e-06
 - model_name: zai-glm-5
   litellm_params:
     model: vercel_ai_gateway/zai/glm-5
