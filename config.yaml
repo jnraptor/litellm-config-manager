@@ -625,14 +625,6 @@ model_list:
     output_cost_per_token: 2.4e-06
 - model_name: minimax-m3
   litellm_params:
-    model: openai/minimax-m3-free
-    order: 3
-    api_base: https://opencode.ai/zen/v1
-    api_key: os.environ/OPENCODE_API_KEY
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
-- model_name: minimax-m3
-  litellm_params:
     model: openai/minimax/minimax-m3
     order: 5
     api_base: https://api.kilo.ai/api/gateway
