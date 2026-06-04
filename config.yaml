@@ -66,6 +66,14 @@ model_list:
     rpm: 10
   model_info:
     mode: ocr
+- model_name: big-pickle
+  litellm_params:
+    model: openai/big-pickle
+    order: 3
+    api_base: https://opencode.ai/zen/v1
+    api_key: os.environ/OPENCODE_API_KEY
+    input_cost_per_token: 1.0e-09
+    output_cost_per_token: 1.0e-09
 - litellm_params:
     model: poe/claude-haiku-4.5
     api_key: os.environ/POE_API_KEY
@@ -419,6 +427,14 @@ model_list:
     order: 1
 - model_name: mimo-v2.5
   litellm_params:
+    model: openai/mimo-v2.5-free
+    order: 3
+    api_base: https://opencode.ai/zen/v1
+    api_key: os.environ/OPENCODE_API_KEY
+    input_cost_per_token: 1.0e-09
+    output_cost_per_token: 1.0e-09
+- model_name: mimo-v2.5
+  litellm_params:
     model: poe/mimo-v2.5
     order: 4
     api_key: os.environ/POE_API_KEY
@@ -685,6 +701,14 @@ model_list:
   litellm_params:
     model: nvidia_nim/nvidia/nemotron-3-ultra-550b-a55b
     order: 3
+    input_cost_per_token: 1.0e-09
+    output_cost_per_token: 1.0e-09
+- model_name: nemotron-3-ultra-550b-a55b
+  litellm_params:
+    model: openai/nemotron-3-ultra-free
+    order: 3
+    api_base: https://opencode.ai/zen/v1
+    api_key: os.environ/OPENCODE_API_KEY
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
 - model_name: nemotron-3-ultra-550b-a55b

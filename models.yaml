@@ -26,6 +26,7 @@ models:
       kilo: xiaomi/mimo-v2.5
       poe: mimo-v2.5
       vercel: xiaomi/mimo-v2.5
+      opencode-zen: mimo-v2.5-free
   mimo-v2.5-pro:
     display_name: mimo-v2.5-pro
     description: mimo-v2.5-pro
@@ -92,6 +93,7 @@ models:
       poe: deepseek-v4-flash-el
       nvidia: deepseek-ai/deepseek-v4-flash
       vercel: deepseek/deepseek-v4-flash
+      opencode-zen: deepseek-v4-flash-free
   deepseek-v4-pro:
     display_name: deepseek-v4-pro
     description: Deepseek v4 Pro model
@@ -168,4 +170,5 @@ models:
       openrouter: nvidia/nemotron-3-ultra-550b-a55b:free
       nvidia: nvidia/nemotron-3-ultra-550b-a55b
       kilo: nvidia/nemotron-3-ultra-550b-a55b:free
+      opencode-zen: nemotron-3-ultra-free
       #ollama: nemotron-3-ultra
