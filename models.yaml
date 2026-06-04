@@ -161,3 +161,11 @@ models:
       poe: qwen3.7-plus
       kilo: qwen/qwen3.7-plus
       opencode-go: qwen3.7-plus
+  nemotron-3-ultra-550b-a55b:
+    display_name: nemotron-3-ultra-550b-a55b
+    description: ''
+    providers:
+      openrouter: nvidia/nemotron-3-ultra-550b-a55b:free
+      nvidia: nvidia/nemotron-3-ultra-550b-a55b
+      kilo: nvidia/nemotron-3-ultra-550b-a55b:free
+      #ollama: nemotron-3-ultra

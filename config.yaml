@@ -658,8 +658,8 @@ model_list:
     order: 5
     api_base: https://api.kilo.ai/api/gateway
     api_key: os.environ/KILO_API_KEY
-    input_cost_per_token: 6.0e-07
-    output_cost_per_token: 2.4e-06
+    input_cost_per_token: 3.0e-07
+    output_cost_per_token: 1.2e-06
 - model_name: minimax-m3
   litellm_params:
     model: openrouter/minimax/minimax-m3
@@ -759,6 +759,26 @@ model_list:
     order: 5
     input_cost_per_token: 6.84e-07
     output_cost_per_token: 3.42e-06
+- model_name: nemotron-3-ultra-550b-a55b
+  litellm_params:
+    model: nvidia_nim/nvidia/nemotron-3-ultra-550b-a55b
+    order: 3
+    input_cost_per_token: 1.0e-09
+    output_cost_per_token: 1.0e-09
+- model_name: nemotron-3-ultra-550b-a55b
+  litellm_params:
+    model: openai/nvidia/nemotron-3-ultra-550b-a55b:free
+    order: 3
+    api_base: https://api.kilo.ai/api/gateway
+    api_key: os.environ/KILO_API_KEY
+    input_cost_per_token: 1.0e-09
+    output_cost_per_token: 1.0e-09
+- model_name: nemotron-3-ultra-550b-a55b
+  litellm_params:
+    model: openrouter/nvidia/nemotron-3-ultra-550b-a55b:free
+    order: 3
+    input_cost_per_token: 1.0e-09
+    output_cost_per_token: 1.0e-09
 - model_name: nim-llama-nemotron-embed-1b-v2
   litellm_params:
     model: nvidia_nim/nvidia/llama-nemotron-embed-1b-v2
