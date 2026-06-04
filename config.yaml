@@ -17,10 +17,8 @@ router_settings:
   redis_port: 6379
   enable_pre_call_checks: true
   fallbacks:
-  - az-kimi-k2.5:
-    - moonshotai-kimi-k2.5
-  - az-minimax-m2.5:
-    - minimax-m2.5
+  - az-kimi-k2.6:
+    - moonshotai-kimi-k2.6
 model_list:
 - litellm_params:
     api_base: os.environ/AZURE_AI_API_BASE_EASTUS2
@@ -60,18 +58,6 @@ model_list:
   model_info:
     base_model: azure_ai/mai-image-2.5-flash
     mode: image_generation
-- litellm_params:
-    api_base: os.environ/AZURE_AI_API_BASE_EASTUS
-    api_key: os.environ/AZURE_AI_API_KEY_EASTUS
-    model: azure_ai/FW-MiniMax-M2.5
-    input_cost_per_token: 3e-07
-    output_cost_per_token: 1.2e-06
-    rpm: 25
-    tpm: 25000
-    order: 5
-  model_name: az-minimax-m2.5
-  model_info:
-    base_model: azure_ai/minimax-m2.5
 - model_name: az-ocr
   litellm_params:
     model: azure_ai/mistral-document-ai-2512
@@ -80,14 +66,6 @@ model_list:
     rpm: 10
   model_info:
     mode: ocr
-- litellm_params:
-    api_base: os.environ/AZURE_AI_API_BASE_EASTUS
-    api_key: os.environ/AZURE_AI_API_KEY_EASTUS
-    model: azure_ai/Phi-4-mini-instruct
-    input_cost_per_token: 7.5e-08
-    output_cost_per_token: 3e-7
-    order: 5
-  model_name: az-phi-4-mini-instruct
 - litellm_params:
     model: poe/claude-haiku-4.5
     api_key: os.environ/POE_API_KEY
@@ -310,56 +288,6 @@ model_list:
     order: 5
     input_cost_per_token: 1.5e-06
     output_cost_per_token: 9.0e-06
-- model_name: gemini-embedding-2
-  litellm_params:
-    model: gemini/gemini-embedding-2
-    order: 3
-    input_cost_per_token: 1.0e-09
-  model_info:
-    mode: embedding
-- model_name: gemma-4-31b
-  litellm_params:
-    model: gemini/gemma-4-31b-it
-    order: 3
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
-- model_name: gemma-4-31b
-  litellm_params:
-    model: nvidia_nim/google/gemma-4-31b-it
-    order: 3
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
-- model_name: gemma-4-31b
-  litellm_params:
-    model: openrouter/google/gemma-4-31b-it:free
-    order: 3
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
-- model_name: gemma-4-31b
-  litellm_params:
-    model: poe/gemma-4-31b
-    order: 4
-    api_key: os.environ/POE_API_KEY
-- model_name: gemma-4-31b
-  litellm_params:
-    model: openai/google/gemma-4-31b-it
-    order: 5
-    api_base: https://api.kilo.ai/api/gateway
-    api_key: os.environ/KILO_API_KEY
-    input_cost_per_token: 1.2e-07
-    output_cost_per_token: 3.7e-07
-- model_name: gemma-4-31b
-  litellm_params:
-    model: openrouter/google/gemma-4-31b-it
-    order: 5
-    input_cost_per_token: 1.2e-07
-    output_cost_per_token: 3.7e-07
-- model_name: gemma-4-31b
-  litellm_params:
-    model: vercel_ai_gateway/google/gemma-4-31b-it
-    order: 5
-    input_cost_per_token: 1.4e-07
-    output_cost_per_token: 4.0e-07
 - model_name: gpt-5-nano
   litellm_params:
     model: openai/gpt-5-nano
@@ -672,12 +600,6 @@ model_list:
     order: 5
     input_cost_per_token: 3.0e-07
     output_cost_per_token: 1.2e-06
-- model_name: mistral-medium-3.5-128b
-  litellm_params:
-    model: nvidia_nim/mistralai/mistral-medium-3.5-128b
-    order: 3
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
 - model_name: moonshotai-kimi-k2.5
   litellm_params:
     model: openai/kimi-k2.5
@@ -830,26 +752,6 @@ model_list:
     order: 3
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
-- model_name: nvidia-nemotron-3-super
-  litellm_params:
-    model: nvidia_nim/nvidia/nemotron-3-super-120b-a12b
-    order: 3
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
-- model_name: nvidia-nemotron-3-super
-  litellm_params:
-    model: openai/nemotron-3-super-free
-    api_base: https://opencode.ai/zen/v1
-    api_key: os.environ/OPENCODE_API_KEY
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
-    order: 3
-- model_name: nvidia-nemotron-3-super
-  litellm_params:
-    model: openrouter/nvidia/nemotron-3-super-120b-a12b:free
-    order: 3
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
 - model_name: oai-text-embedding-3-small
   litellm_params:
     model: openai/oai-text-embedding-3-small
@@ -899,12 +801,6 @@ model_list:
     output_cost_per_token: 1.0e-09
   model_info:
     mode: rerank
-- model_name: qwen3.5-122b-a10b
-  litellm_params:
-    model: nvidia_nim/qwen/qwen3.5-122b-a10b
-    order: 3
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
 - model_name: qwen3.6-plus
   litellm_params:
     model: anthropic/qwen3.6-plus
@@ -1028,11 +924,11 @@ model_list:
     model: auto_router/complexity_router
     complexity_router_config:
       tiers:
-        SIMPLE: az-minimax-m2.5
-        MEDIUM: deepseek-v4-flash
+        SIMPLE: deepseek-v4-flash
+        MEDIUM: mimo-v2.5
         COMPLEX: az-kimi-k2.6
         REASONING: deepseek-v4-pro
-    complexity_router_default_model: az-minimax-m2.5
+    complexity_router_default_model: deepseek-v4-flash
     tier_boundaries:
       simple_medium: 0.15
       medium_complex: 0.35
