@@ -960,6 +960,47 @@ model_list:
     order: 5
     input_cost_per_token: 1.25e-06
     output_cost_per_token: 3.75e-06
+- model_name: qwen3.7-plus
+  litellm_params:
+    model: openai/qwen3.7-plus
+    order: 1
+    input_cost_per_token: 4.0000000000000003e-07
+    output_cost_per_token: 1.6000000000000001e-06
+- model_name: qwen3.7-plus
+  litellm_params:
+    model: openai/qwen/qwen3.7-plus:free
+    order: 3
+    api_base: https://api.kilo.ai/api/gateway
+    api_key: os.environ/KILO_API_KEY
+    input_cost_per_token: 1.0e-09
+    output_cost_per_token: 1.0e-09
+- model_name: qwen3.7-plus
+  litellm_params:
+    model: poe/qwen3.7-plus
+    order: 4
+    api_key: os.environ/POE_API_KEY
+    input_cost_per_token: 4.04e-07
+    output_cost_per_token: 1.6162e-06
+- model_name: qwen3.7-plus
+  litellm_params:
+    model: openai/qwen/qwen3.7-plus
+    order: 5
+    api_base: https://api.kilo.ai/api/gateway
+    api_key: os.environ/KILO_API_KEY
+    input_cost_per_token: 2.6e-07
+    output_cost_per_token: 1.04e-06
+- model_name: qwen3.7-plus
+  litellm_params:
+    model: openrouter/qwen/qwen3.7-plus
+    order: 5
+    input_cost_per_token: 4.0e-07
+    output_cost_per_token: 1.6e-06
+- model_name: qwen3.7-plus
+  litellm_params:
+    model: vercel_ai_gateway/alibaba/qwen3.7-plus
+    order: 5
+    input_cost_per_token: 4.0e-07
+    output_cost_per_token: 1.6e-06
 - model_name: smart_router_1
   litellm_params:
     model: auto_router/complexity_router

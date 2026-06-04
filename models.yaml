@@ -152,3 +152,12 @@ models:
       vercel: stepfun/step-3.7-flash
       nvidia: stepfun-ai/step-3.7-flash
       kilo: stepfun/step-3.7-flash
+  qwen3.7-plus:
+    display_name: qwen3.7-plus
+    description: ''
+    providers:
+      openrouter: qwen/qwen3.7-plus
+      vercel: alibaba/qwen3.7-plus
+      poe: qwen3.7-plus
+      kilo: qwen/qwen3.7-plus
+      opencode-go: qwen3.7-plus
