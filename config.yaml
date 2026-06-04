@@ -962,8 +962,10 @@ model_list:
     output_cost_per_token: 3.75e-06
 - model_name: qwen3.7-plus
   litellm_params:
-    model: openai/qwen3.7-plus
+    model: anthropic/qwen3.7-plus
     order: 1
+    api_base: https://opencode.ai/zen/go
+    api_key: os.environ/OPENCODE_API_KEY
     input_cost_per_token: 4.0000000000000003e-07
     output_cost_per_token: 1.6000000000000001e-06
 - model_name: qwen3.7-plus
