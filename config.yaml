@@ -19,7 +19,21 @@ router_settings:
   fallbacks:
   - az-kimi-k2.6:
     - moonshotai-kimi-k2.6
+  - az-deepseek-v4-pro:
+    - deepseek-v4-pro
 model_list:
+- litellm_params:
+    api_base: os.environ/AZURE_AI_API_BASE_EASTUS
+    api_key: os.environ/AZURE_AI_API_KEY_EASTUS
+    model: azure_ai/FW-DeepSeek-V4-Pro
+    input_cost_per_token: 1.74e-06
+    output_cost_per_token: 3.48e-06
+    rpm: 25
+    tpm: 25000
+    order: 5
+  model_name: az-deepseek-v4-pro
+  model_info:
+    base_model: azure_ai/deepseek-v4-pro
 - litellm_params:
     api_base: os.environ/AZURE_AI_API_BASE_EASTUS2
     api_key: os.environ/AZURE_AI_API_KEY_EASTUS2
@@ -249,6 +263,18 @@ model_list:
     api_key: os.environ/POE_API_KEY
     input_cost_per_token: 1.6667e-06
     output_cost_per_token: 3.3343e-06
+- litellm_params:
+    api_base: os.environ/AZURE_AI_API_BASE_EASTUS
+    api_key: os.environ/AZURE_AI_API_KEY_EASTUS
+    model: azure_ai/FW-DeepSeek-V4-Pro
+    input_cost_per_token: 1.74e-06
+    output_cost_per_token: 3.48e-06
+    rpm: 25
+    tpm: 25000
+    order: 5
+  model_name: deepseek-v4-pro
+  model_info:
+    base_model: azure_ai/deepseek-v4-pro
 - model_name: deepseek-v4-pro
   litellm_params:
     model: openai/deepseek/deepseek-v4-pro
