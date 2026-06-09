@@ -138,6 +138,7 @@ models:
       vercel: anthropic/claude-opus-4.8
       poe: claude-opus-4.8
       kilo: anthropic/claude-opus-4.8
+      requesty: anthropic/claude-opus-4-8
   claude-sonnet-4-6:
     display_name: claude-sonnet-4-6
     description: ''
@@ -145,7 +146,8 @@ models:
       openrouter: anthropic/claude-sonnet-4.6
       vercel: anthropic/claude-sonnet-4.6
       poe: claude-sonnet-4.6
-      kilo: anthropic/claude-sonnet-4.6
+      kilo: stealth/claude-sonnet-4.6
+      requesty: anthropic/claude-sonnet-4-6
   step-3.7-flash:
     display_name: step-3.7-flash
     description: ''
@@ -171,4 +173,13 @@ models:
       nvidia: nvidia/nemotron-3-ultra-550b-a55b
       kilo: nvidia/nemotron-3-ultra-550b-a55b:free
       opencode-zen: nemotron-3-ultra-free
-      #ollama: nemotron-3-ultra
+  claude-haiku-4-5:
+    display_name: claude-haiku-4-5
+    description: ''
+    providers:
+      openrouter: anthropic/claude-haiku-4.5
+      vercel: anthropic/claude-haiku-4.5
+      poe: claude-haiku-4.5
+      kilo: anthropic/claude-haiku-4.5
+      #opencode-zen: claude-haiku-4-5
+      requesty: anthropic/claude-haiku-4-5
