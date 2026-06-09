@@ -566,7 +566,7 @@ model_list:
     model: openrouter/minimax/minimax-m2.5
     order: 5
     input_cost_per_token: 1.5e-07
-    output_cost_per_token: 1.15e-06
+    output_cost_per_token: 9.0e-07
 - model_name: minimax-m2.5
   litellm_params:
     model: vercel_ai_gateway/minimax/minimax-m2.5
@@ -606,8 +606,8 @@ model_list:
   litellm_params:
     model: openrouter/minimax/minimax-m2.7
     order: 5
-    input_cost_per_token: 2.79e-07
-    output_cost_per_token: 1.2e-06
+    input_cost_per_token: 2.7e-07
+    output_cost_per_token: 1.08e-06
 - model_name: minimax-m2.7
   litellm_params:
     model: vercel_ai_gateway/minimax/minimax-m2.7
@@ -620,16 +620,16 @@ model_list:
     order: 1
     api_base: https://opencode.ai/zen/go
     api_key: os.environ/OPENCODE_API_KEY
-    input_cost_per_token: 6.0e-07
-    output_cost_per_token: 2.4e-06
+    input_cost_per_token: 3.0e-07
+    output_cost_per_token: 1.2e-06
 - model_name: minimax-m3
   litellm_params:
     model: openai/minimax/minimax-m3
     order: 5
     api_base: https://api.kilo.ai/api/gateway
     api_key: os.environ/KILO_API_KEY
-    input_cost_per_token: 6.0e-07
-    output_cost_per_token: 2.4e-06
+    input_cost_per_token: 3.0e-07
+    output_cost_per_token: 1.2e-06
 - model_name: minimax-m3
   litellm_params:
     model: openrouter/minimax/minimax-m3
@@ -721,8 +721,8 @@ model_list:
   litellm_params:
     model: openrouter/moonshotai/kimi-k2.6
     order: 5
-    input_cost_per_token: 6.84e-07
-    output_cost_per_token: 3.42e-06
+    input_cost_per_token: 6.8e-07
+    output_cost_per_token: 3.41e-06
 - model_name: nemotron-3-ultra-550b-a55b
   litellm_params:
     model: nvidia_nim/nvidia/nemotron-3-ultra-550b-a55b
@@ -1081,7 +1081,7 @@ model_list:
     order: 5
     api_base: https://api.kilo.ai/api/gateway
     api_key: os.environ/KILO_API_KEY
-    input_cost_per_token: 1.38e-06
+    input_cost_per_token: 1.4e-06
     output_cost_per_token: 4.4e-06
 - model_name: zai-glm-5.1
   litellm_params:
