@@ -181,5 +181,14 @@ models:
       vercel: anthropic/claude-haiku-4.5
       poe: claude-haiku-4.5
       kilo: anthropic/claude-haiku-4.5
-      #opencode-zen: claude-haiku-4-5
       requesty: anthropic/claude-haiku-4-5
+  claude-fable-5:
+    display_name: claude-fable-5
+    description: ''
+    providers:
+      openrouter: anthropic/claude-fable-5
+      vercel: anthropic/claude-fable-5
+      poe: claude-fable-5
+      kilo: anthropic/claude-fable-5
+      #opencode-zen: claude-fable-5
+      requesty: anthropic/claude-fable-5
