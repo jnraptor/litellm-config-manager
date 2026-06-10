@@ -804,6 +804,14 @@ model_list:
     order: 5
   model_info:
     mode: embedding
+- model_name: north-mini-code-free
+  litellm_params:
+    model: openai/north-mini-code-free
+    order: 3
+    api_base: https://opencode.ai/zen/v1
+    api_key: os.environ/OPENCODE_API_KEY
+    input_cost_per_token: 1.0e-09
+    output_cost_per_token: 1.0e-09
 - model_name: nvidia-llama-nemotron-embed-vl-1b-v2
   litellm_params:
     model: nvidia_nim/nvidia/llama-nemotron-embed-vl-1b-v2
