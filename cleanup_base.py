@@ -501,7 +501,7 @@ class BaseModelCleaner(ABC):
         model_list = config.get("model_list", [])
         report.total_entries = len(model_list)
 
-        seen_entries: Dict[Tuple[str, str], int] = {}
+        seen_entries: Dict[Tuple[str, str, str], int] = {}
 
         # Load provider configs for provider-specific checks
         try:
@@ -589,8 +589,9 @@ class BaseModelCleaner(ABC):
                 _skip_rest = False
 
             if not _skip_rest:
-                # Check 5: Duplicate (model_name, model)
-                dup_key = (model_name, model_id)
+                # Check 5: Duplicate (model_name, model, api_base)
+                api_base = litellm_params.get("api_base", "") or ""
+                dup_key = (model_name, model_id, api_base)
                 if dup_key in seen_entries:
                     first_index = seen_entries[dup_key]
                     report.issues.append(ValidationIssue(
@@ -599,8 +600,8 @@ class BaseModelCleaner(ABC):
                         entry_index=index,
                         model_name=model_name,
                         model_id=model_id,
-                        message=f"Duplicate entry: same model_name and model ID first seen at index #{first_index}",
-                        suggestion="Remove the duplicate entry or change model_name/model ID",
+                        message=f"Duplicate entry: same model_name, model ID, and api_base first seen at index #{first_index}",
+                        suggestion="Remove the duplicate entry or change model_name/model ID/api_base",
                     ))
                 else:
                     seen_entries[dup_key] = index

@@ -266,6 +266,29 @@ class TestValidateConfig:
         assert report.has_errors
         assert any(i.category == "duplicate" for i in report.issues)
 
+    def test_duplicate_different_api_base(self, cleaner):
+        """Same model_name+model but different api_base should NOT be flagged as duplicate."""
+        config = {
+            "model_list": [
+                {
+                    "model_name": "claude-fable-5",
+                    "litellm_params": {
+                        "model": "openai/anthropic/claude-fable-5",
+                        "api_base": "https://api.kilo.ai/api/gateway",
+                    },
+                },
+                {
+                    "model_name": "claude-fable-5",
+                    "litellm_params": {
+                        "model": "openai/anthropic/claude-fable-5",
+                        "api_base": "https://router.requesty.ai/v1",
+                    },
+                },
+            ]
+        }
+        report = cleaner.validate_config(config)
+        assert not any(i.category == "duplicate" for i in report.issues)
+
     def test_non_numeric_input_cost(self, cleaner):
         config = {
             "model_list": [
