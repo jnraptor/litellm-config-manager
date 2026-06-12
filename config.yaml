@@ -678,8 +678,8 @@ model_list:
     order: 1
     api_base: https://opencode.ai/zen/go
     api_key: os.environ/OPENCODE_API_KEY
-    input_cost_per_token: 3.0e-07
-    output_cost_per_token: 1.2e-06
+    input_cost_per_token: 1.0000000000000001e-07
+    output_cost_per_token: 4.0000000000000003e-07
 - model_name: minimax-m3
   litellm_params:
     model: openai/minimax/minimax-m3
