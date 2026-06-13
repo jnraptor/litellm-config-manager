@@ -525,8 +525,8 @@ model_list:
     model: fireworks_ai/accounts/fireworks/models/kimi-k2p7-code
     order: 4
     api_key: os.environ/FIREWORKS_AI_API_KEY
-    input_cost_per_token: 1.2e-06
-    output_cost_per_token: 1.2e-06
+    input_cost_per_token: 9.5e-07
+    output_cost_per_token: 4e-06
 - model_name: kimi-k2.7
   litellm_params:
     model: poe/kimi-k2.7-code
