@@ -18,7 +18,7 @@ router_settings:
   enable_pre_call_checks: true
   fallbacks:
   - az-kimi-k2.6:
-    - moonshotai-kimi-k2.6
+    - kimi-k2.6
   - az-deepseek-v4-pro:
     - deepseek-v4-pro
 model_list:
@@ -1005,7 +1005,7 @@ model_list:
       tiers:
         SIMPLE: deepseek-v4-flash
         MEDIUM: mimo-v2.5
-        COMPLEX: az-kimi-k2.6
+        COMPLEX: kimi-k2.7
         REASONING: deepseek-v4-pro
     complexity_router_default_model: deepseek-v4-flash
     tier_boundaries:
