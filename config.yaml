@@ -771,6 +771,13 @@ model_list:
     order: 3
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
+- model_name: nemotron-3-ultra-550b-a55b
+  litellm_params:
+    model: fireworks_ai/accounts/fireworks/models/nemotron-3-ultra-nvfp4
+    order: 4
+    api_key: os.environ/FIREWORKS_AI_API_KEY
+    input_cost_per_token: 6e-07
+    output_cost_per_token: 2.4e-06
 - model_name: nim-llama-nemotron-embed-1b-v2
   litellm_params:
     model: nvidia_nim/nvidia/llama-nemotron-embed-1b-v2
