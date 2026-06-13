@@ -546,8 +546,8 @@ model_list:
   litellm_params:
     model: openrouter/moonshotai/kimi-k2.7-code
     order: 5
-    input_cost_per_token: 9.5e-07
-    output_cost_per_token: 4.0e-06
+    input_cost_per_token: 7.5e-07
+    output_cost_per_token: 3.5e-06
 - model_name: kimi-k2.7
   litellm_params:
     model: vercel_ai_gateway/moonshotai/kimi-k2.7-code
