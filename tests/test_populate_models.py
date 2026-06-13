@@ -141,6 +141,27 @@ class TestFindModelInApi:
         matched, _, _ = find_model_in_api("minimax-m3", api)
         assert matched == "minimax-m3"
 
+    def test_no_false_positive_for_shorter_version(self):
+        """A key like kimi-k2.7 should not match the older kimi-k2 variants."""
+        api = {
+            "kimi-k2": {"id": "kimi-k2"},
+            "kimi-k2:1t": {"id": "kimi-k2:1t"},
+            "moonshotai/kimi-k2": {"id": "moonshotai/kimi-k2"},
+        }
+        matched, score, _ = find_model_in_api("kimi-k2.7", api)
+        assert matched is None
+        assert score == 0.0
+
+    def test_substring_match_allows_longer_variant(self):
+        """kimi-k2.7 may match a longer id like kimi-k2.7-code when exact is missing."""
+        api = {
+            "kimi-k2.7-code": {"id": "kimi-k2.7-code"},
+            "kimi-k2": {"id": "kimi-k2"},
+        }
+        matched, score, _ = find_model_in_api("kimi-k2.7", api)
+        assert matched == "kimi-k2.7-code"
+        assert score == 0.6
+
 
 # ==============================================================================
 # ModelMappingLoader.save() / update_model_mapping()

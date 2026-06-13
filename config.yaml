@@ -88,34 +88,6 @@ model_list:
     api_key: os.environ/OPENCODE_API_KEY
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
-- model_name: claude-fable-5
-  litellm_params:
-    model: openai/anthropic/claude-fable-5
-    order: 5
-    api_base: https://api.kilo.ai/api/gateway
-    api_key: os.environ/KILO_API_KEY
-    input_cost_per_token: 1.0e-05
-    output_cost_per_token: 5.0e-05
-- model_name: claude-fable-5
-  litellm_params:
-    model: openai/anthropic/claude-fable-5
-    order: 5
-    api_base: https://router.requesty.ai/v1
-    api_key: os.environ/REQUESTY_API_KEY
-    input_cost_per_token: 1.0e-05
-    output_cost_per_token: 5.0e-05
-- model_name: claude-fable-5
-  litellm_params:
-    model: openrouter/anthropic/claude-fable-5
-    order: 5
-    input_cost_per_token: 1.0e-05
-    output_cost_per_token: 5.0e-05
-- model_name: claude-fable-5
-  litellm_params:
-    model: vercel_ai_gateway/anthropic/claude-fable-5
-    order: 5
-    input_cost_per_token: 1.0e-05
-    output_cost_per_token: 5.0e-05
 - litellm_params:
     model: poe/claude-haiku-4.5
     api_key: os.environ/POE_API_KEY
@@ -493,6 +465,88 @@ model_list:
     order: 5
   model_info:
     mode: rerank
+- model_name: kimi-k2.6
+  litellm_params:
+    model: openai/kimi-k2.6
+    api_base: https://opencode.ai/zen/go/v1
+    api_key: os.environ/OPENCODE_API_KEY
+    input_cost_per_token: 9.499999999999999e-07
+    output_cost_per_token: 4.0e-06
+    order: 1
+- model_name: kimi-k2.6
+  litellm_params:
+    model: nvidia_nim/moonshotai/kimi-k2.6
+    order: 3
+    input_cost_per_token: 1.0e-09
+    output_cost_per_token: 1.0e-09
+- model_name: kimi-k2.6
+  litellm_params:
+    model: fireworks_ai/accounts/fireworks/models/kimi-k2p6
+    order: 4
+    api_key: os.environ/FIREWORKS_AI_API_KEY
+    input_cost_per_token: 9.5e-07
+    output_cost_per_token: 4.0e-06
+- litellm_params:
+    api_base: os.environ/AZURE_AI_API_BASE_EASTUS2
+    api_key: os.environ/AZURE_AI_API_KEY_EASTUS2
+    model: azure_ai/FW-Kimi-K2.6
+    input_cost_per_token: 6e-07
+    output_cost_per_token: 3e-06
+    rpm: 25
+    tpm: 25000
+    order: 5
+  model_name: kimi-k2.6
+  model_info:
+    base_model: azure_ai/kimi-k2.6
+- model_name: kimi-k2.6
+  litellm_params:
+    model: openai/moonshotai/kimi-k2.6
+    order: 5
+    api_base: https://api.kilo.ai/api/gateway
+    api_key: os.environ/KILO_API_KEY
+    input_cost_per_token: 8.0e-07
+    output_cost_per_token: 3.4e-06
+- model_name: kimi-k2.6
+  litellm_params:
+    model: openrouter/moonshotai/kimi-k2.6
+    order: 5
+    input_cost_per_token: 6.8e-07
+    output_cost_per_token: 3.41e-06
+- model_name: kimi-k2.7
+  litellm_params:
+    model: openai/kimi-k2.7-code
+    order: 1
+    api_base: https://opencode.ai/zen/go/v1
+    api_key: os.environ/OPENCODE_API_KEY
+    input_cost_per_token: 9.499999999999999e-07
+    output_cost_per_token: 4.0e-06
+- model_name: kimi-k2.7
+  litellm_params:
+    model: poe/kimi-k2.7-code
+    order: 4
+    api_key: os.environ/POE_API_KEY
+    input_cost_per_token: 9.596e-07
+    output_cost_per_token: 4.0404e-06
+- model_name: kimi-k2.7
+  litellm_params:
+    model: openai/moonshotai/kimi-k2.7-code
+    order: 5
+    api_base: https://api.kilo.ai/api/gateway
+    api_key: os.environ/KILO_API_KEY
+    input_cost_per_token: 9.5e-07
+    output_cost_per_token: 4.0e-06
+- model_name: kimi-k2.7
+  litellm_params:
+    model: openrouter/moonshotai/kimi-k2.7-code
+    order: 5
+    input_cost_per_token: 9.5e-07
+    output_cost_per_token: 4.0e-06
+- model_name: kimi-k2.7
+  litellm_params:
+    model: vercel_ai_gateway/moonshotai/kimi-k2.7-code
+    order: 5
+    input_cost_per_token: 9.5e-07
+    output_cost_per_token: 4.0e-06
 - litellm_params:
     model: openai/Gemma-4-E2B
     api_base: os.environ/LLAMA_API_BASE
@@ -577,60 +631,6 @@ model_list:
     order: 5
     input_cost_per_token: 4.35e-07
     output_cost_per_token: 8.7e-07
-- model_name: minimax-m2.5
-  litellm_params:
-    model: anthropic/minimax-m2.5
-    api_base: https://opencode.ai/zen/go
-    api_key: os.environ/OPENCODE_API_KEY
-    input_cost_per_token: 3.0e-07
-    output_cost_per_token: 1.2e-06
-    order: 1
-- model_name: minimax-m2.5
-  litellm_params:
-    model: fireworks_ai/accounts/fireworks/models/minimax-m2p5
-    order: 4
-    api_key: os.environ/FIREWORKS_AI_API_KEY
-    input_cost_per_token: 3.0e-07
-    output_cost_per_token: 1.2e-06
-- model_name: minimax-m2.5
-  litellm_params:
-    model: poe/minimax-m2.5
-    order: 4
-    api_key: os.environ/POE_API_KEY
-    input_cost_per_token: 3.03e-07
-    output_cost_per_token: 1.2121e-06
-- litellm_params:
-    api_base: os.environ/AZURE_AI_API_BASE_EASTUS
-    api_key: os.environ/AZURE_AI_API_KEY_EASTUS
-    model: azure_ai/FW-MiniMax-M2.5
-    input_cost_per_token: 3e-07
-    output_cost_per_token: 1.2e-06
-    rpm: 25
-    tpm: 25000
-    order: 5
-  model_name: minimax-m2.5
-  model_info:
-    base_model: azure_ai/minimax-m2.5
-- model_name: minimax-m2.5
-  litellm_params:
-    model: openai/minimax/minimax-m2.5
-    order: 5
-    api_base: https://api.kilo.ai/api/gateway
-    api_key: os.environ/KILO_API_KEY
-    input_cost_per_token: 3.0e-07
-    output_cost_per_token: 1.2e-06
-- model_name: minimax-m2.5
-  litellm_params:
-    model: openrouter/minimax/minimax-m2.5
-    order: 5
-    input_cost_per_token: 1.5e-07
-    output_cost_per_token: 9.0e-07
-- model_name: minimax-m2.5
-  litellm_params:
-    model: vercel_ai_gateway/minimax/minimax-m2.5
-    order: 5
-    input_cost_per_token: 3.0e-07
-    output_cost_per_token: 1.2e-06
 - model_name: minimax-m2.7
   litellm_params:
     model: anthropic/minimax-m2.7
@@ -682,6 +682,12 @@ model_list:
     output_cost_per_token: 4.0000000000000003e-07
 - model_name: minimax-m3
   litellm_params:
+    model: nvidia_nim/minimaxai/minimax-m3
+    order: 3
+    input_cost_per_token: 1.0e-09
+    output_cost_per_token: 1.0e-09
+- model_name: minimax-m3
+  litellm_params:
     model: openai/minimax/minimax-m3
     order: 5
     api_base: https://api.kilo.ai/api/gateway
@@ -700,87 +706,6 @@ model_list:
     order: 5
     input_cost_per_token: 3.0e-07
     output_cost_per_token: 1.2e-06
-- model_name: moonshotai-kimi-k2.5
-  litellm_params:
-    model: openai/kimi-k2.5
-    api_base: https://opencode.ai/zen/go/v1
-    api_key: os.environ/OPENCODE_API_KEY
-    input_cost_per_token: 6.0e-07
-    output_cost_per_token: 3.0e-06
-    order: 1
-- model_name: moonshotai-kimi-k2.5
-  litellm_params:
-    model: fireworks_ai/accounts/fireworks/models/kimi-k2p5
-    order: 4
-    api_key: os.environ/FIREWORKS_AI_API_KEY
-    input_cost_per_token: 6.0e-07
-    output_cost_per_token: 3.0e-06
-- model_name: moonshotai-kimi-k2.5
-  litellm_params:
-    model: poe/kimi-k2.5-fw
-    order: 4
-    api_key: os.environ/POE_API_KEY
-- model_name: moonshotai-kimi-k2.5
-  litellm_params:
-    model: openai/moonshotai/kimi-k2.5
-    order: 5
-    api_base: https://api.kilo.ai/api/gateway
-    api_key: os.environ/KILO_API_KEY
-    input_cost_per_token: 6.0e-07
-    output_cost_per_token: 3.0e-06
-- model_name: moonshotai-kimi-k2.5
-  litellm_params:
-    model: openrouter/moonshotai/kimi-k2.5
-    input_cost_per_token: 4.0e-07
-    output_cost_per_token: 1.9e-06
-    order: 5
-- model_name: moonshotai-kimi-k2.6
-  litellm_params:
-    model: openai/kimi-k2.6
-    api_base: https://opencode.ai/zen/go/v1
-    api_key: os.environ/OPENCODE_API_KEY
-    input_cost_per_token: 9.499999999999999e-07
-    output_cost_per_token: 4.0e-06
-    order: 1
-- model_name: moonshotai-kimi-k2.6
-  litellm_params:
-    model: nvidia_nim/moonshotai/kimi-k2.6
-    order: 3
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
-- model_name: moonshotai-kimi-k2.6
-  litellm_params:
-    model: fireworks_ai/accounts/fireworks/models/kimi-k2p6
-    order: 4
-    api_key: os.environ/FIREWORKS_AI_API_KEY
-    input_cost_per_token: 9.5e-07
-    output_cost_per_token: 4.0e-06
-- litellm_params:
-    api_base: os.environ/AZURE_AI_API_BASE_EASTUS2
-    api_key: os.environ/AZURE_AI_API_KEY_EASTUS2
-    model: azure_ai/FW-Kimi-K2.6
-    input_cost_per_token: 6e-07
-    output_cost_per_token: 3e-06
-    rpm: 25
-    tpm: 25000
-    order: 5
-  model_name: moonshotai-kimi-k2.6
-  model_info:
-    base_model: azure_ai/kimi-k2.6
-- model_name: moonshotai-kimi-k2.6
-  litellm_params:
-    model: openai/moonshotai/kimi-k2.6
-    order: 5
-    api_base: https://api.kilo.ai/api/gateway
-    api_key: os.environ/KILO_API_KEY
-    input_cost_per_token: 8.0e-07
-    output_cost_per_token: 3.4e-06
-- model_name: moonshotai-kimi-k2.6
-  litellm_params:
-    model: openrouter/moonshotai/kimi-k2.6
-    order: 5
-    input_cost_per_token: 6.7e-07
-    output_cost_per_token: 3.39e-06
 - model_name: nemotron-3-ultra-550b-a55b
   litellm_params:
     model: nvidia_nim/nvidia/nemotron-3-ultra-550b-a55b

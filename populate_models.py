@@ -205,9 +205,11 @@ def find_model_in_api(
         if api_norm == key_norm:
             return api_id, 0.75, "normalized-with-suffix"
 
-    # Tier 5: substring fallback (loose). Require the key to be a
-    # substantial portion of the api id to avoid e.g. matching
-    # "minimax-m3" against a much longer "minimax-m3-turbo-experimental".
+    # Tier 5: substring fallback (loose). Only match when the model key
+    # is contained in the API model id, and require the key to be a
+    # substantial portion of the api id. This avoids false positives such
+    # as matching "kimi-k2.7" to "kimi-k2" because the shorter id happens
+    # to be a substring of the key.
     if len(key_norm) >= 5:
         best_sub: Optional[Tuple[str, float, str]] = None
         for api_id in api_models.keys():
@@ -215,9 +217,6 @@ def find_model_in_api(
             if key_norm in api_norm and len(key_norm) / len(api_norm) >= 0.5:
                 if best_sub is None or len(api_norm) < len(_normalize_for_match(best_sub[0])):
                     best_sub = (api_id, 0.6, "substring")
-            elif api_norm in key_norm and len(api_norm) / len(key_norm) >= 0.5:
-                if best_sub is None or len(api_norm) < len(_normalize_for_match(best_sub[0])):
-                    best_sub = (api_id, 0.6, "substring-reverse")
         if best_sub is not None:
             return best_sub
 

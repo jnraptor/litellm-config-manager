@@ -126,10 +126,10 @@ models:
     description: Minimax M3
     providers:
       kilo: minimax/minimax-m3
-      opencode-go: minimax-m3
-      opencode-zen: minimax-m3-free
+      opencode-go: anthropic/minimax-m3
       openrouter: minimax/minimax-m3
       vercel: minimax/minimax-m3
+      nvidia: minimaxai/minimax-m3
   claude-opus-4-8:
     display_name: claude-opus-4-8
     description: ''
@@ -182,13 +182,12 @@ models:
       poe: claude-haiku-4.5
       kilo: anthropic/claude-haiku-4.5
       requesty: anthropic/claude-haiku-4-5
-  claude-fable-5:
-    display_name: claude-fable-5
+  kimi-k2.7:
+    display_name: kimi-k2.7
     description: ''
     providers:
-      openrouter: anthropic/claude-fable-5
-      vercel: anthropic/claude-fable-5
-      poe: claude-fable-5
-      kilo: anthropic/claude-fable-5
-      #opencode-zen: claude-fable-5
-      requesty: anthropic/claude-fable-5
+      openrouter: moonshotai/kimi-k2.7-code
+      vercel: moonshotai/kimi-k2.7-code
+      poe: kimi-k2.7-code
+      kilo: moonshotai/kimi-k2.7-code
+      opencode-go: openai/kimi-k2.7-code
