@@ -522,6 +522,13 @@ model_list:
     output_cost_per_token: 4.0e-06
 - model_name: kimi-k2.7
   litellm_params:
+    model: fireworks_ai/accounts/fireworks/models/kimi-k2p7-code
+    order: 4
+    api_key: os.environ/FIREWORKS_AI_API_KEY
+    input_cost_per_token: 1.2e-06
+    output_cost_per_token: 1.2e-06
+- model_name: kimi-k2.7
+  litellm_params:
     model: poe/kimi-k2.7-code
     order: 4
     api_key: os.environ/POE_API_KEY
@@ -971,6 +978,13 @@ model_list:
     api_key: os.environ/OPENCODE_API_KEY
     input_cost_per_token: 4.0000000000000003e-07
     output_cost_per_token: 1.6000000000000001e-06
+- model_name: qwen3.7-plus
+  litellm_params:
+    model: fireworks_ai/accounts/fireworks/models/qwen3p7-plus
+    order: 4
+    api_key: os.environ/FIREWORKS_AI_API_KEY
+    input_cost_per_token: 4.0e-07
+    output_cost_per_token: 1.6e-06
 - model_name: qwen3.7-plus
   litellm_params:
     model: poe/qwen3.7-plus
