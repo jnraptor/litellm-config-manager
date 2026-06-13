@@ -125,11 +125,14 @@ models:
     display_name: minimax-m3
     description: Minimax M3
     providers:
-      kilo: minimax/minimax-m3
-      opencode-go: anthropic/minimax-m3
       openrouter: minimax/minimax-m3
       vercel: minimax/minimax-m3
+      poe: minimax-m3-el
       nvidia: minimaxai/minimax-m3
+      kilo: minimax/minimax-m3
+      opencode-go: anthropic/minimax-m3
+      requesty: minimaxi/minimax-m3
+      fireworks: accounts/fireworks/models/minimax-m3
   claude-opus-4-8:
     display_name: claude-opus-4-8
     description: ''

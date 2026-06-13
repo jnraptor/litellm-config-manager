@@ -688,10 +688,32 @@ model_list:
     output_cost_per_token: 1.0e-09
 - model_name: minimax-m3
   litellm_params:
+    model: fireworks_ai/accounts/fireworks/models/minimax-m3
+    order: 4
+    api_key: os.environ/FIREWORKS_AI_API_KEY
+    input_cost_per_token: 3.0e-07
+    output_cost_per_token: 1.2e-06
+- model_name: minimax-m3
+  litellm_params:
+    model: poe/minimax-m3-el
+    order: 4
+    api_key: os.environ/POE_API_KEY
+    input_cost_per_token: 3.03e-07
+    output_cost_per_token: 1.2121e-06
+- model_name: minimax-m3
+  litellm_params:
     model: openai/minimax/minimax-m3
     order: 5
     api_base: https://api.kilo.ai/api/gateway
     api_key: os.environ/KILO_API_KEY
+    input_cost_per_token: 3.0e-07
+    output_cost_per_token: 1.2e-06
+- model_name: minimax-m3
+  litellm_params:
+    model: openai/minimaxi/minimax-m3
+    order: 5
+    api_base: https://router.requesty.ai/v1
+    api_key: os.environ/REQUESTY_API_KEY
     input_cost_per_token: 3.0e-07
     output_cost_per_token: 1.2e-06
 - model_name: minimax-m3
