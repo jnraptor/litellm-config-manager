@@ -194,3 +194,14 @@ models:
       poe: kimi-k2.7-code
       kilo: moonshotai/kimi-k2.7-code
       opencode-go: openai/kimi-k2.7-code
+  glm-5.2:
+    display_name: glm-5.2
+    description: ''
+    providers:
+      openrouter: z-ai/glm-5.2
+      vercel: zai/glm-5.2
+      poe: glm-5.2
+      kilo: z-ai/glm-5.2
+      #ollama: glm-5.2
+      requesty: zai/glm-5.2
+      fireworks: accounts/fireworks/models/glm-5p2
