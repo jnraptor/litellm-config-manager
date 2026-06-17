@@ -1138,8 +1138,8 @@ model_list:
       tiers:
         SIMPLE: deepseek-v4-flash
         MEDIUM: mimo-v2.5
-        COMPLEX: kimi-k2.7
-        REASONING: deepseek-v4-pro
+        COMPLEX: deepseek-v4-pro
+        REASONING: glm-5.2
     complexity_router_default_model: deepseek-v4-flash
     tier_boundaries:
       simple_medium: 0.15
