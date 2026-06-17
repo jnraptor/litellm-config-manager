@@ -199,3 +199,4 @@ models:
       #ollama: glm-5.2
       requesty: zai/glm-5.2
       fireworks: accounts/fireworks/models/glm-5p2
+      opencode-go: openai/glm-5.2
