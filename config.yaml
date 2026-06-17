@@ -368,6 +368,13 @@ model_list:
     output_cost_per_token: 1.0e-09
 - model_name: glm-5.2
   litellm_params:
+    model: fireworks_ai/accounts/fireworks/models/glm-5p2
+    order: 4
+    api_key: os.environ/FIREWORKS_AI_API_KEY
+    input_cost_per_token: 1.4e-06
+    output_cost_per_token: 4.4e-06
+- model_name: glm-5.2
+  litellm_params:
     model: poe/glm-5.2
     order: 4
     api_key: os.environ/POE_API_KEY
@@ -1200,12 +1207,5 @@ model_list:
   litellm_params:
     model: vercel_ai_gateway/zai/glm-5.1
     order: 5
-    input_cost_per_token: 1.4e-06
-    output_cost_per_token: 4.4e-06
-- model_name: zai-glm-5.2
-  litellm_params:
-    model: fireworks_ai/accounts/fireworks/models/glm-5p2
-    order: 4
-    api_key: os.environ/FIREWORKS_AI_API_KEY
     input_cost_per_token: 1.4e-06
     output_cost_per_token: 4.4e-06
