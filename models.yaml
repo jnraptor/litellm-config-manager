@@ -196,7 +196,13 @@ models:
       vercel: zai/glm-5.2
       poe: glm-5.2
       kilo: z-ai/glm-5.2
-      #ollama: glm-5.2
       requesty: zai/glm-5.2
       fireworks: accounts/fireworks/models/glm-5p2
       opencode-go: openai/glm-5.2
+  north-mini-code:
+    display_name: north-mini-code
+    description: ''
+    providers:
+      openrouter: cohere/north-mini-code:free
+      kilo: cohere/north-mini-code:free
+      opencode-zen: north-mini-code-free

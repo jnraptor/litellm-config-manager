@@ -890,22 +890,6 @@ model_list:
     api_key: os.environ/FIREWORKS_AI_API_KEY
     input_cost_per_token: 6e-07
     output_cost_per_token: 2.4e-06
-- model_name: nim-llama-nemotron-embed-1b-v2
-  litellm_params:
-    model: nvidia_nim/nvidia/llama-nemotron-embed-1b-v2
-    order: 3
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
-  model_info:
-    mode: embedding
-- model_name: nim-llama-nemotron-rerank-1b-v2
-  litellm_params:
-    model: nvidia_nim/nvidia/llama-nemotron-rerank-1b-v2
-    order: 5
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
-  model_info:
-    mode: rerank
 - model_name: nomic-embed-text
   litellm_params:
     model: ollama/nomic-embed-text-v2-moe:latest
@@ -915,10 +899,24 @@ model_list:
     mode: embedding
 - model_name: north-mini-code-free
   litellm_params:
+    model: openai/cohere/north-mini-code:free
+    order: 3
+    api_base: https://api.kilo.ai/api/gateway
+    api_key: os.environ/KILO_API_KEY
+    input_cost_per_token: 1.0e-09
+    output_cost_per_token: 1.0e-09
+- model_name: north-mini-code-free
+  litellm_params:
     model: openai/north-mini-code-free
     order: 3
     api_base: https://opencode.ai/zen/v1
     api_key: os.environ/OPENCODE_API_KEY
+    input_cost_per_token: 1.0e-09
+    output_cost_per_token: 1.0e-09
+- model_name: north-mini-code-free
+  litellm_params:
+    model: openrouter/cohere/north-mini-code:free
+    order: 3
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
 - model_name: nvidia-llama-nemotron-embed-vl-1b-v2
