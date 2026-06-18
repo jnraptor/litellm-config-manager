@@ -462,8 +462,8 @@ model_list:
   litellm_params:
     model: vercel_ai_gateway/zai/glm-5.2
     order: 5
-    input_cost_per_token: 1.4e-06
-    output_cost_per_token: 4.4e-06
+    input_cost_per_token: 1.5e-06
+    output_cost_per_token: 4.5e-06
 - model_name: gpt-5-nano
   litellm_params:
     model: openai/gpt-5-nano
