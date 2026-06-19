@@ -456,8 +456,8 @@ model_list:
   litellm_params:
     model: openrouter/z-ai/glm-5.2
     order: 5
-    input_cost_per_token: 1.4e-06
-    output_cost_per_token: 4.4e-06
+    input_cost_per_token: 1.2e-06
+    output_cost_per_token: 4.1e-06
 - model_name: glm-5.2
   litellm_params:
     model: vercel_ai_gateway/zai/glm-5.2
@@ -622,8 +622,8 @@ model_list:
   litellm_params:
     model: openrouter/moonshotai/kimi-k2.6
     order: 5
-    input_cost_per_token: 6.8e-07
-    output_cost_per_token: 3.41e-06
+    input_cost_per_token: 6.7e-07
+    output_cost_per_token: 3.5e-06
 - model_name: kimi-k2.7
   litellm_params:
     model: openai/kimi-k2.7-code
@@ -890,6 +890,12 @@ model_list:
     api_key: os.environ/FIREWORKS_AI_API_KEY
     input_cost_per_token: 6e-07
     output_cost_per_token: 2.4e-06
+- model_name: nemotron-3-ultra-550b-a55b
+  litellm_params:
+    model: openrouter/nvidia/nemotron-3-ultra-550b-a55b
+    order: 5
+    input_cost_per_token: 5.0e-07
+    output_cost_per_token: 2.2e-06
 - model_name: nomic-embed-text
   litellm_params:
     model: ollama/nomic-embed-text-v2-moe:latest
