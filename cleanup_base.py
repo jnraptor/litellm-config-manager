@@ -1865,11 +1865,30 @@ class ProviderConfigLoader:
 
         return providers[provider_name]
 
-    def list_providers(self) -> List[str]:
-        """Get list of all configured provider names."""
+    def list_providers(self, include_disabled: bool = False) -> List[str]:
+        """
+        Get list of all configured provider names.
+
+        By default, providers with ``enabled: false`` in providers.yaml are
+        excluded so that cleanup/populate scripts skip them. Set
+        ``include_disabled=True`` to get the full list regardless.
+
+        Args:
+            include_disabled: If True, include providers with ``enabled: false``.
+
+        Returns:
+            List of provider names.
+        """
         if not self._config:
             self._load_config()
-        return list(self._config.get("providers", {}).keys())
+        providers = self._config.get("providers", {})
+        if include_disabled:
+            return list(providers.keys())
+        return [
+            name
+            for name, cfg in providers.items()
+            if cfg.get("enabled", True)
+        ]
 
     @classmethod
     def reset(cls) -> None:

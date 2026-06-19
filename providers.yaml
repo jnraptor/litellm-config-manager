@@ -130,6 +130,7 @@ providers:
   ollama:
     name: "Ollama"
     description: "Ollama model provider for local and hosted models"
+    enabled: false
     api_url: "https://ollama.com/api/tags"
     model_prefix: "ollama_chat/"
     model_detection:

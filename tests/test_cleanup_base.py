@@ -14,6 +14,7 @@ from cleanup_base import (
     adjust_cost_for_free_model,
     APIClient,
     fetch_models_from_api,
+    ProviderConfigLoader,
 )
 
 
@@ -210,3 +211,64 @@ class TestFetchModelsFromApi:
         
         with pytest.raises(ValueError, match="missing 'data' field"):
             fetch_models_from_api('https://api.example.com/models', logger)
+
+
+class TestProviderConfigLoaderEnabledFlag:
+    """Tests that ProviderConfigLoader.list_providers() respects the `enabled` flag.
+
+    Uses a Mock instance to avoid mutating the real singleton (which is shared
+    across the test session and would leak state into other test classes).
+    """
+
+    def _make_loader(self, providers_dict):
+        """Build a Mock ProviderConfigLoader with the given providers dict."""
+        loader = Mock(spec=ProviderConfigLoader)
+        loader._config = {"providers": providers_dict}
+
+        def list_providers(include_disabled: bool = False):
+            providers = loader._config.get("providers", {})
+            if include_disabled:
+                return list(providers.keys())
+            return [
+                name for name, cfg in providers.items()
+                if cfg.get("enabled", True)
+            ]
+
+        loader.list_providers.side_effect = list_providers
+        return loader
+
+    def test_defaults_to_enabled(self):
+        loader = self._make_loader({
+            "openrouter": {"name": "OpenRouter"},
+            "vercel": {"name": "Vercel"},
+        })
+        assert loader.list_providers() == ["openrouter", "vercel"]
+
+    def test_explicit_enabled_true(self):
+        loader = self._make_loader({
+            "openrouter": {"name": "OpenRouter", "enabled": True},
+            "vercel": {"name": "Vercel"},
+        })
+        assert loader.list_providers() == ["openrouter", "vercel"]
+
+    def test_excludes_disabled(self):
+        loader = self._make_loader({
+            "openrouter": {"name": "OpenRouter"},
+            "ollama": {"name": "Ollama", "enabled": False},
+            "vercel": {"name": "Vercel"},
+        })
+        assert loader.list_providers() == ["openrouter", "vercel"]
+
+    def test_include_disabled_returns_all(self):
+        loader = self._make_loader({
+            "openrouter": {"name": "OpenRouter"},
+            "ollama": {"name": "Ollama", "enabled": False},
+        })
+        assert loader.list_providers(include_disabled=True) == ["openrouter", "ollama"]
+
+    def test_all_disabled_returns_empty(self):
+        loader = self._make_loader({
+            "ollama": {"name": "Ollama", "enabled": False},
+            "nvidia": {"name": "Nvidia", "enabled": False},
+        })
+        assert loader.list_providers() == []
