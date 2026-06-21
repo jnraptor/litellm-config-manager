@@ -1,274 +1,266 @@
-# Provider Configuration for Unified Model Cleanup Script
-# This file defines the configuration for each supported provider
-
 providers:
   openrouter:
-    name: "OpenRouter"
-    description: "OpenRouter AI model provider"
-    api_url: "https://openrouter.ai/api/v1/models"
-    embeddings_api_url: "https://openrouter.ai/api/v1/embeddings/models"
-    model_prefix: "openrouter/"
+    name: OpenRouter
+    description: OpenRouter AI model provider
+    api_url: https://openrouter.ai/api/v1/models
+    embeddings_api_url: https://openrouter.ai/api/v1/embeddings/models
+    model_prefix: openrouter/
     model_detection:
-      type: "prefix"
-      value: "openrouter/"
+      type: prefix
+      value: openrouter/
     pricing:
-      input_field: "pricing.prompt"
-      output_field: "pricing.completion"
+      input_field: pricing.prompt
+      output_field: pricing.completion
       is_per_million: false
-      # Handle free models by converting 0.0 to 1e-09
       free_model_handling: true
-    model_name_prefix: "or-"
+    model_name_prefix: or-
     model_name_cleanup:
-      - replace: [["anthropic-", ""], ["meta-llama-", ""], ["google-", ""], ["mistralai-", "mistral-"], ["qwen-", ""]]
-    special_models: ["openrouter/free"]
+    - replace:
+      - - anthropic-
+        - ''
+      - - meta-llama-
+        - ''
+      - - google-
+        - ''
+      - - mistralai-
+        - mistral-
+      - - qwen-
+        - ''
+    special_models: []
     api_base_config: null
     api_key_env: null
-    # Suffix added to model ID to get the free variant (e.g., "model:free")
-    free_variant_suffix: ":free"
-    # Order for litellm_params/order - lower values are tried first
+    free_variant_suffix: :free
     order: 5
-
   vercel:
-    name: "Vercel AI Gateway"
-    description: "Vercel AI Gateway model provider"
-    api_url: "https://ai-gateway.vercel.sh/v1/models"
-    model_prefix: "vercel_ai_gateway/"
+    name: Vercel AI Gateway
+    description: Vercel AI Gateway model provider
+    api_url: https://ai-gateway.vercel.sh/v1/models
+    model_prefix: vercel_ai_gateway/
     model_detection:
-      type: "prefix"
-      value: "vercel_ai_gateway/"
+      type: prefix
+      value: vercel_ai_gateway/
     pricing:
-      input_field: "pricing.input"
-      output_field: "pricing.output"
+      input_field: pricing.input
+      output_field: pricing.output
       is_per_million: false
-      # Handle free models by converting 0.0 to 1e-09
       free_model_handling: true
-    model_name_prefix: "vc-"
+    model_name_prefix: vc-
     model_name_cleanup:
-      - replace: [["anthropic/", "-"], ["meta-", "llama-"], ["google/", "-"], ["mistralai/", "mistral-"], ["qwen/", ""]]
+    - replace:
+      - - anthropic/
+        - '-'
+      - - meta-
+        - llama-
+      - - google/
+        - '-'
+      - - mistralai/
+        - mistral-
+      - - qwen/
+        - ''
     special_models: []
     api_base_config: null
     api_key_env: null
-    # Order for litellm_params/order - lower values are tried first
     order: 5
-
   poe:
-    name: "Poe"
-    description: "Poe model provider"
-    api_url: "https://api.poe.com/v1/models"
-    model_prefix: "poe/"
+    name: Poe
+    description: Poe model provider
+    api_url: https://api.poe.com/v1/models
+    model_prefix: poe/
     model_detection:
-      type: "prefix"
-      value: "poe/"
+      type: prefix
+      value: poe/
     pricing:
-      input_field: "pricing.prompt"
-      output_field: "pricing.completion"
+      input_field: pricing.prompt
+      output_field: pricing.completion
       is_per_million: false
       free_model_handling: true
-      models_dev_id: "poe"
-    model_name_prefix: "poe-"
+      models_dev_id: poe
+    model_name_prefix: poe-
     model_name_cleanup: []
     special_models: []
     api_base_config:
-      api_key_env: "POE_API_KEY"
-    api_key_env: "POE_API_KEY"
-    # Order for litellm_params/order - lower values are tried first
+      api_key_env: POE_API_KEY
+    api_key_env: POE_API_KEY
     order: 4
-
   nvidia:
-    name: "Nvidia"
-    description: "Nvidia NIM model provider (free models)"
-    api_url: "https://integrate.api.nvidia.com/v1/models"
-    model_prefix: "nvidia_nim/"
+    name: Nvidia
+    description: Nvidia NIM model provider (free models)
+    api_url: https://integrate.api.nvidia.com/v1/models
+    model_prefix: nvidia_nim/
     model_detection:
-      type: "prefix"
-      value: "nvidia_nim/"
+      type: prefix
+      value: nvidia_nim/
     pricing:
-      # Nvidia models are free - no pricing fields in API
       input_field: null
       output_field: null
       is_per_million: false
-      # All models are free, use nominal cost for LiteLLM compatibility
       free_model_handling: true
       default_cost: 1.0e-09
-    model_name_prefix: "nim-"
+    model_name_prefix: nim-
     model_name_cleanup:
-      - replace: [["nvidia-", ""], ["meta-", ""], ["google-", ""], ["mistralai-", "mistral-"]]
-    special_models: ["nvidia/llama-nemotron-rerank-1b-v2"]
+    - replace:
+      - - nvidia-
+        - ''
+      - - meta-
+        - ''
+      - - google-
+        - ''
+      - - mistralai-
+        - mistral-
+    special_models: []
     api_base_config: null
     api_key_env: null
-    # Order for litellm_params/order - lower values are tried first
     order: 5
-
   kilo:
-    name: "Kilo"
-    description: "Kilo AI model provider"
-    api_url: "https://api.kilo.ai/api/gateway/models"
+    name: Kilo
+    description: Kilo AI model provider
+    api_url: https://api.kilo.ai/api/gateway/models
     embeddings_api_url: null
-    model_prefix: "openai/"
+    model_prefix: openai/
     model_detection:
-      type: "api_base"
-      value: "api.kilo.ai"
-      # For env var references, match models with this api_base env var
-      api_base_env_var: "KILO_API_BASE"
+      type: api_base
+      value: api.kilo.ai
+      api_base_env_var: KILO_API_BASE
     pricing:
-      input_field: "pricing.prompt"
-      output_field: "pricing.completion"
+      input_field: pricing.prompt
+      output_field: pricing.completion
       is_per_million: false
       free_model_handling: true
-    model_name_prefix: ""
+    model_name_prefix: ''
     model_name_cleanup: []
     special_models: []
     api_base_config:
-      url: "https://api.kilo.ai/api/gateway"
-      api_key_env: "KILO_API_KEY"
-    api_key_env: "KILO_API_KEY"
-    # Suffix added to model ID to get the free variant (e.g., "model:free")
-    free_variant_suffix: ":free"
-    # Order for litellm_params/order - lower values are tried first
+      url: https://api.kilo.ai/api/gateway
+      api_key_env: KILO_API_KEY
+    api_key_env: KILO_API_KEY
+    free_variant_suffix: :free
     order: 5
-
   ollama:
-    name: "Ollama"
-    description: "Ollama model provider for local and hosted models"
+    name: Ollama
+    description: Ollama model provider for local and hosted models
     enabled: false
-    api_url: "https://ollama.com/api/tags"
-    model_prefix: "ollama_chat/"
+    api_url: https://ollama.com/api/tags
+    model_prefix: ollama_chat/
     model_detection:
-      type: "prefix"
-      value: "ollama_chat/"
+      type: prefix
+      value: ollama_chat/
     pricing:
-      # Ollama models don't have pricing in the API
       input_field: null
       output_field: null
       is_per_million: false
       free_model_handling: true
       default_cost: 1.0e-09
-    model_name_prefix: ""
+    model_name_prefix: ''
     model_name_cleanup: []
     special_models: []
     api_base_config:
-      url: "https://ollama.com"
-      api_key_env: "OLLAMA_API_KEY"
-    api_key_env: "OLLAMA_API_KEY"
-    # Order for litellm_params/order - lower values are tried first
+      url: https://ollama.com
+      api_key_env: OLLAMA_API_KEY
+    api_key_env: OLLAMA_API_KEY
     order: 5
-
   fireworks:
-    name: "Fireworks"
-    description: "Fireworks AI model provider"
-    api_url: "https://api.fireworks.ai/inference/v1/models"
-    model_prefix: "fireworks_ai/"
+    name: Fireworks
+    description: Fireworks AI model provider
+    api_url: https://api.fireworks.ai/inference/v1/models
+    use_models_dev_for_listing: true
+    model_prefix: fireworks_ai/
     model_detection:
-      type: "prefix"
-      value: "fireworks_ai/"
+      type: prefix
+      value: fireworks_ai/
     pricing:
-      # Fireworks models may not always have pricing in the API
       input_field: null
       output_field: null
       is_per_million: false
       free_model_handling: true
       default_cost: null
-      # Augment costs from models.dev API when provider API has no pricing
-      models_dev_id: "fireworks-ai"
-    model_name_prefix: ""
+      models_dev_id: fireworks-ai
+    model_name_prefix: ''
     model_name_cleanup: []
-    #special_models: []
-    special_models: ["accounts/fireworks/models/qwen3p6-plus", "accounts/fireworks/models/qwen3-embedding-8b", "accounts/fireworks/models/qwen3-reranker-8b", "accounts/fireworks/models/deepseek-v4-flash", "accounts/fireworks/models/minimax-m3", "accounts/fireworks/models/kimi-k2p7-code", "accounts/fireworks/models/qwen3p7-plus", "accounts/fireworks/models/nemotron-3-ultra-nvfp4", "accounts/fireworks/models/glm-5p2"]
+    special_models:
+    - accounts/fireworks/models/qwen3-embedding-8b
+    - accounts/fireworks/models/qwen3-reranker-8b
+    - accounts/fireworks/models/nemotron-3-ultra-nvfp4
     api_base_config:
-      api_key_env: "FIREWORKS_AI_API_KEY"
-    api_key_env: "FIREWORKS_AI_API_KEY"
-    # Order for litellm_params/order - lower values are tried first
+      api_key_env: FIREWORKS_AI_API_KEY
+    api_key_env: FIREWORKS_AI_API_KEY
     order: 4
-
   opencode-zen:
-    name: "OpenCode Zen"
-    description: "OpenCode Zen model provider"
-    api_url: "https://opencode.ai/zen/v1/models"
-    model_prefix: "openai/"
+    name: OpenCode Zen
+    description: OpenCode Zen model provider
+    api_url: https://opencode.ai/zen/v1/models
+    model_prefix: openai/
     model_detection:
-      type: "api_base"
-      value: "opencode.ai/zen/v1"
+      type: api_base
+      value: opencode.ai/zen/v1
     pricing:
-      # OpenCode Zen models don't have pricing in the API
       input_field: null
       output_field: null
       is_per_million: false
       free_model_handling: true
       default_cost: null
-      # Augment costs from models.dev API when provider API has no pricing
-      models_dev_id: "opencode"
-    model_name_prefix: ""
+      models_dev_id: opencode
+    model_name_prefix: ''
     model_name_cleanup: []
     special_models: []
     api_base_config:
-      url: "https://opencode.ai/zen/v1"
-      api_key_env: "OPENCODE_API_KEY"
-    api_key_env: "OPENCODE_API_KEY"
-    # Order for litellm_params/order - lower values are tried first
+      url: https://opencode.ai/zen/v1
+      api_key_env: OPENCODE_API_KEY
+    api_key_env: OPENCODE_API_KEY
     order: 5
-
   opencode-go:
-    name: "OpenCode Go"
-    description: "OpenCode Go model provider (OpenAI and Anthropic compatible APIs)"
-    api_url: "https://opencode.ai/zen/go/v1/models"
-    model_prefix: "openai/"
+    name: OpenCode Go
+    description: OpenCode Go model provider (OpenAI and Anthropic compatible APIs)
+    api_url: https://opencode.ai/zen/go/v1/models
+    model_prefix: openai/
     model_detection:
-      type: "api_base"
-      value: "opencode.ai/zen/go"
+      type: api_base
+      value: opencode.ai/zen/go
     model_prefixes:
-      - prefix: "openai/"
-        api_base: "https://opencode.ai/zen/go/v1"
-      - prefix: "anthropic/"
-        api_base: "https://opencode.ai/zen/go"
+    - prefix: openai/
+      api_base: https://opencode.ai/zen/go/v1
+    - prefix: anthropic/
+      api_base: https://opencode.ai/zen/go
     pricing:
-      # OpenCode Go models don't have pricing in the API
       input_field: null
       output_field: null
       is_per_million: false
       free_model_handling: true
       default_cost: null
-      # Augment costs from models.dev API when provider API has no pricing
-      models_dev_id: "opencode-go"
-    model_name_prefix: ""
+      models_dev_id: opencode-go
+    model_name_prefix: ''
     model_name_cleanup: []
     special_models: []
     api_base_config:
-      url: "https://opencode.ai/zen/go/v1"
-      api_key_env: "OPENCODE_API_KEY"
-    api_key_env: "OPENCODE_API_KEY"
-    # Order for litellm_params/order - lower values are tried first
+      url: https://opencode.ai/zen/go/v1
+      api_key_env: OPENCODE_API_KEY
+    api_key_env: OPENCODE_API_KEY
     order: 1
-
   requesty:
-    name: "Requesty"
-    description: "Requesty AI model provider"
-    api_url: "https://router.requesty.ai/v1/models"
-    model_prefix: "openai/"
+    name: Requesty
+    description: Requesty AI model provider
+    api_url: https://router.requesty.ai/v1/models
+    model_prefix: openai/
     model_detection:
-      type: "api_base"
-      value: "router.requesty.ai"
+      type: api_base
+      value: router.requesty.ai
     pricing:
-      input_field: "input_price"
-      output_field: "output_price"
+      input_field: input_price
+      output_field: output_price
       is_per_million: false
       free_model_handling: true
-    model_name_prefix: ""
+    model_name_prefix: ''
     model_name_cleanup: []
-    # Special models that should not be removed even if not found in API
-    special_models: ["smart-task"]
+    special_models:
+    - smart-task
     api_base_config:
-      url: "https://router.requesty.ai/v1"
-      api_key_env: "REQUESTY_API_KEY"
-    api_key_env: "REQUESTY_API_KEY"
-    # Order for litellm_params/order - lower values are tried first
+      url: https://router.requesty.ai/v1
+      api_key_env: REQUESTY_API_KEY
+    api_key_env: REQUESTY_API_KEY
     order: 5
-
-# Default settings that apply to all providers unless overridden
 defaults:
   timeout: 30
   retry_count: 3
-  log_level: "INFO"
+  log_level: INFO
   cost_comparison_precision: 2
-  # Standard free model cost for LiteLLM compatibility
   free_model_cost: 1.0e-09
   free_order: 3

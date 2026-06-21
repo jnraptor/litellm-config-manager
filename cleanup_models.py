@@ -11,6 +11,8 @@ against their current APIs and:
 5. Supports both regular and embedding models (where applicable)
 6. Supports mapped models for simplified multi-provider addition
 7. Supports deleting models by model_name from the configuration
+8. Prunes ``special_models`` entries in ``providers.yaml`` that are now
+   available through the provider's normal models source
 
 Supported providers: openrouter, requesty, vercel, poe, nvidia, kilo, ollama, opencode-zen, opencode-go, all
 
@@ -190,6 +192,9 @@ class UnifiedModelCleaner:
             config, cost_changes, order_changed = cleaner.validate_and_update_costs(
                 config, provider_models, api_models, cleaner.PROVIDER_ORDER, free_order
             )
+            pruned_special_models = self._prune_provider_special_models(
+                provider_name, api_models
+            )
 
             if self.dry_run:
                 cleaner.preview_sort_changes(config)
@@ -197,6 +202,12 @@ class UnifiedModelCleaner:
                 cleaner.preview_cost_changes(cost_changes)
                 if order_changed:
                     self.logger.info("[DRY-RUN] Model order values would be updated")
+                if pruned_special_models:
+                    self.logger.info(
+                        f"[DRY-RUN] Would remove {len(pruned_special_models)} "
+                        f"special_models now available in source: "
+                        f"{', '.join(pruned_special_models)}"
+                    )
             else:
                 if invalid_models:
                     config = cleaner.remove_invalid_entries(config, invalid_models)
@@ -214,6 +225,10 @@ class UnifiedModelCleaner:
                 changes_made.append(f"Updated costs for {models_updated} models")
             if was_sorted:
                 changes_made.append("Sorted model list")
+            if pruned_special_models:
+                changes_made.append(
+                    f"Pruned {len(pruned_special_models)} special_models now in source"
+                )
 
             return models_removed, models_updated, changes_made
 
@@ -360,6 +375,48 @@ class UnifiedModelCleaner:
                 self.logger.info(f"Removed {count} entry(s) for model '{name}'")
 
         return config, removed
+
+    def _prune_provider_special_models(
+        self,
+        provider_name: str,
+        api_models: Dict[str, Dict[str, Any]],
+    ) -> List[str]:
+        """
+        Remove ``special_models`` entries that are now available from the
+        provider's models source.
+
+        Providers maintain a ``special_models`` list in ``providers.yaml``
+        to pin models that aren't yet returned by the provider API or
+        models.dev. Once a model becomes available through the normal
+        source, its entry becomes redundant and is removed. ``dry_run``
+        is honored — no file changes occur in that case.
+
+        Returns the list of model IDs that were (or would be) removed.
+        Returns an empty list if the provider has no ``special_models``,
+        if nothing is redundant, or if the live ``providers.yaml`` could
+        not be loaded (so we fail safely and don't break the cleanup).
+        """
+        loader = ProviderConfigLoader()
+        try:
+            provider_cfg = loader.get_provider_config(provider_name)
+        except ValueError:
+            return []
+        if not provider_cfg.get("special_models"):
+            return []
+
+        removed = loader.prune_special_models(provider_name, api_models.keys())
+        if removed and not self.dry_run:
+            loader.save()
+            self.logger.info(
+                f"Pruned {len(removed)} special_models from {provider_name}: "
+                f"{', '.join(removed)}"
+            )
+        elif removed:
+            self.logger.info(
+                f"Would prune {len(removed)} special_models from {provider_name}: "
+                f"{', '.join(removed)}"
+            )
+        return removed
 
     def validate_config(self, config: Optional[Dict[str, Any]] = None) -> ValidationReport:
         """

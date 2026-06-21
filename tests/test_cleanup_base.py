@@ -272,3 +272,87 @@ class TestProviderConfigLoaderEnabledFlag:
             "nvidia": {"name": "Nvidia", "enabled": False},
         })
         assert loader.list_providers() == []
+
+
+class TestPruneSpecialModels:
+    """Tests for ProviderConfigLoader.prune_special_models() and save().
+
+    Builds a real ProviderConfigLoader subclass that points at a tmp_path
+    providers.yaml file. This avoids mutating the singleton that other
+    tests in this session depend on (e.g. TestConfigDrivenModelCleaner
+    expects the singleton to still load the real providers.yaml).
+    """
+
+    def _make_loader(self, tmp_path, providers):
+        path = tmp_path / "providers.yaml"
+        with open(path, "w") as f:
+            import yaml
+
+            yaml.dump({"providers": providers}, f)
+
+        class _Loader(ProviderConfigLoader):
+            def __new__(cls, _path):
+                instance = ProviderConfigLoader.__new__(cls)
+                instance._config_path = _path
+                instance._config = {}
+                instance._load_config()
+                return instance
+
+        return _Loader(path), path
+
+    def test_removes_models_that_are_in_source(self, tmp_path):
+        loader, _ = self._make_loader(tmp_path, {
+            "fireworks": {
+                "name": "Fireworks",
+                "special_models": [
+                    "accounts/fireworks/models/deepseek-v4-flash",
+                    "accounts/fireworks/models/nemotron-3-ultra-nvfp4",
+                ],
+            },
+        })
+
+        removed = loader.prune_special_models(
+            "fireworks", ["accounts/fireworks/models/deepseek-v4-flash"]
+        )
+
+        assert removed == ["accounts/fireworks/models/deepseek-v4-flash"]
+        assert loader.get_provider_config("fireworks")["special_models"] == [
+            "accounts/fireworks/models/nemotron-3-ultra-nvfp4",
+        ]
+
+    def test_keeps_models_not_in_source(self, tmp_path):
+        loader, _ = self._make_loader(tmp_path, {
+            "nvidia": {
+                "name": "Nvidia",
+                "special_models": ["nvidia/llama-nemotron-rerank-1b-v2"],
+            },
+        })
+
+        removed = loader.prune_special_models(
+            "nvidia", ["nvidia/llama-3.3-70b-instruct"]
+        )
+
+        assert removed == []
+        assert loader.get_provider_config("nvidia")["special_models"] == [
+            "nvidia/llama-nemotron-rerank-1b-v2",
+        ]
+
+    def test_empty_special_models_returns_empty(self, tmp_path):
+        loader, _ = self._make_loader(tmp_path, {
+            "openrouter": {"name": "OpenRouter", "special_models": []},
+        })
+
+        removed = loader.prune_special_models("openrouter", ["any/model"])
+
+        assert removed == []
+        assert loader.get_provider_config("openrouter")["special_models"] == []
+
+    def test_missing_special_models_key_returns_empty(self, tmp_path):
+        loader, _ = self._make_loader(tmp_path, {
+            "openrouter": {"name": "OpenRouter"},
+        })
+
+        removed = loader.prune_special_models("openrouter", ["any/model"])
+
+        assert removed == []
+        assert "special_models" not in loader.get_provider_config("openrouter")

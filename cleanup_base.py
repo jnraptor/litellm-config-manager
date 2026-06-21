@@ -30,7 +30,7 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from enum import Enum
 from functools import lru_cache
-from typing import Dict, List, Tuple, Any, Optional, Set
+from typing import Dict, List, Tuple, Any, Optional, Set, Iterable
 from pathlib import Path
 
 
@@ -355,6 +355,75 @@ class ModelsDevClient:
                     f"Could not fetch models.dev API data: {e}. "
                     f"Cost augmentation from models.dev will be unavailable."
                 )
+
+    def get_provider_models(
+        self,
+        provider_id: str,
+        logger: Optional[logging.Logger] = None,
+    ) -> Dict[str, Dict[str, Any]]:
+        """
+        Get all available models for a provider from models.dev.
+
+        Returns a dict mapping model ID to a model-info dict compatible with
+        the output of ``ConfigDrivenModelCleaner.fetch_available_models()``:
+
+        - ``id``: model ID as returned by models.dev
+        - ``input_cost``: per-token input cost (``cost.input / 1_000_000``)
+        - ``output_cost``: per-token output cost (``cost.output / 1_000_000``)
+        - ``model_info``: ``None`` (no extra metadata)
+
+        Args:
+            provider_id: The models.dev provider ID (e.g., "fireworks-ai")
+            logger: Optional logger for debug output
+
+        Returns:
+            Dict mapping model_id to model info dict.
+
+        Raises:
+            RuntimeError: If models.dev data cannot be loaded.
+            ValueError: If the provider is not present in models.dev data.
+        """
+        self._ensure_loaded(logger)
+
+        if self._data is None:
+            raise RuntimeError(
+                "models.dev data is unavailable; cannot list provider models"
+            )
+
+        if provider_id not in self._data:
+            available = ", ".join(sorted(self._data.keys()))
+            raise ValueError(
+                f"Provider '{provider_id}' not found in models.dev. "
+                f"Available: {available}"
+            )
+
+        provider = self._data.get(provider_id, {})
+        raw_models = provider.get("models", {}) or {}
+
+        models: Dict[str, Dict[str, Any]] = {}
+        for model_id, model_data in raw_models.items():
+            if not isinstance(model_data, dict):
+                continue
+            cost = model_data.get("cost", {}) or {}
+            input_cost = cost.get("input")
+            output_cost = cost.get("output")
+            if input_cost is not None:
+                input_cost = float(input_cost) / 1_000_000
+            if output_cost is not None:
+                output_cost = float(output_cost) / 1_000_000
+            models[model_id] = {
+                "id": model_id,
+                "input_cost": input_cost,
+                "output_cost": output_cost,
+                "model_info": None,
+            }
+
+        if logger:
+            logger.debug(
+                f"Loaded {len(models)} models for provider '{provider_id}' from models.dev"
+            )
+
+        return models
 
     def get_model_cost(
         self,
@@ -1897,6 +1966,86 @@ class ProviderConfigLoader:
         cls._config = {}
         cls._config_path = None
 
+    def save(self, dry_run: bool = False) -> None:
+        """
+        Persist the current in-memory providers config back to disk.
+
+        Creates a ``.yaml.backup`` of the existing file before overwriting.
+        A full-file rewrite is used, so any hand-written comments in
+        ``providers.yaml`` will be lost.
+
+        Args:
+            dry_run: If True, log the action but do not write the file.
+        """
+        if self._config_path is None:
+            raise ValueError("Config path not initialized")
+
+        if dry_run:
+            logger = setup_logging(False, "ProviderConfigLoader")
+            logger.info(
+                f"DRY RUN: Would write providers config to {self._config_path}"
+            )
+            return
+
+        if self._config_path.exists():
+            backup_path = self._config_path.with_suffix(
+                self._config_path.suffix + ".backup"
+            )
+            backup_path.write_text(
+                self._config_path.read_text(encoding="utf-8"),
+                encoding="utf-8",
+            )
+
+        with open(self._config_path, "w", encoding="utf-8") as f:
+            yaml.dump(
+                self._config,
+                f,
+                default_flow_style=False,
+                sort_keys=False,
+                allow_unicode=True,
+                width=1000,
+            )
+
+    def prune_special_models(
+        self,
+        provider_name: str,
+        available_model_ids: Iterable[str],
+    ) -> List[str]:
+        """
+        Remove ``special_models`` entries that are now available in the
+        provider's models source.
+
+        A ``special_models`` entry is considered redundant when its ID
+        appears in ``available_model_ids`` (matched exactly). Synthetic or
+        alias entries that don't match any real model ID are kept.
+
+        Mutates the in-memory providers config in place. Call ``save()``
+        afterwards to persist.
+
+        Args:
+            provider_name: Provider whose special_models to prune.
+            available_model_ids: Iterable of model IDs that the provider's
+                API or models.dev currently exposes.
+
+        Returns:
+            The list of model IDs that were removed (empty if nothing
+            changed).
+        """
+        provider_cfg = self.get_provider_config(provider_name)
+        special = list(provider_cfg.get("special_models", []) or [])
+        if not special:
+            return []
+
+        available = set(available_model_ids)
+        kept = [m for m in special if m not in available]
+        removed = [m for m in special if m in available]
+
+        if removed:
+            provider_cfg["special_models"] = kept
+            self._config["providers"][provider_name] = provider_cfg
+
+        return removed
+
 
 class ModelMappingLoader:
     """
@@ -2111,6 +2260,13 @@ class ConfigDrivenModelCleaner(BaseModelCleaner):
         # models.dev cost augmentation (for providers without pricing in their API)
         self._models_dev_id = self._pricing_config.get("models_dev_id")
 
+        # Use models.dev as the source of truth for the model catalog instead of
+        # the provider's own api_url. Used by Fireworks, whose own model listing
+        # endpoint is not kept up to date.
+        self._use_models_dev_for_listing = bool(
+            self.provider_config.get("use_models_dev_for_listing", False)
+        )
+
         self.logger.debug(
             f"Loaded config for provider '{provider_name}': {self.PROVIDER_NAME}"
         )
@@ -2203,6 +2359,9 @@ class ConfigDrivenModelCleaner(BaseModelCleaner):
         This is the main method that subclasses should override to handle
         provider-specific API response formats.
         """
+        if self._use_models_dev_for_listing:
+            return self._fetch_available_models_from_models_dev()
+
         try:
             headers = self._build_api_headers()
             data = fetch_models_from_api(self.API_URL, self.logger, headers=headers)
@@ -2227,6 +2386,53 @@ class ConfigDrivenModelCleaner(BaseModelCleaner):
                 f"Error fetching models from {self.PROVIDER_NAME} API: {e}"
             )
             raise
+
+    def _fetch_available_models_from_models_dev(self) -> Dict[str, Dict[str, Any]]:
+        """
+        Fetch the full model catalog for this provider from models.dev.
+
+        Requires ``use_models_dev_for_listing: true`` and a configured
+        ``pricing.models_dev_id``. Fails fast if either precondition is not met
+        or models.dev data is unavailable. Embedding models listed in
+        ``embeddings_api_url`` are still merged, but only when their IDs are
+        not already present in the models.dev catalog.
+        """
+        if not self._models_dev_id:
+            raise ValueError(
+                f"Provider '{self.PROVIDER_NAME}' has use_models_dev_for_listing=true "
+                f"but pricing.models_dev_id is not set"
+            )
+
+        try:
+            available_models = _models_dev_client.get_provider_models(
+                self._models_dev_id, self.logger
+            )
+        except Exception as e:
+            self.logger.error(
+                f"Error fetching models from models.dev for {self.PROVIDER_NAME}: {e}"
+            )
+            raise
+
+        # Apply free_model_handling (zero cost -> configured free model cost)
+        if self._pricing_config.get("free_model_handling", False):
+            for model_info in available_models.values():
+                model_info["input_cost"] = adjust_cost_for_free_model(
+                    model_info.get("input_cost")
+                )
+                model_info["output_cost"] = adjust_cost_for_free_model(
+                    model_info.get("output_cost")
+                )
+
+        # Merge embedding models from embeddings_api_url (only add new IDs)
+        if self._embeddings_api_url:
+            self._fetch_embedding_models(
+                available_models, self._build_api_headers()
+            )
+
+        self.logger.info(
+            f"Fetched {len(available_models)} available models for {self.PROVIDER_NAME} from models.dev"
+        )
+        return available_models
 
     def _build_api_headers(self) -> Optional[Dict[str, str]]:
         """Build API headers including authorization if configured."""
@@ -2253,14 +2459,33 @@ class ConfigDrivenModelCleaner(BaseModelCleaner):
             )
 
             if "data" in embed_data:
+                added = 0
+                skipped = 0
                 for model in embed_data["data"]:
                     if isinstance(model, dict) and "id" in model:
+                        model_id = model["id"]
+                        # When the catalog was loaded from models.dev, only
+                        # add new IDs from the embeddings endpoint; never
+                        # overwrite an entry already loaded from models.dev.
+                        if (
+                            self._use_models_dev_for_listing
+                            and model_id in available_models
+                        ):
+                            skipped += 1
+                            continue
                         model_with_info = dict(model)
                         if "model_info" not in model_with_info:
                             model_with_info["model_info"] = {"mode": "embedding"}
                         model_info = self.parse_api_model(model_with_info)
                         available_models[model_info["id"]] = model_info
-                self.logger.debug(f"Fetched embedding models from {self.PROVIDER_NAME}")
+                        added += 1
+                if self._use_models_dev_for_listing:
+                    self.logger.debug(
+                        f"Embedding merge for {self.PROVIDER_NAME}: added={added}, "
+                        f"skipped_existing={skipped}"
+                    )
+                else:
+                    self.logger.debug(f"Fetched embedding models from {self.PROVIDER_NAME}")
         except requests.RequestException as e:
             self.logger.warning(f"Could not fetch embedding models: {e}")
 
