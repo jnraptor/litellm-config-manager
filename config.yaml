@@ -456,8 +456,8 @@ model_list:
   litellm_params:
     model: openrouter/z-ai/glm-5.2
     order: 5
-    input_cost_per_token: 1.2e-06
-    output_cost_per_token: 4.1e-06
+    input_cost_per_token: 1.0e-06
+    output_cost_per_token: 4.0e-06
 - model_name: glm-5.2
   litellm_params:
     model: vercel_ai_gateway/zai/glm-5.2
@@ -623,7 +623,7 @@ model_list:
     model: openrouter/moonshotai/kimi-k2.6
     order: 5
     input_cost_per_token: 6.6e-07
-    output_cost_per_token: 3.5e-06
+    output_cost_per_token: 3.41e-06
 - model_name: kimi-k2.7
   litellm_params:
     model: openai/kimi-k2.7-code
