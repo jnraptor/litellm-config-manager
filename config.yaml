@@ -72,6 +72,14 @@ model_list:
   model_info:
     base_model: azure_ai/mai-image-2.5-flash
     mode: image_generation
+- model_name: az-mistral-ocr-4-0
+  litellm_params:
+    model: azure_ai/mistral-ocr-4-0
+    api_base: os.environ/AZURE_AI_API_BASE_EASTUS
+    api_key: os.environ/AZURE_AI_API_KEY_EASTUS
+    rpm: 10
+  model_info:
+    mode: ocr
 - model_name: az-ocr
   litellm_params:
     model: azure_ai/mistral-document-ai-2512
@@ -456,8 +464,8 @@ model_list:
   litellm_params:
     model: openrouter/z-ai/glm-5.2
     order: 5
-    input_cost_per_token: 1.0e-06
-    output_cost_per_token: 4.0e-06
+    input_cost_per_token: 9.5e-07
+    output_cost_per_token: 3.0e-06
 - model_name: glm-5.2
   litellm_params:
     model: vercel_ai_gateway/zai/glm-5.2
@@ -658,8 +666,8 @@ model_list:
   litellm_params:
     model: openrouter/moonshotai/kimi-k2.7-code
     order: 5
-    input_cost_per_token: 6.12e-07
-    output_cost_per_token: 3.069e-06
+    input_cost_per_token: 7.4e-07
+    output_cost_per_token: 3.5e-06
 - model_name: kimi-k2.7
   litellm_params:
     model: vercel_ai_gateway/moonshotai/kimi-k2.7-code
@@ -707,7 +715,7 @@ model_list:
   litellm_params:
     model: openrouter/xiaomi/mimo-v2.5
     order: 5
-    input_cost_per_token: 1.4e-07
+    input_cost_per_token: 1.05e-07
     output_cost_per_token: 2.8e-07
 - model_name: mimo-v2.5
   litellm_params:
@@ -783,8 +791,8 @@ model_list:
   litellm_params:
     model: openrouter/minimax/minimax-m2.7
     order: 5
-    input_cost_per_token: 2.5e-07
-    output_cost_per_token: 1.0e-06
+    input_cost_per_token: 2.4e-07
+    output_cost_per_token: 9.6e-07
 - model_name: minimax-m2.7
   litellm_params:
     model: vercel_ai_gateway/minimax/minimax-m2.7
