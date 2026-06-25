@@ -235,6 +235,29 @@ providers:
       api_key_env: OPENCODE_API_KEY
     api_key_env: OPENCODE_API_KEY
     order: 1
+  mistral:
+    name: Mistral
+    description: Mistral AI direct API provider
+    api_url: https://api.mistral.ai/v1/models
+    model_prefix: mistral/
+    model_detection:
+      type: prefix
+      value: mistral/
+    pricing:
+      input_field: null
+      output_field: null
+      is_per_million: false
+      free_model_handling: true
+      default_cost: null
+      models_dev_id: mistral
+    model_name_prefix: ''
+    model_name_cleanup: []
+    special_models: []
+    api_base_config:
+      url: https://api.mistral.ai/v1
+      api_key_env: MISTRAL_API_KEY
+    api_key_env: MISTRAL_API_KEY
+    order: 4
   requesty:
     name: Requesty
     description: Requesty AI model provider
