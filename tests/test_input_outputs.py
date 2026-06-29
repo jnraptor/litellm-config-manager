@@ -279,7 +279,7 @@ def run_test_case(test_case: InputOutputTestCase) -> Tuple[bool, List[str]]:
     # Mock _models_dev_client to prevent live API calls during tests.
     # These tests validate provider-specific parsing, not models.dev augmentation.
     mock_client = Mock()
-    mock_client.get_model_cost.return_value = (None, None)
+    mock_client.get_model_cost.return_value = (None, None, None, None)
     try:
         with patch("cleanup_base._models_dev_client", mock_client):
             parsed_model = cleaner.parse_api_model(test_case.input_data)
@@ -367,6 +367,36 @@ def run_test_case(test_case: InputOutputTestCase) -> Tuple[bool, List[str]]:
         errors.append(
             f"output_cost_per_token mismatch: "
             f"expected {expected_output_cost}, got {actual_output_cost}"
+        )
+
+    # Check cache_creation_input_token_cost (presence and value, or verified absent)
+    expected_cache_creation = expected_litellm.get("cache_creation_input_token_cost")
+    actual_cache_creation = actual_litellm.get("cache_creation_input_token_cost")
+    if expected_cache_creation is not None:
+        if not costs_match(actual_cache_creation, expected_cache_creation):
+            errors.append(
+                f"cache_creation_input_token_cost mismatch: "
+                f"expected {expected_cache_creation}, got {actual_cache_creation}"
+            )
+    elif actual_cache_creation is not None:
+        errors.append(
+            f"cache_creation_input_token_cost should be absent, "
+            f"but got {actual_cache_creation}"
+        )
+
+    # Check cache_read_input_token_cost (presence and value, or verified absent)
+    expected_cache_read = expected_litellm.get("cache_read_input_token_cost")
+    actual_cache_read = actual_litellm.get("cache_read_input_token_cost")
+    if expected_cache_read is not None:
+        if not costs_match(actual_cache_read, expected_cache_read):
+            errors.append(
+                f"cache_read_input_token_cost mismatch: "
+                f"expected {expected_cache_read}, got {actual_cache_read}"
+            )
+    elif actual_cache_read is not None:
+        errors.append(
+            f"cache_read_input_token_cost should be absent, "
+            f"but got {actual_cache_read}"
         )
 
     # Check model_info (if expected)

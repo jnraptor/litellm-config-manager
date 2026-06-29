@@ -2,13 +2,13 @@
 ### input
 ```json
 {
-  "id": "z-ai/glm-5",
-  "canonical_slug": "z-ai/glm-5-20260211",
-  "hugging_face_id": "zai-org/GLM-5",
-  "name": "Z.ai: GLM 5",
-  "created": 1770829182,
-  "description": "GLM-5 is Z.ai’s flagship open-source foundation model engineered for complex systems design and long-horizon agent workflows. Built for expert developers, it delivers production-grade performance on large-scale programming tasks, rivaling leading closed-source models. With advanced agentic planning, deep backend reasoning, and iterative self-correction, GLM-5 moves beyond code generation to full-system construction and autonomous execution.",
-  "context_length": 202752,
+  "id": "qwen/qwen3.7-max",
+  "canonical_slug": "qwen/qwen3.7-max-20260520",
+  "hugging_face_id": null,
+  "name": "Qwen: Qwen3.7 Max",
+  "created": 1779376861,
+  "description": "Qwen3.7-Max is the flagship model in Alibaba's Qwen3.7 series. It supports text input and output and is designed for agent-centric workloads, with particular strengths in coding, office and productivity tasks,...",
+  "context_length": 1000000,
   "architecture": {
     "modality": "text->text",
     "input_modalities": [
@@ -17,105 +17,210 @@
     "output_modalities": [
       "text"
     ],
-    "tokenizer": "Other",
+    "tokenizer": "Qwen",
     "instruct_type": null
   },
   "pricing": {
-    "prompt": "0.0000008",
-    "completion": "0.00000256",
-    "input_cache_read": "0.00000016"
+    "prompt": "0.00000125",
+    "completion": "0.00000375",
+    "input_cache_read": "0.00000025",
+    "input_cache_write": "0.0000015625"
   },
   "top_provider": {
-    "context_length": 202752,
-    "max_completion_tokens": null,
+    "context_length": 1000000,
+    "max_completion_tokens": 65536,
     "is_moderated": false
   },
   "per_request_limits": null,
   "supported_parameters": [
-    "frequency_penalty",
     "include_reasoning",
-    "logit_bias",
     "logprobs",
     "max_tokens",
-    "min_p",
     "presence_penalty",
     "reasoning",
-    "repetition_penalty",
     "response_format",
     "seed",
-    "stop",
     "structured_outputs",
     "temperature",
     "tool_choice",
     "tools",
-    "top_k",
     "top_logprobs",
     "top_p"
   ],
   "default_parameters": {
-    "temperature": 1,
-    "top_p": 0.95,
-    "frequency_penalty": null
+    "temperature": null,
+    "top_p": null,
+    "top_k": null,
+    "frequency_penalty": null,
+    "presence_penalty": null,
+    "repetition_penalty": null
   },
-  "expiration_date": null
+  "supported_voices": null,
+  "knowledge_cutoff": null,
+  "expiration_date": null,
+  "links": {
+    "details": "/api/v1/models/qwen/qwen3.7-max-20260520/endpoints"
+  },
+  "benchmarks": {
+    "design_arena": [
+      {
+        "arena": "agents",
+        "category": "androidnative",
+        "elo": 1175,
+        "win_rate": 45.4,
+        "rank": 16
+      },
+      {
+        "arena": "agents",
+        "category": "fullstack",
+        "elo": 1224,
+        "win_rate": 48.3,
+        "rank": 10
+      },
+      {
+        "arena": "agents",
+        "category": "mobileapps",
+        "elo": 1221,
+        "win_rate": 48.3,
+        "rank": 11
+      },
+      {
+        "arena": "agents",
+        "category": "webapps",
+        "elo": 1260,
+        "win_rate": 50.6,
+        "rank": 6
+      },
+      {
+        "arena": "models",
+        "category": "3d",
+        "elo": 1326,
+        "win_rate": 60,
+        "rank": 10
+      },
+      {
+        "arena": "models",
+        "category": "asciiart",
+        "elo": 1262,
+        "win_rate": 54.3,
+        "rank": 9
+      },
+      {
+        "arena": "models",
+        "category": "codecategories",
+        "elo": 1311,
+        "win_rate": 57.4,
+        "rank": 10
+      },
+      {
+        "arena": "models",
+        "category": "dataviz",
+        "elo": 1289,
+        "win_rate": 56.2,
+        "rank": 13
+      },
+      {
+        "arena": "models",
+        "category": "gamedev",
+        "elo": 1324,
+        "win_rate": 58.7,
+        "rank": 10
+      },
+      {
+        "arena": "models",
+        "category": "svg",
+        "elo": 1278,
+        "win_rate": 60.5,
+        "rank": 8
+      },
+      {
+        "arena": "models",
+        "category": "uicomponent",
+        "elo": 1327,
+        "win_rate": 59.6,
+        "rank": 6
+      },
+      {
+        "arena": "models",
+        "category": "website",
+        "elo": 1304,
+        "win_rate": 56.5,
+        "rank": 13
+      }
+    ],
+    "artificial_analysis": {
+      "intelligence_index": 46,
+      "coding_index": 66,
+      "agentic_index": 30.6
+    }
+  },
+  "reasoning": {
+    "mandatory": false,
+    "default_enabled": true
+  }
 }
 ```
 ### output
 ```yaml
-- model_name: zai-glm-5
+- model_name: qwen3.7-max
   litellm_params:
-    model: openrouter/z-ai/glm-5
+    model: openrouter/qwen/qwen3.7-max
     order: 5
-    input_cost_per_token: 8.0e-07
-    output_cost_per_token: 2.56e-06
+    input_cost_per_token: 1.25e-06
+    output_cost_per_token: 3.75e-06
+    cache_creation_input_token_cost: 1.5625e-06
+    cache_read_input_token_cost: 2.5e-07
 ```
 
 ## vercel
 ### input
 ```json
 {
-  "id": "zai/glm-5",
+  "id": "alibaba/qwen3.7-max",
   "object": "model",
   "created": 1755815280,
-  "released": 1770854400,
-  "owned_by": "zai",
-  "name": "GLM-5",
-  "description": "GLM-5 is Zai’s new-generation flagship foundation model, designed for Agentic Engineering, capable of providing reliable productivity in complex system engineering and long-range Agent tasks. In terms of Coding and Agent capabilities, GLM-5 has achieved state-of-the-art (SOTA) performance in open source, with its usability in real programming scenarios approaching that of Claude Opus 4.5.",
-  "context_window": 202800,
-  "max_tokens": 131072,
+  "released": 1779321600,
+  "owned_by": "alibaba",
+  "name": "Qwen 3.7 Max",
+  "description": "Qwen3.7 is a next‑generation flagship model designed for the agent‑centric era, with its core strengths lying in the breadth and depth of its agent‑level capabilities: it excels at programming, office and productivity tasks, and long‑term autonomous execution.",
+  "context_window": 991000,
+  "max_tokens": 64000,
   "type": "language",
   "tags": [
-    "reasoning",
     "implicit-caching",
+    "reasoning",
     "tool-use"
   ],
   "pricing": {
-    "input": "0.000001",
-    "output": "0.0000032",
-    "input_cache_read": "0.0000002"
+    "input": "0.00000125",
+    "output": "0.00000375",
+    "input_cache_read": "0.00000025",
+    "input_cache_write": "0.0000015625"
   }
 }
 ```
 ### output
 ```yaml
-- model_name: zai-glm-5
+- model_name: qwen3.7-max
   litellm_params:
-    model: vercel_ai_gateway/zai/glm-5
+    model: vercel_ai_gateway/alibaba/qwen3.7-max
     order: 5
-    input_cost_per_token: 1.0e-06
-    output_cost_per_token: 3.2e-06
+    input_cost_per_token: 1.25e-06
+    output_cost_per_token: 3.75e-06
+    cache_creation_input_token_cost: 1.5625e-06
+    cache_read_input_token_cost: 2.5e-07
 ```
 
 ## poe
 ### input
 ```json
 {
-  "id": "glm-5",
+  "id": "qwen3.7-max",
   "object": "model",
-  "created": 1770830055326,
-  "description": "GLM-5 is an open-source foundation model engineered for complex system engineering and long-horizon Agent tasks, delivering reliable productivity for top-tier programmers. Transcending the boundary from \"writing code\" to \"building systems,\" it moves beyond traditional snippet generation to offer senior-architect-level planning and execution capabilities. By rejecting the \"frontend-heavy, logic-light\" approach, GLM-5 demonstrates exceptional reasoning and self-healing abilities in backend refactoring, complex algorithm implementation, and deep debugging—autonomously analyzing logs and iteratively fixing persistent bugs until the system runs. As the first open-source model featuring Opus-class style and system engineering depth, GLM-5 provides extreme logic density alongside the freedom of local deployment and high cost-effectiveness, making it the ideal choice for large-scale backend development and automated Agent construction. Context window: 205k tokens\n\nThis bot supports optional parameters for additional customization.",
-  "owned_by": "Novita AI",
-  "root": "glm-5",
+  "created": 1779377367791,
+  "description": "Qwen3.7 Max is a next‑generation flagship model designed for the agent‑centric era, with its core strengths lying in the breadth and depth of its agent‑level capabilities: it excels at programming, office and productivity tasks, and long‑term autonomous execution.\nThis model is served by Alibaba Cloud Int. from Singapore.\n\nNotes:\n- Context Window: 1,000,000\n- Text only input\n\nThis bot supports optional parameters for additional customization.",
+  "owned_by": "EmpirioLabs AI",
+  "root": "qwen3.7-max",
   "architecture": {
     "input_modalities": [
       "text"
@@ -128,25 +233,26 @@
   "supported_features": [
     "tools"
   ],
+  "supported_endpoints": [],
   "pricing": {
-    "prompt": "0.0000010",
-    "completion": "0.0000032",
+    "prompt": "0.0000025253",
+    "completion": "0.0000075758",
     "image": null,
     "request": null,
-    "input_cache_read": "0.00000020",
+    "input_cache_read": null,
     "input_cache_write": null
   },
   "context_window": null,
   "context_length": null,
   "metadata": {
-    "display_name": "GLM-5",
+    "display_name": "Qwen3.7-Max",
     "image": {
-      "url": "https://qph.cf2.poecdn.net/main-thumb-pb-6802092-200-sqrsdkzksaocmqhyynlwkagfcrkajwyw.jpeg",
-      "alt": "GLM-5 model icon",
+      "url": "https://qph.cf2.poecdn.net/main-thumb-pb-6998003-200-wogoiajhsikxcwozjxarwrpuvidslpdx.jpeg",
+      "alt": "Qwen3.7-Max model icon",
       "width": 200,
       "height": 200
     },
-    "url": "https://poe.com/glm-5"
+    "url": "https://poe.com/qwen3.7-max"
   },
   "reasoning": null,
   "parameters": [
@@ -155,41 +261,45 @@
       "schema": {
         "type": "boolean"
       },
+      "default_value": true,
+      "description": "Let the model reason step-by-step before answering"
+    },
+    {
+      "name": "tool_web_search",
+      "schema": {
+        "type": "boolean"
+      },
       "default_value": false,
-      "description": "This will cause the model to think..."
+      "description": "Search the web for real-time information"
     },
     {
-      "name": "temperature",
+      "name": "tool_web_extractor",
       "schema": {
-        "type": "number",
-        "minimum": 0,
-        "maximum": 2
+        "type": "boolean"
       },
-      "default_value": 0.7,
-      "description": "Controls randomness in the response. Lower values make the output more focused and deterministic."
+      "default_value": false,
+      "description": "Extract and read content from URLs (requires Web Search and Thinking)"
     },
     {
-      "name": "max_output_tokens",
+      "name": "tool_code_interpreter",
       "schema": {
-        "type": "number",
-        "minimum": 1,
-        "maximum": 131072
+        "type": "boolean"
       },
-      "default_value": 131072,
-      "description": "Maximum number of tokens to generate in the response."
+      "default_value": false,
+      "description": "Run Python code in a sandbox (requires thinking)"
     }
   ]
 }
 ```
 ### output
 ```yaml
-- model_name: zai-glm-5
+- model_name: qwen3.7-max
   litellm_params:
-    model: poe/glm-5
+    model: poe/qwen3.7-max
     order: 4
     api_key: os.environ/POE_API_KEY
-    input_cost_per_token: 1.0e-06
-    output_cost_per_token: 3.2e-06
+    input_cost_per_token: 2.5253e-06
+    output_cost_per_token: 7.5758e-06
 ```
 
 ## nvidia
@@ -216,74 +326,67 @@
 ### input
 ```json
 {
-  "id": "z-ai/glm-5",
-  "name": "Z.ai: GLM 5",
-  "created": 1770829182,
-  "description": "GLM-5 is Z.ai’s flagship open-source foundation model engineered for complex systems design and long-horizon agent workflows. Built for expert developers, it delivers production-grade performance on large-scale programming tasks, rivaling leading closed-source models. With advanced agentic planning, deep backend reasoning, and iterative self-correction, GLM-5 moves beyond code generation to full-system construction and autonomous execution.",
+  "id": "qwen/qwen3.7-max",
+  "name": "Qwen: Qwen3.7 Max (50% off)",
+  "created": 1779376861,
+  "description": "Qwen3.7-Max is the flagship model in Alibaba's Qwen3.7 series. It supports text input and output and is designed for agent-centric workloads, with particular strengths in coding, office and productivity tasks,...",
   "architecture": {
+    "modality": "text->text",
     "input_modalities": [
       "text"
     ],
     "output_modalities": [
       "text"
     ],
-    "tokenizer": "Other"
+    "tokenizer": "Qwen"
   },
   "top_provider": {
     "is_moderated": false,
-    "context_length": 202752,
-    "max_completion_tokens": null
+    "context_length": 1000000,
+    "max_completion_tokens": 65536
   },
   "pricing": {
-    "prompt": "0.0000008",
-    "completion": "0.00000256",
-    "input_cache_read": "0.00000016"
+    "prompt": "0.000001250000",
+    "completion": "0.000003750000",
+    "input_cache_read": "0.000000125000",
+    "input_cache_write": "0.000001562500"
   },
-  "context_length": 202752,
+  "context_length": 1000000,
   "per_request_limits": null,
   "supported_parameters": [
-    "frequency_penalty",
     "include_reasoning",
-    "logit_bias",
     "logprobs",
     "max_tokens",
-    "min_p",
     "presence_penalty",
     "reasoning",
-    "repetition_penalty",
     "response_format",
     "seed",
-    "stop",
     "structured_outputs",
     "temperature",
     "tool_choice",
     "tools",
-    "top_k",
     "top_logprobs",
     "top_p"
   ],
-  "preferredIndex": 10,
-  "versioned_settings": {
-    "4.146.0": {
-      "included_tools": [
-        "write_file",
-        "edit_file"
-      ],
-      "excluded_tools": [
-        "apply_diff"
-      ]
-    }
+  "expiration_date": null,
+  "terminalBench": {
+    "overallScore": 0.54606742,
+    "avgAttemptCostUsd": 20.6499772
   },
+  "isFree": false,
+  "mayTrainOnYourPrompts": false,
   "opencode": {
     "variants": {
       "instant": {
         "reasoning": {
-          "enabled": false
+          "enabled": false,
+          "effort": "none"
         }
       },
       "thinking": {
         "reasoning": {
-          "enabled": true
+          "enabled": true,
+          "effort": "high"
         }
       }
     }
@@ -292,14 +395,16 @@
 ```
 ### output
 ```yaml
-- model_name: zai-glm-5
+- model_name: qwen3.7-max
   litellm_params:
-    model: openai/z-ai/glm-5
+    model: openai/qwen/qwen3.7-max
     order: 5
     api_base: https://api.kilo.ai/api/gateway
     api_key: os.environ/KILO_API_KEY
-    input_cost_per_token: 8.0e-07
-    output_cost_per_token: 2.56e-06
+    input_cost_per_token: 1.25e-06
+    output_cost_per_token: 3.75e-06
+    cache_creation_input_token_cost: 1.5625e-06
+    cache_read_input_token_cost: 1.25e-07
 ```
 
 ## ollama
@@ -422,33 +527,41 @@
 ```json
 {
   "api": "chat",
-  "id": "anthropic/claude-haiku-4-5",
+  "id": "alibaba/qwen3.7-max",
   "object": "model",
-  "created": 1764004371,
+  "created": 1779791470,
   "owned_by": "system",
-  "input_price": 0.000001,
-  "caching_price": 0.00000125,
-  "cached_price": 1e-7,
-  "output_price": 0.000005,
-  "max_output_tokens": 64000,
-  "context_window": 200000,
+  "input_price": 0.0000025,
+  "caching_price": 0.000003125,
+  "cached_price": 2.5e-7,
+  "output_price": 0.0000075,
+  "max_output_tokens": 65536,
+  "context_window": 1048576,
   "supports_caching": true,
-  "supports_vision": true,
-  "supports_computer_use": true,
+  "supports_vision": false,
+  "supports_computer_use": false,
   "supports_reasoning": false,
   "supports_image_generation": false,
   "supports_tool_calling": true,
-  "description": "Anthropic Haiku 4.5"
+  "supports_role_developer": false,
+  "supports_web_search": false,
+  "supports_output_json_object": true,
+  "supports_output_json_schema": true,
+  "description": "Qwen3.7-Max is the flagship model in Alibaba's Qwen3.7 series. It supports text input and output and is designed for agent-centric workloads, with particular strengths in coding, office and productivity tasks, and long-horizon autonomous execution. The model offers notable gains in coding and agentic performance over prior Qwen generations and supports explicit prompt caching for efficient repeated context use.",
+  "privacy_comments": "N/A",
+  "geolocation": "global"
 }
 ```
 ### output
 ```yaml
 - litellm_params:
-    model: openai/anthropic/claude-haiku-4-5
+    model: openai/alibaba/qwen3.7-max
     api_base: https://router.requesty.ai/v1
     api_key: os.environ/REQUESTY_API_KEY
-    input_cost_per_token: 1.0e-06
-    output_cost_per_token: 5.0e-06
+    input_cost_per_token: 2.5e-06
+    output_cost_per_token: 7.5e-06
+    cache_creation_input_token_cost: 3.125e-06
+    cache_read_input_token_cost: 2.5e-07
     order: 5
-  model_name: claude-haiku-4-5
+  model_name: qwen3.7-max
 ```

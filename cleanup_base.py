@@ -407,14 +407,22 @@ class ModelsDevClient:
             cost = model_data.get("cost", {}) or {}
             input_cost = cost.get("input")
             output_cost = cost.get("output")
+            cache_read_cost = cost.get("cache_read")
+            cache_creation_cost = cost.get("cache_write")
             if input_cost is not None:
                 input_cost = float(input_cost) / 1_000_000
             if output_cost is not None:
                 output_cost = float(output_cost) / 1_000_000
+            if cache_read_cost is not None:
+                cache_read_cost = float(cache_read_cost) / 1_000_000
+            if cache_creation_cost is not None:
+                cache_creation_cost = float(cache_creation_cost) / 1_000_000
             models[model_id] = {
                 "id": model_id,
                 "input_cost": input_cost,
                 "output_cost": output_cost,
+                "cache_read_cost": cache_read_cost,
+                "cache_creation_cost": cache_creation_cost,
                 "model_info": None,
             }
 
@@ -430,7 +438,7 @@ class ModelsDevClient:
         provider_id: str,
         model_id: str,
         logger: Optional[logging.Logger] = None,
-    ) -> Tuple[Optional[float], Optional[float]]:
+    ) -> Tuple[Optional[float], Optional[float], Optional[float], Optional[float]]:
         """
         Get per-token cost for a model from models.dev.
 
@@ -441,13 +449,14 @@ class ModelsDevClient:
             logger: Optional logger for debug output
 
         Returns:
-            Tuple of (input_cost_per_token, output_cost_per_token).
-            Returns (None, None) if not found or API unavailable.
+            Tuple of (input_cost_per_token, output_cost_per_token,
+                      cache_read_cost_per_token, cache_creation_cost_per_token).
+            Returns (None, None, None, None) if not found or API unavailable.
         """
         self._ensure_loaded(logger)
 
         if self._data is None:
-            return None, None
+            return None, None, None, None
 
         provider = self._data.get(provider_id, {})
         models = provider.get("models", {})
@@ -456,13 +465,19 @@ class ModelsDevClient:
 
         input_cost = cost.get("input")
         output_cost = cost.get("output")
+        cache_read_cost = cost.get("cache_read")
+        cache_creation_cost = cost.get("cache_write")
 
         if input_cost is not None:
             input_cost = float(input_cost) / 1_000_000
         if output_cost is not None:
             output_cost = float(output_cost) / 1_000_000
+        if cache_read_cost is not None:
+            cache_read_cost = float(cache_read_cost) / 1_000_000
+        if cache_creation_cost is not None:
+            cache_creation_cost = float(cache_creation_cost) / 1_000_000
 
-        return input_cost, output_cost
+        return input_cost, output_cost, cache_read_cost, cache_creation_cost
 
     def clear_cache(self) -> None:
         """Clear cached data, allowing a fresh fetch on next access."""
@@ -749,6 +764,52 @@ class BaseModelCleaner(ABC):
                             suggestion="Verify cost is correct (> $10 per 1000 tokens)",
                         ))
 
+                # Check: cache_read_input_token_cost is numeric and non-negative
+                cache_read_cost = litellm_params.get("cache_read_input_token_cost")
+                if cache_read_cost is not None and not _is_numeric_cost(cache_read_cost):
+                    report.issues.append(ValidationIssue(
+                        severity=ValidationSeverity.ERROR,
+                        category="cost",
+                        entry_index=index,
+                        model_name=model_name,
+                        model_id=model_id,
+                        message=f"cache_read_input_token_cost is non-numeric (found {type(cache_read_cost).__name__})",
+                        suggestion="Use a numeric value for cache_read_input_token_cost",
+                    ))
+                elif cache_read_cost is not None and float(cache_read_cost) < 0:
+                    report.issues.append(ValidationIssue(
+                        severity=ValidationSeverity.ERROR,
+                        category="cost",
+                        entry_index=index,
+                        model_name=model_name,
+                        model_id=model_id,
+                        message=f"cache_read_input_token_cost is negative ({cache_read_cost})",
+                        suggestion="Cost must be >= 0",
+                    ))
+
+                # Check: cache_creation_input_token_cost is numeric and non-negative
+                cache_creation_cost = litellm_params.get("cache_creation_input_token_cost")
+                if cache_creation_cost is not None and not _is_numeric_cost(cache_creation_cost):
+                    report.issues.append(ValidationIssue(
+                        severity=ValidationSeverity.ERROR,
+                        category="cost",
+                        entry_index=index,
+                        model_name=model_name,
+                        model_id=model_id,
+                        message=f"cache_creation_input_token_cost is non-numeric (found {type(cache_creation_cost).__name__})",
+                        suggestion="Use a numeric value for cache_creation_input_token_cost",
+                    ))
+                elif cache_creation_cost is not None and float(cache_creation_cost) < 0:
+                    report.issues.append(ValidationIssue(
+                        severity=ValidationSeverity.ERROR,
+                        category="cost",
+                        entry_index=index,
+                        model_name=model_name,
+                        model_id=model_id,
+                        message=f"cache_creation_input_token_cost is negative ({cache_creation_cost})",
+                        suggestion="Cost must be >= 0",
+                    ))
+
                 # Check 10: order is positive int
                 order = litellm_params.get("order")
                 if order is not None:
@@ -957,22 +1018,26 @@ class BaseModelCleaner(ABC):
 
             self.logger.info(f"  - Model: {model_id} (name: {model_name})")
 
-            for cost_type in ["input_cost", "output_cost"]:
+            cost_labels = {
+                "input_cost": "Input cost",
+                "output_cost": "Output cost",
+                "cache_read_cost": "Cache read cost",
+                "cache_creation_cost": "Cache creation cost",
+            }
+            for cost_type, cost_label in cost_labels.items():
                 if cost_type in changes:
                     old_val = changes[cost_type]["old"]
                     new_val = changes[cost_type]["new"]
                     old_str = str(old_val) if old_val is not None else "None"
+                    new_str = str(new_val) if new_val is not None else "None (removed)"
 
                     pct_str = ""
-                    if old_val is not None and old_val != 0:
+                    if old_val is not None and old_val != 0 and new_val is not None:
                         pct_change = ((new_val - old_val) / old_val) * 100
                         pct_str = f" ({pct_change:+.1f}%)"
 
-                    cost_label = (
-                        "Input cost" if cost_type == "input_cost" else "Output cost"
-                    )
                     self.logger.info(
-                        f"    {cost_label}: {old_str} → {new_val}{pct_str}"
+                        f"    {cost_label}: {old_str} → {new_str}{pct_str}"
                     )
 
     def preview_sort_changes(self, config: Dict[str, Any]) -> None:
@@ -1208,12 +1273,16 @@ class BaseModelCleaner(ABC):
             api_model_info = api_models[api_model_id]
             api_input_cost = api_model_info.get("input_cost")
             api_output_cost = api_model_info.get("output_cost")
+            api_cache_read_cost = api_model_info.get("cache_read_cost")
+            api_cache_creation_cost = api_model_info.get("cache_creation_cost")
 
             if 0 <= index < len(model_list):
                 model_entry = model_list[index]
                 litellm_params = model_entry.get("litellm_params", {})
                 current_input_cost = litellm_params.get("input_cost_per_token")
                 current_output_cost = litellm_params.get("output_cost_per_token")
+                current_cache_read_cost = litellm_params.get("cache_read_input_token_cost")
+                current_cache_creation_cost = litellm_params.get("cache_creation_input_token_cost")
 
                 # Normalize string costs (e.g. from YAML) to floats
                 if isinstance(current_input_cost, str):
@@ -1228,9 +1297,23 @@ class BaseModelCleaner(ABC):
                         litellm_params["output_cost_per_token"] = current_output_cost
                     except ValueError:
                         current_output_cost = None
+                if isinstance(current_cache_read_cost, str):
+                    try:
+                        current_cache_read_cost = float(current_cache_read_cost)
+                        litellm_params["cache_read_input_token_cost"] = current_cache_read_cost
+                    except ValueError:
+                        current_cache_read_cost = None
+                if isinstance(current_cache_creation_cost, str):
+                    try:
+                        current_cache_creation_cost = float(current_cache_creation_cost)
+                        litellm_params["cache_creation_input_token_cost"] = current_cache_creation_cost
+                    except ValueError:
+                        current_cache_creation_cost = None
 
                 input_changed = False
                 output_changed = False
+                cache_read_changed = False
+                cache_creation_changed = False
                 change_info = {
                     "index": index,
                     "model_id": model_id,
@@ -1286,6 +1369,58 @@ class BaseModelCleaner(ABC):
                             f"Output cost change for {model_id}: {current_output_cost} → {adjusted_output_cost}"
                         )
 
+                # Sync cache read cost: add/update or remove if API no longer provides it
+                if api_cache_read_cost is not None:
+                    if current_cache_read_cost is None or not costs_are_equal(
+                        current_cache_read_cost, api_cache_read_cost
+                    ):
+                        cache_read_changed = True
+                        change_info["changes"]["cache_read_cost"] = {
+                            "old": current_cache_read_cost,
+                            "new": api_cache_read_cost,
+                        }
+                        litellm_params["cache_read_input_token_cost"] = api_cache_read_cost
+                        self.logger.debug(
+                            f"Cache read cost change for {model_id}: {current_cache_read_cost} → {api_cache_read_cost}"
+                        )
+                elif current_cache_read_cost is not None:
+                    # API no longer reports cache read cost — remove stale field
+                    cache_read_changed = True
+                    change_info["changes"]["cache_read_cost"] = {
+                        "old": current_cache_read_cost,
+                        "new": None,
+                    }
+                    del litellm_params["cache_read_input_token_cost"]
+                    self.logger.debug(
+                        f"Removing stale cache_read_input_token_cost for {model_id}"
+                    )
+
+                # Sync cache creation cost: add/update or remove if API no longer provides it
+                if api_cache_creation_cost is not None:
+                    if current_cache_creation_cost is None or not costs_are_equal(
+                        current_cache_creation_cost, api_cache_creation_cost
+                    ):
+                        cache_creation_changed = True
+                        change_info["changes"]["cache_creation_cost"] = {
+                            "old": current_cache_creation_cost,
+                            "new": api_cache_creation_cost,
+                        }
+                        litellm_params["cache_creation_input_token_cost"] = api_cache_creation_cost
+                        self.logger.debug(
+                            f"Cache creation cost change for {model_id}: {current_cache_creation_cost} → {api_cache_creation_cost}"
+                        )
+                elif current_cache_creation_cost is not None:
+                    # API no longer reports cache creation cost — remove stale field
+                    cache_creation_changed = True
+                    change_info["changes"]["cache_creation_cost"] = {
+                        "old": current_cache_creation_cost,
+                        "new": None,
+                    }
+                    del litellm_params["cache_creation_input_token_cost"]
+                    self.logger.debug(
+                        f"Removing stale cache_creation_input_token_cost for {model_id}"
+                    )
+
                 # Determine the order to use: free_order for free models, provider_order otherwise
                 # Check if both input and output costs are equal to the free_model_cost
                 final_input_cost = litellm_params.get("input_cost_per_token")
@@ -1306,7 +1441,7 @@ class BaseModelCleaner(ABC):
                         order_changed = True
                     litellm_params["order"] = provider_order
 
-                if input_changed or output_changed:
+                if input_changed or output_changed or cache_read_changed or cache_creation_changed:
                     cost_changes.append(change_info)
                     self._log_cost_change(
                         model_id,
@@ -1353,6 +1488,28 @@ class BaseModelCleaner(ABC):
                 ) * 100
                 pct_str = f" ({pct_change:+.1f}%)"
             self.logger.info(f"  Output cost: {old_val} → {new_val}{pct_str}")
+
+        if "cache_read_cost" in change_info["changes"]:
+            old_val = change_info["changes"]["cache_read_cost"]["old"]
+            new_val = change_info["changes"]["cache_read_cost"]["new"]
+            old_str = str(old_val) if old_val is not None else "None"
+            new_str = str(new_val) if new_val is not None else "None (removed)"
+            pct_str = ""
+            if old_val is not None and old_val != 0 and new_val is not None:
+                pct_change = ((new_val - old_val) / old_val) * 100
+                pct_str = f" ({pct_change:+.1f}%)"
+            self.logger.info(f"  Cache read cost: {old_str} → {new_str}{pct_str}")
+
+        if "cache_creation_cost" in change_info["changes"]:
+            old_val = change_info["changes"]["cache_creation_cost"]["old"]
+            new_val = change_info["changes"]["cache_creation_cost"]["new"]
+            old_str = str(old_val) if old_val is not None else "None"
+            new_str = str(new_val) if new_val is not None else "None (removed)"
+            pct_str = ""
+            if old_val is not None and old_val != 0 and new_val is not None:
+                pct_change = ((new_val - old_val) / old_val) * 100
+                pct_str = f" ({pct_change:+.1f}%)"
+            self.logger.info(f"  Cache creation cost: {old_str} → {new_str}{pct_str}")
 
     def generate_model_name(self, model_id: str, prefix: str = "") -> str:
         """
@@ -2530,6 +2687,8 @@ class ConfigDrivenModelCleaner(BaseModelCleaner):
             "id": model["id"],
             "input_cost": None,
             "output_cost": None,
+            "cache_read_cost": None,
+            "cache_creation_cost": None,
             "model_info": model.get("model_info"),
         }
 
@@ -2542,6 +2701,8 @@ class ConfigDrivenModelCleaner(BaseModelCleaner):
 
         input_field = self._pricing_config.get("input_field")
         output_field = self._pricing_config.get("output_field")
+        cache_read_field = self._pricing_config.get("cache_read_field")
+        cache_write_field = self._pricing_config.get("cache_write_field")
         is_per_million = self._pricing_config.get("is_per_million", False)
         divisor = self._pricing_config.get("divisor", 1)
 
@@ -2575,14 +2736,44 @@ class ConfigDrivenModelCleaner(BaseModelCleaner):
                 except (ValueError, TypeError):
                     pass
 
+        # Parse cache read cost
+        if cache_read_field:
+            cache_read_value = get_nested_value(model, cache_read_field)
+            if cache_read_value is not None:
+                try:
+                    if isinstance(cache_read_value, str):
+                        cache_read_value = cache_read_value.replace("$", "").replace(",", "")
+                    cache_read_cost = float(cache_read_value)
+                    if is_per_million:
+                        cache_read_cost = cache_read_cost / divisor / 1_000_000
+                    model_info["cache_read_cost"] = cache_read_cost
+                except (ValueError, TypeError):
+                    pass
+
+        # Parse cache write (creation) cost
+        if cache_write_field:
+            cache_write_value = get_nested_value(model, cache_write_field)
+            if cache_write_value is not None:
+                try:
+                    if isinstance(cache_write_value, str):
+                        cache_write_value = cache_write_value.replace("$", "").replace(",", "")
+                    cache_creation_cost = float(cache_write_value)
+                    if is_per_million:
+                        cache_creation_cost = cache_creation_cost / divisor / 1_000_000
+                    model_info["cache_creation_cost"] = cache_creation_cost
+                except (ValueError, TypeError):
+                    pass
+
         # Fallback to models.dev if provider API has no pricing
         if (
             model_info["input_cost"] is None
             and model_info["output_cost"] is None
             and self._models_dev_id
         ):
-            dev_input, dev_output = _models_dev_client.get_model_cost(
-                self._models_dev_id, model["id"], self.logger
+            dev_input, dev_output, dev_cache_read, dev_cache_creation = (
+                _models_dev_client.get_model_cost(
+                    self._models_dev_id, model["id"], self.logger
+                )
             )
             if dev_input is not None or dev_output is not None:
                 model_info["input_cost"] = dev_input
@@ -2590,6 +2781,16 @@ class ConfigDrivenModelCleaner(BaseModelCleaner):
                 self.logger.debug(
                     f"Cost from models.dev for {model['id']}: "
                     f"input={dev_input}, output={dev_output}"
+                )
+            if dev_cache_read is not None:
+                model_info["cache_read_cost"] = dev_cache_read
+                self.logger.debug(
+                    f"Cache read cost from models.dev for {model['id']}: {dev_cache_read}"
+                )
+            if dev_cache_creation is not None:
+                model_info["cache_creation_cost"] = dev_cache_creation
+                self.logger.debug(
+                    f"Cache creation cost from models.dev for {model['id']}: {dev_cache_creation}"
                 )
 
         return model_info
@@ -2727,6 +2928,14 @@ class ConfigDrivenModelCleaner(BaseModelCleaner):
             entry["litellm_params"]["input_cost_per_token"] = input_cost
         if output_cost is not None:
             entry["litellm_params"]["output_cost_per_token"] = output_cost
+
+        # Add cache costs if available (not subject to free-model adjustment)
+        cache_creation_cost = api_model_info.get("cache_creation_cost")
+        cache_read_cost = api_model_info.get("cache_read_cost")
+        if cache_creation_cost is not None:
+            entry["litellm_params"]["cache_creation_input_token_cost"] = cache_creation_cost
+        if cache_read_cost is not None:
+            entry["litellm_params"]["cache_read_input_token_cost"] = cache_read_cost
 
         # Add model_info if present
         model_info_section = api_model_info.get("model_info")

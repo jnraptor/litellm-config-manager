@@ -11,6 +11,8 @@ providers:
     pricing:
       input_field: pricing.prompt
       output_field: pricing.completion
+      cache_read_field: pricing.input_cache_read
+      cache_write_field: pricing.input_cache_write
       is_per_million: false
       free_model_handling: true
     model_name_prefix: or-
@@ -42,6 +44,8 @@ providers:
     pricing:
       input_field: pricing.input
       output_field: pricing.output
+      cache_read_field: pricing.input_cache_read
+      cache_write_field: pricing.input_cache_write
       is_per_million: false
       free_model_handling: true
     model_name_prefix: vc-
@@ -72,6 +76,8 @@ providers:
     pricing:
       input_field: pricing.prompt
       output_field: pricing.completion
+      cache_read_field: pricing.input_cache_read
+      cache_write_field: pricing.input_cache_write
       is_per_million: false
       free_model_handling: true
       models_dev_id: poe
@@ -124,6 +130,8 @@ providers:
     pricing:
       input_field: pricing.prompt
       output_field: pricing.completion
+      cache_read_field: pricing.input_cache_read
+      cache_write_field: pricing.input_cache_write
       is_per_million: false
       free_model_handling: true
     model_name_prefix: ''
@@ -269,6 +277,8 @@ providers:
     pricing:
       input_field: input_price
       output_field: output_price
+      cache_read_field: cached_price
+      cache_write_field: caching_price
       is_per_million: false
       free_model_handling: true
     model_name_prefix: ''

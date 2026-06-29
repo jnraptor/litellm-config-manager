@@ -116,7 +116,7 @@ class TestModelsDevClient:
         client = ModelsDevClient()
         client._data = SAMPLE_MODELS_DEV_DATA
 
-        input_cost, output_cost = client.get_model_cost(
+        input_cost, output_cost, cache_read_cost, cache_creation_cost = client.get_model_cost(
             "fireworks-ai", "accounts/fireworks/models/deepseek-v4-pro"
         )
 
@@ -130,7 +130,7 @@ class TestModelsDevClient:
         client = ModelsDevClient()
         client._data = SAMPLE_MODELS_DEV_DATA
 
-        input_cost, output_cost = client.get_model_cost(
+        input_cost, output_cost, cache_read_cost, cache_creation_cost = client.get_model_cost(
             "opencode", "claude-sonnet-4-6"
         )
 
@@ -142,7 +142,7 @@ class TestModelsDevClient:
         client = ModelsDevClient()
         client._data = SAMPLE_MODELS_DEV_DATA
 
-        input_cost, output_cost = client.get_model_cost(
+        input_cost, output_cost, cache_read_cost, cache_creation_cost = client.get_model_cost(
             "opencode-go", "deepseek-v4-pro"
         )
 
@@ -154,7 +154,7 @@ class TestModelsDevClient:
         client = ModelsDevClient()
         client._data = SAMPLE_MODELS_DEV_DATA
 
-        input_cost, output_cost = client.get_model_cost(
+        input_cost, output_cost, cache_read_cost, cache_creation_cost = client.get_model_cost(
             "fireworks-ai", "accounts/fireworks/models/free-model"
         )
 
@@ -166,7 +166,7 @@ class TestModelsDevClient:
         client = ModelsDevClient()
         client._data = SAMPLE_MODELS_DEV_DATA
 
-        input_cost, output_cost = client.get_model_cost(
+        input_cost, output_cost, cache_read_cost, cache_creation_cost = client.get_model_cost(
             "nonexistent-provider", "some-model"
         )
 
@@ -174,11 +174,11 @@ class TestModelsDevClient:
         assert output_cost is None
 
     def test_get_model_cost_missing_model(self):
-        """Test that missing model returns (None, None)."""
+        """Test that missing model returns (None, None, None, None)."""
         client = ModelsDevClient()
         client._data = SAMPLE_MODELS_DEV_DATA
 
-        input_cost, output_cost = client.get_model_cost(
+        input_cost, output_cost, cache_read_cost, cache_creation_cost = client.get_model_cost(
             "fireworks-ai", "accounts/fireworks/models/nonexistent-model"
         )
 
@@ -186,11 +186,11 @@ class TestModelsDevClient:
         assert output_cost is None
 
     def test_get_model_cost_no_cost_field(self):
-        """Test model without a cost field returns (None, None)."""
+        """Test model without a cost field returns (None, None, None, None)."""
         client = ModelsDevClient()
         client._data = SAMPLE_MODELS_DEV_DATA
 
-        input_cost, output_cost = client.get_model_cost(
+        input_cost, output_cost, cache_read_cost, cache_creation_cost = client.get_model_cost(
             "no-cost-provider", "model-no-cost"
         )
 
@@ -198,11 +198,11 @@ class TestModelsDevClient:
         assert output_cost is None
 
     def test_get_model_cost_empty_provider(self):
-        """Test provider with no models returns (None, None)."""
+        """Test provider with no models returns (None, None, None, None)."""
         client = ModelsDevClient()
         client._data = SAMPLE_MODELS_DEV_DATA
 
-        input_cost, output_cost = client.get_model_cost(
+        input_cost, output_cost, cache_read_cost, cache_creation_cost = client.get_model_cost(
             "empty-provider", "any-model"
         )
 
@@ -210,11 +210,11 @@ class TestModelsDevClient:
         assert output_cost is None
 
     def test_get_model_cost_data_not_loaded(self):
-        """Test that unloaded data returns (None, None) when load fails."""
+        """Test that unloaded data returns (None, None, None, None) when load fails."""
         client = ModelsDevClient()
         client._load_failed = True  # Simulate failed load
 
-        input_cost, output_cost = client.get_model_cost(
+        input_cost, output_cost, cache_read_cost, cache_creation_cost = client.get_model_cost(
             "fireworks-ai", "accounts/fireworks/models/deepseek-v4-pro"
         )
 
@@ -309,7 +309,7 @@ class TestModelsDevClient:
             }
         }
 
-        input_cost, output_cost = client.get_model_cost(
+        input_cost, output_cost, cache_read_cost, cache_creation_cost = client.get_model_cost(
             "test-provider", "test-model"
         )
 
@@ -356,7 +356,7 @@ class TestParseApiModelWithModelsDevFallback:
     @patch("cleanup_base._models_dev_client")
     def test_fallback_to_models_dev_when_no_pricing(self, mock_client):
         """Test that models.dev is used when provider API has no pricing."""
-        mock_client.get_model_cost.return_value = (1.74e-06, 3.48e-06)
+        mock_client.get_model_cost.return_value = (1.74e-06, 3.48e-06, None, None)
 
         cleaner = self._create_cleaner_with_mock(models_dev_id="fireworks-ai")
 
@@ -385,7 +385,7 @@ class TestParseApiModelWithModelsDevFallback:
     @patch("cleanup_base._models_dev_client")
     def test_fallback_returns_none_for_unknown_model(self, mock_client):
         """Test fallback returns None costs when model not found in models.dev."""
-        mock_client.get_model_cost.return_value = (None, None)
+        mock_client.get_model_cost.return_value = (None, None, None, None)
 
         cleaner = self._create_cleaner_with_mock(models_dev_id="fireworks-ai")
 
