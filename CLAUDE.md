@@ -290,7 +290,7 @@ How each provider's models are detected in `config.yaml`:
 
 Cache fields are only present when the provider API reports cache pricing. They are removed automatically when the API stops reporting them (full sync).
 
-**Free Model Handling:** Free models use `1.0e-09` costs for LiteLLM compatibility (LiteLLM requires non-zero costs). `adjust_cost_for_free_model()` converts `0.0` → `1.0e-09`.
+**Free Model Handling:** Free models use `1.0e-09` costs for LiteLLM compatibility (LiteLLM requires non-zero costs). `adjust_cost_for_free_model()` converts `0.0` → `1.0e-09` for all cost fields — input, output, and both cache fields.
 
 **Free Variants (OpenRouter, Kilo):** When adding a model via `--add-model`, if a `<model-id>:free` variant exists in the API, it is automatically added with the same `model_name` for load balancing.
 

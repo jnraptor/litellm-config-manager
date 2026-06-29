@@ -1371,17 +1371,18 @@ class BaseModelCleaner(ABC):
 
                 # Sync cache read cost: add/update or remove if API no longer provides it
                 if api_cache_read_cost is not None:
+                    adjusted_cache_read_cost = adjust_cost_for_free_model(api_cache_read_cost)
                     if current_cache_read_cost is None or not costs_are_equal(
-                        current_cache_read_cost, api_cache_read_cost
+                        current_cache_read_cost, adjusted_cache_read_cost
                     ):
                         cache_read_changed = True
                         change_info["changes"]["cache_read_cost"] = {
                             "old": current_cache_read_cost,
-                            "new": api_cache_read_cost,
+                            "new": adjusted_cache_read_cost,
                         }
-                        litellm_params["cache_read_input_token_cost"] = api_cache_read_cost
+                        litellm_params["cache_read_input_token_cost"] = adjusted_cache_read_cost
                         self.logger.debug(
-                            f"Cache read cost change for {model_id}: {current_cache_read_cost} → {api_cache_read_cost}"
+                            f"Cache read cost change for {model_id}: {current_cache_read_cost} → {adjusted_cache_read_cost}"
                         )
                 elif current_cache_read_cost is not None:
                     # API no longer reports cache read cost — remove stale field
@@ -1397,17 +1398,18 @@ class BaseModelCleaner(ABC):
 
                 # Sync cache creation cost: add/update or remove if API no longer provides it
                 if api_cache_creation_cost is not None:
+                    adjusted_cache_creation_cost = adjust_cost_for_free_model(api_cache_creation_cost)
                     if current_cache_creation_cost is None or not costs_are_equal(
-                        current_cache_creation_cost, api_cache_creation_cost
+                        current_cache_creation_cost, adjusted_cache_creation_cost
                     ):
                         cache_creation_changed = True
                         change_info["changes"]["cache_creation_cost"] = {
                             "old": current_cache_creation_cost,
-                            "new": api_cache_creation_cost,
+                            "new": adjusted_cache_creation_cost,
                         }
-                        litellm_params["cache_creation_input_token_cost"] = api_cache_creation_cost
+                        litellm_params["cache_creation_input_token_cost"] = adjusted_cache_creation_cost
                         self.logger.debug(
-                            f"Cache creation cost change for {model_id}: {current_cache_creation_cost} → {api_cache_creation_cost}"
+                            f"Cache creation cost change for {model_id}: {current_cache_creation_cost} → {adjusted_cache_creation_cost}"
                         )
                 elif current_cache_creation_cost is not None:
                     # API no longer reports cache creation cost — remove stale field
@@ -2929,13 +2931,13 @@ class ConfigDrivenModelCleaner(BaseModelCleaner):
         if output_cost is not None:
             entry["litellm_params"]["output_cost_per_token"] = output_cost
 
-        # Add cache costs if available (not subject to free-model adjustment)
+        # Add cache costs if available (adjusted same as input/output: 0.0 → 1.0e-09)
         cache_creation_cost = api_model_info.get("cache_creation_cost")
         cache_read_cost = api_model_info.get("cache_read_cost")
         if cache_creation_cost is not None:
-            entry["litellm_params"]["cache_creation_input_token_cost"] = cache_creation_cost
+            entry["litellm_params"]["cache_creation_input_token_cost"] = adjust_cost_for_free_model(cache_creation_cost)
         if cache_read_cost is not None:
-            entry["litellm_params"]["cache_read_input_token_cost"] = cache_read_cost
+            entry["litellm_params"]["cache_read_input_token_cost"] = adjust_cost_for_free_model(cache_read_cost)
 
         # Add model_info if present
         model_info_section = api_model_info.get("model_info")
