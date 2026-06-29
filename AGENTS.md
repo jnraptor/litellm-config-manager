@@ -64,7 +64,7 @@ Current coverage: ~72%
 - `ConfigDrivenModelCleaner` — Provider-specific implementation
 - `UnifiedModelCleaner` — Multi-provider orchestration (cleanup, add mapped models, delete models by name)
 - `ModelMappingLoader` — Loads and saves model mappings from `models.yaml` (full rewrite via `yaml.dump`)
-- `ModelsDevClient` — Fetches cost data from models.dev API for providers without pricing
+- `ModelsDevClient` — Fetches cost data (input, output, cache read/write) from models.dev API for providers without pricing
 - `ModelsPopulator` — Populates `models.yaml` for a single model key across all providers
 
 For full details, see [CLAUDE.md](./CLAUDE.md).

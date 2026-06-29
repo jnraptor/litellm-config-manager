@@ -7,7 +7,7 @@ Comprehensive Python scripts that validate models from multiple providers (OpenR
 - Identifies models from multiple providers in your `config.yaml`
 - Checks their validity against the current APIs
 - Removes entries for invalid/deprecated models
-- **Automatically updates costs** (`input_cost_per_token` and `output_cost_per_token`) when they differ from API pricing
+- **Automatically updates costs** (`input_cost_per_token`, `output_cost_per_token`, `cache_creation_input_token_cost`, `cache_read_input_token_cost`) when they differ from API pricing — stale cache fields are removed if the API stops reporting them
 - **Adds new models** with automatic cost detection and proper formatting
 - **Custom model naming** when adding single models
 - **Sorts model lists** alphabetically
@@ -209,7 +209,7 @@ before each save.
 All scripts share these capabilities:
 
 - **Dry-run mode**: Preview all changes (removals, cost updates, additions, sorting) before applying
-- **Automatic cost updates**: Syncs `input_cost_per_token` and `output_cost_per_token` with current API pricing
+- **Automatic cost updates**: Syncs `input_cost_per_token`, `output_cost_per_token`, `cache_creation_input_token_cost`, and `cache_read_input_token_cost` with current API pricing; stale cache fields are removed when the API no longer reports them
 - **Percentage-based logging**: Shows cost changes with percentage differences (e.g., `1e-06 → 3e-07 (-70.0%)`)
 - **Free model handling**: Preserves `1e-09` costs for free models (LiteLLM compatibility)
 - **Duplicate prevention**: Skips models that already exist in configuration
@@ -234,7 +234,7 @@ All scripts share these capabilities:
 2. **Extract Models**: Identify provider-specific models by prefix or `api_base` pattern
 3. **Fetch Available Models with Pricing**: Query the provider API
 4. **Validate**: Compare config models against API models
-5. **Update Costs**: Compare and update `input_cost_per_token` / `output_cost_per_token`
+5. **Update Costs**: Compare and update `input_cost_per_token`, `output_cost_per_token`, `cache_creation_input_token_cost`, and `cache_read_input_token_cost`; remove stale cache fields when the API stops reporting them
 6. **Handle Free Models**: Preserve `1e-09` costs for free models
 7. **Remove Invalid Entries**: Delete entire entries for deprecated models
 8. **Sort**: Alphabetically sort model list

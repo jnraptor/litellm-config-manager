@@ -217,7 +217,7 @@ populate_models.py
 - `get_nested_value(data, field_path)` — module-level utility for dot-notation dict access (e.g., `"pricing.prompt"`)
 - `costs_are_equal()` — relative-tolerance comparison for scientific notation floats
 - `APIClient` — HTTP fetch with retry logic and response caching
-- `ModelsDevClient` — fetches and caches cost data from `https://models.dev/api.json`; provides per-token costs for providers whose own APIs don't include pricing (e.g., Fireworks, OpenCode Zen, OpenCode Go)
+- `ModelsDevClient` — fetches and caches cost data from `https://models.dev/api.json`; provides per-token costs (input, output, and cache read/write from `cost.cache_read` / `cost.cache_write`) for providers whose own APIs don't include pricing (e.g., Fireworks, OpenCode Zen, OpenCode Go)
 - `BaseModelCleaner` — abstract base with YAML load/save, sort, validate, cost update, add model
 - `ConfigDrivenModelCleaner` — reads `providers.yaml`; implements all abstract methods based on config; handles free variant logic via `_free_variant_suffix`; falls back to `ModelsDevClient` for pricing when `pricing.models_dev_id` is configured
 - `ModelMappingLoader` — loads and saves `models.yaml`; `save()` rewrites the whole file via `yaml.dump` (hand-written comments will be lost)
@@ -228,9 +228,10 @@ populate_models.py
 
 - `model_detection.type`: `"prefix"` (OpenRouter, Vercel, Nvidia) or `"api_base"` (Requesty, Poe, Kilo, OpenCode Zen, OpenCode Go)
 - `pricing.input_field` / `pricing.output_field`: dot-notation paths into the API response
+- `pricing.cache_read_field` / `pricing.cache_write_field`: dot-notation paths for cache pricing (OpenRouter, Vercel, Kilo, Poe, Requesty); omit for providers that use models.dev or have no cache pricing
 - `pricing.is_per_million` + `pricing.divisor`: conversion to per-token cost
 - `pricing.default_cost`: used when API has no pricing (Nvidia: `1.0e-09`)
-- `pricing.models_dev_id`: maps to a provider ID in `models.dev/api.json` for cost augmentation; used when provider API has no pricing (e.g., `"fireworks-ai"`, `"opencode"`, `"opencode-go"`)
+- `pricing.models_dev_id`: maps to a provider ID in `models.dev/api.json` for cost augmentation; used when provider API has no pricing (e.g., `"fireworks-ai"`, `"opencode"`, `"opencode-go"`); also sources `cost.cache_read` / `cost.cache_write` for cache fields
 - `free_variant_suffix`: `":free"` for OpenRouter and Kilo — triggers automatic `:free` variant addition when adding models
 - `special_models`: model IDs exempt from removal validation
 - `model_prefixes`: optional list of `{prefix, api_base}` mappings for providers that serve models under multiple prefixes (e.g., OpenCode Go with `openai/`, `dashscope/`, `anthropic/`)
@@ -282,8 +283,12 @@ How each provider's models are detected in `config.yaml`:
     api_key: os.environ/API_KEY_NAME
     input_cost_per_token: 1.0e-07
     output_cost_per_token: 3.0e-07
+    cache_creation_input_token_cost: 1.25e-06  # optional: cost to write to cache
+    cache_read_input_token_cost: 1.0e-07       # optional: cost to read from cache
     order: 5
 ```
+
+Cache fields are only present when the provider API reports cache pricing. They are removed automatically when the API stops reporting them (full sync).
 
 **Free Model Handling:** Free models use `1.0e-09` costs for LiteLLM compatibility (LiteLLM requires non-zero costs). `adjust_cost_for_free_model()` converts `0.0` → `1.0e-09`.
 
