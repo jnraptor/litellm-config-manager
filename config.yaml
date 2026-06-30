@@ -283,8 +283,8 @@ model_list:
   litellm_params:
     model: openrouter/deepseek/deepseek-v4-flash
     order: 5
-    input_cost_per_token: 9.0e-08
-    output_cost_per_token: 1.8e-07
+    input_cost_per_token: 9.8e-08
+    output_cost_per_token: 1.96e-07
     cache_read_input_token_cost: 2.0e-08
 - model_name: deepseek-v4-flash
   litellm_params:
@@ -493,7 +493,7 @@ model_list:
   litellm_params:
     model: openrouter/z-ai/glm-5.2
     order: 5
-    input_cost_per_token: 9.4e-07
+    input_cost_per_token: 9.3e-07
     output_cost_per_token: 3.0e-06
     cache_read_input_token_cost: 1.8e-07
 - model_name: glm-5.2
@@ -846,9 +846,9 @@ model_list:
     order: 1
     api_base: https://opencode.ai/zen/go
     api_key: os.environ/OPENCODE_API_KEY
-    input_cost_per_token: 1.0000000000000001e-07
-    output_cost_per_token: 4.0000000000000003e-07
-    cache_read_input_token_cost: 2.0e-08
+    input_cost_per_token: 3.0e-07
+    output_cost_per_token: 1.2e-06
+    cache_read_input_token_cost: 6.0e-08
 - model_name: minimax-m3
   litellm_params:
     model: nvidia_nim/minimaxai/minimax-m3
