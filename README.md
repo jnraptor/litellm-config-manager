@@ -91,6 +91,7 @@ python cleanup_models.py --provider all --add-model model1 model2  # Add to all 
 python cleanup_models.py --provider all --add-mapped-model glm-5  # Add mapped model
 python cleanup_models.py --provider openrouter --add-model gpt-4 --model-name "My GPT-4"
 python cleanup_models.py --provider all --delete-model "model_name" --dry-run  # Preview deletion
+python cleanup_models.py --provider all --delete-provider openrouter --dry-run  # Preview provider deletion
 python cleanup_models.py --provider all --dry-run          # Preview only
 ```
 
@@ -185,6 +186,7 @@ before each save.
 | `--verbose` | Detailed logging with cost comparison and percentage changes |
 | `--add-model MODEL_ID [MODEL_ID ...]` | Add one or more models (space-separated) |
 | `--delete-model NAME [NAME ...]` | Delete one or more models by `model_name` |
+| `--delete-provider PROVIDER [PROVIDER ...]` | Delete all models for a provider and disable it in `providers.yaml` |
 | `--add-mapped-model NAME` | Add a model defined in `models.yaml` across all providers |
 | `--model-name NAME` | Custom name for single-model additions |
 

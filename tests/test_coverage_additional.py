@@ -5,6 +5,7 @@ Tests for the 4 key uncovered areas identified in coverage analysis:
 2. File I/O and save operations
 3. Free variant handling
 4. ModelMappingLoader
+5. Provider deletion (--delete-provider)
 """
 
 import json
@@ -214,6 +215,326 @@ class TestCleanupModelsUnifiedScript:
         assert removed == 2
         remaining = [e["model_name"] for e in config["model_list"]]
         assert remaining == ["model-b"]
+
+    @pytest.fixture
+    def temp_providers_config(self, tmp_path):
+        """Create a temporary providers.yaml for delete-provider tests."""
+        providers_content = {
+            "providers": {
+                "openrouter": {
+                    "name": "OpenRouter",
+                    "api_url": "https://api.test.com/models",
+                    "model_prefix": "openrouter/",
+                    "model_detection": {"type": "prefix", "value": "openrouter/"},
+                    "pricing": {
+                        "input_field": None,
+                        "output_field": None,
+                        "is_per_million": False,
+                        "free_model_handling": True,
+                        "default_cost": None,
+                    },
+                    "model_name_prefix": "",
+                    "model_name_cleanup": [],
+                    "special_models": [],
+                    "api_base_config": None,
+                    "api_key_env": None,
+                    "order": 5,
+                    "enabled": True,
+                },
+                "kilo": {
+                    "name": "Kilo",
+                    "api_url": "https://api.test.com/models",
+                    "model_prefix": "openai/",
+                    "model_detection": {
+                        "type": "api_base",
+                        "value": "api.kilo.ai",
+                    },
+                    "pricing": {
+                        "input_field": None,
+                        "output_field": None,
+                        "is_per_million": False,
+                        "free_model_handling": True,
+                        "default_cost": None,
+                    },
+                    "model_name_prefix": "",
+                    "model_name_cleanup": [],
+                    "special_models": [],
+                    "api_base_config": {
+                        "url": "https://api.kilo.ai/api/gateway",
+                        "api_key_env": "KILO_API_KEY",
+                    },
+                    "api_key_env": "KILO_API_KEY",
+                    "order": 5,
+                    "enabled": True,
+                },
+            },
+            "defaults": {
+                "timeout": 30,
+                "retry_count": 3,
+                "log_level": "INFO",
+                "cost_comparison_precision": 2,
+                "free_model_cost": 1.0e-09,
+                "free_order": 3,
+            },
+        }
+        providers_file = tmp_path / "providers.yaml"
+        with open(providers_file, "w") as f:
+            yaml.dump(providers_content, f)
+        # Initialize the singleton with the temp path so all cleaners use it.
+        ProviderConfigLoader(str(providers_file))
+        return str(providers_file)
+
+    def test_delete_provider_from_config_removes_prefix_models(
+        self, tmp_path, temp_providers_config
+    ):
+        """Test delete_provider_from_config removes prefix-detected models."""
+        from cleanup_models import UnifiedModelCleaner
+
+        config_content = {
+            "model_list": [
+                {
+                    "model_name": "or-model1",
+                    "litellm_params": {"model": "openrouter/anthropic/claude-3"},
+                },
+                {
+                    "model_name": "kilo-model1",
+                    "litellm_params": {
+                        "model": "openai/test-model",
+                        "api_base": "https://api.kilo.ai/api/gateway",
+                    },
+                },
+                {
+                    "model_name": "other-model",
+                    "litellm_params": {"model": "mistral/some-model"},
+                },
+            ],
+        }
+        config_file = tmp_path / "config.yaml"
+        with open(config_file, "w") as f:
+            yaml.dump(config_content, f)
+
+        cleaner = UnifiedModelCleaner(
+            config_path=str(config_file),
+            provider_names=["openrouter"],
+            dry_run=True,
+        )
+        config = cleaner.load_config()
+        updated_config, removed, details = cleaner.delete_provider_from_config(
+            config, ["openrouter"]
+        )
+
+        assert removed == 1
+        assert details["openrouter"] == 1
+        assert len(updated_config["model_list"]) == 2
+        remaining_models = [e["litellm_params"]["model"] for e in updated_config["model_list"]]
+        assert "openrouter/anthropic/claude-3" not in remaining_models
+
+    def test_delete_provider_from_config_removes_api_base_models(
+        self, tmp_path, temp_providers_config
+    ):
+        """Test delete_provider_from_config removes api_base-detected models."""
+        from cleanup_models import UnifiedModelCleaner
+
+        config_content = {
+            "model_list": [
+                {
+                    "model_name": "or-model1",
+                    "litellm_params": {"model": "openrouter/anthropic/claude-3"},
+                },
+                {
+                    "model_name": "kilo-model1",
+                    "litellm_params": {
+                        "model": "openai/test-model",
+                        "api_base": "https://api.kilo.ai/api/gateway",
+                    },
+                },
+                {
+                    "model_name": "kilo-model2",
+                    "litellm_params": {
+                        "model": "openai/another-model",
+                        "api_base": "https://api.kilo.ai/api/gateway",
+                    },
+                },
+            ],
+        }
+        config_file = tmp_path / "config.yaml"
+        with open(config_file, "w") as f:
+            yaml.dump(config_content, f)
+
+        cleaner = UnifiedModelCleaner(
+            config_path=str(config_file),
+            provider_names=["kilo"],
+            dry_run=True,
+        )
+        config = cleaner.load_config()
+        updated_config, removed, details = cleaner.delete_provider_from_config(
+            config, ["kilo"]
+        )
+
+        assert removed == 2
+        assert details["kilo"] == 2
+        assert len(updated_config["model_list"]) == 1
+        assert updated_config["model_list"][0]["model_name"] == "or-model1"
+
+    def test_delete_provider_from_config_removes_multiple_providers(
+        self, tmp_path, temp_providers_config
+    ):
+        """Test delete_provider_from_config handles multiple providers at once."""
+        from cleanup_models import UnifiedModelCleaner
+
+        config_content = {
+            "model_list": [
+                {
+                    "model_name": "or-model1",
+                    "litellm_params": {"model": "openrouter/anthropic/claude-3"},
+                },
+                {
+                    "model_name": "kilo-model1",
+                    "litellm_params": {
+                        "model": "openai/test-model",
+                        "api_base": "https://api.kilo.ai/api/gateway",
+                    },
+                },
+                {
+                    "model_name": "other-model",
+                    "litellm_params": {"model": "mistral/some-model"},
+                },
+            ],
+        }
+        config_file = tmp_path / "config.yaml"
+        with open(config_file, "w") as f:
+            yaml.dump(config_content, f)
+
+        cleaner = UnifiedModelCleaner(
+            config_path=str(config_file),
+            provider_names=["openrouter"],
+            dry_run=True,
+        )
+        config = cleaner.load_config()
+        updated_config, removed, details = cleaner.delete_provider_from_config(
+            config, ["openrouter", "kilo"]
+        )
+
+        assert removed == 2
+        assert details["openrouter"] == 1
+        assert details["kilo"] == 1
+        assert len(updated_config["model_list"]) == 1
+        assert updated_config["model_list"][0]["model_name"] == "other-model"
+
+    def test_disable_providers_sets_enabled_false(
+        self, tmp_path, temp_providers_config
+    ):
+        """Test disable_providers writes enabled: false to providers.yaml."""
+        from cleanup_models import UnifiedModelCleaner
+
+        config_file = tmp_path / "config.yaml"
+        with open(config_file, "w") as f:
+            yaml.dump({"model_list": []}, f)
+
+        cleaner = UnifiedModelCleaner(
+            config_path=str(config_file),
+            provider_names=["openrouter"],
+            dry_run=False,
+        )
+        disabled = cleaner.disable_providers(["openrouter"])
+
+        assert disabled == ["openrouter"]
+
+        with open(temp_providers_config, "r") as f:
+            saved = yaml.safe_load(f)
+        assert saved["providers"]["openrouter"]["enabled"] is False
+        assert saved["providers"]["kilo"]["enabled"] is True
+
+    def test_disable_providers_already_disabled(
+        self, tmp_path, temp_providers_config
+    ):
+        """Test disable_providers skips providers already disabled."""
+        from cleanup_models import UnifiedModelCleaner
+
+        # Pre-disable openrouter in the temp config
+        with open(temp_providers_config, "r") as f:
+            providers = yaml.safe_load(f)
+        providers["providers"]["openrouter"]["enabled"] = False
+        with open(temp_providers_config, "w") as f:
+            yaml.dump(providers, f)
+
+        # Re-initialize the singleton so it sees the updated file
+        ProviderConfigLoader.reset()
+        ProviderConfigLoader(temp_providers_config)
+
+        config_file = tmp_path / "config.yaml"
+        with open(config_file, "w") as f:
+            yaml.dump({"model_list": []}, f)
+
+        cleaner = UnifiedModelCleaner(
+            config_path=str(config_file),
+            provider_names=["openrouter"],
+            dry_run=False,
+        )
+        disabled = cleaner.disable_providers(["openrouter"])
+
+        assert disabled == []
+
+    def test_delete_provider_dry_run_preserves_files(
+        self, tmp_path, temp_providers_config
+    ):
+        """Test delete-provider in dry-run mode leaves files unchanged."""
+        from cleanup_models import UnifiedModelCleaner
+
+        config_content = {
+            "model_list": [
+                {
+                    "model_name": "or-model1",
+                    "litellm_params": {"model": "openrouter/anthropic/claude-3"},
+                },
+            ],
+        }
+        config_file = tmp_path / "config.yaml"
+        with open(config_file, "w") as f:
+            yaml.dump(config_content, f)
+
+        cleaner = UnifiedModelCleaner(
+            config_path=str(config_file),
+            provider_names=["openrouter"],
+            dry_run=True,
+        )
+        config = cleaner.load_config()
+        updated_config, removed, details = cleaner.delete_provider_from_config(
+            config, ["openrouter"]
+        )
+        disabled = cleaner.disable_providers(["openrouter"])
+        cleaner.save_config(updated_config)
+
+        assert removed == 1
+        assert disabled == ["openrouter"]
+
+        with open(config_file, "r") as f:
+            saved_config = yaml.safe_load(f)
+        assert len(saved_config["model_list"]) == 1
+
+        with open(temp_providers_config, "r") as f:
+            saved_providers = yaml.safe_load(f)
+        assert saved_providers["providers"]["openrouter"]["enabled"] is True
+
+    def test_delete_provider_cli_errors_for_unknown_provider(
+        self, tmp_path, temp_providers_config
+    ):
+        """Test CLI rejects unknown providers for --delete-provider."""
+        from cleanup_models import main
+
+        config_file = tmp_path / "config.yaml"
+        with open(config_file, "w") as f:
+            yaml.dump({"model_list": []}, f)
+
+        with patch("sys.argv", [
+            "cleanup_models.py",
+            "--provider", "openrouter",
+            "--config", str(config_file),
+            "--delete-provider", "unknown-provider",
+        ]):
+            result = main()
+
+        assert result == 1
 
 
 # ==============================================================================

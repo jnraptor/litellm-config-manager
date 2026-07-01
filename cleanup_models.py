@@ -11,7 +11,9 @@ against their current APIs and:
 5. Supports both regular and embedding models (where applicable)
 6. Supports mapped models for simplified multi-provider addition
 7. Supports deleting models by model_name from the configuration
-8. Prunes ``special_models`` entries in ``providers.yaml`` that are now
+8. Supports deleting providers, removing their models from config.yaml and
+   disabling them in providers.yaml
+9. Prunes ``special_models`` entries in ``providers.yaml`` that are now
    available through the provider's normal models source
 
 Supported providers: openrouter, requesty, vercel, poe, nvidia, kilo, ollama, opencode-zen, opencode-go, all
@@ -22,6 +24,7 @@ Usage:
     python cleanup_models.py --provider requesty --add-model "model1 model2"
     python cleanup_models.py --provider all --add-mapped-model glm-5 [--dry-run]
     python cleanup_models.py --provider all --delete-model "model_name" [--dry-run]
+    python cleanup_models.py --provider all --delete-provider "openrouter" [--dry-run]
 
 Author: Unified script for LiteLLM Config Management
 """
@@ -29,7 +32,7 @@ Author: Unified script for LiteLLM Config Management
 import argparse
 import sys
 import yaml
-from typing import Dict, List, Tuple, Any, Optional
+from typing import Dict, List, Tuple, Any, Optional, Set
 from pathlib import Path
 
 # Import shared utilities from cleanup_base
@@ -376,6 +379,93 @@ class UnifiedModelCleaner:
 
         return config, removed
 
+    def _get_cleaner(self, provider_name: str) -> ConfigDrivenModelCleaner:
+        """Return the cleaner for a provider, creating it on demand if needed."""
+        if provider_name not in self.cleaners:
+            if provider_name == "ollama":
+                self.cleaners[provider_name] = OllamaModelCleaner(
+                    str(self.config_path), self.dry_run, self.verbose
+                )
+            else:
+                self.cleaners[provider_name] = ConfigDrivenModelCleaner(
+                    provider_name, str(self.config_path), self.dry_run, self.verbose
+                )
+        return self.cleaners[provider_name]
+
+    def delete_provider_from_config(
+        self,
+        config: Dict[str, Any],
+        provider_names: List[str],
+    ) -> Tuple[Dict[str, Any], int, Dict[str, int]]:
+        """
+        Remove all model entries that belong to the given providers.
+
+        Uses each provider's configured detection rules (prefix or api_base)
+        to identify matching entries in ``config.yaml``.
+        """
+        model_list = config.get("model_list", [])
+        original_count = len(model_list)
+        indices_to_remove: Set[int] = set()
+        details: Dict[str, int] = {}
+
+        for provider_name in provider_names:
+            cleaner = self._get_cleaner(provider_name)
+            provider_models = cleaner.extract_provider_models(config)
+            indices = {index for index, _, _ in provider_models}
+            indices_to_remove.update(indices)
+            details[provider_name] = len(indices)
+            self.logger.info(
+                f"Found {len(indices)} entry(s) for provider '{provider_name}'"
+            )
+
+        new_model_list = [
+            entry
+            for index, entry in enumerate(model_list)
+            if index not in indices_to_remove
+        ]
+        config["model_list"] = new_model_list
+        removed = original_count - len(new_model_list)
+
+        return config, removed, details
+
+    def disable_providers(
+        self,
+        provider_names: List[str],
+    ) -> List[str]:
+        """
+        Set ``enabled: false`` for the given providers in ``providers.yaml``.
+
+        Honors ``dry_run`` by logging the intended change without writing the
+        file. Returns the list of providers that were actually disabled.
+        """
+        loader = ProviderConfigLoader()
+        disabled: List[str] = []
+
+        for provider_name in provider_names:
+            try:
+                provider_cfg = loader.get_provider_config(provider_name)
+            except ValueError:
+                self.logger.warning(
+                    f"Provider '{provider_name}' not found in providers.yaml"
+                )
+                continue
+
+            if provider_cfg.get("enabled", True) is False:
+                self.logger.info(f"Provider '{provider_name}' is already disabled")
+            else:
+                provider_cfg["enabled"] = False
+                disabled.append(provider_name)
+                self.logger.info(f"Disabled provider '{provider_name}'")
+
+        if disabled and not self.dry_run:
+            loader.save()
+        elif disabled:
+            self.logger.info(
+                f"DRY RUN: Would disable providers: {', '.join(disabled)}"
+            )
+
+        return disabled
+
     def _prune_provider_special_models(
         self,
         provider_name: str,
@@ -454,12 +544,14 @@ def main():
         description="Clean up invalid models, update costs, sort model list, and add new models in LiteLLM configuration",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
- This script performs five main functions:
+ This script performs six main functions:
 1. Sorts the model list alphabetically by model_name
 2. Validates models against the current API and removes invalid entries
 3. Updates model costs when they differ from API pricing
 4. Adds one or more models to the configuration
 5. Deletes models by model_name from the configuration
+6. Deletes providers, removing their models from config.yaml and disabling
+   them in providers.yaml
 
 Supported providers: openrouter, vercel, poe, nvidia, kilo, ollama, fireworks, opencode-zen, opencode-go, all
 
@@ -469,6 +561,7 @@ Examples:
   %(prog)s --provider poe --add-model "model1 model2"      # Add models to poe
   %(prog)s --provider openrouter --dry-run --verbose       # Preview changes
   %(prog)s --provider all --delete-model "model1 model2"   # Delete models by name
+  %(prog)s --provider all --delete-provider openrouter     # Remove OpenRouter models and disable provider
 
 Mapped Model Addition (simplified multi-provider workflow):
   %(prog)s --provider all --add-mapped-model glm-5         # Add glm-5 from all providers
@@ -517,6 +610,14 @@ Mapped Model Addition (simplified multi-provider workflow):
         help="Delete one or more models by model_name from the configuration",
     )
     parser.add_argument(
+        "--delete-provider",
+        nargs="+",
+        help=(
+            "Delete all models for one or more providers from the configuration "
+            "and disable the providers in providers.yaml"
+        ),
+    )
+    parser.add_argument(
         "--validate",
         action="store_true",
         help="Validate config.yaml structure without API calls (offline)",
@@ -529,6 +630,7 @@ Mapped Model Addition (simplified multi-provider workflow):
 
         loader = ProviderConfigLoader()
         available_providers = loader.list_providers()
+        all_providers = loader.list_providers(include_disabled=True)
 
         if args.provider.lower() == "all":
             provider_names = available_providers
@@ -593,6 +695,40 @@ Mapped Model Addition (simplified multi-provider workflow):
             print(f"{'=' * 60}")
             print(f"Requested: {', '.join(args.delete_model)}")
             print(f"Removed: {removed} entries")
+            if args.dry_run:
+                print(f"\nDRY RUN: No actual changes were made")
+            else:
+                print(f"\nConfiguration saved successfully")
+            return 0
+
+        # Handle provider deletion
+        if args.delete_provider:
+            delete_provider_names = [p.lower() for p in args.delete_provider]
+            for provider_name in delete_provider_names:
+                if provider_name not in all_providers:
+                    print(
+                        f"Error: Unknown provider '{provider_name}'. Available: {', '.join(all_providers)}",
+                        file=sys.stderr,
+                    )
+                    return 1
+
+            config = cleaner.load_config()
+            updated_config, removed, details = cleaner.delete_provider_from_config(
+                config, delete_provider_names
+            )
+            disabled = cleaner.disable_providers(delete_provider_names)
+
+            if not args.dry_run:
+                cleaner.save_config(updated_config)
+
+            print(f"\n{'=' * 60}")
+            print(f"Provider Deletion Summary")
+            print(f"{'=' * 60}")
+            for provider_name, count in details.items():
+                print(f"{provider_name}: {count} model entry(s) removed")
+            print(f"\nTotal removed: {removed} entries")
+            print(f"Providers disabled: {', '.join(disabled) if disabled else 'none'}")
+
             if args.dry_run:
                 print(f"\nDRY RUN: No actual changes were made")
             else:
