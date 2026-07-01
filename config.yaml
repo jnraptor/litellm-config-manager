@@ -233,14 +233,6 @@ model_list:
     cache_creation_input_token_cost: 3.75e-06
 - model_name: claude-sonnet-5
   litellm_params:
-    model: poe/claude-sonnet-5
-    order: 4
-    api_key: os.environ/POE_API_KEY
-    input_cost_per_token: 1.7172e-06
-    output_cost_per_token: 8.5859e-06
-    cache_read_input_token_cost: 1.717e-07
-- model_name: claude-sonnet-5
-  litellm_params:
     model: openai/anthropic/claude-sonnet-5
     order: 5
     api_base: https://api.kilo.ai/api/gateway
@@ -1311,10 +1303,3 @@ model_list:
     input_cost_per_token: 2.0e-07
     output_cost_per_token: 1.15e-06
     cache_read_input_token_cost: 4.0e-08
-guardrails:
-- guardrail_name: headroom-compression
-  litellm_params:
-    guardrail: headroom
-    mode: pre_call
-    api_base: http://headroom:8787
-    default_on: false
