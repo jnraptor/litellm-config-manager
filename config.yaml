@@ -1311,3 +1311,10 @@ model_list:
     input_cost_per_token: 2.0e-07
     output_cost_per_token: 1.15e-06
     cache_read_input_token_cost: 4.0e-08
+guardrails:
+  - guardrail_name: headroom-compression
+    litellm_params:
+      guardrail: headroom
+      mode: pre_call
+      api_base: http://headroom:8787
+      default_on: false
