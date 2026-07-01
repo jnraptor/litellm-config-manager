@@ -206,3 +206,13 @@ models:
       openrouter: cohere/north-mini-code:free
       kilo: cohere/north-mini-code:free
       opencode-zen: north-mini-code-free
+  claude-sonnet-5:
+    display_name: claude-sonnet-5
+    description: ''
+    providers:
+      openrouter: anthropic/claude-sonnet-5
+      vercel: anthropic/claude-sonnet-5
+      poe: claude-sonnet-5
+      kilo: anthropic/claude-sonnet-5
+      #opencode-zen: claude-sonnet-5
+      requesty: anthropic/claude-sonnet-5
