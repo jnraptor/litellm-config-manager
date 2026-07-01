@@ -327,9 +327,9 @@ model_list:
   litellm_params:
     model: openrouter/deepseek/deepseek-v4-flash
     order: 5
-    input_cost_per_token: 9.8e-08
-    output_cost_per_token: 1.96e-07
-    cache_read_input_token_cost: 2.0e-08
+    input_cost_per_token: 9.0e-08
+    output_cost_per_token: 1.8e-07
+    cache_read_input_token_cost: 1.8e-08
 - model_name: deepseek-v4-flash
   litellm_params:
     model: vercel_ai_gateway/deepseek/deepseek-v4-flash
@@ -1312,9 +1312,9 @@ model_list:
     output_cost_per_token: 1.15e-06
     cache_read_input_token_cost: 4.0e-08
 guardrails:
-  - guardrail_name: headroom-compression
-    litellm_params:
-      guardrail: headroom
-      mode: pre_call
-      api_base: http://headroom:8787
-      default_on: false
+- guardrail_name: headroom-compression
+  litellm_params:
+    guardrail: headroom
+    mode: pre_call
+    api_base: http://headroom:8787
+    default_on: false
