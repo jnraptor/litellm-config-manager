@@ -43,8 +43,6 @@ from cleanup_base import (
     ModelMappingLoader,
     sort_model_list as base_sort_model_list,
     ValidationReport,
-    ValidationSeverity,
-    ValidationIssue,
     _print_validation_report,
 )
 from dotenv import load_dotenv
@@ -217,7 +215,9 @@ class UnifiedModelCleaner:
                 if was_sorted or invalid_models or cost_changes or order_changed:
                     self.save_config(config)
 
-            cleaner.generate_report(invalid_models, cost_changes, was_sorted, order_changed)
+            cleaner.generate_report(
+                invalid_models, cost_changes, was_sorted, order_changed
+            )
 
             models_removed = len(invalid_models)
             models_updated = len(cost_changes)
@@ -363,7 +363,8 @@ class UnifiedModelCleaner:
         model_names_set = set(model_names)
 
         new_model_list = [
-            entry for entry in model_list
+            entry
+            for entry in model_list
             if entry.get("model_name") not in model_names_set
         ]
 
@@ -460,9 +461,7 @@ class UnifiedModelCleaner:
         if disabled and not self.dry_run:
             loader.save()
         elif disabled:
-            self.logger.info(
-                f"DRY RUN: Would disable providers: {', '.join(disabled)}"
-            )
+            self.logger.info(f"DRY RUN: Would disable providers: {', '.join(disabled)}")
 
         return disabled
 
@@ -508,7 +507,9 @@ class UnifiedModelCleaner:
             )
         return removed
 
-    def validate_config(self, config: Optional[Dict[str, Any]] = None) -> ValidationReport:
+    def validate_config(
+        self, config: Optional[Dict[str, Any]] = None
+    ) -> ValidationReport:
         """
         Validate config.yaml structure without API calls (offline).
 
@@ -691,14 +692,14 @@ Mapped Model Addition (simplified multi-provider workflow):
             if not args.dry_run:
                 cleaner.save_config(config)
             print(f"\n{'=' * 60}")
-            print(f"Model Deletion Summary")
+            print("Model Deletion Summary")
             print(f"{'=' * 60}")
             print(f"Requested: {', '.join(args.delete_model)}")
             print(f"Removed: {removed} entries")
             if args.dry_run:
-                print(f"\nDRY RUN: No actual changes were made")
+                print("\nDRY RUN: No actual changes were made")
             else:
-                print(f"\nConfiguration saved successfully")
+                print("\nConfiguration saved successfully")
             return 0
 
         # Handle provider deletion
@@ -722,7 +723,7 @@ Mapped Model Addition (simplified multi-provider workflow):
                 cleaner.save_config(updated_config)
 
             print(f"\n{'=' * 60}")
-            print(f"Provider Deletion Summary")
+            print("Provider Deletion Summary")
             print(f"{'=' * 60}")
             for provider_name, count in details.items():
                 print(f"{provider_name}: {count} model entry(s) removed")
@@ -730,9 +731,9 @@ Mapped Model Addition (simplified multi-provider workflow):
             print(f"Providers disabled: {', '.join(disabled) if disabled else 'none'}")
 
             if args.dry_run:
-                print(f"\nDRY RUN: No actual changes were made")
+                print("\nDRY RUN: No actual changes were made")
             else:
-                print(f"\nConfiguration saved successfully")
+                print("\nConfiguration saved successfully")
             return 0
 
         # Handle mapped model addition
@@ -764,7 +765,7 @@ Mapped Model Addition (simplified multi-provider workflow):
                         print(f"  - {msg}")
 
             if args.dry_run:
-                print(f"\nDRY RUN: No actual changes were made")
+                print("\nDRY RUN: No actual changes were made")
             else:
                 print(f"\n✅ Total models added: {total_added}")
 
@@ -784,13 +785,13 @@ Mapped Model Addition (simplified multi-provider workflow):
             print(f"Total changes: {len(changes_made)}")
 
             if changes_made:
-                print(f"\nChanges made:")
+                print("\nChanges made:")
                 for change in changes_made:
                     print(f"  - {change}")
         else:
             results = cleaner.cleanup_all_providers(add_models, args.model_name)
 
-            print(f"\nSummary for all providers:")
+            print("\nSummary for all providers:")
             total_removed = 0
             total_updated = 0
             total_changes = 0
@@ -806,17 +807,17 @@ Mapped Model Addition (simplified multi-provider workflow):
                 total_changes += len(changes)
 
                 if changes:
-                    print(f"  Details:")
+                    print("  Details:")
                     for change in changes:
                         print(f"    - {change}")
 
-            print(f"\nOverall Summary:")
+            print("\nOverall Summary:")
             print(f"Total models removed: {total_removed}")
             print(f"Total models updated: {total_updated}")
             print(f"Total changes: {total_changes}")
 
         if args.dry_run:
-            print(f"\nDRY RUN: No actual changes were made")
+            print("\nDRY RUN: No actual changes were made")
 
         return 0
 
