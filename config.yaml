@@ -1074,12 +1074,6 @@ model_list:
     mode: embedding
 - model_name: nvidia-nemotron-3-nano-omni
   litellm_params:
-    model: nvidia_nim/nvidia/nemotron-3-nano-omni-30b-a3b-reasoning
-    order: 3
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
-- model_name: nvidia-nemotron-3-nano-omni
-  litellm_params:
     model: openai/nvidia/nemotron-3-nano-omni-30b-a3b-reasoning
     order: 3
     api_base: https://router.requesty.ai/v1
@@ -1303,4 +1297,4 @@ guardrails:
     guardrail: headroom
     mode: pre_call
     api_base: http://headroom:8787
-    default_on: false
+    default_on: true
