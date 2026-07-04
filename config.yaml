@@ -531,9 +531,9 @@ model_list:
   litellm_params:
     model: openrouter/z-ai/glm-5.2
     order: 5
-    input_cost_per_token: 9.3e-07
-    output_cost_per_token: 3.0e-06
-    cache_read_input_token_cost: 1.8e-07
+    input_cost_per_token: 7.7e-07
+    output_cost_per_token: 2.42e-06
+    cache_read_input_token_cost: 1.43e-07
 - model_name: glm-5.2
   litellm_params:
     model: vercel_ai_gateway/zai/glm-5.2
@@ -954,8 +954,8 @@ model_list:
     order: 4
     rpm: 50
     tpm: 25000
-    input_cost_per_token: 4.0000000000000003e-07
-    output_cost_per_token: 2.0e-06
+    input_cost_per_token: 1.5e-06
+    output_cost_per_token: 7.5e-06
 - litellm_params:
     api_base: os.environ/AZURE_AI_API_BASE_EASTUS
     api_key: os.environ/AZURE_AI_API_KEY_EASTUS
@@ -1304,5 +1304,5 @@ guardrails:
   litellm_params:
     guardrail: headroom
     mode: pre_call
-    api_base: http://headroom:8787
+    api_base: http://10.10.1.1:8787
     default_on: true
