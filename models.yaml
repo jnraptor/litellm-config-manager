@@ -214,5 +214,10 @@ models:
       vercel: anthropic/claude-sonnet-5
       poe: claude-sonnet-5
       kilo: anthropic/claude-sonnet-5
-      #opencode-zen: claude-sonnet-5
       requesty: anthropic/claude-sonnet-5
+  tencent-hy3:
+    display_name: tencent-hy3
+    description: ''
+    providers:
+      openrouter: tencent/hy3
+      kilo: tencent/hy3
