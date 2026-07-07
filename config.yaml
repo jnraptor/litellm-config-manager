@@ -440,7 +440,7 @@ model_list:
     api_key: os.environ/FIREWORKS_AI_API_KEY
     input_cost_per_token: 1.4e-06
     output_cost_per_token: 4.4e-06
-    cache_read_input_token_cost: 2.6e-07
+    cache_read_input_token_cost: 1.4e-07
 - model_name: glm-5.2
   litellm_params:
     model: poe/glm-5.2
@@ -471,9 +471,9 @@ model_list:
   litellm_params:
     model: openrouter/z-ai/glm-5.2
     order: 5
-    input_cost_per_token: 9.0e-07
-    output_cost_per_token: 2.86e-06
-    cache_read_input_token_cost: 1.7e-07
+    input_cost_per_token: 9.3e-07
+    output_cost_per_token: 3.0e-06
+    cache_read_input_token_cost: 1.8e-07
 - model_name: gpt-5-nano
   litellm_params:
     model: openai/gpt-5-nano
