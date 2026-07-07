@@ -531,9 +531,9 @@ model_list:
   litellm_params:
     model: openrouter/z-ai/glm-5.2
     order: 5
-    input_cost_per_token: 9.086e-07
-    output_cost_per_token: 2.8556e-06
-    cache_read_input_token_cost: 1.6874e-07
+    input_cost_per_token: 9.0e-07
+    output_cost_per_token: 2.86e-06
+    cache_read_input_token_cost: 1.7e-07
 - model_name: glm-5.2
   litellm_params:
     model: vercel_ai_gateway/zai/glm-5.2
@@ -1321,16 +1321,16 @@ model_list:
     order: 5
     api_base: https://api.kilo.ai/api/gateway
     api_key: os.environ/KILO_API_KEY
-    input_cost_per_token: 1.4e-07
-    output_cost_per_token: 5.8e-07
-    cache_read_input_token_cost: 3.5e-08
+    input_cost_per_token: 2.0e-07
+    output_cost_per_token: 8.0e-07
+    cache_read_input_token_cost: 5.0e-07
 - model_name: tencent-hy3
   litellm_params:
     model: openrouter/tencent/hy3
     order: 5
-    input_cost_per_token: 1.4e-07
-    output_cost_per_token: 5.8e-07
-    cache_read_input_token_cost: 3.5e-08
+    input_cost_per_token: 2.0e-07
+    output_cost_per_token: 8.0e-07
+    cache_read_input_token_cost: 5.0e-07
 guardrails:
 - guardrail_name: headroom-compression
   litellm_params:
