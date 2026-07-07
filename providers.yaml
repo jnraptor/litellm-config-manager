@@ -65,6 +65,7 @@ providers:
     api_base_config: null
     api_key_env: null
     order: 5
+    enabled: false
   poe:
     name: Poe
     description: Poe model provider

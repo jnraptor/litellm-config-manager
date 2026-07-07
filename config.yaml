@@ -114,14 +114,6 @@ model_list:
     cache_read_input_token_cost: 1.0e-07
     cache_creation_input_token_cost: 1.25e-06
   model_name: claude-haiku-4-5
-- model_name: claude-haiku-4-5
-  litellm_params:
-    model: vercel_ai_gateway/anthropic/claude-haiku-4.5
-    order: 5
-    input_cost_per_token: 1.0e-06
-    output_cost_per_token: 5.0e-06
-    cache_read_input_token_cost: 1.0e-07
-    cache_creation_input_token_cost: 1.25e-06
 - model_name: claude-opus-4-8
   litellm_params:
     model: poe/claude-opus-4.8
@@ -164,14 +156,6 @@ model_list:
 - model_name: claude-opus-4-8
   litellm_params:
     model: openrouter/anthropic/claude-opus-4.8
-    order: 5
-    input_cost_per_token: 5.0e-06
-    output_cost_per_token: 2.5e-05
-    cache_read_input_token_cost: 5.0e-07
-    cache_creation_input_token_cost: 6.25e-06
-- model_name: claude-opus-4-8
-  litellm_params:
-    model: vercel_ai_gateway/anthropic/claude-opus-4.8
     order: 5
     input_cost_per_token: 5.0e-06
     output_cost_per_token: 2.5e-05
@@ -224,14 +208,6 @@ model_list:
     output_cost_per_token: 1.5e-05
     cache_read_input_token_cost: 3.0e-07
     cache_creation_input_token_cost: 3.75e-06
-- model_name: claude-sonnet-4-6
-  litellm_params:
-    model: vercel_ai_gateway/anthropic/claude-sonnet-4.6
-    order: 5
-    input_cost_per_token: 3.0e-06
-    output_cost_per_token: 1.5e-05
-    cache_read_input_token_cost: 3.0e-07
-    cache_creation_input_token_cost: 3.75e-06
 - model_name: claude-sonnet-5
   litellm_params:
     model: openai/anthropic/claude-sonnet-5
@@ -255,14 +231,6 @@ model_list:
 - model_name: claude-sonnet-5
   litellm_params:
     model: openrouter/anthropic/claude-sonnet-5
-    order: 5
-    input_cost_per_token: 2.0e-06
-    output_cost_per_token: 1.0e-05
-    cache_creation_input_token_cost: 2.5e-06
-    cache_read_input_token_cost: 2.0e-07
-- model_name: claude-sonnet-5
-  litellm_params:
-    model: vercel_ai_gateway/anthropic/claude-sonnet-5
     order: 5
     input_cost_per_token: 2.0e-06
     output_cost_per_token: 1.0e-05
@@ -323,13 +291,6 @@ model_list:
     input_cost_per_token: 9.0e-08
     output_cost_per_token: 1.8e-07
     cache_read_input_token_cost: 1.8e-08
-- model_name: deepseek-v4-flash
-  litellm_params:
-    model: vercel_ai_gateway/deepseek/deepseek-v4-flash
-    order: 5
-    input_cost_per_token: 1.4e-07
-    output_cost_per_token: 2.8e-07
-    cache_read_input_token_cost: 2.8e-09
 - model_name: deepseek-v4-pro
   litellm_params:
     model: openai/deepseek-v4-pro
@@ -376,13 +337,6 @@ model_list:
     input_cost_per_token: 4.35e-07
     output_cost_per_token: 8.7e-07
     cache_read_input_token_cost: 3.625e-09
-- model_name: deepseek-v4-pro
-  litellm_params:
-    model: vercel_ai_gateway/deepseek/deepseek-v4-pro
-    order: 5
-    input_cost_per_token: 4.35e-07
-    output_cost_per_token: 8.7e-07
-    cache_read_input_token_cost: 3.6e-09
 - model_name: gemini-3.5-flash
   litellm_params:
     model: poe/gemini-3.5-flash
@@ -409,13 +363,6 @@ model_list:
     output_cost_per_token: 9.0e-06
     cache_read_input_token_cost: 1.5e-07
     cache_creation_input_token_cost: 8.333333333333334e-08
-- model_name: gemini-3.5-flash
-  litellm_params:
-    model: vercel_ai_gateway/google/gemini-3.5-flash
-    order: 5
-    input_cost_per_token: 1.5e-06
-    output_cost_per_token: 9.0e-06
-    cache_read_input_token_cost: 1.5e-07
 - model_name: gemma-4-31b
   litellm_params:
     model: openai/google/gemma-4-31b-it
@@ -471,13 +418,6 @@ model_list:
     input_cost_per_token: 9.66e-07
     output_cost_per_token: 3.036e-06
     cache_read_input_token_cost: 1.794e-07
-- model_name: glm-5.1
-  litellm_params:
-    model: vercel_ai_gateway/zai/glm-5.1
-    order: 5
-    input_cost_per_token: 1.3e-06
-    output_cost_per_token: 4.3e-06
-    cache_read_input_token_cost: 2.6e-07
 - model_name: glm-5.2
   litellm_params:
     model: openai/glm-5.2
@@ -534,13 +474,6 @@ model_list:
     input_cost_per_token: 9.0e-07
     output_cost_per_token: 2.86e-06
     cache_read_input_token_cost: 1.7e-07
-- model_name: glm-5.2
-  litellm_params:
-    model: vercel_ai_gateway/zai/glm-5.2
-    order: 5
-    input_cost_per_token: 1.4e-06
-    output_cost_per_token: 4.4e-06
-    cache_read_input_token_cost: 2.6e-07
 - model_name: gpt-5-nano
   litellm_params:
     model: openai/gpt-5-nano
@@ -734,13 +667,6 @@ model_list:
     input_cost_per_token: 7.4e-07
     output_cost_per_token: 3.5e-06
     cache_read_input_token_cost: 1.5e-07
-- model_name: kimi-k2.7
-  litellm_params:
-    model: vercel_ai_gateway/moonshotai/kimi-k2.7-code
-    order: 5
-    input_cost_per_token: 9.5e-07
-    output_cost_per_token: 4.0e-06
-    cache_read_input_token_cost: 1.9e-07
 - litellm_params:
     model: openai/Gemma-4-E2B
     api_base: os.environ/LLAMA_API_BASE
@@ -788,13 +714,6 @@ model_list:
     input_cost_per_token: 1.05e-07
     output_cost_per_token: 2.8e-07
     cache_read_input_token_cost: 2.8e-08
-- model_name: mimo-v2.5
-  litellm_params:
-    model: vercel_ai_gateway/xiaomi/mimo-v2.5
-    order: 5
-    input_cost_per_token: 1.4e-07
-    output_cost_per_token: 2.8e-07
-    cache_read_input_token_cost: 2.8e-09
 - model_name: mimo-v2.5-pro
   litellm_params:
     model: openai/mimo-v2.5-pro
@@ -823,13 +742,6 @@ model_list:
 - model_name: mimo-v2.5-pro
   litellm_params:
     model: openrouter/xiaomi/mimo-v2.5-pro
-    order: 5
-    input_cost_per_token: 4.35e-07
-    output_cost_per_token: 8.7e-07
-    cache_read_input_token_cost: 3.6e-09
-- model_name: mimo-v2.5-pro
-  litellm_params:
-    model: vercel_ai_gateway/xiaomi/mimo-v2.5-pro
     order: 5
     input_cost_per_token: 4.35e-07
     output_cost_per_token: 8.7e-07
@@ -872,14 +784,6 @@ model_list:
     order: 5
     input_cost_per_token: 1.8e-07
     output_cost_per_token: 7.2e-07
-- model_name: minimax-m2.7
-  litellm_params:
-    model: vercel_ai_gateway/minimax/minimax-m2.7
-    order: 5
-    input_cost_per_token: 3.0e-07
-    output_cost_per_token: 1.2e-06
-    cache_read_input_token_cost: 6.0e-08
-    cache_creation_input_token_cost: 3.75e-07
 - model_name: minimax-m3
   litellm_params:
     model: anthropic/minimax-m3
@@ -932,13 +836,6 @@ model_list:
 - model_name: minimax-m3
   litellm_params:
     model: openrouter/minimax/minimax-m3
-    order: 5
-    input_cost_per_token: 3.0e-07
-    output_cost_per_token: 1.2e-06
-    cache_read_input_token_cost: 6.0e-08
-- model_name: minimax-m3
-  litellm_params:
-    model: vercel_ai_gateway/minimax/minimax-m3
     order: 5
     input_cost_per_token: 3.0e-07
     output_cost_per_token: 1.2e-06
@@ -1187,14 +1084,6 @@ model_list:
     output_cost_per_token: 3.75e-06
     cache_read_input_token_cost: 2.5e-07
     cache_creation_input_token_cost: 1.5625e-06
-- model_name: qwen3.7-max
-  litellm_params:
-    model: vercel_ai_gateway/alibaba/qwen3.7-max
-    order: 5
-    input_cost_per_token: 1.25e-06
-    output_cost_per_token: 3.75e-06
-    cache_read_input_token_cost: 2.5e-07
-    cache_creation_input_token_cost: 1.5625e-06
 - model_name: qwen3.7-plus
   litellm_params:
     model: anthropic/qwen3.7-plus
@@ -1238,14 +1127,6 @@ model_list:
     output_cost_per_token: 1.28e-06
     cache_read_input_token_cost: 6.4e-08
     cache_creation_input_token_cost: 4.0e-07
-- model_name: qwen3.7-plus
-  litellm_params:
-    model: vercel_ai_gateway/alibaba/qwen3.7-plus
-    order: 5
-    input_cost_per_token: 4.0e-07
-    output_cost_per_token: 1.6e-06
-    cache_read_input_token_cost: 8.0e-08
-    cache_creation_input_token_cost: 5.0e-07
 - model_name: smart_router_1
   litellm_params:
     model: auto_router/complexity_router
@@ -1290,13 +1171,6 @@ model_list:
 - model_name: step-3.7-flash
   litellm_params:
     model: openrouter/stepfun/step-3.7-flash
-    order: 5
-    input_cost_per_token: 2.0e-07
-    output_cost_per_token: 1.15e-06
-    cache_read_input_token_cost: 4.0e-08
-- model_name: step-3.7-flash
-  litellm_params:
-    model: vercel_ai_gateway/stepfun/step-3.7-flash
     order: 5
     input_cost_per_token: 2.0e-07
     output_cost_per_token: 1.15e-06
