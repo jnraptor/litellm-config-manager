@@ -408,7 +408,7 @@ model_list:
     order: 5
     api_base: https://api.kilo.ai/api/gateway
     api_key: os.environ/KILO_API_KEY
-    input_cost_per_token: 1.4e-06
+    input_cost_per_token: 1.38e-06
     output_cost_per_token: 4.4e-06
     cache_read_input_token_cost: 2.6e-07
 - model_name: glm-5.1
@@ -471,9 +471,9 @@ model_list:
   litellm_params:
     model: openrouter/z-ai/glm-5.2
     order: 5
-    input_cost_per_token: 8.498e-07
-    output_cost_per_token: 2.6708e-06
-    cache_read_input_token_cost: 1.5782e-07
+    input_cost_per_token: 9.156e-07
+    output_cost_per_token: 2.8776e-06
+    cache_read_input_token_cost: 1.7004e-07
 - model_name: gpt-5-nano
   litellm_params:
     model: openai/gpt-5-nano
@@ -623,9 +623,9 @@ model_list:
   litellm_params:
     model: openrouter/moonshotai/kimi-k2.6
     order: 5
-    input_cost_per_token: 6.6e-07
-    output_cost_per_token: 3.41e-06
-    cache_read_input_token_cost: 1.44e-07
+    input_cost_per_token: 9.5e-07
+    output_cost_per_token: 4.0e-06
+    cache_read_input_token_cost: 1.6e-07
 - model_name: kimi-k2.7
   litellm_params:
     model: openai/kimi-k2.7-code
@@ -664,9 +664,9 @@ model_list:
   litellm_params:
     model: openrouter/moonshotai/kimi-k2.7-code
     order: 5
-    input_cost_per_token: 7.19e-07
-    output_cost_per_token: 3.49e-06
-    cache_read_input_token_cost: 1.49e-07
+    input_cost_per_token: 7.5e-07
+    output_cost_per_token: 3.5e-06
+    cache_read_input_token_cost: 1.6e-07
 - litellm_params:
     model: openai/Gemma-4-E2B
     api_base: os.environ/LLAMA_API_BASE
