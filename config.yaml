@@ -290,7 +290,7 @@ model_list:
     order: 5
     input_cost_per_token: 9.8e-08
     output_cost_per_token: 1.96e-07
-    cache_read_input_token_cost: 2.0e-08
+    cache_read_input_token_cost: 1.96e-08
 - model_name: deepseek-v4-pro
   litellm_params:
     model: openai/deepseek-v4-pro
@@ -471,9 +471,9 @@ model_list:
   litellm_params:
     model: openrouter/z-ai/glm-5.2
     order: 5
-    input_cost_per_token: 9.156e-07
-    output_cost_per_token: 2.8776e-06
-    cache_read_input_token_cost: 1.7004e-07
+    input_cost_per_token: 8.974e-07
+    output_cost_per_token: 2.8204e-06
+    cache_read_input_token_cost: 1.6666e-07
 - model_name: gpt-5-nano
   litellm_params:
     model: openai/gpt-5-nano
@@ -573,6 +573,47 @@ model_list:
   model_info:
     base_model: azure/gpt-image-2
     mode: image_generation
+- model_name: grok-4.5
+  litellm_params:
+    model: openai/grok-4.5
+    order: 1
+    input_cost_per_token: 2.0e-06
+    output_cost_per_token: 6.0e-06
+    cache_read_input_token_cost: 5.0e-07
+- model_name: grok-4.5
+  litellm_params:
+    model: poe/grok-4.5
+    order: 4
+    api_key: os.environ/POE_API_KEY
+    input_cost_per_token: 2.0202e-06
+    output_cost_per_token: 6.0606e-06
+    cache_read_input_token_cost: 5.051e-07
+- model_name: grok-4.5
+  litellm_params:
+    model: openai/x-ai/grok-4.5
+    order: 5
+    api_base: https://api.kilo.ai/api/gateway
+    api_key: os.environ/KILO_API_KEY
+    input_cost_per_token: 2.0e-06
+    output_cost_per_token: 6.0e-06
+    cache_read_input_token_cost: 5.0e-07
+- model_name: grok-4.5
+  litellm_params:
+    model: openai/xai/grok-4.5
+    order: 5
+    api_base: https://router.requesty.ai/v1
+    api_key: os.environ/REQUESTY_API_KEY
+    input_cost_per_token: 2.0e-06
+    output_cost_per_token: 6.0e-06
+    cache_creation_input_token_cost: 2.0e-06
+    cache_read_input_token_cost: 5.0e-07
+- model_name: grok-4.5
+  litellm_params:
+    model: openrouter/x-ai/grok-4.5
+    order: 5
+    input_cost_per_token: 2.0e-06
+    output_cost_per_token: 6.0e-06
+    cache_read_input_token_cost: 5.0e-07
 - model_name: jina-embeddings-v4
   litellm_params:
     model: jina_ai/jina-embeddings-v4
@@ -667,6 +708,39 @@ model_list:
     input_cost_per_token: 7.5e-07
     output_cost_per_token: 3.5e-06
     cache_read_input_token_cost: 1.6e-07
+- model_name: kimi-k3
+  litellm_params:
+    model: openai/kimi-k3
+    order: 1
+    input_cost_per_token: 3.0e-06
+    output_cost_per_token: 1.5e-05
+    cache_read_input_token_cost: 3.0e-07
+- model_name: kimi-k3
+  litellm_params:
+    model: openai/moonshot/kimi-k3
+    order: 5
+    api_base: https://router.requesty.ai/v1
+    api_key: os.environ/REQUESTY_API_KEY
+    input_cost_per_token: 3.0e-06
+    output_cost_per_token: 1.5e-05
+    cache_creation_input_token_cost: 1.5e-05
+    cache_read_input_token_cost: 3.0e-07
+- model_name: kimi-k3
+  litellm_params:
+    model: openai/moonshotai/kimi-k3
+    order: 5
+    api_base: https://api.kilo.ai/api/gateway
+    api_key: os.environ/KILO_API_KEY
+    input_cost_per_token: 3.0e-06
+    output_cost_per_token: 1.5e-05
+    cache_read_input_token_cost: 3.0e-07
+- model_name: kimi-k3
+  litellm_params:
+    model: openrouter/moonshotai/kimi-k3
+    order: 5
+    input_cost_per_token: 3.0e-06
+    output_cost_per_token: 1.5e-05
+    cache_read_input_token_cost: 3.0e-07
 - litellm_params:
     model: openai/Gemma-4-E2B
     api_base: os.environ/LLAMA_API_BASE
@@ -782,9 +856,9 @@ model_list:
   litellm_params:
     model: openrouter/minimax/minimax-m2.7
     order: 5
-    input_cost_per_token: 3.0e-07
-    output_cost_per_token: 1.2e-06
-    cache_read_input_token_cost: 6.0e-08
+    input_cost_per_token: 2.5e-07
+    output_cost_per_token: 1.0e-06
+    cache_read_input_token_cost: 5.0e-08
 - model_name: minimax-m3
   litellm_params:
     model: anthropic/minimax-m3
