@@ -471,9 +471,9 @@ model_list:
   litellm_params:
     model: openrouter/z-ai/glm-5.2
     order: 5
-    input_cost_per_token: 1.218e-06
-    output_cost_per_token: 3.828e-06
-    cache_read_input_token_cost: 2.262e-07
+    input_cost_per_token: 9.436e-07
+    output_cost_per_token: 2.9656e-06
+    cache_read_input_token_cost: 1.7524e-07
 - model_name: gpt-5-nano
   litellm_params:
     model: openai/gpt-5-nano
@@ -584,6 +584,21 @@ model_list:
     input_cost_per_token: 2.0e-06
     output_cost_per_token: 6.0e-06
     cache_read_input_token_cost: 5.0e-07
+- model_name: inkling
+  litellm_params:
+    model: nvidia_nim/thinkingmachines/inkling
+    order: 3
+    input_cost_per_token: 1.0e-09
+    output_cost_per_token: 1.0e-09
+- model_name: inkling
+  litellm_params:
+    model: openai/thinkingmachines/inkling-256k
+    order: 5
+    api_base: https://router.requesty.ai/v1
+    api_key: os.environ/REQUESTY_API_KEY
+    input_cost_per_token: 1.87e-06
+    output_cost_per_token: 4.68e-06
+    cache_read_input_token_cost: 3.74e-07
 - model_name: jina-embeddings-v4
   litellm_params:
     model: jina_ai/jina-embeddings-v4

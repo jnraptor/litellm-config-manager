@@ -238,3 +238,9 @@ models:
       kilo: x-ai/grok-4.5
       opencode-go: grok-4.5
       requesty: xai/grok-4.5
+  inkling:
+    display_name: inkling
+    description: ''
+    providers:
+      nvidia: thinkingmachines/inkling
+      requesty: thinkingmachines/inkling
