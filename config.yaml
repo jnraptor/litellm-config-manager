@@ -471,9 +471,9 @@ model_list:
   litellm_params:
     model: openrouter/z-ai/glm-5.2
     order: 5
-    input_cost_per_token: 8.974e-07
-    output_cost_per_token: 2.8204e-06
-    cache_read_input_token_cost: 1.6666e-07
+    input_cost_per_token: 1.218e-06
+    output_cost_per_token: 3.828e-06
+    cache_read_input_token_cost: 2.262e-07
 - model_name: gpt-5-nano
   litellm_params:
     model: openai/gpt-5-nano
@@ -493,13 +493,6 @@ model_list:
   model_name: gpt-5-nano
   model_info:
     base_model: azure/gpt-5-nano
-- model_name: gpt-5.4
-  litellm_params:
-    model: openai/gpt-5.4-2026-03-05
-    api_key: os.environ/OPENAI_API_KEY
-    order: 4
-    rpm: 500
-    tpm: 500000
 - model_name: gpt-5.4-mini
   litellm_params:
     model: openai/gpt-5.4-mini-2026-03-17
@@ -538,29 +531,6 @@ model_list:
   model_name: gpt-5.4-nano
   model_info:
     base_model: azure/gpt-5.4-nano
-- model_name: gpt-5.5
-  litellm_params:
-    model: openai/gpt-5.5-2026-04-23
-    api_key: os.environ/OPENAI_API_KEY
-    order: 4
-    rpm: 500
-    tpm: 500000
-- model_name: gpt-image-1-mini
-  litellm_params:
-    model: openai/gpt-image-1-mini
-    api_key: os.environ/OPENAI_API_KEY
-    order: 4
-    tpm: 100000
-  model_info:
-    mode: image_generation
-- model_name: gpt-image-2
-  litellm_params:
-    model: openai/gpt-image-2-2026-04-21
-    api_key: os.environ/OPENAI_API_KEY
-    order: 4
-    tpm: 100000
-  model_info:
-    mode: image_generation
 - litellm_params:
     api_base: os.environ/AZURE_OPENAI_API_BASE
     api_key: os.environ/AZURE_OPENAI_API_KEY
