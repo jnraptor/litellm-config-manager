@@ -144,7 +144,7 @@ providers:
       api_key_env: KILO_API_KEY
     api_key_env: KILO_API_KEY
     free_variant_suffix: :free
-    order: 5
+    order: 4
   ollama:
     name: Ollama
     description: Ollama model provider for local and hosted models

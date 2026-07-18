@@ -246,4 +246,4 @@ models:
       poe: inkling
       nvidia: thinkingmachines/inkling
       kilo: thinkingmachines/inkling
-      requesty: thinkingmachines/inkling
+      requesty: thinkingmachines/inkling-256k
