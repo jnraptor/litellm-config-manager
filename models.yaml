@@ -242,5 +242,8 @@ models:
     display_name: inkling
     description: ''
     providers:
+      openrouter: thinkingmachines/inkling
+      poe: inkling
       nvidia: thinkingmachines/inkling
+      kilo: thinkingmachines/inkling
       requesty: thinkingmachines/inkling
