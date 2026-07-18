@@ -398,7 +398,7 @@
 - model_name: qwen3.7-max
   litellm_params:
     model: openai/qwen/qwen3.7-max
-    order: 5
+    order: 4
     api_base: https://api.kilo.ai/api/gateway
     api_key: os.environ/KILO_API_KEY
     input_cost_per_token: 1.25e-06
