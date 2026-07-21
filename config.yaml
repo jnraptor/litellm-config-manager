@@ -254,9 +254,9 @@ model_list:
   litellm_params:
     model: openrouter/deepseek/deepseek-v4-flash
     order: 5
-    input_cost_per_token: 9.8e-08
-    output_cost_per_token: 1.96e-07
-    cache_read_input_token_cost: 1.96e-08
+    input_cost_per_token: 9.38e-08
+    output_cost_per_token: 1.876e-07
+    cache_read_input_token_cost: 1.876e-08
 - model_name: deepseek-v4-pro
   litellm_params:
     model: openai/deepseek-v4-pro
@@ -407,9 +407,9 @@ model_list:
   litellm_params:
     model: openrouter/z-ai/glm-5.2
     order: 5
-    input_cost_per_token: 9.464e-07
-    output_cost_per_token: 2.9744e-06
-    cache_read_input_token_cost: 1.7576e-07
+    input_cost_per_token: 7.91e-07
+    output_cost_per_token: 2.486e-06
+    cache_read_input_token_cost: 1.469e-07
 - litellm_params:
     api_base: os.environ/AZURE_OPENAI_API_BASE
     api_key: os.environ/AZURE_OPENAI_API_KEY
@@ -1035,34 +1035,20 @@ model_list:
     cache_read_input_token_cost: 4.0e-08
 - model_name: tencent-hy3
   litellm_params:
-    model: openai/tencent/hy3:free
-    order: 3
-    api_base: https://api.kilo.ai/api/gateway
-    api_key: os.environ/KILO_API_KEY
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
-- model_name: tencent-hy3
-  litellm_params:
-    model: openrouter/tencent/hy3:free
-    order: 3
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
-- model_name: tencent-hy3
-  litellm_params:
     model: openai/tencent/hy3
     order: 4
     api_base: https://api.kilo.ai/api/gateway
     api_key: os.environ/KILO_API_KEY
-    input_cost_per_token: 1.32e-07
-    output_cost_per_token: 5.28e-07
-    cache_read_input_token_cost: 3.3e-08
+    input_cost_per_token: 1.4e-07
+    output_cost_per_token: 5.8e-07
+    cache_read_input_token_cost: 3.5e-08
 - model_name: tencent-hy3
   litellm_params:
     model: openrouter/tencent/hy3
     order: 5
-    input_cost_per_token: 2.0e-07
-    output_cost_per_token: 8.0e-07
-    cache_read_input_token_cost: 5.0e-08
+    input_cost_per_token: 1.4e-07
+    output_cost_per_token: 5.8e-07
+    cache_read_input_token_cost: 3.5e-08
 guardrails:
 - guardrail_name: headroom-compression
   litellm_params:
