@@ -407,9 +407,9 @@ model_list:
   litellm_params:
     model: openrouter/z-ai/glm-5.2
     order: 5
-    input_cost_per_token: 8.246e-07
-    output_cost_per_token: 2.5916e-06
-    cache_read_input_token_cost: 1.5314e-07
+    input_cost_per_token: 8.218e-07
+    output_cost_per_token: 2.5828e-06
+    cache_read_input_token_cost: 1.5262e-07
 - litellm_params:
     api_base: os.environ/AZURE_OPENAI_API_BASE
     api_key: os.environ/AZURE_OPENAI_API_KEY
