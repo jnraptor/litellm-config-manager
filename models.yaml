@@ -247,3 +247,10 @@ models:
       nvidia: thinkingmachines/inkling
       kilo: thinkingmachines/inkling
       requesty: thinkingmachines/inkling-256k
+  laguna-s-2.1:
+    display_name: laguna-s-2.1
+    description: ''
+    providers:
+      openrouter: poolside/laguna-s-2.1
+      kilo: poolside/laguna-s-2.1
+      opencode-zen: laguna-s-2.1-free

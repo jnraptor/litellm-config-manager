@@ -247,16 +247,16 @@ model_list:
     order: 4
     api_base: https://api.kilo.ai/api/gateway
     api_key: os.environ/KILO_API_KEY
-    input_cost_per_token: 2.0e-07
-    output_cost_per_token: 4.0e-07
-    cache_read_input_token_cost: 4.0e-08
+    input_cost_per_token: 9.0e-08
+    output_cost_per_token: 1.8e-07
+    cache_read_input_token_cost: 1.8e-08
 - model_name: deepseek-v4-flash
   litellm_params:
     model: openrouter/deepseek/deepseek-v4-flash
     order: 5
-    input_cost_per_token: 9.38e-08
-    output_cost_per_token: 1.876e-07
-    cache_read_input_token_cost: 1.876e-08
+    input_cost_per_token: 9.8e-08
+    output_cost_per_token: 1.96e-07
+    cache_read_input_token_cost: 1.96e-08
 - model_name: deepseek-v4-pro
   litellm_params:
     model: openai/deepseek-v4-pro
@@ -286,9 +286,9 @@ model_list:
     order: 4
     api_base: https://api.kilo.ai/api/gateway
     api_key: os.environ/KILO_API_KEY
-    input_cost_per_token: 2.4e-06
-    output_cost_per_token: 4.8e-06
-    cache_read_input_token_cost: 2.0e-07
+    input_cost_per_token: 4.35e-07
+    output_cost_per_token: 8.7e-07
+    cache_read_input_token_cost: 3.625e-09
 - model_name: deepseek-v4-pro
   litellm_params:
     model: openrouter/deepseek/deepseek-v4-pro
@@ -407,9 +407,9 @@ model_list:
   litellm_params:
     model: openrouter/z-ai/glm-5.2
     order: 5
-    input_cost_per_token: 7.91e-07
-    output_cost_per_token: 2.486e-06
-    cache_read_input_token_cost: 1.469e-07
+    input_cost_per_token: 8.246e-07
+    output_cost_per_token: 2.5916e-06
+    cache_read_input_token_cost: 1.5314e-07
 - litellm_params:
     api_base: os.environ/AZURE_OPENAI_API_BASE
     api_key: os.environ/AZURE_OPENAI_API_KEY
@@ -641,6 +641,45 @@ model_list:
     input_cost_per_token: 3.0e-06
     output_cost_per_token: 1.5e-05
     cache_read_input_token_cost: 3.0e-07
+- model_name: laguna-s-2.1
+  litellm_params:
+    model: openai/laguna-s-2.1-free
+    order: 3
+    api_base: https://opencode.ai/zen/v1
+    api_key: os.environ/OPENCODE_API_KEY
+    input_cost_per_token: 1.0e-09
+    output_cost_per_token: 1.0e-09
+    cache_read_input_token_cost: 1.0e-09
+- model_name: laguna-s-2.1
+  litellm_params:
+    model: openai/poolside/laguna-s-2.1:free
+    order: 3
+    api_base: https://api.kilo.ai/api/gateway
+    api_key: os.environ/KILO_API_KEY
+    input_cost_per_token: 1.0e-09
+    output_cost_per_token: 1.0e-09
+- model_name: laguna-s-2.1
+  litellm_params:
+    model: openrouter/poolside/laguna-s-2.1:free
+    order: 3
+    input_cost_per_token: 1.0e-09
+    output_cost_per_token: 1.0e-09
+- model_name: laguna-s-2.1
+  litellm_params:
+    model: openai/poolside/laguna-s-2.1
+    order: 4
+    api_base: https://api.kilo.ai/api/gateway
+    api_key: os.environ/KILO_API_KEY
+    input_cost_per_token: 1.0e-07
+    output_cost_per_token: 2.0e-07
+    cache_read_input_token_cost: 1.0e-08
+- model_name: laguna-s-2.1
+  litellm_params:
+    model: openrouter/poolside/laguna-s-2.1
+    order: 5
+    input_cost_per_token: 1.0e-07
+    output_cost_per_token: 2.0e-07
+    cache_read_input_token_cost: 1.0e-08
 - litellm_params:
     model: openai/Gemma-4-E2B
     api_base: os.environ/LLAMA_API_BASE
@@ -1033,22 +1072,6 @@ model_list:
     input_cost_per_token: 2.0e-07
     output_cost_per_token: 1.15e-06
     cache_read_input_token_cost: 4.0e-08
-- model_name: tencent-hy3
-  litellm_params:
-    model: openai/tencent/hy3
-    order: 4
-    api_base: https://api.kilo.ai/api/gateway
-    api_key: os.environ/KILO_API_KEY
-    input_cost_per_token: 1.4e-07
-    output_cost_per_token: 5.8e-07
-    cache_read_input_token_cost: 3.5e-08
-- model_name: tencent-hy3
-  litellm_params:
-    model: openrouter/tencent/hy3
-    order: 5
-    input_cost_per_token: 1.4e-07
-    output_cost_per_token: 5.8e-07
-    cache_read_input_token_cost: 3.5e-08
 guardrails:
 - guardrail_name: headroom-compression
   litellm_params:
