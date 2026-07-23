@@ -247,9 +247,9 @@ model_list:
     order: 4
     api_base: https://api.kilo.ai/api/gateway
     api_key: os.environ/KILO_API_KEY
-    input_cost_per_token: 9.0e-08
-    output_cost_per_token: 1.8e-07
-    cache_read_input_token_cost: 1.8e-08
+    input_cost_per_token: 1.4e-07
+    output_cost_per_token: 2.8e-07
+    cache_read_input_token_cost: 2.8e-08
 - model_name: deepseek-v4-flash
   litellm_params:
     model: openrouter/deepseek/deepseek-v4-flash
@@ -286,9 +286,9 @@ model_list:
     order: 4
     api_base: https://api.kilo.ai/api/gateway
     api_key: os.environ/KILO_API_KEY
-    input_cost_per_token: 4.35e-07
-    output_cost_per_token: 8.7e-07
-    cache_read_input_token_cost: 3.625e-09
+    input_cost_per_token: 1.6e-06
+    output_cost_per_token: 3.2e-06
+    cache_read_input_token_cost: 1.35e-07
 - model_name: deepseek-v4-pro
   litellm_params:
     model: openrouter/deepseek/deepseek-v4-pro
@@ -407,9 +407,9 @@ model_list:
   litellm_params:
     model: openrouter/z-ai/glm-5.2
     order: 5
-    input_cost_per_token: 7.686e-07
-    output_cost_per_token: 2.4156e-06
-    cache_read_input_token_cost: 1.4274e-07
+    input_cost_per_token: 7.896e-07
+    output_cost_per_token: 2.4816e-06
+    cache_read_input_token_cost: 1.4664e-07
 - litellm_params:
     api_base: os.environ/AZURE_OPENAI_API_BASE
     api_key: os.environ/AZURE_OPENAI_API_KEY
