@@ -254,3 +254,11 @@ models:
       openrouter: poolside/laguna-s-2.1
       kilo: poolside/laguna-s-2.1
       opencode-zen: laguna-s-2.1-free
+  hy3:
+    display_name: hy3
+    description: ''
+    providers:
+      openrouter: tencent/hy3
+      kilo: tencent/hy3
+      opencode-go: hy3
+      requesty: novita/tencent/hy3

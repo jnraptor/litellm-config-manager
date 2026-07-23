@@ -407,9 +407,9 @@ model_list:
   litellm_params:
     model: openrouter/z-ai/glm-5.2
     order: 5
-    input_cost_per_token: 8.218e-07
-    output_cost_per_token: 2.5828e-06
-    cache_read_input_token_cost: 1.5262e-07
+    input_cost_per_token: 7.686e-07
+    output_cost_per_token: 2.4156e-06
+    cache_read_input_token_cost: 1.4274e-07
 - litellm_params:
     api_base: os.environ/AZURE_OPENAI_API_BASE
     api_key: os.environ/AZURE_OPENAI_API_KEY
@@ -491,6 +491,37 @@ model_list:
     input_cost_per_token: 2.0e-06
     output_cost_per_token: 6.0e-06
     cache_read_input_token_cost: 3.0e-07
+- model_name: hy3
+  litellm_params:
+    model: openai/hy3
+    order: 1
+    input_cost_per_token: 1.4e-07
+    output_cost_per_token: 5.8e-07
+    cache_read_input_token_cost: 3.5e-08
+- model_name: hy3
+  litellm_params:
+    model: openai/novita/tencent/hy3
+    order: 3
+    api_base: https://router.requesty.ai/v1
+    api_key: os.environ/REQUESTY_API_KEY
+    input_cost_per_token: 1.0e-09
+    output_cost_per_token: 1.0e-09
+- model_name: hy3
+  litellm_params:
+    model: openai/tencent/hy3
+    order: 4
+    api_base: https://api.kilo.ai/api/gateway
+    api_key: os.environ/KILO_API_KEY
+    input_cost_per_token: 1.4e-07
+    output_cost_per_token: 5.8e-07
+    cache_read_input_token_cost: 3.5e-08
+- model_name: hy3
+  litellm_params:
+    model: openrouter/tencent/hy3
+    order: 5
+    input_cost_per_token: 1.4e-07
+    output_cost_per_token: 5.8e-07
+    cache_read_input_token_cost: 3.5e-08
 - model_name: inkling
   litellm_params:
     model: nvidia_nim/thinkingmachines/inkling
