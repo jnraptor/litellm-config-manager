@@ -407,9 +407,9 @@ model_list:
   litellm_params:
     model: openrouter/z-ai/glm-5.2
     order: 5
-    input_cost_per_token: 9.8e-07
-    output_cost_per_token: 3.08e-06
-    cache_read_input_token_cost: 1.82e-07
+    input_cost_per_token: 8.19e-07
+    output_cost_per_token: 2.574e-06
+    cache_read_input_token_cost: 1.521e-07
 - litellm_params:
     api_base: os.environ/AZURE_OPENAI_API_BASE
     api_key: os.environ/AZURE_OPENAI_API_KEY
@@ -829,9 +829,9 @@ model_list:
   litellm_params:
     model: openrouter/minimax/minimax-m2.7
     order: 5
-    input_cost_per_token: 3.0e-07
-    output_cost_per_token: 1.2e-06
-    cache_read_input_token_cost: 6.0e-08
+    input_cost_per_token: 2.5e-07
+    output_cost_per_token: 1.0e-06
+    cache_read_input_token_cost: 5.0e-08
 - model_name: minimax-m3
   litellm_params:
     model: anthropic/minimax-m3
