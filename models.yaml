@@ -262,3 +262,10 @@ models:
       kilo: tencent/hy3
       opencode-go: hy3
       requesty: novita/tencent/hy3
+  ling-3.0-flash:
+    display_name: ling-3.0-flash
+    description: ''
+    providers:
+      openrouter: inclusionai/ling-3.0-flash:free
+      kilo: inclusionai/ling-3.0-flash:free
+      opencode-zen: ling-3.0-flash-free
