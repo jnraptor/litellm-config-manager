@@ -31,21 +31,24 @@ Author: Unified script for LiteLLM Config Management
 
 import argparse
 import sys
-import yaml
-from typing import Dict, List, Tuple, Any, Optional, Set
 from pathlib import Path
+from typing import Any
+
+import yaml
+from dotenv import load_dotenv
 
 # Import shared utilities from cleanup_base
 from cleanup_base import (
-    setup_logging,
     ConfigDrivenModelCleaner,
-    ProviderConfigLoader,
     ModelMappingLoader,
-    sort_model_list as base_sort_model_list,
+    ProviderConfigLoader,
     ValidationReport,
     _print_validation_report,
+    setup_logging,
 )
-from dotenv import load_dotenv
+from cleanup_base import (
+    sort_model_list as base_sort_model_list,
+)
 
 # Import provider-specific cleaners
 from cleanup_ollama_models import OllamaModelCleaner
@@ -63,7 +66,7 @@ class UnifiedModelCleaner:
     def __init__(
         self,
         config_path: str,
-        provider_names: List[str],
+        provider_names: list[str],
         dry_run: bool = False,
         verbose: bool = False,
     ):
@@ -75,7 +78,7 @@ class UnifiedModelCleaner:
 
         # Create per-provider cleaners that handle all provider-specific logic
         # Use custom cleaners for providers that need special handling
-        self.cleaners: Dict[str, ConfigDrivenModelCleaner] = {}
+        self.cleaners: dict[str, ConfigDrivenModelCleaner] = {}
         for name in provider_names:
             if name == "ollama":
                 self.cleaners[name] = OllamaModelCleaner(config_path, dry_run, verbose)
@@ -84,7 +87,7 @@ class UnifiedModelCleaner:
                     name, config_path, dry_run, verbose
                 )
 
-    def load_config(self) -> Dict[str, Any]:
+    def load_config(self) -> dict[str, Any]:
         """Load and parse the YAML configuration file."""
         try:
             self.logger.info(f"Loading configuration from {self.config_path}")
@@ -110,7 +113,7 @@ class UnifiedModelCleaner:
             self.logger.error(f"YAML parsing error: {e}")
             raise
 
-    def save_config(self, config: Dict[str, Any]) -> None:
+    def save_config(self, config: dict[str, Any]) -> None:
         """Save the updated configuration back to the file (with backup)."""
         if self.dry_run:
             self.logger.info("DRY RUN: Would save configuration to file")
@@ -134,7 +137,7 @@ class UnifiedModelCleaner:
                 self.logger.info("Restored configuration from backup")
             raise
 
-    def sort_model_list(self, config: Dict[str, Any]) -> Tuple[Dict[str, Any], bool]:
+    def sort_model_list(self, config: dict[str, Any]) -> tuple[dict[str, Any], bool]:
         """Sort the model list by model_name alphabetically."""
         if "model_list" not in config or not config["model_list"]:
             self.logger.info("No model list found or model list is empty")
@@ -151,9 +154,9 @@ class UnifiedModelCleaner:
     def cleanup_provider(
         self,
         provider_name: str,
-        add_models: Optional[List[str]] = None,
-        custom_model_name: Optional[str] = None,
-    ) -> Tuple[int, int, List[str]]:
+        add_models: list[str] | None = None,
+        custom_model_name: str | None = None,
+    ) -> tuple[int, int, list[str]]:
         """Clean up models for a specific provider, delegating to its cleaner instance."""
         cleaner = self.cleaners[provider_name]
         try:
@@ -241,9 +244,9 @@ class UnifiedModelCleaner:
 
     def cleanup_all_providers(
         self,
-        add_models: Optional[Dict[str, List[str]]] = None,
-        custom_model_name: Optional[str] = None,
-    ) -> Dict[str, Tuple[int, int, List[str]]]:
+        add_models: dict[str, list[str]] | None = None,
+        custom_model_name: str | None = None,
+    ) -> dict[str, tuple[int, int, list[str]]]:
         """Clean up models for all configured providers."""
         results = {}
         for provider_name in self.provider_names:
@@ -259,7 +262,7 @@ class UnifiedModelCleaner:
                 results[provider_name] = (models_removed, models_updated, changes_made)
             except Exception as e:
                 self.logger.error(f"Error processing provider {provider_name}: {e}")
-                results[provider_name] = (0, 0, [f"Error: {str(e)}"])
+                results[provider_name] = (0, 0, [f"Error: {e!s}"])
 
         return results
 
@@ -267,8 +270,8 @@ class UnifiedModelCleaner:
         self,
         model_key: str,
         mapping_loader: ModelMappingLoader,
-        config: Optional[Dict[str, Any]] = None,
-    ) -> Tuple[Dict[str, Any], Dict[str, List[str]]]:
+        config: dict[str, Any] | None = None,
+    ) -> tuple[dict[str, Any], dict[str, list[str]]]:
         """
         Add a mapped model across all configured providers.
 
@@ -301,7 +304,7 @@ class UnifiedModelCleaner:
         self.logger.info(f"Display name: {display_name}")
         self.logger.info(f"{'=' * 60}")
 
-        added_models_by_provider: Dict[str, List[str]] = {}
+        added_models_by_provider: dict[str, list[str]] = {}
 
         for provider_name in self.provider_names:
             provider_model_id = provider_mappings.get(provider_name)
@@ -343,7 +346,7 @@ class UnifiedModelCleaner:
 
             except Exception as e:
                 self.logger.error(f"  Error adding model from {provider_name}: {e}")
-                added_models_by_provider[provider_name] = [f"Error: {str(e)}"]
+                added_models_by_provider[provider_name] = [f"Error: {e!s}"]
 
         # Sort after all additions
         if not self.dry_run and any(added_models_by_provider.values()):
@@ -354,9 +357,9 @@ class UnifiedModelCleaner:
 
     def delete_model_from_config(
         self,
-        config: Dict[str, Any],
-        model_names: List[str],
-    ) -> Tuple[Dict[str, Any], int]:
+        config: dict[str, Any],
+        model_names: list[str],
+    ) -> tuple[dict[str, Any], int]:
         """Remove all entries matching the given model_names."""
         model_list = config.get("model_list", [])
         original_count = len(model_list)
@@ -395,9 +398,9 @@ class UnifiedModelCleaner:
 
     def delete_provider_from_config(
         self,
-        config: Dict[str, Any],
-        provider_names: List[str],
-    ) -> Tuple[Dict[str, Any], int, Dict[str, int]]:
+        config: dict[str, Any],
+        provider_names: list[str],
+    ) -> tuple[dict[str, Any], int, dict[str, int]]:
         """
         Remove all model entries that belong to the given providers.
 
@@ -406,8 +409,8 @@ class UnifiedModelCleaner:
         """
         model_list = config.get("model_list", [])
         original_count = len(model_list)
-        indices_to_remove: Set[int] = set()
-        details: Dict[str, int] = {}
+        indices_to_remove: set[int] = set()
+        details: dict[str, int] = {}
 
         for provider_name in provider_names:
             cleaner = self._get_cleaner(provider_name)
@@ -431,8 +434,8 @@ class UnifiedModelCleaner:
 
     def disable_providers(
         self,
-        provider_names: List[str],
-    ) -> List[str]:
+        provider_names: list[str],
+    ) -> list[str]:
         """
         Set ``enabled: false`` for the given providers in ``providers.yaml``.
 
@@ -440,7 +443,7 @@ class UnifiedModelCleaner:
         file. Returns the list of providers that were actually disabled.
         """
         loader = ProviderConfigLoader()
-        disabled: List[str] = []
+        disabled: list[str] = []
 
         for provider_name in provider_names:
             try:
@@ -468,8 +471,8 @@ class UnifiedModelCleaner:
     def _prune_provider_special_models(
         self,
         provider_name: str,
-        api_models: Dict[str, Dict[str, Any]],
-    ) -> List[str]:
+        api_models: dict[str, dict[str, Any]],
+    ) -> list[str]:
         """
         Remove ``special_models`` entries that are now available from the
         provider's models source.
@@ -507,9 +510,7 @@ class UnifiedModelCleaner:
             )
         return removed
 
-    def validate_config(
-        self, config: Optional[Dict[str, Any]] = None
-    ) -> ValidationReport:
+    def validate_config(self, config: dict[str, Any] | None = None) -> ValidationReport:
         """
         Validate config.yaml structure without API calls (offline).
 

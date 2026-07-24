@@ -254,7 +254,10 @@ class TestModelMappingLoaderSave:
         # File should not be touched
         assert path.read_text() == "models:\n  glm-5: foo\n"
         # In-memory cache should be updated
-        assert loader.get_model_mapping("glm-5") == {"display_name": "x", "providers": {}}
+        assert loader.get_model_mapping("glm-5") == {
+            "display_name": "x",
+            "providers": {},
+        }
 
     def test_save_writes_valid_yaml(self, tmp_path):
         path = tmp_path / "models.yaml"
@@ -273,7 +276,8 @@ class TestModelMappingLoaderSave:
         with open(path) as f:
             data = yaml.safe_load(f)
         assert (
-            data["models"]["minimax-m3"]["providers"]["openrouter"] == "minimax/minimax-m3"
+            data["models"]["minimax-m3"]["providers"]["openrouter"]
+            == "minimax/minimax-m3"
         )
         assert data["models"]["minimax-m3"]["providers"]["kilo"] == "minimax/minimax-m3"
 
@@ -419,7 +423,9 @@ class TestModelsPopulator:
         """End-to-end: populate should actually write the new entry to disk."""
         providers_path = self._make_providers_yaml(tmp_path)
         models_path = tmp_path / "models.yaml"
-        models_path.write_text("models:\n  other-model:\n    providers:\n      alpha: a/other\n")
+        models_path.write_text(
+            "models:\n  other-model:\n    providers:\n      alpha: a/other\n"
+        )
 
         from cleanup_base import ConfigDrivenModelCleaner
 
@@ -445,9 +451,7 @@ class TestModelsPopulator:
             data = yaml.safe_load(f)
         assert "other-model" in data["models"]
         assert "brand-new" in data["models"]
-        assert (
-            data["models"]["brand-new"]["providers"]["alpha"] == "alpha/brand-new"
-        )
+        assert data["models"]["brand-new"]["providers"]["alpha"] == "alpha/brand-new"
         # beta is missing — should be omitted from the file entirely,
         # not written as null.
         assert "beta" not in data["models"]["brand-new"]["providers"]

@@ -12,20 +12,23 @@ Users manually edit `config.yaml` to add/modify model entries. Typos, missing fi
 from dataclasses import dataclass, field
 from enum import Enum
 
+
 class ValidationSeverity(Enum):
     ERROR = "error"
     WARNING = "warning"
     INFO = "info"
 
+
 @dataclass
 class ValidationIssue:
     severity: ValidationSeverity
     category: str
-    entry_index: int      # 0-based index in model_list, or -1 for file-level
-    model_name: str       # from entry, or "" if N/A
-    model_id: str         # litellm_params.model, or "" if N/A
+    entry_index: int  # 0-based index in model_list, or -1 for file-level
+    model_name: str  # from entry, or "" if N/A
+    model_id: str  # litellm_params.model, or "" if N/A
     message: str
     suggestion: str = ""
+
 
 @dataclass
 class ValidationReport:
@@ -83,14 +86,19 @@ Since `BaseModelCleaner.validate_config()` validates all entries structurally (p
 
 In `main()`, add:
 ```python
-parser.add_argument("--validate", action="store_true",
-    help="Validate config.yaml structure without API calls (offline)")
+parser.add_argument(
+    "--validate",
+    action="store_true",
+    help="Validate config.yaml structure without API calls (offline)",
+)
 ```
 
 Add handling branch before provider processing:
 ```python
 if args.validate:
-    cleaner = UnifiedModelCleaner(args.config, provider_names, dry_run=False, verbose=args.verbose)
+    cleaner = UnifiedModelCleaner(
+        args.config, provider_names, dry_run=False, verbose=args.verbose
+    )
     report = cleaner.validate_config()
     _print_validation_report(report)
     return 1 if report.has_errors else 0
@@ -118,7 +126,9 @@ Summary: 87 entries checked, 1 errors, 1 warnings
 Add `--validate` flag so all provider scripts also support it. Before cleanup runs:
 ```python
 if args.validate:
-    cleaner = cleaner_class(config_path=args.config, dry_run=False, verbose=args.verbose)
+    cleaner = cleaner_class(
+        config_path=args.config, dry_run=False, verbose=args.verbose
+    )
     report = cleaner.validate_config()
     _print_report(report)  # inline print logic
     return 1 if report.has_errors else 0

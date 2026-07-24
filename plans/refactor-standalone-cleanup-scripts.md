@@ -92,30 +92,38 @@ Each standalone script will:
 ```python
 # In cleanup_base.py
 
+
 class ProviderConfigLoader:
     """Singleton loader for provider configuration."""
+
     _instance = None
     _config = None
-    
+
     @classmethod
     def get_config(cls, provider_name: str) -> Dict[str, Any]:
         """Get configuration for a specific provider."""
         ...
 
+
 class ConfigDrivenModelCleaner(BaseModelCleaner):
     """Base class for config-driven model cleaners."""
-    
-    def __init__(self, provider_name: str, config_path: str, 
-                 dry_run: bool = False, verbose: bool = False):
+
+    def __init__(
+        self,
+        provider_name: str,
+        config_path: str,
+        dry_run: bool = False,
+        verbose: bool = False,
+    ):
         # Load provider config from providers.yaml
         self.provider_config = ProviderConfigLoader.get_config(provider_name)
-        
+
         # Set attributes from config
-        self.PROVIDER_NAME = self.provider_config['name']
-        self.API_URL = self.provider_config['api_url']
-        self.MODEL_PREFIX = self.provider_config['model_prefix']
-        self.SPECIAL_MODELS = set(self.provider_config.get('special_models', []))
-        self.PROVIDER_ORDER = self.provider_config.get('order', 2)
+        self.PROVIDER_NAME = self.provider_config["name"]
+        self.API_URL = self.provider_config["api_url"]
+        self.MODEL_PREFIX = self.provider_config["model_prefix"]
+        self.SPECIAL_MODELS = set(self.provider_config.get("special_models", []))
+        self.PROVIDER_ORDER = self.provider_config.get("order", 2)
         ...
 ```
 
@@ -127,30 +135,31 @@ class ConfigDrivenModelCleaner(BaseModelCleaner):
 NVIDIA_API_URL = "https://integrate.api.nvidia.com/v1/models"
 FREE_MODEL_COST = 1.0e-09
 
+
 class NvidiaModelCleaner(BaseModelCleaner):
     PROVIDER_NAME = "Nvidia"
     API_URL = NVIDIA_API_URL
     MODEL_PREFIX = "nvidia_nim/"
     PROVIDER_ORDER = 2
-    
+
     def extract_provider_models(self, config):
         # 20+ lines of boilerplate
         ...
-    
+
     def fetch_available_models(self):
         # Provider-specific API parsing
         ...
-    
+
     def get_api_model_id(self, model_id):
-        return model_id.replace(self.MODEL_PREFIX, '')
-    
+        return model_id.replace(self.MODEL_PREFIX, "")
+
     def generate_model_name(self, model_id, prefix="nim-"):
         return super().generate_model_name(model_id, prefix)
-    
+
     def create_model_entry(self, model_id, api_model_info, model_name):
         # Provider-specific entry creation
         ...
-    
+
     def run_cleanup(self, add_models=None, custom_model_name=None):
         # 50+ lines of common cleanup logic
         ...
@@ -159,36 +168,43 @@ class NvidiaModelCleaner(BaseModelCleaner):
 ### After (cleanup_nvidia_models.py - ~60 lines)
 
 ```python
-from cleanup_base import ConfigDrivenModelCleaner, setup_common_args, validate_model_name_arg
+from cleanup_base import (
+    ConfigDrivenModelCleaner,
+    setup_common_args,
+    validate_model_name_arg,
+)
+
 
 class NvidiaModelCleaner(ConfigDrivenModelCleaner):
     """Cleaner for Nvidia NIM models."""
-    
+
     def __init__(self, config_path: str, dry_run: bool = False, verbose: bool = False):
-        super().__init__('nvidia', config_path, dry_run, verbose)
-    
+        super().__init__("nvidia", config_path, dry_run, verbose)
+
     def parse_api_pricing(self, model: Dict[str, Any]) -> Dict[str, Any]:
         """Override: Nvidia models are free."""
         return {
-            'id': model['id'],
-            'input_cost': self.provider_config['pricing'].get('default_cost', 1e-09),
-            'output_cost': self.provider_config['pricing'].get('default_cost', 1e-09),
+            "id": model["id"],
+            "input_cost": self.provider_config["pricing"].get("default_cost", 1e-09),
+            "output_cost": self.provider_config["pricing"].get("default_cost", 1e-09),
         }
+
 
 def main():
     parser = argparse.ArgumentParser(
-        description='Validate and cleanup Nvidia NIM models in LiteLLM config'
+        description="Validate and cleanup Nvidia NIM models in LiteLLM config"
     )
     setup_common_args(parser)
     args = parser.parse_args()
     validate_model_name_arg(args, parser)
-    
+
     cleaner = NvidiaModelCleaner(
-        config_path=args.config,
-        dry_run=args.dry_run,
-        verbose=args.verbose
+        config_path=args.config, dry_run=args.dry_run, verbose=args.verbose
     )
-    return cleaner.run_cleanup(add_models=args.add_model, custom_model_name=args.model_name)
+    return cleaner.run_cleanup(
+        add_models=args.add_model, custom_model_name=args.model_name
+    )
+
 
 if __name__ == "__main__":
     sys.exit(main())

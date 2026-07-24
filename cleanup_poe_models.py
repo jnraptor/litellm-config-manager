@@ -27,19 +27,19 @@ class PoeModelCleaner(ConfigDrivenModelCleaner):
 
     def __init__(self, config_path: str, dry_run: bool = False, verbose: bool = False):
         """Initialize the Poe model cleaner."""
-        super().__init__('poe', config_path, dry_run, verbose)
+        super().__init__("poe", config_path, dry_run, verbose)
 
 
 main = create_provider_main(
     PoeModelCleaner,
-    'Validate and cleanup Poe models in LiteLLM config',
+    "Validate and cleanup Poe models in LiteLLM config",
     """
 Examples:
   %(prog)s                              # Run cleanup on default config.yaml
   %(prog)s --config my.yaml             # Run cleanup on custom config file
   %(prog)s --dry-run                    # Preview changes without modifying file
   %(prog)s --add-model Claude-Sonnet-4.5  # Add new model(s)
-    """
+    """,
 )
 
 

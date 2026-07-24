@@ -29,12 +29,12 @@ class NvidiaModelCleaner(ConfigDrivenModelCleaner):
 
     def __init__(self, config_path: str, dry_run: bool = False, verbose: bool = False):
         """Initialize the Nvidia model cleaner."""
-        super().__init__('nvidia', config_path, dry_run, verbose)
+        super().__init__("nvidia", config_path, dry_run, verbose)
 
 
 main = create_provider_main(
     NvidiaModelCleaner,
-    'Validate and cleanup Nvidia NIM models in LiteLLM config',
+    "Validate and cleanup Nvidia NIM models in LiteLLM config",
     """
 Note: All Nvidia models are free, so they use a nominal cost of 1e-09 for LiteLLM compatibility.
 
@@ -43,7 +43,7 @@ Examples:
   %(prog)s --config my.yaml                             # Run cleanup on custom config file
   %(prog)s --dry-run                                    # Preview changes without modifying file
   %(prog)s --add-model "meta/llama-3.1-8b-instruct"     # Add a single model
-    """
+    """,
 )
 
 

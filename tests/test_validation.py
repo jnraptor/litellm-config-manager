@@ -91,26 +91,30 @@ class TestValidationDataClasses:
 
     def test_validation_report_has_errors_true(self):
         report = ValidationReport()
-        report.issues.append(ValidationIssue(
-            severity=ValidationSeverity.ERROR,
-            category="test",
-            entry_index=0,
-            model_name="m",
-            model_id="id",
-            message="msg",
-        ))
+        report.issues.append(
+            ValidationIssue(
+                severity=ValidationSeverity.ERROR,
+                category="test",
+                entry_index=0,
+                model_name="m",
+                model_id="id",
+                message="msg",
+            )
+        )
         assert report.has_errors is True
 
     def test_validation_report_has_errors_false(self):
         report = ValidationReport()
-        report.issues.append(ValidationIssue(
-            severity=ValidationSeverity.WARNING,
-            category="test",
-            entry_index=0,
-            model_name="m",
-            model_id="id",
-            message="msg",
-        ))
+        report.issues.append(
+            ValidationIssue(
+                severity=ValidationSeverity.WARNING,
+                category="test",
+                entry_index=0,
+                model_name="m",
+                model_id="id",
+                message="msg",
+            )
+        )
         assert report.has_errors is False
 
     def test_validation_report_defaults(self):
@@ -125,16 +129,31 @@ class TestValidationConstants:
 
     def test_valid_model_modes(self):
         expected = {
-            "chat", "completion", "embedding", "image_generation",
-            "rerank", "audio_transcription", "image", "ocr"
+            "chat",
+            "completion",
+            "embedding",
+            "image_generation",
+            "rerank",
+            "audio_transcription",
+            "image",
+            "ocr",
         }
         assert VALID_MODEL_MODES == expected
 
     def test_fallback_known_prefixes(self):
         expected = {
-            "azure/", "azure_ai/", "openai/", "dashscope/",
-            "jina_ai/", "ollama/", "ollama_chat/", "anthropic/",
-            "vercel_ai_gateway/", "auto_router/", "gemini/", "vertex_ai/"
+            "azure/",
+            "azure_ai/",
+            "openai/",
+            "dashscope/",
+            "jina_ai/",
+            "ollama/",
+            "ollama_chat/",
+            "anthropic/",
+            "vercel_ai_gateway/",
+            "auto_router/",
+            "gemini/",
+            "vertex_ai/",
         }
         assert FALLBACK_KNOWN_PREFIXES == expected
 
@@ -147,6 +166,7 @@ class TestValidateConfig:
         config_file = tmp_path / "config.yaml"
         with open(config_file, "w") as f:
             import yaml
+
             yaml.dump({"model_list": []}, f)
         return MockModelCleaner(config_path=str(config_file))
 
@@ -203,7 +223,7 @@ class TestValidateConfig:
                     "model_name": 123,
                     "litellm_params": {
                         "model": "openrouter/gpt-4",
-                    }
+                    },
                 }
             ]
         }
@@ -212,23 +232,14 @@ class TestValidateConfig:
         assert any(i.category == "model_name" for i in report.issues)
 
     def test_missing_litellm_params(self, cleaner):
-        config = {
-            "model_list": [
-                {"model_name": "model-1"}
-            ]
-        }
+        config = {"model_list": [{"model_name": "model-1"}]}
         report = cleaner.validate_config(config)
         assert report.has_errors
         assert any(i.category == "litellm_params" for i in report.issues)
 
     def test_non_dict_litellm_params(self, cleaner):
         config = {
-            "model_list": [
-                {
-                    "model_name": "model-1",
-                    "litellm_params": "not-a-dict"
-                }
-            ]
+            "model_list": [{"model_name": "model-1", "litellm_params": "not-a-dict"}]
         }
         report = cleaner.validate_config(config)
         assert report.has_errors
@@ -241,7 +252,7 @@ class TestValidateConfig:
                     "model_name": "model-1",
                     "litellm_params": {
                         "order": 1,
-                    }
+                    },
                 }
             ]
         }
@@ -390,8 +401,7 @@ class TestValidateConfig:
         report = cleaner.validate_config(config)
         assert report.has_errors
         assert any(
-            i.category == "cost" and "negative" in i.message
-            for i in report.issues
+            i.category == "cost" and "negative" in i.message for i in report.issues
         )
 
     def test_negative_output_cost(self, cleaner):
@@ -409,8 +419,7 @@ class TestValidateConfig:
         report = cleaner.validate_config(config)
         assert report.has_errors
         assert any(
-            i.category == "cost" and "negative" in i.message
-            for i in report.issues
+            i.category == "cost" and "negative" in i.message for i in report.issues
         )
 
     def test_high_input_cost_warning(self, cleaner):
@@ -428,7 +437,8 @@ class TestValidateConfig:
         report = cleaner.validate_config(config)
         assert not report.has_errors
         assert any(
-            i.severity == ValidationSeverity.WARNING and "suspiciously high" in i.message
+            i.severity == ValidationSeverity.WARNING
+            and "suspiciously high" in i.message
             for i in report.issues
         )
 
@@ -447,7 +457,8 @@ class TestValidateConfig:
         report = cleaner.validate_config(config)
         assert not report.has_errors
         assert any(
-            i.severity == ValidationSeverity.WARNING and "suspiciously high" in i.message
+            i.severity == ValidationSeverity.WARNING
+            and "suspiciously high" in i.message
             for i in report.issues
         )
 
@@ -529,7 +540,9 @@ class TestValidateConfig:
                 ]
             }
             report = cleaner.validate_config(config)
-            assert not any(i.category == "mode" for i in report.issues), f"Mode {mode} should be valid"
+            assert not any(i.category == "mode" for i in report.issues), (
+                f"Mode {mode} should be valid"
+            )
 
     def test_unknown_provider_prefix_warning(self, cleaner):
         config = {
@@ -590,6 +603,7 @@ class TestUnifiedModelCleanerValidation:
     def reset_provider_singleton(self, monkeypatch):
         """Reset ProviderConfigLoader singleton before each test."""
         from cleanup_base import ProviderConfigLoader
+
         # Reset the singleton instance
         ProviderConfigLoader._instance = None
         ProviderConfigLoader._config = {}
@@ -621,6 +635,7 @@ class TestUnifiedModelCleanerValidation:
         providers_file = tmp_path / "providers.yaml"
         with open(providers_file, "w") as f:
             import yaml
+
             yaml.dump(providers_content, f)
 
         config_file = tmp_path / "config.yaml"
@@ -629,6 +644,7 @@ class TestUnifiedModelCleanerValidation:
 
         # Monkeypatch ProviderConfigLoader to use our temp file
         from cleanup_base import ProviderConfigLoader
+
         original_new = ProviderConfigLoader.__new__
 
         def mock_new(cls, config_path="providers.yaml"):
@@ -672,16 +688,25 @@ class TestUnifiedModelCleanerValidation:
         providers_file = tmp_path / "providers.yaml"
         with open(providers_file, "w") as f:
             import yaml
+
             yaml.dump(providers_content, f)
 
         config_file = tmp_path / "config.yaml"
         with open(config_file, "w") as f:
             yaml.dump(
-                {"model_list": [{"model_name": "m", "litellm_params": {"model": "test/x", "order": 1}}]},
+                {
+                    "model_list": [
+                        {
+                            "model_name": "m",
+                            "litellm_params": {"model": "test/x", "order": 1},
+                        }
+                    ]
+                },
                 f,
             )
 
         from cleanup_base import ProviderConfigLoader
+
         original_new = ProviderConfigLoader.__new__
 
         def mock_new(cls, config_path="providers.yaml"):
@@ -705,7 +730,15 @@ class TestUnifiedModelCleanerValidation:
         config_file = tmp_path / "config.yaml"
         with open(config_file, "w") as f:
             import yaml
-            yaml.dump({"model_list": [{"model_name": "m", "litellm_params": {"model": "test/x"}}]}, f)
+
+            yaml.dump(
+                {
+                    "model_list": [
+                        {"model_name": "m", "litellm_params": {"model": "test/x"}}
+                    ]
+                },
+                f,
+            )
 
         cleaner = UnifiedModelCleaner(
             config_path=str(config_file),
@@ -730,14 +763,16 @@ class TestPrintValidationReport:
     def test_print_with_errors(self, capsys):
         report = ValidationReport()
         report.total_entries = 2
-        report.issues.append(ValidationIssue(
-            severity=ValidationSeverity.ERROR,
-            category="model_name",
-            entry_index=0,
-            model_name="",
-            model_id="",
-            message="Missing model_name",
-        ))
+        report.issues.append(
+            ValidationIssue(
+                severity=ValidationSeverity.ERROR,
+                category="model_name",
+                entry_index=0,
+                model_name="",
+                model_id="",
+                message="Missing model_name",
+            )
+        )
         _print_validation_report(report)
         captured = capsys.readouterr()
         assert "ERRORS (1):" in captured.out
@@ -747,14 +782,16 @@ class TestPrintValidationReport:
     def test_print_with_warnings(self, capsys):
         report = ValidationReport()
         report.total_entries = 1
-        report.issues.append(ValidationIssue(
-            severity=ValidationSeverity.WARNING,
-            category="provider_prefix",
-            entry_index=0,
-            model_name="m",
-            model_id="unknown/x",
-            message="Unknown prefix",
-        ))
+        report.issues.append(
+            ValidationIssue(
+                severity=ValidationSeverity.WARNING,
+                category="provider_prefix",
+                entry_index=0,
+                model_name="m",
+                model_id="unknown/x",
+                message="Unknown prefix",
+            )
+        )
         _print_validation_report(report)
         captured = capsys.readouterr()
         assert "WARNINGS (1):" in captured.out
@@ -764,14 +801,16 @@ class TestPrintValidationReport:
     def test_print_with_model_info(self, capsys):
         report = ValidationReport()
         report.total_entries = 1
-        report.issues.append(ValidationIssue(
-            severity=ValidationSeverity.ERROR,
-            category="duplicate",
-            entry_index=1,
-            model_name="gpt-4",
-            model_id="openrouter/gpt-4",
-            message="Duplicate entry",
-        ))
+        report.issues.append(
+            ValidationIssue(
+                severity=ValidationSeverity.ERROR,
+                category="duplicate",
+                entry_index=1,
+                model_name="gpt-4",
+                model_id="openrouter/gpt-4",
+                message="Duplicate entry",
+            )
+        )
         _print_validation_report(report)
         captured = capsys.readouterr()
         assert "model_name='gpt-4'" in captured.out
@@ -785,10 +824,13 @@ class TestCreateProviderMainValidate:
         config_file = tmp_path / "config.yaml"
         with open(config_file, "w") as f:
             import yaml
+
             yaml.dump({"model_list": []}, f)
 
         main_fn = create_provider_main(MockModelCleaner, "Test cleaner")
-        monkeypatch.setattr(sys, "argv", ["test_script", "--validate", "--config", str(config_file)])
+        monkeypatch.setattr(
+            sys, "argv", ["test_script", "--validate", "--config", str(config_file)]
+        )
         exit_code = main_fn()
         assert exit_code == 0
         captured = capsys.readouterr()
@@ -798,10 +840,13 @@ class TestCreateProviderMainValidate:
         config_file = tmp_path / "config.yaml"
         with open(config_file, "w") as f:
             import yaml
+
             yaml.dump({"model_list": ["not-a-dict"]}, f)
 
         main_fn = create_provider_main(MockModelCleaner, "Test cleaner")
-        monkeypatch.setattr(sys, "argv", ["test_script", "--validate", "--config", str(config_file)])
+        monkeypatch.setattr(
+            sys, "argv", ["test_script", "--validate", "--config", str(config_file)]
+        )
         exit_code = main_fn()
         assert exit_code == 1
         captured = capsys.readouterr()
@@ -834,24 +879,33 @@ class TestCleanupModelsMainValidate:
         providers_file = tmp_path / "providers.yaml"
         with open(providers_file, "w") as f:
             import yaml
+
             yaml.dump(providers_content, f)
 
         config_file = tmp_path / "config.yaml"
         with open(config_file, "w") as f:
             yaml.dump({"model_list": []}, f)
 
-        monkeypatch.setattr(sys, "argv", [
-            "cleanup_models",
-            "--provider", "test_provider",
-            "--validate",
-            "--config", str(config_file),
-        ])
+        monkeypatch.setattr(
+            sys,
+            "argv",
+            [
+                "cleanup_models",
+                "--provider",
+                "test_provider",
+                "--validate",
+                "--config",
+                str(config_file),
+            ],
+        )
 
         from cleanup_models import main
+
         # The ProviderConfigLoader singleton may have been loaded before,
         # so we need to reset it or patch it to use our temp providers.yaml
         # Since ProviderConfigLoader is a singleton, patch its _load_config behavior
         from cleanup_base import ProviderConfigLoader
+
         original_new = ProviderConfigLoader.__new__
 
         def mock_new(cls, config_path="providers.yaml"):

@@ -177,9 +177,9 @@ class ValidationSeverity(Enum):
 class ValidationIssue:
     severity: ValidationSeverity
     category: str
-    entry_index: int      # 0-based index in model_list, or -1 for file-level
-    model_name: str       # from entry, or "" if N/A
-    model_id: str         # litellm_params.model, or "" if N/A
+    entry_index: int  # 0-based index in model_list, or -1 for file-level
+    model_name: str  # from entry, or "" if N/A
+    model_id: str  # litellm_params.model, or "" if N/A
     message: str
     suggestion: str = ""
 
@@ -195,16 +195,35 @@ class ValidationReport:
         return any(i.severity == ValidationSeverity.ERROR for i in self.issues)
 
 
-VALID_MODEL_MODES = frozenset({
-    "chat", "completion", "embedding", "image_generation",
-    "rerank", "audio_transcription", "image", "ocr"
-})
+VALID_MODEL_MODES = frozenset(
+    {
+        "chat",
+        "completion",
+        "embedding",
+        "image_generation",
+        "rerank",
+        "audio_transcription",
+        "image",
+        "ocr",
+    }
+)
 
-FALLBACK_KNOWN_PREFIXES = frozenset({
-    "azure/", "azure_ai/", "openai/", "dashscope/",
-    "jina_ai/", "ollama/", "ollama_chat/", "anthropic/",
-    "vercel_ai_gateway/", "auto_router/", "gemini/", "vertex_ai/"
-})
+FALLBACK_KNOWN_PREFIXES = frozenset(
+    {
+        "azure/",
+        "azure_ai/",
+        "openai/",
+        "dashscope/",
+        "jina_ai/",
+        "ollama/",
+        "ollama_chat/",
+        "anthropic/",
+        "vercel_ai_gateway/",
+        "auto_router/",
+        "gemini/",
+        "vertex_ai/",
+    }
+)
 
 
 class APIClient:
@@ -345,9 +364,7 @@ class ModelsDevClient:
                 logger.debug("Fetching cost data from models.dev API...")
             self._data = self._api_client.fetch(self.MODELS_DEV_URL, logger=logger)
             if logger:
-                logger.debug(
-                    f"Loaded models.dev data with {len(self._data)} providers"
-                )
+                logger.debug(f"Loaded models.dev data with {len(self._data)} providers")
         except Exception as e:
             self._load_failed = True
             if logger:
@@ -565,7 +582,9 @@ class BaseModelCleaner(ABC):
             self.logger.error(f"Error saving configuration: {e}")
             raise
 
-    def validate_config(self, config: Optional[Dict[str, Any]] = None) -> ValidationReport:
+    def validate_config(
+        self, config: Optional[Dict[str, Any]] = None
+    ) -> ValidationReport:
         """
         Validate config.yaml structure without API calls (offline).
 
@@ -615,58 +634,70 @@ class BaseModelCleaner(ABC):
         for index, entry in enumerate(model_list):
             # Check 1: Entry is a dict
             if not isinstance(entry, dict):
-                report.issues.append(ValidationIssue(
-                    severity=ValidationSeverity.ERROR,
-                    category="type",
-                    entry_index=index,
-                    model_name="",
-                    model_id="",
-                    message=f"Entry is not a dictionary (found {type(entry).__name__})",
-                    suggestion="Convert entry to a dictionary with model_name and litellm_params",
-                ))
+                report.issues.append(
+                    ValidationIssue(
+                        severity=ValidationSeverity.ERROR,
+                        category="type",
+                        entry_index=index,
+                        model_name="",
+                        model_id="",
+                        message=f"Entry is not a dictionary (found {type(entry).__name__})",
+                        suggestion="Convert entry to a dictionary with model_name and litellm_params",
+                    )
+                )
                 continue
 
             model_name = entry.get("model_name", "")
             litellm_params = entry.get("litellm_params")
-            model_id = litellm_params.get("model", "") if isinstance(litellm_params, dict) else ""
+            model_id = (
+                litellm_params.get("model", "")
+                if isinstance(litellm_params, dict)
+                else ""
+            )
 
             # Check 2: model_name present & string
             if not isinstance(model_name, str) or not model_name:
-                report.issues.append(ValidationIssue(
-                    severity=ValidationSeverity.ERROR,
-                    category="model_name",
-                    entry_index=index,
-                    model_name=str(model_name) if model_name else "",
-                    model_id=model_id,
-                    message="Missing or non-string 'model_name'",
-                    suggestion="Add a valid string 'model_name' to the entry",
-                ))
+                report.issues.append(
+                    ValidationIssue(
+                        severity=ValidationSeverity.ERROR,
+                        category="model_name",
+                        entry_index=index,
+                        model_name=str(model_name) if model_name else "",
+                        model_id=model_id,
+                        message="Missing or non-string 'model_name'",
+                        suggestion="Add a valid string 'model_name' to the entry",
+                    )
+                )
 
             # Check 3: litellm_params present & dict
             if litellm_params is None or not isinstance(litellm_params, dict):
-                report.issues.append(ValidationIssue(
-                    severity=ValidationSeverity.ERROR,
-                    category="litellm_params",
-                    entry_index=index,
-                    model_name=model_name,
-                    model_id="",
-                    message="Missing or non-dict 'litellm_params'",
-                    suggestion="Add a valid dict 'litellm_params' to the entry",
-                ))
+                report.issues.append(
+                    ValidationIssue(
+                        severity=ValidationSeverity.ERROR,
+                        category="litellm_params",
+                        entry_index=index,
+                        model_name=model_name,
+                        model_id="",
+                        message="Missing or non-dict 'litellm_params'",
+                        suggestion="Add a valid dict 'litellm_params' to the entry",
+                    )
+                )
                 # Skip remaining checks that depend on litellm_params
                 continue
 
             # Check 4: litellm_params.model present & non-empty
             if not model_id:
-                report.issues.append(ValidationIssue(
-                    severity=ValidationSeverity.ERROR,
-                    category="model_id",
-                    entry_index=index,
-                    model_name=model_name,
-                    model_id="",
-                    message="Missing required field 'litellm_params.model'",
-                    suggestion="Add a provider-prefixed model ID (e.g., 'openrouter/gpt-4')",
-                ))
+                report.issues.append(
+                    ValidationIssue(
+                        severity=ValidationSeverity.ERROR,
+                        category="model_id",
+                        entry_index=index,
+                        model_name=model_name,
+                        model_id="",
+                        message="Missing required field 'litellm_params.model'",
+                        suggestion="Add a provider-prefixed model ID (e.g., 'openrouter/gpt-4')",
+                    )
+                )
                 # Skip checks that need model_id
                 _skip_rest = True
             else:
@@ -678,179 +709,219 @@ class BaseModelCleaner(ABC):
                 dup_key = (model_name, model_id, api_base)
                 if dup_key in seen_entries:
                     first_index = seen_entries[dup_key]
-                    report.issues.append(ValidationIssue(
-                        severity=ValidationSeverity.ERROR,
-                        category="duplicate",
-                        entry_index=index,
-                        model_name=model_name,
-                        model_id=model_id,
-                        message=f"Duplicate entry: same model_name, model ID, and api_base first seen at index #{first_index}",
-                        suggestion="Remove the duplicate entry or change model_name/model ID/api_base",
-                    ))
+                    report.issues.append(
+                        ValidationIssue(
+                            severity=ValidationSeverity.ERROR,
+                            category="duplicate",
+                            entry_index=index,
+                            model_name=model_name,
+                            model_id=model_id,
+                            message=f"Duplicate entry: same model_name, model ID, and api_base first seen at index #{first_index}",
+                            suggestion="Remove the duplicate entry or change model_name/model ID/api_base",
+                        )
+                    )
                 else:
                     seen_entries[dup_key] = index
 
                 # Check 6: input_cost_per_token is numeric
                 input_cost = litellm_params.get("input_cost_per_token")
                 if input_cost is not None and not _is_numeric_cost(input_cost):
-                    report.issues.append(ValidationIssue(
-                        severity=ValidationSeverity.ERROR,
-                        category="cost",
-                        entry_index=index,
-                        model_name=model_name,
-                        model_id=model_id,
-                        message=f"input_cost_per_token is non-numeric (found {type(input_cost).__name__})",
-                        suggestion="Use a numeric value for input_cost_per_token",
-                    ))
+                    report.issues.append(
+                        ValidationIssue(
+                            severity=ValidationSeverity.ERROR,
+                            category="cost",
+                            entry_index=index,
+                            model_name=model_name,
+                            model_id=model_id,
+                            message=f"input_cost_per_token is non-numeric (found {type(input_cost).__name__})",
+                            suggestion="Use a numeric value for input_cost_per_token",
+                        )
+                    )
                 elif input_cost is not None:
                     input_cost_num = float(input_cost)
                     # Check 8: Cost >= 0
                     if input_cost_num < 0:
-                        report.issues.append(ValidationIssue(
-                            severity=ValidationSeverity.ERROR,
-                            category="cost",
-                            entry_index=index,
-                            model_name=model_name,
-                            model_id=model_id,
-                            message=f"input_cost_per_token is negative ({input_cost})",
-                            suggestion="Cost must be >= 0",
-                        ))
+                        report.issues.append(
+                            ValidationIssue(
+                                severity=ValidationSeverity.ERROR,
+                                category="cost",
+                                entry_index=index,
+                                model_name=model_name,
+                                model_id=model_id,
+                                message=f"input_cost_per_token is negative ({input_cost})",
+                                suggestion="Cost must be >= 0",
+                            )
+                        )
                     # Check 9: Cost > 0.01
                     elif input_cost_num > 0.01:
-                        report.issues.append(ValidationIssue(
-                            severity=ValidationSeverity.WARNING,
-                            category="cost",
-                            entry_index=index,
-                            model_name=model_name,
-                            model_id=model_id,
-                            message=f"input_cost_per_token is suspiciously high ({input_cost})",
-                            suggestion="Verify cost is correct (> $10 per 1000 tokens)",
-                        ))
+                        report.issues.append(
+                            ValidationIssue(
+                                severity=ValidationSeverity.WARNING,
+                                category="cost",
+                                entry_index=index,
+                                model_name=model_name,
+                                model_id=model_id,
+                                message=f"input_cost_per_token is suspiciously high ({input_cost})",
+                                suggestion="Verify cost is correct (> $10 per 1000 tokens)",
+                            )
+                        )
 
                 # Check 7: output_cost_per_token is numeric
                 output_cost = litellm_params.get("output_cost_per_token")
                 if output_cost is not None and not _is_numeric_cost(output_cost):
-                    report.issues.append(ValidationIssue(
-                        severity=ValidationSeverity.ERROR,
-                        category="cost",
-                        entry_index=index,
-                        model_name=model_name,
-                        model_id=model_id,
-                        message=f"output_cost_per_token is non-numeric (found {type(output_cost).__name__})",
-                        suggestion="Use a numeric value for output_cost_per_token",
-                    ))
+                    report.issues.append(
+                        ValidationIssue(
+                            severity=ValidationSeverity.ERROR,
+                            category="cost",
+                            entry_index=index,
+                            model_name=model_name,
+                            model_id=model_id,
+                            message=f"output_cost_per_token is non-numeric (found {type(output_cost).__name__})",
+                            suggestion="Use a numeric value for output_cost_per_token",
+                        )
+                    )
                 elif output_cost is not None:
                     output_cost_num = float(output_cost)
                     # Check 8: Cost >= 0
                     if output_cost_num < 0:
-                        report.issues.append(ValidationIssue(
+                        report.issues.append(
+                            ValidationIssue(
+                                severity=ValidationSeverity.ERROR,
+                                category="cost",
+                                entry_index=index,
+                                model_name=model_name,
+                                model_id=model_id,
+                                message=f"output_cost_per_token is negative ({output_cost})",
+                                suggestion="Cost must be >= 0",
+                            )
+                        )
+                    # Check 9: Cost > 0.01
+                    elif output_cost_num > 0.01:
+                        report.issues.append(
+                            ValidationIssue(
+                                severity=ValidationSeverity.WARNING,
+                                category="cost",
+                                entry_index=index,
+                                model_name=model_name,
+                                model_id=model_id,
+                                message=f"output_cost_per_token is suspiciously high ({output_cost})",
+                                suggestion="Verify cost is correct (> $10 per 1000 tokens)",
+                            )
+                        )
+
+                # Check: cache_read_input_token_cost is numeric and non-negative
+                cache_read_cost = litellm_params.get("cache_read_input_token_cost")
+                if cache_read_cost is not None and not _is_numeric_cost(
+                    cache_read_cost
+                ):
+                    report.issues.append(
+                        ValidationIssue(
                             severity=ValidationSeverity.ERROR,
                             category="cost",
                             entry_index=index,
                             model_name=model_name,
                             model_id=model_id,
-                            message=f"output_cost_per_token is negative ({output_cost})",
-                            suggestion="Cost must be >= 0",
-                        ))
-                    # Check 9: Cost > 0.01
-                    elif output_cost_num > 0.01:
-                        report.issues.append(ValidationIssue(
-                            severity=ValidationSeverity.WARNING,
+                            message=f"cache_read_input_token_cost is non-numeric (found {type(cache_read_cost).__name__})",
+                            suggestion="Use a numeric value for cache_read_input_token_cost",
+                        )
+                    )
+                elif cache_read_cost is not None and float(cache_read_cost) < 0:
+                    report.issues.append(
+                        ValidationIssue(
+                            severity=ValidationSeverity.ERROR,
                             category="cost",
                             entry_index=index,
                             model_name=model_name,
                             model_id=model_id,
-                            message=f"output_cost_per_token is suspiciously high ({output_cost})",
-                            suggestion="Verify cost is correct (> $10 per 1000 tokens)",
-                        ))
-
-                # Check: cache_read_input_token_cost is numeric and non-negative
-                cache_read_cost = litellm_params.get("cache_read_input_token_cost")
-                if cache_read_cost is not None and not _is_numeric_cost(cache_read_cost):
-                    report.issues.append(ValidationIssue(
-                        severity=ValidationSeverity.ERROR,
-                        category="cost",
-                        entry_index=index,
-                        model_name=model_name,
-                        model_id=model_id,
-                        message=f"cache_read_input_token_cost is non-numeric (found {type(cache_read_cost).__name__})",
-                        suggestion="Use a numeric value for cache_read_input_token_cost",
-                    ))
-                elif cache_read_cost is not None and float(cache_read_cost) < 0:
-                    report.issues.append(ValidationIssue(
-                        severity=ValidationSeverity.ERROR,
-                        category="cost",
-                        entry_index=index,
-                        model_name=model_name,
-                        model_id=model_id,
-                        message=f"cache_read_input_token_cost is negative ({cache_read_cost})",
-                        suggestion="Cost must be >= 0",
-                    ))
+                            message=f"cache_read_input_token_cost is negative ({cache_read_cost})",
+                            suggestion="Cost must be >= 0",
+                        )
+                    )
 
                 # Check: cache_creation_input_token_cost is numeric and non-negative
-                cache_creation_cost = litellm_params.get("cache_creation_input_token_cost")
-                if cache_creation_cost is not None and not _is_numeric_cost(cache_creation_cost):
-                    report.issues.append(ValidationIssue(
-                        severity=ValidationSeverity.ERROR,
-                        category="cost",
-                        entry_index=index,
-                        model_name=model_name,
-                        model_id=model_id,
-                        message=f"cache_creation_input_token_cost is non-numeric (found {type(cache_creation_cost).__name__})",
-                        suggestion="Use a numeric value for cache_creation_input_token_cost",
-                    ))
+                cache_creation_cost = litellm_params.get(
+                    "cache_creation_input_token_cost"
+                )
+                if cache_creation_cost is not None and not _is_numeric_cost(
+                    cache_creation_cost
+                ):
+                    report.issues.append(
+                        ValidationIssue(
+                            severity=ValidationSeverity.ERROR,
+                            category="cost",
+                            entry_index=index,
+                            model_name=model_name,
+                            model_id=model_id,
+                            message=f"cache_creation_input_token_cost is non-numeric (found {type(cache_creation_cost).__name__})",
+                            suggestion="Use a numeric value for cache_creation_input_token_cost",
+                        )
+                    )
                 elif cache_creation_cost is not None and float(cache_creation_cost) < 0:
-                    report.issues.append(ValidationIssue(
-                        severity=ValidationSeverity.ERROR,
-                        category="cost",
-                        entry_index=index,
-                        model_name=model_name,
-                        model_id=model_id,
-                        message=f"cache_creation_input_token_cost is negative ({cache_creation_cost})",
-                        suggestion="Cost must be >= 0",
-                    ))
+                    report.issues.append(
+                        ValidationIssue(
+                            severity=ValidationSeverity.ERROR,
+                            category="cost",
+                            entry_index=index,
+                            model_name=model_name,
+                            model_id=model_id,
+                            message=f"cache_creation_input_token_cost is negative ({cache_creation_cost})",
+                            suggestion="Cost must be >= 0",
+                        )
+                    )
 
                 # Check 10: order is positive int
                 order = litellm_params.get("order")
                 if order is not None:
-                    if not isinstance(order, int) or isinstance(order, bool) or order <= 0:
-                        report.issues.append(ValidationIssue(
-                            severity=ValidationSeverity.ERROR,
-                            category="order",
-                            entry_index=index,
-                            model_name=model_name,
-                            model_id=model_id,
-                            message=f"order must be a positive integer (found {order})",
-                            suggestion="Set order to a positive integer value",
-                        ))
+                    if (
+                        not isinstance(order, int)
+                        or isinstance(order, bool)
+                        or order <= 0
+                    ):
+                        report.issues.append(
+                            ValidationIssue(
+                                severity=ValidationSeverity.ERROR,
+                                category="order",
+                                entry_index=index,
+                                model_name=model_name,
+                                model_id=model_id,
+                                message=f"order must be a positive integer (found {order})",
+                                suggestion="Set order to a positive integer value",
+                            )
+                        )
 
                 # Check 11: model_info.mode in VALID_MODEL_MODES
                 model_info = entry.get("model_info", {})
                 if isinstance(model_info, dict):
                     mode = model_info.get("mode")
                     if mode is not None and mode not in VALID_MODEL_MODES:
-                        report.issues.append(ValidationIssue(
-                            severity=ValidationSeverity.ERROR,
-                            category="mode",
+                        report.issues.append(
+                            ValidationIssue(
+                                severity=ValidationSeverity.ERROR,
+                                category="mode",
+                                entry_index=index,
+                                model_name=model_name,
+                                model_id=model_id,
+                                message=f"Invalid model_info.mode '{mode}'",
+                                suggestion=f"Use one of: {', '.join(sorted(VALID_MODEL_MODES))}",
+                            )
+                        )
+
+                # Check 13: Unknown provider prefix
+                has_known_prefix = any(
+                    model_id.startswith(prefix) for prefix in known_prefixes
+                )
+                if not has_known_prefix:
+                    report.issues.append(
+                        ValidationIssue(
+                            severity=ValidationSeverity.WARNING,
+                            category="provider_prefix",
                             entry_index=index,
                             model_name=model_name,
                             model_id=model_id,
-                            message=f"Invalid model_info.mode '{mode}'",
-                            suggestion=f"Use one of: {', '.join(sorted(VALID_MODEL_MODES))}",
-                        ))
-
-                # Check 13: Unknown provider prefix
-                has_known_prefix = any(model_id.startswith(prefix) for prefix in known_prefixes)
-                if not has_known_prefix:
-                    report.issues.append(ValidationIssue(
-                        severity=ValidationSeverity.WARNING,
-                        category="provider_prefix",
-                        entry_index=index,
-                        model_name=model_name,
-                        model_id=model_id,
-                        message="Model ID has unknown provider prefix",
-                        suggestion="Check the model ID prefix or add the provider to providers.yaml",
-                    ))
+                            message="Model ID has unknown provider prefix",
+                            suggestion="Check the model ID prefix or add the provider to providers.yaml",
+                        )
+                    )
 
             # Check 12: Missing api_key for providers that need it
             if provider_loader and litellm_params and isinstance(litellm_params, dict):
@@ -870,7 +941,9 @@ class BaseModelCleaner(ABC):
                         api_base_env_var = detection.get("api_base_env_var")
                         provider_model_prefixes = pconf.get("model_prefixes")
                         if provider_model_prefixes:
-                            prefix_list = [mp["prefix"] for mp in provider_model_prefixes]
+                            prefix_list = [
+                                mp["prefix"] for mp in provider_model_prefixes
+                            ]
                             is_match = is_api_base_model(
                                 api_base,
                                 model_id,
@@ -892,15 +965,17 @@ class BaseModelCleaner(ABC):
                         # Provider requires an API key; check if entry has api_key
                         entry_api_key = litellm_params.get("api_key")
                         if not entry_api_key:
-                            report.issues.append(ValidationIssue(
-                                severity=ValidationSeverity.WARNING,
-                                category="api_key",
-                                entry_index=index,
-                                model_name=model_name,
-                                model_id=model_id,
-                                message=f"Provider '{provider_name}' requires api_key but entry has none",
-                                suggestion=f"Add 'api_key' to litellm_params (e.g., 'os.environ/{api_key_env}')",
-                            ))
+                            report.issues.append(
+                                ValidationIssue(
+                                    severity=ValidationSeverity.WARNING,
+                                    category="api_key",
+                                    entry_index=index,
+                                    model_name=model_name,
+                                    model_id=model_id,
+                                    message=f"Provider '{provider_name}' requires api_key but entry has none",
+                                    suggestion=f"Add 'api_key' to litellm_params (e.g., 'os.environ/{api_key_env}')",
+                                )
+                            )
                         # Only report once per entry
                         break
 
@@ -1145,13 +1220,21 @@ class BaseModelCleaner(ABC):
                     "✅ Model list sorted by model_name, then by litellm_params.order"
                 )
 
-        if not invalid_models and not cost_changes and not was_sorted and not order_changed:
+        if (
+            not invalid_models
+            and not cost_changes
+            and not was_sorted
+            and not order_changed
+        ):
             self.logger.info(
                 f"✅ All {self.PROVIDER_NAME} models are valid with current costs and list is already sorted"
             )
         elif self.dry_run:
             total_changes = (
-                len(invalid_models) + len(cost_changes) + (1 if was_sorted else 0) + (1 if order_changed else 0)
+                len(invalid_models)
+                + len(cost_changes)
+                + (1 if was_sorted else 0)
+                + (1 if order_changed else 0)
             )
             self.logger.info(f"📋 [DRY-RUN] Total changes identified: {total_changes}")
             self.logger.info(
@@ -1159,7 +1242,10 @@ class BaseModelCleaner(ABC):
             )
         else:
             total_changes = (
-                len(invalid_models) + len(cost_changes) + (1 if was_sorted else 0) + (1 if order_changed else 0)
+                len(invalid_models)
+                + len(cost_changes)
+                + (1 if was_sorted else 0)
+                + (1 if order_changed else 0)
             )
             self.logger.info(
                 f"✅ Cleanup completed: {total_changes} total changes applied"
@@ -1281,8 +1367,12 @@ class BaseModelCleaner(ABC):
                 litellm_params = model_entry.get("litellm_params", {})
                 current_input_cost = litellm_params.get("input_cost_per_token")
                 current_output_cost = litellm_params.get("output_cost_per_token")
-                current_cache_read_cost = litellm_params.get("cache_read_input_token_cost")
-                current_cache_creation_cost = litellm_params.get("cache_creation_input_token_cost")
+                current_cache_read_cost = litellm_params.get(
+                    "cache_read_input_token_cost"
+                )
+                current_cache_creation_cost = litellm_params.get(
+                    "cache_creation_input_token_cost"
+                )
 
                 # Normalize string costs (e.g. from YAML) to floats
                 if isinstance(current_input_cost, str):
@@ -1300,13 +1390,17 @@ class BaseModelCleaner(ABC):
                 if isinstance(current_cache_read_cost, str):
                     try:
                         current_cache_read_cost = float(current_cache_read_cost)
-                        litellm_params["cache_read_input_token_cost"] = current_cache_read_cost
+                        litellm_params["cache_read_input_token_cost"] = (
+                            current_cache_read_cost
+                        )
                     except ValueError:
                         current_cache_read_cost = None
                 if isinstance(current_cache_creation_cost, str):
                     try:
                         current_cache_creation_cost = float(current_cache_creation_cost)
-                        litellm_params["cache_creation_input_token_cost"] = current_cache_creation_cost
+                        litellm_params["cache_creation_input_token_cost"] = (
+                            current_cache_creation_cost
+                        )
                     except ValueError:
                         current_cache_creation_cost = None
 
@@ -1371,7 +1465,9 @@ class BaseModelCleaner(ABC):
 
                 # Sync cache read cost: add/update or remove if API no longer provides it
                 if api_cache_read_cost is not None:
-                    adjusted_cache_read_cost = adjust_cost_for_free_model(api_cache_read_cost)
+                    adjusted_cache_read_cost = adjust_cost_for_free_model(
+                        api_cache_read_cost
+                    )
                     if current_cache_read_cost is None or not costs_are_equal(
                         current_cache_read_cost, adjusted_cache_read_cost
                     ):
@@ -1380,7 +1476,9 @@ class BaseModelCleaner(ABC):
                             "old": current_cache_read_cost,
                             "new": adjusted_cache_read_cost,
                         }
-                        litellm_params["cache_read_input_token_cost"] = adjusted_cache_read_cost
+                        litellm_params["cache_read_input_token_cost"] = (
+                            adjusted_cache_read_cost
+                        )
                         self.logger.debug(
                             f"Cache read cost change for {model_id}: {current_cache_read_cost} → {adjusted_cache_read_cost}"
                         )
@@ -1398,7 +1496,9 @@ class BaseModelCleaner(ABC):
 
                 # Sync cache creation cost: add/update or remove if API no longer provides it
                 if api_cache_creation_cost is not None:
-                    adjusted_cache_creation_cost = adjust_cost_for_free_model(api_cache_creation_cost)
+                    adjusted_cache_creation_cost = adjust_cost_for_free_model(
+                        api_cache_creation_cost
+                    )
                     if current_cache_creation_cost is None or not costs_are_equal(
                         current_cache_creation_cost, adjusted_cache_creation_cost
                     ):
@@ -1407,7 +1507,9 @@ class BaseModelCleaner(ABC):
                             "old": current_cache_creation_cost,
                             "new": adjusted_cache_creation_cost,
                         }
-                        litellm_params["cache_creation_input_token_cost"] = adjusted_cache_creation_cost
+                        litellm_params["cache_creation_input_token_cost"] = (
+                            adjusted_cache_creation_cost
+                        )
                         self.logger.debug(
                             f"Cache creation cost change for {model_id}: {current_cache_creation_cost} → {adjusted_cache_creation_cost}"
                         )
@@ -1443,7 +1545,12 @@ class BaseModelCleaner(ABC):
                         order_changed = True
                     litellm_params["order"] = provider_order
 
-                if input_changed or output_changed or cache_read_changed or cache_creation_changed:
+                if (
+                    input_changed
+                    or output_changed
+                    or cache_read_changed
+                    or cache_creation_changed
+                ):
                     cost_changes.append(change_info)
                     self._log_cost_change(
                         model_id,
@@ -1588,7 +1695,7 @@ class BaseModelCleaner(ABC):
             if self._model_prefixes:
                 for prefix_entry in self._model_prefixes:
                     if model_id.startswith(prefix_entry["prefix"]):
-                        api_lookup_id = model_id[len(prefix_entry["prefix"]):]
+                        api_lookup_id = model_id[len(prefix_entry["prefix"]) :]
                         break
 
             model_info = self.find_model_in_api(api_lookup_id, api_models)
@@ -2112,11 +2219,7 @@ class ProviderConfigLoader:
         providers = self._config.get("providers", {})
         if include_disabled:
             return list(providers.keys())
-        return [
-            name
-            for name, cfg in providers.items()
-            if cfg.get("enabled", True)
-        ]
+        return [name for name, cfg in providers.items() if cfg.get("enabled", True)]
 
     @classmethod
     def reset(cls) -> None:
@@ -2141,9 +2244,7 @@ class ProviderConfigLoader:
 
         if dry_run:
             logger = setup_logging(False, "ProviderConfigLoader")
-            logger.info(
-                f"DRY RUN: Would write providers config to {self._config_path}"
-            )
+            logger.info(f"DRY RUN: Would write providers config to {self._config_path}")
             return
 
         if self._config_path.exists():
@@ -2430,7 +2531,9 @@ class ConfigDrivenModelCleaner(BaseModelCleaner):
             f"Loaded config for provider '{provider_name}': {self.PROVIDER_NAME}"
         )
 
-    def _load_defaults(self, providers_config_path: str = "providers.yaml") -> Dict[str, Any]:
+    def _load_defaults(
+        self, providers_config_path: str = "providers.yaml"
+    ) -> Dict[str, Any]:
         """
         Load default settings from providers.yaml.
 
@@ -2584,9 +2687,7 @@ class ConfigDrivenModelCleaner(BaseModelCleaner):
 
         # Merge embedding models from embeddings_api_url (only add new IDs)
         if self._embeddings_api_url:
-            self._fetch_embedding_models(
-                available_models, self._build_api_headers()
-            )
+            self._fetch_embedding_models(available_models, self._build_api_headers())
 
         self.logger.info(
             f"Fetched {len(available_models)} available models for {self.PROVIDER_NAME} from models.dev"
@@ -2644,7 +2745,9 @@ class ConfigDrivenModelCleaner(BaseModelCleaner):
                         f"skipped_existing={skipped}"
                     )
                 else:
-                    self.logger.debug(f"Fetched embedding models from {self.PROVIDER_NAME}")
+                    self.logger.debug(
+                        f"Fetched embedding models from {self.PROVIDER_NAME}"
+                    )
         except requests.RequestException as e:
             self.logger.warning(f"Could not fetch embedding models: {e}")
 
@@ -2744,7 +2847,9 @@ class ConfigDrivenModelCleaner(BaseModelCleaner):
             if cache_read_value is not None:
                 try:
                     if isinstance(cache_read_value, str):
-                        cache_read_value = cache_read_value.replace("$", "").replace(",", "")
+                        cache_read_value = cache_read_value.replace("$", "").replace(
+                            ",", ""
+                        )
                     cache_read_cost = float(cache_read_value)
                     if is_per_million:
                         cache_read_cost = cache_read_cost / divisor / 1_000_000
@@ -2758,7 +2863,9 @@ class ConfigDrivenModelCleaner(BaseModelCleaner):
             if cache_write_value is not None:
                 try:
                     if isinstance(cache_write_value, str):
-                        cache_write_value = cache_write_value.replace("$", "").replace(",", "")
+                        cache_write_value = cache_write_value.replace("$", "").replace(
+                            ",", ""
+                        )
                     cache_creation_cost = float(cache_write_value)
                     if is_per_million:
                         cache_creation_cost = cache_creation_cost / divisor / 1_000_000
@@ -2811,7 +2918,7 @@ class ConfigDrivenModelCleaner(BaseModelCleaner):
             for prefix_entry in self._model_prefixes:
                 prefix = prefix_entry["prefix"]
                 if model_id.startswith(prefix):
-                    return model_id[len(prefix):]
+                    return model_id[len(prefix) :]
         if model_id.startswith(self.MODEL_PREFIX):
             return model_id[len(self.MODEL_PREFIX) :]
         return model_id
@@ -2884,7 +2991,11 @@ class ConfigDrivenModelCleaner(BaseModelCleaner):
             and costs_are_equal(input_cost, free_model_cost)
             and costs_are_equal(output_cost, free_model_cost)
         )
-        model_order = free_order if (is_free_model and free_order is not None) else self.PROVIDER_ORDER
+        model_order = (
+            free_order
+            if (is_free_model and free_order is not None)
+            else self.PROVIDER_ORDER
+        )
 
         entry = {
             "model_name": model_name,
@@ -2935,9 +3046,13 @@ class ConfigDrivenModelCleaner(BaseModelCleaner):
         cache_creation_cost = api_model_info.get("cache_creation_cost")
         cache_read_cost = api_model_info.get("cache_read_cost")
         if cache_creation_cost is not None:
-            entry["litellm_params"]["cache_creation_input_token_cost"] = adjust_cost_for_free_model(cache_creation_cost)
+            entry["litellm_params"]["cache_creation_input_token_cost"] = (
+                adjust_cost_for_free_model(cache_creation_cost)
+            )
         if cache_read_cost is not None:
-            entry["litellm_params"]["cache_read_input_token_cost"] = adjust_cost_for_free_model(cache_read_cost)
+            entry["litellm_params"]["cache_read_input_token_cost"] = (
+                adjust_cost_for_free_model(cache_read_cost)
+            )
 
         # Add model_info if present
         model_info_section = api_model_info.get("model_info")
@@ -3009,7 +3124,9 @@ class ConfigDrivenModelCleaner(BaseModelCleaner):
                 if invalid_models or cost_changes or was_sorted or order_changed:
                     self.save_config(config)
 
-            self.generate_report(invalid_models, cost_changes, was_sorted, order_changed)
+            self.generate_report(
+                invalid_models, cost_changes, was_sorted, order_changed
+            )
             return 0
 
         except Exception as e:
@@ -3026,7 +3143,11 @@ def _print_validation_report(report: ValidationReport) -> None:
     if errors:
         print(f"ERRORS ({len(errors)}):")
         for issue in errors:
-            name_part = f"model_name='{issue.model_name}'" if issue.model_name else f"model_name=''"
+            name_part = (
+                f"model_name='{issue.model_name}'"
+                if issue.model_name
+                else f"model_name=''"
+            )
             model_part = f" [model='{issue.model_id}']" if issue.model_id else ""
             print(f"  Entry #{issue.entry_index} ({name_part}){model_part}")
             print(f"    - {issue.message}")
@@ -3034,7 +3155,11 @@ def _print_validation_report(report: ValidationReport) -> None:
     if warnings:
         print(f"WARNINGS ({len(warnings)}):")
         for issue in warnings:
-            name_part = f"model_name='{issue.model_name}'" if issue.model_name else f"model_name=''"
+            name_part = (
+                f"model_name='{issue.model_name}'"
+                if issue.model_name
+                else f"model_name=''"
+            )
             model_part = f" [model='{issue.model_id}']" if issue.model_id else ""
             print(f"  Entry #{issue.entry_index} ({name_part}){model_part}")
             print(f"    - {issue.message}")
@@ -3042,14 +3167,20 @@ def _print_validation_report(report: ValidationReport) -> None:
     if infos:
         print(f"INFO ({len(infos)}):")
         for issue in infos:
-            name_part = f"model_name='{issue.model_name}'" if issue.model_name else f"model_name=''"
+            name_part = (
+                f"model_name='{issue.model_name}'"
+                if issue.model_name
+                else f"model_name=''"
+            )
             model_part = f" [model='{issue.model_id}']" if issue.model_id else ""
             print(f"  Entry #{issue.entry_index} ({name_part}){model_part}")
             print(f"    - {issue.message}")
 
     error_count = len(errors)
     warning_count = len(warnings)
-    print(f"\nSummary: {report.total_entries} entries checked, {error_count} errors, {warning_count} warnings")
+    print(
+        f"\nSummary: {report.total_entries} entries checked, {error_count} errors, {warning_count} warnings"
+    )
 
 
 def create_provider_main(cleaner_class, description: str, epilog: str = ""):

@@ -28,19 +28,19 @@ class KiloModelCleaner(ConfigDrivenModelCleaner):
 
     def __init__(self, config_path: str, dry_run: bool = False, verbose: bool = False):
         """Initialize the Kilo model cleaner."""
-        super().__init__('kilo', config_path, dry_run, verbose)
+        super().__init__("kilo", config_path, dry_run, verbose)
 
 
 main = create_provider_main(
     KiloModelCleaner,
-    'Validate and cleanup Kilo models in LiteLLM config',
+    "Validate and cleanup Kilo models in LiteLLM config",
     """
 Examples:
   %(prog)s                              # Run cleanup on default config.yaml
   %(prog)s --config my.yaml             # Run cleanup on custom config file
   %(prog)s --dry-run                    # Preview changes without modifying file
   %(prog)s --add-model anthropic/claude-opus-4.6  # Add new model(s)
-    """
+    """,
 )
 
 

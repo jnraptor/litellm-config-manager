@@ -140,9 +140,18 @@ class TestCleanupModelsUnifiedScript:
 
         config_content = {
             "model_list": [
-                {"model_name": "model-a", "litellm_params": {"model": "openai/model-a"}},
-                {"model_name": "model-b", "litellm_params": {"model": "openai/model-b"}},
-                {"model_name": "model-a", "litellm_params": {"model": "openai/model-a-v2"}},
+                {
+                    "model_name": "model-a",
+                    "litellm_params": {"model": "openai/model-a"},
+                },
+                {
+                    "model_name": "model-b",
+                    "litellm_params": {"model": "openai/model-b"},
+                },
+                {
+                    "model_name": "model-a",
+                    "litellm_params": {"model": "openai/model-a-v2"},
+                },
             ],
         }
         config_file = tmp_path / "config.yaml"
@@ -169,7 +178,10 @@ class TestCleanupModelsUnifiedScript:
 
         config_content = {
             "model_list": [
-                {"model_name": "model-a", "litellm_params": {"model": "openai/model-a"}},
+                {
+                    "model_name": "model-a",
+                    "litellm_params": {"model": "openai/model-a"},
+                },
             ],
         }
         config_file = tmp_path / "config.yaml"
@@ -195,9 +207,18 @@ class TestCleanupModelsUnifiedScript:
 
         config_content = {
             "model_list": [
-                {"model_name": "model-a", "litellm_params": {"model": "openai/model-a"}},
-                {"model_name": "model-b", "litellm_params": {"model": "openai/model-b"}},
-                {"model_name": "model-c", "litellm_params": {"model": "openai/model-c"}},
+                {
+                    "model_name": "model-a",
+                    "litellm_params": {"model": "openai/model-a"},
+                },
+                {
+                    "model_name": "model-b",
+                    "litellm_params": {"model": "openai/model-b"},
+                },
+                {
+                    "model_name": "model-c",
+                    "litellm_params": {"model": "openai/model-c"},
+                },
             ],
         }
         config_file = tmp_path / "config.yaml"
@@ -326,7 +347,9 @@ class TestCleanupModelsUnifiedScript:
         assert removed == 1
         assert details["openrouter"] == 1
         assert len(updated_config["model_list"]) == 2
-        remaining_models = [e["litellm_params"]["model"] for e in updated_config["model_list"]]
+        remaining_models = [
+            e["litellm_params"]["model"] for e in updated_config["model_list"]
+        ]
         assert "openrouter/anthropic/claude-3" not in remaining_models
 
     def test_delete_provider_from_config_removes_api_base_models(
@@ -445,9 +468,7 @@ class TestCleanupModelsUnifiedScript:
         assert saved["providers"]["openrouter"]["enabled"] is False
         assert saved["providers"]["kilo"]["enabled"] is True
 
-    def test_disable_providers_already_disabled(
-        self, tmp_path, temp_providers_config
-    ):
+    def test_disable_providers_already_disabled(self, tmp_path, temp_providers_config):
         """Test disable_providers skips providers already disabled."""
         from cleanup_models import UnifiedModelCleaner
 
@@ -526,12 +547,18 @@ class TestCleanupModelsUnifiedScript:
         with open(config_file, "w") as f:
             yaml.dump({"model_list": []}, f)
 
-        with patch("sys.argv", [
-            "cleanup_models.py",
-            "--provider", "openrouter",
-            "--config", str(config_file),
-            "--delete-provider", "unknown-provider",
-        ]):
+        with patch(
+            "sys.argv",
+            [
+                "cleanup_models.py",
+                "--provider",
+                "openrouter",
+                "--config",
+                str(config_file),
+                "--delete-provider",
+                "unknown-provider",
+            ],
+        ):
             result = main()
 
         assert result == 1

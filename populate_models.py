@@ -123,7 +123,7 @@ def _strip_vendor_prefixes(value: str) -> str:
         changed = False
         for prefix in VENDOR_PREFIXES:
             if s.startswith(prefix):
-                s = s[len(prefix):]
+                s = s[len(prefix) :]
                 changed = True
                 break
     return s
@@ -215,7 +215,9 @@ def find_model_in_api(
         for api_id in api_models.keys():
             api_norm = _normalize_for_match(api_id)
             if key_norm in api_norm and len(key_norm) / len(api_norm) >= 0.5:
-                if best_sub is None or len(api_norm) < len(_normalize_for_match(best_sub[0])):
+                if best_sub is None or len(api_norm) < len(
+                    _normalize_for_match(best_sub[0])
+                ):
                     best_sub = (api_id, 0.6, "substring")
         if best_sub is not None:
             return best_sub
@@ -245,7 +247,9 @@ class ModelsPopulator:
         self.mapping_loader = ModelMappingLoader(models_config_path)
         self._cleaners: Dict[str, ConfigDrivenModelCleaner] = {}
 
-    def _get_cleaner(self, provider_name: str, config_path: str) -> ConfigDrivenModelCleaner:
+    def _get_cleaner(
+        self, provider_name: str, config_path: str
+    ) -> ConfigDrivenModelCleaner:
         if provider_name in self._cleaners:
             return self._cleaners[provider_name]
         if provider_name == "ollama":
@@ -313,7 +317,9 @@ class ModelsPopulator:
                 cleaner = self._get_cleaner(provider_name, config_path)
                 api_models = cleaner.fetch_available_models()
             except Exception as exc:
-                self.logger.warning(f"  Failed to fetch models from {provider_name}: {exc}")
+                self.logger.warning(
+                    f"  Failed to fetch models from {provider_name}: {exc}"
+                )
                 missing.append(provider_name)
                 continue
 

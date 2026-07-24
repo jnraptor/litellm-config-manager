@@ -296,7 +296,9 @@ def run_test_case(test_case: InputOutputTestCase) -> Tuple[bool, List[str]]:
     # For multi-prefix providers (e.g., opencode-go), prepend the expected prefix
     # so create_model_entry can determine the correct api_base
     if test_case.provider in ("opencode-go", "opencode-go-anthropic"):
-        expected_model = test_case.expected_output.get("litellm_params", {}).get("model", "")
+        expected_model = test_case.expected_output.get("litellm_params", {}).get(
+            "model", ""
+        )
         if "/" in expected_model:
             expected_prefix = expected_model.split("/")[0] + "/"
             if not model_id.startswith(expected_prefix):
@@ -395,8 +397,7 @@ def run_test_case(test_case: InputOutputTestCase) -> Tuple[bool, List[str]]:
             )
     elif actual_cache_read is not None:
         errors.append(
-            f"cache_read_input_token_cost should be absent, "
-            f"but got {actual_cache_read}"
+            f"cache_read_input_token_cost should be absent, but got {actual_cache_read}"
         )
 
     # Check model_info (if expected)

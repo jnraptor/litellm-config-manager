@@ -116,8 +116,10 @@ class TestModelsDevClient:
         client = ModelsDevClient()
         client._data = SAMPLE_MODELS_DEV_DATA
 
-        input_cost, output_cost, cache_read_cost, cache_creation_cost = client.get_model_cost(
-            "fireworks-ai", "accounts/fireworks/models/deepseek-v4-pro"
+        input_cost, output_cost, cache_read_cost, cache_creation_cost = (
+            client.get_model_cost(
+                "fireworks-ai", "accounts/fireworks/models/deepseek-v4-pro"
+            )
         )
 
         # 1.74 per million → 1.74e-06 per token
@@ -130,8 +132,8 @@ class TestModelsDevClient:
         client = ModelsDevClient()
         client._data = SAMPLE_MODELS_DEV_DATA
 
-        input_cost, output_cost, cache_read_cost, cache_creation_cost = client.get_model_cost(
-            "opencode", "claude-sonnet-4-6"
+        input_cost, output_cost, cache_read_cost, cache_creation_cost = (
+            client.get_model_cost("opencode", "claude-sonnet-4-6")
         )
 
         assert input_cost == pytest.approx(3e-06)
@@ -142,8 +144,8 @@ class TestModelsDevClient:
         client = ModelsDevClient()
         client._data = SAMPLE_MODELS_DEV_DATA
 
-        input_cost, output_cost, cache_read_cost, cache_creation_cost = client.get_model_cost(
-            "opencode-go", "deepseek-v4-pro"
+        input_cost, output_cost, cache_read_cost, cache_creation_cost = (
+            client.get_model_cost("opencode-go", "deepseek-v4-pro")
         )
 
         assert input_cost == pytest.approx(1.74e-06)
@@ -154,8 +156,10 @@ class TestModelsDevClient:
         client = ModelsDevClient()
         client._data = SAMPLE_MODELS_DEV_DATA
 
-        input_cost, output_cost, cache_read_cost, cache_creation_cost = client.get_model_cost(
-            "fireworks-ai", "accounts/fireworks/models/free-model"
+        input_cost, output_cost, cache_read_cost, cache_creation_cost = (
+            client.get_model_cost(
+                "fireworks-ai", "accounts/fireworks/models/free-model"
+            )
         )
 
         assert input_cost == pytest.approx(0.0)
@@ -166,8 +170,8 @@ class TestModelsDevClient:
         client = ModelsDevClient()
         client._data = SAMPLE_MODELS_DEV_DATA
 
-        input_cost, output_cost, cache_read_cost, cache_creation_cost = client.get_model_cost(
-            "nonexistent-provider", "some-model"
+        input_cost, output_cost, cache_read_cost, cache_creation_cost = (
+            client.get_model_cost("nonexistent-provider", "some-model")
         )
 
         assert input_cost is None
@@ -178,8 +182,10 @@ class TestModelsDevClient:
         client = ModelsDevClient()
         client._data = SAMPLE_MODELS_DEV_DATA
 
-        input_cost, output_cost, cache_read_cost, cache_creation_cost = client.get_model_cost(
-            "fireworks-ai", "accounts/fireworks/models/nonexistent-model"
+        input_cost, output_cost, cache_read_cost, cache_creation_cost = (
+            client.get_model_cost(
+                "fireworks-ai", "accounts/fireworks/models/nonexistent-model"
+            )
         )
 
         assert input_cost is None
@@ -190,8 +196,8 @@ class TestModelsDevClient:
         client = ModelsDevClient()
         client._data = SAMPLE_MODELS_DEV_DATA
 
-        input_cost, output_cost, cache_read_cost, cache_creation_cost = client.get_model_cost(
-            "no-cost-provider", "model-no-cost"
+        input_cost, output_cost, cache_read_cost, cache_creation_cost = (
+            client.get_model_cost("no-cost-provider", "model-no-cost")
         )
 
         assert input_cost is None
@@ -202,8 +208,8 @@ class TestModelsDevClient:
         client = ModelsDevClient()
         client._data = SAMPLE_MODELS_DEV_DATA
 
-        input_cost, output_cost, cache_read_cost, cache_creation_cost = client.get_model_cost(
-            "empty-provider", "any-model"
+        input_cost, output_cost, cache_read_cost, cache_creation_cost = (
+            client.get_model_cost("empty-provider", "any-model")
         )
 
         assert input_cost is None
@@ -214,8 +220,10 @@ class TestModelsDevClient:
         client = ModelsDevClient()
         client._load_failed = True  # Simulate failed load
 
-        input_cost, output_cost, cache_read_cost, cache_creation_cost = client.get_model_cost(
-            "fireworks-ai", "accounts/fireworks/models/deepseek-v4-pro"
+        input_cost, output_cost, cache_read_cost, cache_creation_cost = (
+            client.get_model_cost(
+                "fireworks-ai", "accounts/fireworks/models/deepseek-v4-pro"
+            )
         )
 
         assert input_cost is None
@@ -238,7 +246,9 @@ class TestModelsDevClient:
         """Test graceful handling of network failure."""
         client = ModelsDevClient()
         client._api_client = Mock()
-        client._api_client.fetch.side_effect = requests.RequestException("Connection error")
+        client._api_client.fetch.side_effect = requests.RequestException(
+            "Connection error"
+        )
 
         logger = logging.getLogger("test_network_failure")
         client._ensure_loaded(logger)
@@ -309,8 +319,8 @@ class TestModelsDevClient:
             }
         }
 
-        input_cost, output_cost, cache_read_cost, cache_creation_cost = client.get_model_cost(
-            "test-provider", "test-model"
+        input_cost, output_cost, cache_read_cost, cache_creation_cost = (
+            client.get_model_cost("test-provider", "test-model")
         )
 
         # 0.29 / 1_000_000 = 2.9e-07
@@ -366,7 +376,8 @@ class TestParseApiModelWithModelsDevFallback:
         assert result["input_cost"] == pytest.approx(1.74e-06)
         assert result["output_cost"] == pytest.approx(3.48e-06)
         mock_client.get_model_cost.assert_called_once_with(
-            "fireworks-ai", "accounts/fireworks/models/deepseek-v4-pro",
+            "fireworks-ai",
+            "accounts/fireworks/models/deepseek-v4-pro",
             cleaner.logger,
         )
 
@@ -484,17 +495,14 @@ class TestModelsDevClientGetProviderModels:
 
         models = client.get_provider_models("fireworks-ai")
 
-        assert (
-            models["accounts/fireworks/models/deepseek-v4-pro"]["input_cost"]
-            == pytest.approx(1.74e-06)
-        )
-        assert (
-            models["accounts/fireworks/models/deepseek-v4-pro"]["output_cost"]
-            == pytest.approx(3.48e-06)
-        )
-        assert (
-            models["accounts/fireworks/models/glm-5"]["input_cost"]
-            == pytest.approx(1.0e-06)
+        assert models["accounts/fireworks/models/deepseek-v4-pro"][
+            "input_cost"
+        ] == pytest.approx(1.74e-06)
+        assert models["accounts/fireworks/models/deepseek-v4-pro"][
+            "output_cost"
+        ] == pytest.approx(3.48e-06)
+        assert models["accounts/fireworks/models/glm-5"]["input_cost"] == pytest.approx(
+            1.0e-06
         )
 
     def test_returns_id_and_none_model_info(self):
@@ -541,7 +549,10 @@ class TestModelsDevClientGetProviderModels:
         client._data = {
             "test-provider": {
                 "models": {
-                    "good-model": {"id": "good-model", "cost": {"input": 1.0, "output": 2.0}},
+                    "good-model": {
+                        "id": "good-model",
+                        "cost": {"input": 1.0, "output": 2.0},
+                    },
                     "not-a-dict": "oops",
                 }
             }
@@ -617,10 +628,9 @@ class TestFetchAvailableModelsFromModelsDev:
         result = cleaner.fetch_available_models()
 
         assert "accounts/fireworks/models/deepseek-v4-pro" in result
-        assert (
-            result["accounts/fireworks/models/deepseek-v4-pro"]["input_cost"]
-            == pytest.approx(1.74e-06)
-        )
+        assert result["accounts/fireworks/models/deepseek-v4-pro"][
+            "input_cost"
+        ] == pytest.approx(1.74e-06)
         mock_client.get_provider_models.assert_called_once_with(
             "fireworks-ai", cleaner.logger
         )
@@ -640,14 +650,12 @@ class TestFetchAvailableModelsFromModelsDev:
         cleaner = self._create_cleaner()
         result = cleaner.fetch_available_models()
 
-        assert (
-            result["accounts/fireworks/models/free-model"]["input_cost"]
-            == pytest.approx(1e-09)
-        )
-        assert (
-            result["accounts/fireworks/models/free-model"]["output_cost"]
-            == pytest.approx(1e-09)
-        )
+        assert result["accounts/fireworks/models/free-model"][
+            "input_cost"
+        ] == pytest.approx(1e-09)
+        assert result["accounts/fireworks/models/free-model"][
+            "output_cost"
+        ] == pytest.approx(1e-09)
 
     @patch("cleanup_base._models_dev_client")
     def test_does_not_apply_free_handling_when_disabled(self, mock_client):
@@ -741,9 +749,10 @@ class TestFetchAvailableModelsFromModelsDev:
 
         cleaner = self._create_cleaner()
 
-        with patch.object(cleaner, "_build_api_headers", return_value=None), patch(
-            "cleanup_base.fetch_models_from_api"
-        ) as mock_fetch:
+        with (
+            patch.object(cleaner, "_build_api_headers", return_value=None),
+            patch("cleanup_base.fetch_models_from_api") as mock_fetch,
+        ):
             cleaner.fetch_available_models()
             mock_fetch.assert_not_called()
 
@@ -794,15 +803,15 @@ class TestFetchAvailableModelsFromModelsDev:
             ]
         }
 
-        with patch.object(cleaner, "_build_api_headers", return_value=None), patch(
-            "cleanup_base.fetch_models_from_api", return_value=embed_response
+        with (
+            patch.object(cleaner, "_build_api_headers", return_value=None),
+            patch("cleanup_base.fetch_models_from_api", return_value=embed_response),
         ):
             result = cleaner.fetch_available_models()
 
         # The chat model from models.dev was not overwritten
-        assert (
-            result["accounts/fireworks/models/shared-id"]["input_cost"]
-            == pytest.approx(1.5e-06)
-        )
+        assert result["accounts/fireworks/models/shared-id"][
+            "input_cost"
+        ] == pytest.approx(1.5e-06)
         # The new embedding-only model was added
         assert "accounts/fireworks/models/embedding-only" in result

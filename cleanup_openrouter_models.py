@@ -28,19 +28,19 @@ class OpenRouterModelCleaner(ConfigDrivenModelCleaner):
 
     def __init__(self, config_path: str, dry_run: bool = False, verbose: bool = False):
         """Initialize the OpenRouter model cleaner."""
-        super().__init__('openrouter', config_path, dry_run, verbose)
+        super().__init__("openrouter", config_path, dry_run, verbose)
 
 
 main = create_provider_main(
     OpenRouterModelCleaner,
-    'Validate and cleanup OpenRouter models in LiteLLM config',
+    "Validate and cleanup OpenRouter models in LiteLLM config",
     """
 Examples:
   %(prog)s                              # Run cleanup on default config.yaml
   %(prog)s --config my.yaml             # Run cleanup on custom config file
   %(prog)s --dry-run                    # Preview changes without modifying file
   %(prog)s --add-model qwen/qwen3-14b   # Add new model(s)
-    """
+    """,
 )
 
 
