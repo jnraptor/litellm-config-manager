@@ -254,9 +254,9 @@ model_list:
   litellm_params:
     model: openrouter/deepseek/deepseek-v4-flash
     order: 5
-    input_cost_per_token: 9.8e-08
-    output_cost_per_token: 1.96e-07
-    cache_read_input_token_cost: 1.96e-08
+    input_cost_per_token: 9.38e-08
+    output_cost_per_token: 1.876e-07
+    cache_read_input_token_cost: 1.876e-08
 - model_name: deepseek-v4-pro
   litellm_params:
     model: openai/deepseek-v4-pro
@@ -407,9 +407,9 @@ model_list:
   litellm_params:
     model: openrouter/z-ai/glm-5.2
     order: 5
-    input_cost_per_token: 7.826e-07
-    output_cost_per_token: 2.4596e-06
-    cache_read_input_token_cost: 1.4534e-07
+    input_cost_per_token: 7.952e-07
+    output_cost_per_token: 2.4992e-06
+    cache_read_input_token_cost: 1.4768e-07
 - litellm_params:
     api_base: os.environ/AZURE_OPENAI_API_BASE
     api_key: os.environ/AZURE_OPENAI_API_KEY
@@ -500,19 +500,19 @@ model_list:
     cache_read_input_token_cost: 3.5e-08
 - model_name: hy3
   litellm_params:
-    model: openai/novita/tencent/hy3
-    order: 5
-    api_base: https://router.requesty.ai/v1
-    api_key: os.environ/REQUESTY_API_KEY
+    model: openai/tencent/hy3
+    order: 4
+    api_base: https://api.kilo.ai/api/gateway
+    api_key: os.environ/KILO_API_KEY
     input_cost_per_token: 1.4e-07
     output_cost_per_token: 5.8e-07
     cache_read_input_token_cost: 3.5e-08
 - model_name: hy3
   litellm_params:
-    model: openai/tencent/hy3
-    order: 4
-    api_base: https://api.kilo.ai/api/gateway
-    api_key: os.environ/KILO_API_KEY
+    model: openai/novita/tencent/hy3
+    order: 5
+    api_base: https://router.requesty.ai/v1
+    api_key: os.environ/REQUESTY_API_KEY
     input_cost_per_token: 1.4e-07
     output_cost_per_token: 5.8e-07
     cache_read_input_token_cost: 3.5e-08
@@ -637,8 +637,8 @@ model_list:
   litellm_params:
     model: openrouter/moonshotai/kimi-k2.7-code
     order: 5
-    input_cost_per_token: 8.2e-07
-    output_cost_per_token: 3.75e-06
+    input_cost_per_token: 7.8e-07
+    output_cost_per_token: 3.5e-06
     cache_read_input_token_cost: 1.5e-07
 - model_name: kimi-k3
   litellm_params:
