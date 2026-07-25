@@ -143,6 +143,34 @@ model_list:
     output_cost_per_token: 2.5e-05
     cache_read_input_token_cost: 5.0e-07
     cache_creation_input_token_cost: 6.25e-06
+- model_name: claude-opus-5
+  litellm_params:
+    model: openai/anthropic/claude-opus-5
+    order: 4
+    api_base: https://api.kilo.ai/api/gateway
+    api_key: os.environ/KILO_API_KEY
+    input_cost_per_token: 5.0e-06
+    output_cost_per_token: 2.5e-05
+    cache_creation_input_token_cost: 6.25e-06
+    cache_read_input_token_cost: 5.0e-07
+- model_name: claude-opus-5
+  litellm_params:
+    model: openai/anthropic/claude-opus-5
+    order: 5
+    api_base: https://router.requesty.ai/v1
+    api_key: os.environ/REQUESTY_API_KEY
+    input_cost_per_token: 5.0e-06
+    output_cost_per_token: 2.5e-05
+    cache_creation_input_token_cost: 6.25e-06
+    cache_read_input_token_cost: 5.0e-07
+- model_name: claude-opus-5
+  litellm_params:
+    model: openrouter/anthropic/claude-opus-5
+    order: 5
+    input_cost_per_token: 5.0e-06
+    output_cost_per_token: 2.5e-05
+    cache_creation_input_token_cost: 6.25e-06
+    cache_read_input_token_cost: 5.0e-07
 - model_name: claude-sonnet-4-6
   litellm_params:
     model: openai/anthropic/claude-sonnet-4.6
@@ -604,9 +632,9 @@ model_list:
   litellm_params:
     model: openrouter/moonshotai/kimi-k2.6
     order: 5
-    input_cost_per_token: 6.84e-07
-    output_cost_per_token: 3.42e-06
-    cache_read_input_token_cost: 1.44e-07
+    input_cost_per_token: 4.6512e-07
+    output_cost_per_token: 2.3256e-06
+    cache_read_input_token_cost: 9.792e-08
 - model_name: kimi-k2.7
   litellm_params:
     model: openai/kimi-k2.7-code

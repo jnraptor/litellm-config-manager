@@ -269,3 +269,10 @@ models:
       openrouter: inclusionai/ling-3.0-flash:free
       kilo: inclusionai/ling-3.0-flash:free
       opencode-zen: ling-3.0-flash-free
+  claude-opus-5:
+    display_name: claude-opus-5
+    description: ''
+    providers:
+      openrouter: anthropic/claude-opus-5
+      kilo: anthropic/claude-opus-5
+      requesty: anthropic/claude-opus-5
