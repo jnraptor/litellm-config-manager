@@ -435,9 +435,9 @@ model_list:
   litellm_params:
     model: openrouter/z-ai/glm-5.2
     order: 5
-    input_cost_per_token: 7.952e-07
-    output_cost_per_token: 2.4992e-06
-    cache_read_input_token_cost: 1.4768e-07
+    input_cost_per_token: 7.7e-07
+    output_cost_per_token: 2.42e-06
+    cache_read_input_token_cost: 1.43e-07
 - litellm_params:
     api_base: os.environ/AZURE_OPENAI_API_BASE
     api_key: os.environ/AZURE_OPENAI_API_KEY
@@ -632,9 +632,9 @@ model_list:
   litellm_params:
     model: openrouter/moonshotai/kimi-k2.6
     order: 5
-    input_cost_per_token: 4.6512e-07
-    output_cost_per_token: 2.3256e-06
-    cache_read_input_token_cost: 9.792e-08
+    input_cost_per_token: 6.46e-07
+    output_cost_per_token: 2.72e-06
+    cache_read_input_token_cost: 1.088e-07
 - model_name: kimi-k2.7
   litellm_params:
     model: openai/kimi-k2.7-code
@@ -1161,4 +1161,5 @@ guardrails:
     guardrail: headroom
     mode: pre_call
     api_base: http://10.10.1.1:8787
-    default_on: true
+    api_key: os.environ/HEADROOM_API_KEY
+    default_on: false
