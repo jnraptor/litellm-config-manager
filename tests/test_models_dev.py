@@ -361,9 +361,7 @@ class TestModelsDevClient:
         client = ModelsDevClient()
         client._data = SAMPLE_MODELS_DEV_DATA
 
-        max_input, max_output = client.get_model_limits(
-            "opencode-go", "no-limit-model"
-        )
+        max_input, max_output = client.get_model_limits("opencode-go", "no-limit-model")
 
         assert max_input is None
         assert max_output is None
