@@ -561,9 +561,9 @@ model_list:
   litellm_params:
     model: openrouter/z-ai/glm-5.2
     order: 5
-    input_cost_per_token: 7.196e-07
-    output_cost_per_token: 2.2616e-06
-    cache_read_input_token_cost: 1.3364e-07
+    input_cost_per_token: 6.692e-07
+    output_cost_per_token: 2.1032e-06
+    cache_read_input_token_cost: 1.2428e-07
   model_info:
     max_input_tokens: 1048576
     max_output_tokens: 131072
@@ -843,7 +843,7 @@ model_list:
   litellm_params:
     model: openrouter/moonshotai/kimi-k2.7-code
     order: 5
-    input_cost_per_token: 7.8e-07
+    input_cost_per_token: 7.3e-07
     output_cost_per_token: 3.5e-06
     cache_read_input_token_cost: 1.5e-07
   model_info:
