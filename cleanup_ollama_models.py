@@ -88,6 +88,8 @@ class OllamaModelCleaner(ConfigDrivenModelCleaner):
             "id": model_id,
             "input_cost": None,
             "output_cost": None,
+            "max_input_tokens": None,
+            "max_output_tokens": None,
             "model_info": model.get("model_info"),
         }
 

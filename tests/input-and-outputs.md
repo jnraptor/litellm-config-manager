@@ -170,6 +170,9 @@
     output_cost_per_token: 3.75e-06
     cache_creation_input_token_cost: 1.5625e-06
     cache_read_input_token_cost: 2.5e-07
+  model_info:
+    max_input_tokens: 1000000
+    max_output_tokens: 65536
 ```
 
 ## vercel
@@ -209,6 +212,9 @@
     output_cost_per_token: 3.75e-06
     cache_creation_input_token_cost: 1.5625e-06
     cache_read_input_token_cost: 2.5e-07
+  model_info:
+    max_input_tokens: 991000
+    max_output_tokens: 64000
 ```
 
 ## poe
@@ -405,6 +411,9 @@
     output_cost_per_token: 3.75e-06
     cache_creation_input_token_cost: 1.5625e-06
     cache_read_input_token_cost: 1.25e-07
+  model_info:
+    max_input_tokens: 1000000
+    max_output_tokens: 65536
 ```
 
 ## ollama
@@ -460,6 +469,8 @@
     model: fireworks_ai/accounts/fireworks/models/glm-5
     order: 4
     api_key: os.environ/FIREWORKS_AI_API_KEY
+  model_info:
+    max_input_tokens: 202752
 ```
 
 ## opencode-zen
@@ -563,5 +574,8 @@
     cache_creation_input_token_cost: 3.125e-06
     cache_read_input_token_cost: 2.5e-07
     order: 5
+  model_info:
+    max_input_tokens: 1048576
+    max_output_tokens: 65536
   model_name: qwen3.7-max
 ```

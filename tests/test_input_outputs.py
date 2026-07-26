@@ -230,6 +230,8 @@ class MockCleaner(ConfigDrivenModelCleaner):
         self._embeddings_api_url = self.provider_config.get("embeddings_api_url")
         self._free_variant_suffix = self.provider_config.get("free_variant_suffix")
         self._model_prefixes = self.provider_config.get("model_prefixes")
+        self._max_input_field = self.provider_config.get("max_input_field")
+        self._max_output_field = self.provider_config.get("max_output_field")
         self._models_dev_id = self._pricing_config.get("models_dev_id")
 
         # Load defaults from providers.yaml
@@ -280,6 +282,7 @@ def run_test_case(test_case: InputOutputTestCase) -> Tuple[bool, List[str]]:
     # These tests validate provider-specific parsing, not models.dev augmentation.
     mock_client = Mock()
     mock_client.get_model_cost.return_value = (None, None, None, None)
+    mock_client.get_model_limits.return_value = (None, None)
     try:
         with patch("cleanup_base._models_dev_client", mock_client):
             parsed_model = cleaner.parse_api_model(test_case.input_data)

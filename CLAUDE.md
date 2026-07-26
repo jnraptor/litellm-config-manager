@@ -293,6 +293,8 @@ How each provider's models are detected in `config.yaml`:
 
 Cache fields are only present when the provider API reports cache pricing. They are removed automatically when the API stops reporting them (full sync).
 
+**Token Limits (`max_input_tokens` / `max_output_tokens`):** Context-window limits are written under the top-level `model_info` section of each entry (e.g., `model_info.max_input_tokens: 1000000`). They are sourced from provider-API fields configured per provider in `providers.yaml` via `max_input_field` / `max_output_field` (dot-notation paths, e.g. `context_length` or `top_provider.max_completion_tokens`). When the provider API does not report a limit and `pricing.models_dev_id` is set, the values fall back to models.dev `limit.context` → `max_input_tokens` and `limit.output` → `max_output_tokens`. During cleanup, limits are synced like cache costs: added/updated when the API provides them, and removed when the API stops reporting them (the `model_info` block is dropped entirely only if it becomes empty, so `mode` and other metadata are preserved).
+
 **Free Model Handling:** Free models use `1.0e-09` costs for LiteLLM compatibility (LiteLLM requires non-zero costs). `adjust_cost_for_free_model()` converts `0.0` → `1.0e-09` for all cost fields — input, output, and both cache fields.
 
 **Free Variants (OpenRouter, Kilo):** When adding a model via `--add-model`, if a `<model-id>:free` variant exists in the API, it is automatically added with the same `model_name` for load balancing.

@@ -15,6 +15,9 @@ providers:
       cache_write_field: pricing.input_cache_write
       is_per_million: false
       free_model_handling: true
+      models_dev_id: openrouter
+    max_input_field: context_length
+    max_output_field: top_provider.max_completion_tokens
     model_name_prefix: or-
     model_name_cleanup:
     - replace:
@@ -48,6 +51,8 @@ providers:
       cache_write_field: pricing.input_cache_write
       is_per_million: false
       free_model_handling: true
+    max_input_field: context_window
+    max_output_field: max_tokens
     model_name_prefix: vc-
     model_name_cleanup:
     - replace:
@@ -104,6 +109,7 @@ providers:
       is_per_million: false
       free_model_handling: true
       default_cost: 1.0e-09
+      models_dev_id: nvidia
     model_name_prefix: nim-
     model_name_cleanup:
     - replace:
@@ -136,6 +142,8 @@ providers:
       cache_write_field: pricing.input_cache_write
       is_per_million: false
       free_model_handling: true
+    max_input_field: context_length
+    max_output_field: top_provider.max_completion_tokens
     model_name_prefix: ''
     model_name_cleanup: []
     special_models: []
@@ -184,6 +192,7 @@ providers:
       free_model_handling: true
       default_cost: null
       models_dev_id: fireworks-ai
+    max_input_field: context_length
     model_name_prefix: ''
     model_name_cleanup: []
     special_models:
@@ -283,6 +292,9 @@ providers:
       cache_write_field: caching_price
       is_per_million: false
       free_model_handling: true
+      models_dev_id: requesty
+    max_input_field: context_window
+    max_output_field: max_output_tokens
     model_name_prefix: ''
     model_name_cleanup: []
     special_models:

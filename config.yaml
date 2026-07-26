@@ -77,6 +77,9 @@ model_list:
     output_cost_per_token: 1.0e-09
     cache_read_input_token_cost: 1.0e-09
     cache_creation_input_token_cost: 1.0e-09
+  model_info:
+    max_input_tokens: 200000
+    max_output_tokens: 32000
 - model_name: claude-haiku-4-5
   litellm_params:
     model: openai/anthropic/claude-haiku-4.5
@@ -87,6 +90,9 @@ model_list:
     output_cost_per_token: 5.0e-06
     cache_read_input_token_cost: 1.0e-07
     cache_creation_input_token_cost: 1.25e-06
+  model_info:
+    max_input_tokens: 200000
+    max_output_tokens: 64000
 - model_name: claude-haiku-4-5
   litellm_params:
     model: openai/anthropic/claude-haiku-4-5
@@ -97,6 +103,9 @@ model_list:
     output_cost_per_token: 5.0e-06
     cache_read_input_token_cost: 1.0e-07
     cache_creation_input_token_cost: 1.25e-06
+  model_info:
+    max_input_tokens: 200000
+    max_output_tokens: 64000
 - litellm_params:
     model: openrouter/anthropic/claude-haiku-4.5
     input_cost_per_token: 1.0e-06
@@ -105,6 +114,9 @@ model_list:
     cache_read_input_token_cost: 1.0e-07
     cache_creation_input_token_cost: 1.25e-06
   model_name: claude-haiku-4-5
+  model_info:
+    max_input_tokens: 200000
+    max_output_tokens: 64000
 - model_name: claude-opus-4-8
   litellm_params:
     model: openai/anthropic/claude-opus-4.8
@@ -115,6 +127,9 @@ model_list:
     output_cost_per_token: 2.5e-05
     cache_read_input_token_cost: 5.0e-07
     cache_creation_input_token_cost: 6.25e-06
+  model_info:
+    max_input_tokens: 1000000
+    max_output_tokens: 128000
 - model_name: claude-opus-4-8
   litellm_params:
     model: openai/stealth/claude-opus-4.8
@@ -125,6 +140,9 @@ model_list:
     output_cost_per_token: 2.0e-05
     cache_read_input_token_cost: 4.0e-07
     cache_creation_input_token_cost: 5.0e-06
+  model_info:
+    max_input_tokens: 1000000
+    max_output_tokens: 128000
 - model_name: claude-opus-4-8
   litellm_params:
     model: openai/anthropic/claude-opus-4-8
@@ -135,6 +153,9 @@ model_list:
     output_cost_per_token: 2.5e-05
     cache_read_input_token_cost: 5.0e-07
     cache_creation_input_token_cost: 6.25e-06
+  model_info:
+    max_input_tokens: 1000000
+    max_output_tokens: 128000
 - model_name: claude-opus-4-8
   litellm_params:
     model: openrouter/anthropic/claude-opus-4.8
@@ -143,6 +164,9 @@ model_list:
     output_cost_per_token: 2.5e-05
     cache_read_input_token_cost: 5.0e-07
     cache_creation_input_token_cost: 6.25e-06
+  model_info:
+    max_input_tokens: 1000000
+    max_output_tokens: 128000
 - model_name: claude-opus-5
   litellm_params:
     model: openai/anthropic/claude-opus-5
@@ -153,6 +177,9 @@ model_list:
     output_cost_per_token: 2.5e-05
     cache_creation_input_token_cost: 6.25e-06
     cache_read_input_token_cost: 5.0e-07
+  model_info:
+    max_input_tokens: 1000000
+    max_output_tokens: 128000
 - model_name: claude-opus-5
   litellm_params:
     model: openai/anthropic/claude-opus-5
@@ -163,6 +190,9 @@ model_list:
     output_cost_per_token: 2.5e-05
     cache_creation_input_token_cost: 6.25e-06
     cache_read_input_token_cost: 5.0e-07
+  model_info:
+    max_input_tokens: 1000000
+    max_output_tokens: 128000
 - model_name: claude-opus-5
   litellm_params:
     model: openrouter/anthropic/claude-opus-5
@@ -171,6 +201,9 @@ model_list:
     output_cost_per_token: 2.5e-05
     cache_creation_input_token_cost: 6.25e-06
     cache_read_input_token_cost: 5.0e-07
+  model_info:
+    max_input_tokens: 1000000
+    max_output_tokens: 128000
 - model_name: claude-sonnet-4-6
   litellm_params:
     model: openai/anthropic/claude-sonnet-4.6
@@ -181,6 +214,9 @@ model_list:
     output_cost_per_token: 1.5e-05
     cache_read_input_token_cost: 3.0e-07
     cache_creation_input_token_cost: 3.75e-06
+  model_info:
+    max_input_tokens: 1000000
+    max_output_tokens: 128000
 - model_name: claude-sonnet-4-6
   litellm_params:
     model: openai/stealth/claude-sonnet-4.6
@@ -191,6 +227,9 @@ model_list:
     output_cost_per_token: 1.2e-05
     cache_read_input_token_cost: 2.4e-07
     cache_creation_input_token_cost: 3.0e-06
+  model_info:
+    max_input_tokens: 1000000
+    max_output_tokens: 64000
 - model_name: claude-sonnet-4-6
   litellm_params:
     model: openai/anthropic/claude-sonnet-4-6
@@ -201,6 +240,9 @@ model_list:
     output_cost_per_token: 1.5e-05
     cache_read_input_token_cost: 3.0e-07
     cache_creation_input_token_cost: 3.75e-06
+  model_info:
+    max_input_tokens: 1000000
+    max_output_tokens: 64000
 - model_name: claude-sonnet-4-6
   litellm_params:
     model: openrouter/anthropic/claude-sonnet-4.6
@@ -209,6 +251,9 @@ model_list:
     output_cost_per_token: 1.5e-05
     cache_read_input_token_cost: 3.0e-07
     cache_creation_input_token_cost: 3.75e-06
+  model_info:
+    max_input_tokens: 1000000
+    max_output_tokens: 128000
 - model_name: claude-sonnet-5
   litellm_params:
     model: openai/anthropic/claude-sonnet-5
@@ -219,6 +264,9 @@ model_list:
     output_cost_per_token: 1.0e-05
     cache_creation_input_token_cost: 2.5e-06
     cache_read_input_token_cost: 2.0e-07
+  model_info:
+    max_input_tokens: 1000000
+    max_output_tokens: 128000
 - model_name: claude-sonnet-5
   litellm_params:
     model: openai/anthropic/claude-sonnet-5
@@ -229,6 +277,9 @@ model_list:
     output_cost_per_token: 1.0e-05
     cache_creation_input_token_cost: 2.5e-06
     cache_read_input_token_cost: 2.0e-07
+  model_info:
+    max_input_tokens: 1000000
+    max_output_tokens: 128000
 - model_name: claude-sonnet-5
   litellm_params:
     model: openrouter/anthropic/claude-sonnet-5
@@ -237,6 +288,9 @@ model_list:
     output_cost_per_token: 1.0e-05
     cache_creation_input_token_cost: 2.5e-06
     cache_read_input_token_cost: 2.0e-07
+  model_info:
+    max_input_tokens: 1000000
+    max_output_tokens: 128000
 - model_name: deepseek-v4-flash
   litellm_params:
     model: openai/deepseek-v4-flash
@@ -246,12 +300,18 @@ model_list:
     output_cost_per_token: 2.8e-07
     order: 1
     cache_read_input_token_cost: 2.8e-09
+  model_info:
+    max_input_tokens: 1000000
+    max_output_tokens: 384000
 - model_name: deepseek-v4-flash
   litellm_params:
     model: nvidia_nim/deepseek-ai/deepseek-v4-flash
     order: 3
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
+  model_info:
+    max_input_tokens: 1048576
+    max_output_tokens: 393216
 - model_name: deepseek-v4-flash
   litellm_params:
     model: openai/deepseek-v4-flash-free
@@ -261,6 +321,9 @@ model_list:
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
     cache_read_input_token_cost: 1.0e-09
+  model_info:
+    max_input_tokens: 200000
+    max_output_tokens: 128000
 - model_name: deepseek-v4-flash
   litellm_params:
     model: fireworks_ai/accounts/fireworks/models/deepseek-v4-flash
@@ -269,6 +332,9 @@ model_list:
     input_cost_per_token: 1.4e-07
     output_cost_per_token: 2.8e-07
     cache_read_input_token_cost: 2.8e-08
+  model_info:
+    max_input_tokens: 1000000
+    max_output_tokens: 384000
 - model_name: deepseek-v4-flash
   litellm_params:
     model: openai/deepseek/deepseek-v4-flash
@@ -278,13 +344,19 @@ model_list:
     input_cost_per_token: 1.4e-07
     output_cost_per_token: 2.8e-07
     cache_read_input_token_cost: 2.8e-08
+  model_info:
+    max_input_tokens: 1048576
+    max_output_tokens: 393216
 - model_name: deepseek-v4-flash
   litellm_params:
     model: openrouter/deepseek/deepseek-v4-flash
     order: 5
-    input_cost_per_token: 9.38e-08
-    output_cost_per_token: 1.876e-07
-    cache_read_input_token_cost: 1.876e-08
+    input_cost_per_token: 1.4e-07
+    output_cost_per_token: 2.8e-07
+    cache_read_input_token_cost: 2.8e-08
+  model_info:
+    max_input_tokens: 1048576
+    max_output_tokens: 393216
 - model_name: deepseek-v4-pro
   litellm_params:
     model: openai/deepseek-v4-pro
@@ -294,12 +366,18 @@ model_list:
     output_cost_per_token: 8.7e-07
     order: 1
     cache_read_input_token_cost: 3.625e-09
+  model_info:
+    max_input_tokens: 1000000
+    max_output_tokens: 384000
 - model_name: deepseek-v4-pro
   litellm_params:
     model: nvidia_nim/deepseek-ai/deepseek-v4-pro
     order: 3
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
+  model_info:
+    max_input_tokens: 1048576
+    max_output_tokens: 393216
 - model_name: deepseek-v4-pro
   litellm_params:
     model: fireworks_ai/accounts/fireworks/models/deepseek-v4-pro
@@ -308,6 +386,9 @@ model_list:
     input_cost_per_token: 1.74e-06
     output_cost_per_token: 3.48e-06
     cache_read_input_token_cost: 1.45e-07
+  model_info:
+    max_input_tokens: 1000000
+    max_output_tokens: 384000
 - model_name: deepseek-v4-pro
   litellm_params:
     model: openai/deepseek/deepseek-v4-pro
@@ -317,6 +398,9 @@ model_list:
     input_cost_per_token: 1.6e-06
     output_cost_per_token: 3.2e-06
     cache_read_input_token_cost: 1.35e-07
+  model_info:
+    max_input_tokens: 1048576
+    max_output_tokens: 384000
 - model_name: deepseek-v4-pro
   litellm_params:
     model: openrouter/deepseek/deepseek-v4-pro
@@ -324,6 +408,9 @@ model_list:
     input_cost_per_token: 4.35e-07
     output_cost_per_token: 8.7e-07
     cache_read_input_token_cost: 3.625e-09
+  model_info:
+    max_input_tokens: 1048576
+    max_output_tokens: 384000
 - model_name: gemini-3.5-flash
   litellm_params:
     model: openai/google/gemini-3.5-flash
@@ -334,6 +421,9 @@ model_list:
     output_cost_per_token: 9.0e-06
     cache_read_input_token_cost: 1.5e-07
     cache_creation_input_token_cost: 8.333333333333334e-08
+  model_info:
+    max_input_tokens: 1048576
+    max_output_tokens: 65536
 - model_name: gemini-3.5-flash
   litellm_params:
     model: openrouter/google/gemini-3.5-flash
@@ -342,6 +432,9 @@ model_list:
     output_cost_per_token: 9.0e-06
     cache_read_input_token_cost: 1.5e-07
     cache_creation_input_token_cost: 8.333333333333334e-08
+  model_info:
+    max_input_tokens: 1048576
+    max_output_tokens: 65536
 - model_name: gemma-4-31b
   litellm_params:
     model: openai/google/gemma-4-31b-it
@@ -351,12 +444,18 @@ model_list:
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
     cache_read_input_token_cost: 1.0e-09
+  model_info:
+    max_input_tokens: 262144
+    max_output_tokens: 8192
 - model_name: gemma-4-31b
   litellm_params:
     model: openrouter/google/gemma-4-31b-it:free
     order: 3
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
+  model_info:
+    max_input_tokens: 262144
+    max_output_tokens: 32768
 - model_name: glm-5.1
   litellm_params:
     model: openai/glm-5.1
@@ -366,6 +465,9 @@ model_list:
     output_cost_per_token: 4.4e-06
     order: 1
     cache_read_input_token_cost: 2.6e-07
+  model_info:
+    max_input_tokens: 202752
+    max_output_tokens: 32768
 - model_name: glm-5.1
   litellm_params:
     model: fireworks_ai/accounts/fireworks/models/glm-5p1
@@ -374,6 +476,9 @@ model_list:
     input_cost_per_token: 1.4e-06
     output_cost_per_token: 4.4e-06
     cache_read_input_token_cost: 2.6e-07
+  model_info:
+    max_input_tokens: 202800
+    max_output_tokens: 131072
 - model_name: glm-5.1
   litellm_params:
     model: openai/z-ai/glm-5.1
@@ -383,6 +488,9 @@ model_list:
     input_cost_per_token: 1.38e-06
     output_cost_per_token: 4.4e-06
     cache_read_input_token_cost: 2.6e-07
+  model_info:
+    max_input_tokens: 204800
+    max_output_tokens: 128000
 - model_name: glm-5.1
   litellm_params:
     model: openrouter/z-ai/glm-5.1
@@ -390,6 +498,9 @@ model_list:
     input_cost_per_token: 9.66e-07
     output_cost_per_token: 3.036e-06
     cache_read_input_token_cost: 1.794e-07
+  model_info:
+    max_input_tokens: 204800
+    max_output_tokens: 128000
 - model_name: glm-5.2
   litellm_params:
     model: openai/glm-5.2
@@ -399,12 +510,18 @@ model_list:
     input_cost_per_token: 1.4e-06
     output_cost_per_token: 4.4e-06
     cache_read_input_token_cost: 2.6e-07
+  model_info:
+    max_input_tokens: 1000000
+    max_output_tokens: 131072
 - model_name: glm-5.2
   litellm_params:
     model: nvidia_nim/z-ai/glm-5.2
     order: 3
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
+  model_info:
+    max_input_tokens: 1000000
+    max_output_tokens: 131072
 - model_name: glm-5.2
   litellm_params:
     model: fireworks_ai/accounts/fireworks/models/glm-5p2
@@ -413,6 +530,9 @@ model_list:
     input_cost_per_token: 1.4e-06
     output_cost_per_token: 4.4e-06
     cache_read_input_token_cost: 1.4e-07
+  model_info:
+    max_input_tokens: 1048575
+    max_output_tokens: 131072
 - model_name: glm-5.2
   litellm_params:
     model: openai/z-ai/glm-5.2
@@ -422,6 +542,9 @@ model_list:
     input_cost_per_token: 1.4e-06
     output_cost_per_token: 4.4e-06
     cache_read_input_token_cost: 2.6e-07
+  model_info:
+    max_input_tokens: 1048576
+    max_output_tokens: 131072
 - model_name: glm-5.2
   litellm_params:
     model: openai/zai/glm-5.2
@@ -431,13 +554,19 @@ model_list:
     input_cost_per_token: 1.4e-06
     output_cost_per_token: 4.4e-06
     cache_read_input_token_cost: 2.6e-07
+  model_info:
+    max_input_tokens: 1000000
+    max_output_tokens: 128000
 - model_name: glm-5.2
   litellm_params:
     model: openrouter/z-ai/glm-5.2
     order: 5
-    input_cost_per_token: 7.028e-07
-    output_cost_per_token: 2.2088e-06
-    cache_read_input_token_cost: 1.3052e-07
+    input_cost_per_token: 7.196e-07
+    output_cost_per_token: 2.2616e-06
+    cache_read_input_token_cost: 1.3364e-07
+  model_info:
+    max_input_tokens: 1048576
+    max_output_tokens: 131072
 - litellm_params:
     api_base: os.environ/AZURE_OPENAI_API_BASE
     api_key: os.environ/AZURE_OPENAI_API_KEY
@@ -502,6 +631,8 @@ model_list:
     input_cost_per_token: 2.0e-06
     output_cost_per_token: 6.0e-06
     cache_read_input_token_cost: 3.0e-07
+  model_info:
+    max_input_tokens: 500000
 - model_name: grok-4.5
   litellm_params:
     model: openai/xai/grok-4.5
@@ -512,6 +643,9 @@ model_list:
     output_cost_per_token: 6.0e-06
     cache_creation_input_token_cost: 2.0e-06
     cache_read_input_token_cost: 5.0e-07
+  model_info:
+    max_input_tokens: 500000
+    max_output_tokens: 0
 - model_name: grok-4.5
   litellm_params:
     model: openrouter/x-ai/grok-4.5
@@ -519,6 +653,9 @@ model_list:
     input_cost_per_token: 2.0e-06
     output_cost_per_token: 6.0e-06
     cache_read_input_token_cost: 3.0e-07
+  model_info:
+    max_input_tokens: 500000
+    max_output_tokens: 500000
 - model_name: hy3
   litellm_params:
     model: openai/hy3
@@ -535,6 +672,9 @@ model_list:
     input_cost_per_token: 1.4e-07
     output_cost_per_token: 5.8e-07
     cache_read_input_token_cost: 3.5e-08
+  model_info:
+    max_input_tokens: 262144
+    max_output_tokens: 128000
 - model_name: hy3
   litellm_params:
     model: openai/novita/tencent/hy3
@@ -544,6 +684,9 @@ model_list:
     input_cost_per_token: 1.4e-07
     output_cost_per_token: 5.8e-07
     cache_read_input_token_cost: 3.5e-08
+  model_info:
+    max_input_tokens: 262144
+    max_output_tokens: 262144
 - model_name: hy3
   litellm_params:
     model: openrouter/tencent/hy3
@@ -551,6 +694,9 @@ model_list:
     input_cost_per_token: 1.32e-07
     output_cost_per_token: 5.28e-07
     cache_read_input_token_cost: 3.3e-08
+  model_info:
+    max_input_tokens: 262144
+    max_output_tokens: 128000
 - model_name: inkling
   litellm_params:
     model: nvidia_nim/thinkingmachines/inkling
@@ -566,6 +712,8 @@ model_list:
     input_cost_per_token: 1.0e-06
     output_cost_per_token: 4.05e-06
     cache_read_input_token_cost: 1.7e-07
+  model_info:
+    max_input_tokens: 1048576
 - model_name: inkling
   litellm_params:
     model: openai/thinkingmachines/inkling-256k
@@ -575,6 +723,9 @@ model_list:
     input_cost_per_token: 1.87e-06
     output_cost_per_token: 4.68e-06
     cache_read_input_token_cost: 3.74e-07
+  model_info:
+    max_input_tokens: 262144
+    max_output_tokens: 32768
 - model_name: inkling
   litellm_params:
     model: openrouter/thinkingmachines/inkling
@@ -582,6 +733,9 @@ model_list:
     input_cost_per_token: 1.0e-06
     output_cost_per_token: 4.05e-06
     cache_read_input_token_cost: 1.7e-07
+  model_info:
+    max_input_tokens: 1048576
+    max_output_tokens: 1048576
 - model_name: jina-embeddings-v4
   litellm_params:
     model: jina_ai/jina-embeddings-v4
@@ -605,12 +759,18 @@ model_list:
     output_cost_per_token: 4.0e-06
     order: 1
     cache_read_input_token_cost: 1.6e-07
+  model_info:
+    max_input_tokens: 262144
+    max_output_tokens: 65536
 - model_name: kimi-k2.6
   litellm_params:
     model: nvidia_nim/moonshotai/kimi-k2.6
     order: 3
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
+  model_info:
+    max_input_tokens: 262144
+    max_output_tokens: 262144
 - model_name: kimi-k2.6
   litellm_params:
     model: fireworks_ai/accounts/fireworks/models/kimi-k2p6
@@ -619,6 +779,9 @@ model_list:
     input_cost_per_token: 9.5e-07
     output_cost_per_token: 4.0e-06
     cache_read_input_token_cost: 1.6e-07
+  model_info:
+    max_input_tokens: 262000
+    max_output_tokens: 262000
 - model_name: kimi-k2.6
   litellm_params:
     model: openai/moonshotai/kimi-k2.6
@@ -628,6 +791,9 @@ model_list:
     input_cost_per_token: 8.0e-07
     output_cost_per_token: 3.4e-06
     cache_read_input_token_cost: 1.6e-07
+  model_info:
+    max_input_tokens: 262144
+    max_output_tokens: 262144
 - model_name: kimi-k2.6
   litellm_params:
     model: openrouter/moonshotai/kimi-k2.6
@@ -635,6 +801,9 @@ model_list:
     input_cost_per_token: 6.46e-07
     output_cost_per_token: 2.72e-06
     cache_read_input_token_cost: 1.088e-07
+  model_info:
+    max_input_tokens: 262144
+    max_output_tokens: 262144
 - model_name: kimi-k2.7
   litellm_params:
     model: openai/kimi-k2.7-code
@@ -644,6 +813,9 @@ model_list:
     input_cost_per_token: 9.499999999999999e-07
     output_cost_per_token: 4.0e-06
     cache_read_input_token_cost: 1.9e-07
+  model_info:
+    max_input_tokens: 262144
+    max_output_tokens: 262144
 - model_name: kimi-k2.7
   litellm_params:
     model: fireworks_ai/accounts/fireworks/models/kimi-k2p7-code
@@ -652,6 +824,9 @@ model_list:
     input_cost_per_token: 9.5e-07
     output_cost_per_token: 4.0e-06
     cache_read_input_token_cost: 1.9e-07
+  model_info:
+    max_input_tokens: 262000
+    max_output_tokens: 262000
 - model_name: kimi-k2.7
   litellm_params:
     model: openai/moonshotai/kimi-k2.7-code
@@ -661,6 +836,9 @@ model_list:
     input_cost_per_token: 9.5e-07
     output_cost_per_token: 4.0e-06
     cache_read_input_token_cost: 1.9e-07
+  model_info:
+    max_input_tokens: 262144
+    max_output_tokens: 262144
 - model_name: kimi-k2.7
   litellm_params:
     model: openrouter/moonshotai/kimi-k2.7-code
@@ -668,6 +846,9 @@ model_list:
     input_cost_per_token: 7.8e-07
     output_cost_per_token: 3.5e-06
     cache_read_input_token_cost: 1.5e-07
+  model_info:
+    max_input_tokens: 262144
+    max_output_tokens: 262144
 - model_name: kimi-k3
   litellm_params:
     model: openai/kimi-k3
@@ -684,6 +865,8 @@ model_list:
     input_cost_per_token: 3.0e-06
     output_cost_per_token: 1.5e-05
     cache_read_input_token_cost: 3.0e-07
+  model_info:
+    max_input_tokens: 1048576
 - model_name: kimi-k3
   litellm_params:
     model: openai/moonshot/kimi-k3
@@ -694,6 +877,9 @@ model_list:
     output_cost_per_token: 1.5e-05
     cache_creation_input_token_cost: 1.5e-05
     cache_read_input_token_cost: 3.0e-07
+  model_info:
+    max_input_tokens: 1048576
+    max_output_tokens: 1048576
 - model_name: kimi-k3
   litellm_params:
     model: openrouter/moonshotai/kimi-k3
@@ -701,6 +887,9 @@ model_list:
     input_cost_per_token: 3.0e-06
     output_cost_per_token: 1.5e-05
     cache_read_input_token_cost: 3.0e-07
+  model_info:
+    max_input_tokens: 1048576
+    max_output_tokens: 1048576
 - model_name: laguna-s-2.1
   litellm_params:
     model: openai/laguna-s-2.1-free
@@ -710,6 +899,9 @@ model_list:
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
     cache_read_input_token_cost: 1.0e-09
+  model_info:
+    max_input_tokens: 256000
+    max_output_tokens: 32000
 - model_name: laguna-s-2.1
   litellm_params:
     model: openai/poolside/laguna-s-2.1:free
@@ -718,12 +910,18 @@ model_list:
     api_key: os.environ/KILO_API_KEY
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
+  model_info:
+    max_input_tokens: 262144
+    max_output_tokens: 32768
 - model_name: laguna-s-2.1
   litellm_params:
     model: openrouter/poolside/laguna-s-2.1:free
     order: 3
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
+  model_info:
+    max_input_tokens: 262144
+    max_output_tokens: 32768
 - model_name: laguna-s-2.1
   litellm_params:
     model: openai/poolside/laguna-s-2.1
@@ -733,6 +931,9 @@ model_list:
     input_cost_per_token: 1.0e-07
     output_cost_per_token: 2.0e-07
     cache_read_input_token_cost: 1.0e-08
+  model_info:
+    max_input_tokens: 1048576
+    max_output_tokens: 131072
 - model_name: laguna-s-2.1
   litellm_params:
     model: openrouter/poolside/laguna-s-2.1
@@ -740,6 +941,9 @@ model_list:
     input_cost_per_token: 1.0e-07
     output_cost_per_token: 2.0e-07
     cache_read_input_token_cost: 1.0e-08
+  model_info:
+    max_input_tokens: 1048576
+    max_output_tokens: 131072
 - model_name: ling-3.0-flash
   litellm_params:
     model: openai/inclusionai/ling-3.0-flash:free
@@ -748,6 +952,9 @@ model_list:
     api_key: os.environ/KILO_API_KEY
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
+  model_info:
+    max_input_tokens: 262144
+    max_output_tokens: 32768
 - model_name: ling-3.0-flash
   litellm_params:
     model: openai/ling-3.0-flash-free
@@ -757,12 +964,18 @@ model_list:
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
     cache_read_input_token_cost: 1.0e-09
+  model_info:
+    max_input_tokens: 262144
+    max_output_tokens: 32768
 - model_name: ling-3.0-flash
   litellm_params:
     model: openrouter/inclusionai/ling-3.0-flash:free
     order: 3
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
+  model_info:
+    max_input_tokens: 262144
+    max_output_tokens: 32768
 - litellm_params:
     model: openai/Gemma-4-E2B
     api_base: os.environ/LLAMA_API_BASE
@@ -780,6 +993,9 @@ model_list:
     output_cost_per_token: 2.8e-07
     order: 1
     cache_read_input_token_cost: 2.8e-09
+  model_info:
+    max_input_tokens: 1000000
+    max_output_tokens: 128000
 - model_name: mimo-v2.5
   litellm_params:
     model: openai/mimo-v2.5-free
@@ -789,6 +1005,9 @@ model_list:
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
     cache_read_input_token_cost: 1.0e-09
+  model_info:
+    max_input_tokens: 200000
+    max_output_tokens: 32000
 - model_name: mimo-v2.5
   litellm_params:
     model: openai/xiaomi/mimo-v2.5
@@ -798,6 +1017,9 @@ model_list:
     input_cost_per_token: 1.05e-07
     output_cost_per_token: 2.8e-07
     cache_read_input_token_cost: 2.8e-08
+  model_info:
+    max_input_tokens: 1050000
+    max_output_tokens: 131072
 - model_name: mimo-v2.5
   litellm_params:
     model: openrouter/xiaomi/mimo-v2.5
@@ -805,6 +1027,9 @@ model_list:
     input_cost_per_token: 1.4e-07
     output_cost_per_token: 2.8e-07
     cache_read_input_token_cost: 2.8e-09
+  model_info:
+    max_input_tokens: 1050000
+    max_output_tokens: 131072
 - model_name: mimo-v2.5-pro
   litellm_params:
     model: openai/mimo-v2.5-pro
@@ -814,6 +1039,9 @@ model_list:
     output_cost_per_token: 8.7e-07
     order: 1
     cache_read_input_token_cost: 3.625e-09
+  model_info:
+    max_input_tokens: 1048576
+    max_output_tokens: 128000
 - model_name: mimo-v2.5-pro
   litellm_params:
     model: openai/xiaomi/mimo-v2.5-pro
@@ -823,6 +1051,9 @@ model_list:
     input_cost_per_token: 4.35e-07
     output_cost_per_token: 8.7e-07
     cache_read_input_token_cost: 4.0e-09
+  model_info:
+    max_input_tokens: 1050000
+    max_output_tokens: 131072
 - model_name: mimo-v2.5-pro
   litellm_params:
     model: openrouter/xiaomi/mimo-v2.5-pro
@@ -830,6 +1061,9 @@ model_list:
     input_cost_per_token: 4.35e-07
     output_cost_per_token: 8.7e-07
     cache_read_input_token_cost: 3.6e-09
+  model_info:
+    max_input_tokens: 1050000
+    max_output_tokens: 131072
 - model_name: minimax-m2.7
   litellm_params:
     model: anthropic/minimax-m2.7
@@ -839,12 +1073,18 @@ model_list:
     output_cost_per_token: 1.2e-06
     order: 1
     cache_read_input_token_cost: 6.0e-08
+  model_info:
+    max_input_tokens: 204800
+    max_output_tokens: 131072
 - model_name: minimax-m2.7
   litellm_params:
     model: nvidia_nim/minimaxai/minimax-m2.7
     order: 3
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
+  model_info:
+    max_input_tokens: 204800
+    max_output_tokens: 131072
 - model_name: minimax-m2.7
   litellm_params:
     model: openai/minimax/minimax-m2.7
@@ -854,6 +1094,9 @@ model_list:
     input_cost_per_token: 3.0e-07
     output_cost_per_token: 1.2e-06
     cache_read_input_token_cost: 6.0e-08
+  model_info:
+    max_input_tokens: 204800
+    max_output_tokens: 131072
 - model_name: minimax-m2.7
   litellm_params:
     model: openrouter/minimax/minimax-m2.7
@@ -861,6 +1104,9 @@ model_list:
     input_cost_per_token: 2.5e-07
     output_cost_per_token: 1.0e-06
     cache_read_input_token_cost: 5.0e-08
+  model_info:
+    max_input_tokens: 204800
+    max_output_tokens: 131072
 - model_name: minimax-m3
   litellm_params:
     model: anthropic/minimax-m3
@@ -870,12 +1116,18 @@ model_list:
     input_cost_per_token: 3.0e-07
     output_cost_per_token: 1.2e-06
     cache_read_input_token_cost: 6.0e-08
+  model_info:
+    max_input_tokens: 1000000
+    max_output_tokens: 131072
 - model_name: minimax-m3
   litellm_params:
     model: nvidia_nim/minimaxai/minimax-m3
     order: 3
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
+  model_info:
+    max_input_tokens: 1000000
+    max_output_tokens: 16384
 - model_name: minimax-m3
   litellm_params:
     model: fireworks_ai/accounts/fireworks/models/minimax-m3
@@ -884,6 +1136,9 @@ model_list:
     input_cost_per_token: 3.0e-07
     output_cost_per_token: 1.2e-06
     cache_read_input_token_cost: 6.0e-08
+  model_info:
+    max_input_tokens: 512000
+    max_output_tokens: 512000
 - model_name: minimax-m3
   litellm_params:
     model: openai/minimax/minimax-m3
@@ -893,6 +1148,9 @@ model_list:
     input_cost_per_token: 3.0e-07
     output_cost_per_token: 1.2e-06
     cache_read_input_token_cost: 6.0e-08
+  model_info:
+    max_input_tokens: 1048576
+    max_output_tokens: 512000
 - model_name: minimax-m3
   litellm_params:
     model: openai/minimaxi/minimax-m3
@@ -902,6 +1160,9 @@ model_list:
     input_cost_per_token: 3.0e-07
     output_cost_per_token: 1.2e-06
     cache_read_input_token_cost: 6.0e-08
+  model_info:
+    max_input_tokens: 1000000
+    max_output_tokens: 128000
 - model_name: minimax-m3
   litellm_params:
     model: openrouter/minimax/minimax-m3
@@ -909,6 +1170,9 @@ model_list:
     input_cost_per_token: 3.0e-07
     output_cost_per_token: 1.2e-06
     cache_read_input_token_cost: 6.0e-08
+  model_info:
+    max_input_tokens: 1048576
+    max_output_tokens: 512000
 - model_name: mistral-medium-3-5
   litellm_params:
     model: nvidia_nim/mistralai/mistral-medium-3.5-128b
@@ -924,6 +1188,9 @@ model_list:
     tpm: 25000
     input_cost_per_token: 1.5e-06
     output_cost_per_token: 7.5e-06
+  model_info:
+    max_input_tokens: 262144
+    max_output_tokens: 262144
 - litellm_params:
     api_base: os.environ/AZURE_AI_API_BASE_EASTUS
     api_key: os.environ/AZURE_AI_API_KEY_EASTUS
@@ -942,6 +1209,9 @@ model_list:
     order: 3
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
+  model_info:
+    max_input_tokens: 128000
+    max_output_tokens: 8192
 - model_name: mistral-small-4
   litellm_params:
     model: mistral/mistral-small-latest
@@ -951,6 +1221,9 @@ model_list:
     tpm: 50000
     input_cost_per_token: 1.5e-07
     output_cost_per_token: 6.0e-07
+  model_info:
+    max_input_tokens: 256000
+    max_output_tokens: 256000
 - model_name: nomic-embed-text
   litellm_params:
     model: ollama/nomic-embed-text-v2-moe:latest
@@ -966,6 +1239,9 @@ model_list:
     api_key: os.environ/KILO_API_KEY
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
+  model_info:
+    max_input_tokens: 256000
+    max_output_tokens: 64000
 - model_name: north-mini-code-free
   litellm_params:
     model: openai/north-mini-code-free
@@ -974,12 +1250,18 @@ model_list:
     api_key: os.environ/OPENCODE_API_KEY
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
+  model_info:
+    max_input_tokens: 256000
+    max_output_tokens: 64000
 - model_name: north-mini-code-free
   litellm_params:
     model: openrouter/cohere/north-mini-code:free
     order: 3
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
+  model_info:
+    max_input_tokens: 256000
+    max_output_tokens: 64000
 - model_name: nvidia-llama-nemotron-embed-vl-1b-v2
   litellm_params:
     model: nvidia_nim/nvidia/llama-nemotron-embed-vl-1b-v2
@@ -988,6 +1270,8 @@ model_list:
     output_cost_per_token: 1.0e-09
   model_info:
     mode: embedding
+    max_input_tokens: 32768
+    max_output_tokens: 2048
 - model_name: nvidia-llama-nemotron-embed-vl-1b-v2
   litellm_params:
     model: openrouter/nvidia/llama-nemotron-embed-vl-1b-v2:free
@@ -996,6 +1280,7 @@ model_list:
     output_cost_per_token: 1.0e-09
   model_info:
     mode: embedding
+    max_input_tokens: 131072
 - model_name: nvidia-nemotron-3-nano-omni
   litellm_params:
     model: openai/nvidia/nemotron-3-nano-omni-30b-a3b-reasoning
@@ -1005,6 +1290,9 @@ model_list:
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
     cache_read_input_token_cost: 1.0e-09
+  model_info:
+    max_input_tokens: 131072
+    max_output_tokens: 20480
 - model_name: nvidia-nemotron-3-nano-omni
   litellm_params:
     model: openai/nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free
@@ -1013,18 +1301,27 @@ model_list:
     api_key: os.environ/KILO_API_KEY
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
+  model_info:
+    max_input_tokens: 256000
+    max_output_tokens: 65536
 - model_name: nvidia-nemotron-3-nano-omni
   litellm_params:
     model: openrouter/nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free
     order: 3
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
+  model_info:
+    max_input_tokens: 256000
+    max_output_tokens: 65536
 - litellm_params:
     model: openrouter/openrouter/free
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
     order: 3
   model_name: or-free
+  model_info:
+    max_input_tokens: 200000
+    max_output_tokens: 8000
 - model_name: qwen3-embedding-8b
   litellm_params:
     model: fireworks_ai/accounts/fireworks/models/qwen3-embedding-8b
@@ -1053,6 +1350,9 @@ model_list:
     output_cost_per_token: 7.5e-06
     cache_read_input_token_cost: 5.0e-07
     cache_creation_input_token_cost: 3.125e-06
+  model_info:
+    max_input_tokens: 1000000
+    max_output_tokens: 65536
 - model_name: qwen3.7-max
   litellm_params:
     model: openai/qwen/qwen3.7-max
@@ -1063,6 +1363,9 @@ model_list:
     output_cost_per_token: 3.75e-06
     cache_read_input_token_cost: 1.25e-07
     cache_creation_input_token_cost: 1.5625e-06
+  model_info:
+    max_input_tokens: 1000000
+    max_output_tokens: 65536
 - model_name: qwen3.7-max
   litellm_params:
     model: openrouter/qwen/qwen3.7-max
@@ -1071,6 +1374,9 @@ model_list:
     output_cost_per_token: 4.425e-06
     cache_read_input_token_cost: 2.95e-07
     cache_creation_input_token_cost: 1.84375e-06
+  model_info:
+    max_input_tokens: 1000000
+    max_output_tokens: 65536
 - model_name: qwen3.7-plus
   litellm_params:
     model: anthropic/qwen3.7-plus
@@ -1081,6 +1387,9 @@ model_list:
     output_cost_per_token: 1.6000000000000001e-06
     cache_read_input_token_cost: 4.0e-08
     cache_creation_input_token_cost: 5.0e-07
+  model_info:
+    max_input_tokens: 1000000
+    max_output_tokens: 65536
 - model_name: qwen3.7-plus
   litellm_params:
     model: fireworks_ai/accounts/fireworks/models/qwen3p7-plus
@@ -1089,6 +1398,9 @@ model_list:
     input_cost_per_token: 4.0e-07
     output_cost_per_token: 1.6e-06
     cache_read_input_token_cost: 8.0e-08
+  model_info:
+    max_input_tokens: 262144
+    max_output_tokens: 65536
 - model_name: qwen3.7-plus
   litellm_params:
     model: openai/qwen/qwen3.7-plus
@@ -1099,6 +1411,9 @@ model_list:
     output_cost_per_token: 1.28e-06
     cache_read_input_token_cost: 3.2e-08
     cache_creation_input_token_cost: 4.0e-07
+  model_info:
+    max_input_tokens: 1000000
+    max_output_tokens: 65536
 - model_name: qwen3.7-plus
   litellm_params:
     model: openrouter/qwen/qwen3.7-plus
@@ -1107,6 +1422,9 @@ model_list:
     output_cost_per_token: 1.28e-06
     cache_read_input_token_cost: 6.4e-08
     cache_creation_input_token_cost: 4.0e-07
+  model_info:
+    max_input_tokens: 1000000
+    max_output_tokens: 65536
 - model_name: smart_router_1
   litellm_params:
     model: auto_router/complexity_router
@@ -1130,6 +1448,9 @@ model_list:
     order: 3
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
+  model_info:
+    max_input_tokens: 256000
+    max_output_tokens: 16384
 - model_name: step-3.7-flash
   litellm_params:
     model: openai/stepfun/step-3.7-flash:free
@@ -1139,6 +1460,9 @@ model_list:
     input_cost_per_token: 1.0e-09
     output_cost_per_token: 1.0e-09
     cache_read_input_token_cost: 1.0e-09
+  model_info:
+    max_input_tokens: 262144
+    max_output_tokens: 262144
 - model_name: step-3.7-flash
   litellm_params:
     model: openai/stepfun/step-3.7-flash
@@ -1148,6 +1472,9 @@ model_list:
     input_cost_per_token: 2.0e-07
     output_cost_per_token: 1.15e-06
     cache_read_input_token_cost: 4.0e-08
+  model_info:
+    max_input_tokens: 262144
+    max_output_tokens: 256000
 - model_name: step-3.7-flash
   litellm_params:
     model: openrouter/stepfun/step-3.7-flash
@@ -1155,6 +1482,9 @@ model_list:
     input_cost_per_token: 2.0e-07
     output_cost_per_token: 1.15e-06
     cache_read_input_token_cost: 4.0e-08
+  model_info:
+    max_input_tokens: 262144
+    max_output_tokens: 256000
 guardrails:
 - guardrail_name: headroom-compression
   litellm_params:

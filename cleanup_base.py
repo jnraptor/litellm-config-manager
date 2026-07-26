@@ -422,6 +422,7 @@ class ModelsDevClient:
             if not isinstance(model_data, dict):
                 continue
             cost = model_data.get("cost", {}) or {}
+            limit = model_data.get("limit", {}) or {}
             input_cost = cost.get("input")
             output_cost = cost.get("output")
             cache_read_cost = cost.get("cache_read")
@@ -440,6 +441,8 @@ class ModelsDevClient:
                 "output_cost": output_cost,
                 "cache_read_cost": cache_read_cost,
                 "cache_creation_cost": cache_creation_cost,
+                "max_input_tokens": self._parse_limit(limit.get("context")),
+                "max_output_tokens": self._parse_limit(limit.get("output")),
                 "model_info": None,
             }
 
@@ -495,6 +498,68 @@ class ModelsDevClient:
             cache_creation_cost = float(cache_creation_cost) / 1_000_000
 
         return input_cost, output_cost, cache_read_cost, cache_creation_cost
+
+    @staticmethod
+    def _parse_limit(value: Any) -> Optional[int]:
+        """
+        Coerce a models.dev limit value to an int token count.
+
+        Args:
+            value: The raw limit value (int, float, or numeric string).
+
+        Returns:
+            Integer token count, or None if missing/invalid.
+        """
+        if value is None:
+            return None
+        try:
+            return int(float(value))
+        except (ValueError, TypeError):
+            return None
+
+    def get_model_limits(
+        self,
+        provider_id: str,
+        model_id: str,
+        logger: Optional[logging.Logger] = None,
+    ) -> Tuple[Optional[int], Optional[int]]:
+        """
+        Get context limits for a model from models.dev.
+
+        Maps ``limit.context`` → max_input_tokens and ``limit.output`` →
+        max_output_tokens. Used as a fallback when a provider's own API
+        response does not include token-limit fields.
+
+        Args:
+            provider_id: The models.dev provider ID (e.g., "fireworks-ai")
+            model_id: The model ID as used by the provider
+            logger: Optional logger for debug output
+
+        Returns:
+            Tuple of (max_input_tokens, max_output_tokens). Either may be
+            None if not found or API unavailable.
+        """
+        self._ensure_loaded(logger)
+
+        if self._data is None:
+            return None, None
+
+        provider = self._data.get(provider_id, {})
+        models = provider.get("models", {})
+        model = models.get(model_id, {})
+        limit = model.get("limit", {}) or {}
+
+        max_input = self._parse_limit(limit.get("context"))
+        max_output = self._parse_limit(limit.get("output"))
+
+        if max_input is not None or max_output is not None:
+            if logger:
+                logger.debug(
+                    f"Limits from models.dev for {model_id}: "
+                    f"input={max_input}, output={max_output}"
+                )
+
+        return max_input, max_output
 
     def clear_cache(self) -> None:
         """Clear cached data, allowing a fresh fetch on next access."""
@@ -1525,6 +1590,58 @@ class BaseModelCleaner(ABC):
                         f"Removing stale cache_creation_input_token_cost for {model_id}"
                     )
 
+                # Sync token limits (max_input_tokens / max_output_tokens) into model_info.
+                # Add/update when the API provides them; remove stale keys when it stops.
+                limit_changed = False
+                api_max_input = api_model_info.get("max_input_tokens")
+                api_max_output = api_model_info.get("max_output_tokens")
+                current_model_info = model_entry.get("model_info")
+                if not isinstance(current_model_info, dict):
+                    current_model_info = None
+
+                def _sync_limit(
+                    key: str,
+                    api_value: Optional[int],
+                ) -> bool:
+                    """Sync a single limit key inside model_info. Returns True if changed."""
+                    nonlocal current_model_info
+                    changed = False
+                    current_value = (
+                        current_model_info.get(key) if current_model_info else None
+                    )
+                    if api_value is not None:
+                        if current_value != api_value:
+                            changed = True
+                            change_info["changes"][key] = {
+                                "old": current_value,
+                                "new": api_value,
+                            }
+                            if current_model_info is None:
+                                current_model_info = {}
+                                model_entry["model_info"] = current_model_info
+                            current_model_info[key] = api_value
+                            self.logger.debug(
+                                f"{key} change for {model_id}: {current_value} → {api_value}"
+                            )
+                    elif current_value is not None:
+                        # API no longer reports this limit — remove stale key
+                        changed = True
+                        change_info["changes"][key] = {
+                            "old": current_value,
+                            "new": None,
+                        }
+                        del current_model_info[key]
+                        self.logger.debug(f"Removing stale {key} for {model_id}")
+                    return changed
+
+                limit_changed |= _sync_limit("max_input_tokens", api_max_input)
+                limit_changed |= _sync_limit("max_output_tokens", api_max_output)
+
+                # Drop model_info entirely if it became empty (e.g. only limits were removed)
+                if current_model_info is not None and not current_model_info:
+                    del model_entry["model_info"]
+                    current_model_info = None
+
                 # Determine the order to use: free_order for free models, provider_order otherwise
                 # Check if both input and output costs are equal to the free_model_cost
                 final_input_cost = litellm_params.get("input_cost_per_token")
@@ -1550,6 +1667,7 @@ class BaseModelCleaner(ABC):
                     or output_changed
                     or cache_read_changed
                     or cache_creation_changed
+                    or limit_changed
                 ):
                     cost_changes.append(change_info)
                     self._log_cost_change(
@@ -2517,6 +2635,10 @@ class ConfigDrivenModelCleaner(BaseModelCleaner):
         self._free_variant_suffix = self.provider_config.get("free_variant_suffix")
         self._model_prefixes = self.provider_config.get("model_prefixes")
 
+        # Token-limit field paths (provider API → config.yaml model_info)
+        self._max_input_field = self.provider_config.get("max_input_field")
+        self._max_output_field = self.provider_config.get("max_output_field")
+
         # models.dev cost augmentation (for providers without pricing in their API)
         self._models_dev_id = self._pricing_config.get("models_dev_id")
 
@@ -2794,15 +2916,33 @@ class ConfigDrivenModelCleaner(BaseModelCleaner):
             "output_cost": None,
             "cache_read_cost": None,
             "cache_creation_cost": None,
+            "max_input_tokens": None,
+            "max_output_tokens": None,
             "model_info": model.get("model_info"),
         }
+
+        # Parse token limits from provider-specific API fields (if configured)
+        if self._max_input_field:
+            val = get_nested_value(model, self._max_input_field)
+            if val is not None:
+                try:
+                    model_info["max_input_tokens"] = int(val)
+                except (ValueError, TypeError):
+                    pass
+        if self._max_output_field:
+            val = get_nested_value(model, self._max_output_field)
+            if val is not None:
+                try:
+                    model_info["max_output_tokens"] = int(val)
+                except (ValueError, TypeError):
+                    pass
 
         # Check for default cost (for free providers like Nvidia)
         default_cost = self._pricing_config.get("default_cost")
         if default_cost is not None:
             model_info["input_cost"] = float(default_cost)
             model_info["output_cost"] = float(default_cost)
-            return model_info
+            # Do not return early: still allow models.dev limit fallback below.
 
         input_field = self._pricing_config.get("input_field")
         output_field = self._pricing_config.get("output_field")
@@ -2901,6 +3041,20 @@ class ConfigDrivenModelCleaner(BaseModelCleaner):
                 self.logger.debug(
                     f"Cache creation cost from models.dev for {model['id']}: {dev_cache_creation}"
                 )
+
+        # Fallback to models.dev for token limits when the provider API lacks them.
+        # Only fill sides the provider API did not already supply.
+        if self._models_dev_id and (
+            model_info["max_input_tokens"] is None
+            or model_info["max_output_tokens"] is None
+        ):
+            dev_max_input, dev_max_output = _models_dev_client.get_model_limits(
+                self._models_dev_id, model["id"], self.logger
+            )
+            if dev_max_input is not None and model_info["max_input_tokens"] is None:
+                model_info["max_input_tokens"] = dev_max_input
+            if dev_max_output is not None and model_info["max_output_tokens"] is None:
+                model_info["max_output_tokens"] = dev_max_output
 
         return model_info
 
@@ -3054,8 +3208,15 @@ class ConfigDrivenModelCleaner(BaseModelCleaner):
                 adjust_cost_for_free_model(cache_read_cost)
             )
 
-        # Add model_info if present
-        model_info_section = api_model_info.get("model_info")
+        # Build model_info: preserve any provider-supplied metadata (e.g. mode)
+        # and add token limits when available.
+        model_info_section = dict(api_model_info.get("model_info") or {})
+        max_input = api_model_info.get("max_input_tokens")
+        max_output = api_model_info.get("max_output_tokens")
+        if max_input is not None:
+            model_info_section["max_input_tokens"] = max_input
+        if max_output is not None:
+            model_info_section["max_output_tokens"] = max_output
         if model_info_section:
             entry["model_info"] = model_info_section
 

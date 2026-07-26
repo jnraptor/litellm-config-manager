@@ -44,6 +44,10 @@ SAMPLE_MODELS_DEV_DATA = {
                     "input": 1.0,
                     "output": 3.2,
                 },
+                "limit": {
+                    "context": 202752,
+                    "output": 8192,
+                },
             },
             "accounts/fireworks/models/free-model": {
                 "id": "accounts/fireworks/models/free-model",
@@ -79,6 +83,18 @@ SAMPLE_MODELS_DEV_DATA = {
                 "cost": {
                     "input": 1.74,
                     "output": 3.48,
+                },
+                "limit": {
+                    "context": 131072,
+                    "output": 8192,
+                },
+            },
+            "no-limit-model": {
+                "id": "no-limit-model",
+                "name": "Model Without Limit",
+                "cost": {
+                    "input": 1.0,
+                    "output": 2.0,
                 },
             },
         },
@@ -328,6 +344,79 @@ class TestModelsDevClient:
         # 0.43 / 1_000_000 = 4.3e-07
         assert output_cost == pytest.approx(4.3e-07)
 
+    def test_get_model_limits_present(self):
+        """Test limit extraction from models.dev limit.context / limit.output."""
+        client = ModelsDevClient()
+        client._data = SAMPLE_MODELS_DEV_DATA
+
+        max_input, max_output = client.get_model_limits(
+            "fireworks-ai", "accounts/fireworks/models/glm-5"
+        )
+
+        assert max_input == 202752
+        assert max_output == 8192
+
+    def test_get_model_limits_partial(self):
+        """Test that missing limit side returns None for that side only."""
+        client = ModelsDevClient()
+        client._data = SAMPLE_MODELS_DEV_DATA
+
+        max_input, max_output = client.get_model_limits(
+            "opencode-go", "no-limit-model"
+        )
+
+        assert max_input is None
+        assert max_output is None
+
+    def test_get_model_limits_missing_model(self):
+        """Test that unknown model returns (None, None)."""
+        client = ModelsDevClient()
+        client._data = SAMPLE_MODELS_DEV_DATA
+
+        max_input, max_output = client.get_model_limits(
+            "fireworks-ai", "accounts/fireworks/models/does-not-exist"
+        )
+
+        assert max_input is None
+        assert max_output is None
+
+    def test_get_model_limits_missing_provider(self):
+        """Test that unknown provider returns (None, None)."""
+        client = ModelsDevClient()
+        client._data = SAMPLE_MODELS_DEV_DATA
+
+        max_input, max_output = client.get_model_limits(
+            "nonexistent-provider", "any-model"
+        )
+
+        assert max_input is None
+        assert max_output is None
+
+    def test_get_model_limits_data_not_loaded(self):
+        """Test that unloaded data returns (None, None) when load fails."""
+        client = ModelsDevClient()
+        client._load_failed = True
+
+        max_input, max_output = client.get_model_limits(
+            "fireworks-ai", "accounts/fireworks/models/glm-5"
+        )
+
+        assert max_input is None
+        assert max_output is None
+
+    def test_get_provider_models_includes_limits(self):
+        """Test that get_provider_models exposes max_input_tokens / max_output_tokens."""
+        client = ModelsDevClient()
+        client._data = SAMPLE_MODELS_DEV_DATA
+
+        models = client.get_provider_models("opencode-go")
+
+        assert models["deepseek-v4-pro"]["max_input_tokens"] == 131072
+        assert models["deepseek-v4-pro"]["max_output_tokens"] == 8192
+        # Model without a limit block should expose None for both
+        assert models["no-limit-model"]["max_input_tokens"] is None
+        assert models["no-limit-model"]["max_output_tokens"] is None
+
 
 class TestParseApiModelWithModelsDevFallback:
     """Tests for ConfigDrivenModelCleaner.parse_api_model with models.dev fallback."""
@@ -367,6 +456,7 @@ class TestParseApiModelWithModelsDevFallback:
     def test_fallback_to_models_dev_when_no_pricing(self, mock_client):
         """Test that models.dev is used when provider API has no pricing."""
         mock_client.get_model_cost.return_value = (1.74e-06, 3.48e-06, None, None)
+        mock_client.get_model_limits.return_value = (None, None)
 
         cleaner = self._create_cleaner_with_mock(models_dev_id="fireworks-ai")
 
@@ -397,6 +487,7 @@ class TestParseApiModelWithModelsDevFallback:
     def test_fallback_returns_none_for_unknown_model(self, mock_client):
         """Test fallback returns None costs when model not found in models.dev."""
         mock_client.get_model_cost.return_value = (None, None, None, None)
+        mock_client.get_model_limits.return_value = (None, None)
 
         cleaner = self._create_cleaner_with_mock(models_dev_id="fireworks-ai")
 
@@ -409,6 +500,7 @@ class TestParseApiModelWithModelsDevFallback:
     @patch("cleanup_base._models_dev_client")
     def test_no_fallback_when_provider_has_pricing_fields(self, mock_client):
         """Test that models.dev is NOT used when provider pricing fields return costs."""
+        mock_client.get_model_limits.return_value = (None, None)
         with patch("cleanup_base.ProviderConfigLoader") as mock_loader_class:
             mock_loader = Mock()
             mock_loader.get_provider_config.return_value = {
@@ -450,6 +542,7 @@ class TestParseApiModelWithModelsDevFallback:
     @patch("cleanup_base._models_dev_client")
     def test_no_fallback_when_default_cost_set(self, mock_client):
         """Test that models.dev is NOT used when default_cost is set (free providers)."""
+        mock_client.get_model_limits.return_value = (None, None)
         with patch("cleanup_base.ProviderConfigLoader") as mock_loader_class:
             mock_loader = Mock()
             mock_loader.get_provider_config.return_value = {
@@ -483,6 +576,124 @@ class TestParseApiModelWithModelsDevFallback:
         assert result["input_cost"] == 1.0e-09
         assert result["output_cost"] == 1.0e-09
         mock_client.get_model_cost.assert_not_called()
+
+    @patch("cleanup_base._models_dev_client")
+    def test_limit_fallback_from_models_dev(self, mock_client):
+        """Test that token limits are filled from models.dev when provider API lacks them."""
+        mock_client.get_model_cost.return_value = (None, None, None, None)
+        mock_client.get_model_limits.return_value = (131072, 8192)
+
+        cleaner = self._create_cleaner_with_mock(models_dev_id="opencode-go")
+
+        model = {"id": "deepseek-v4-pro"}
+        result = cleaner.parse_api_model(model)
+
+        assert result["max_input_tokens"] == 131072
+        assert result["max_output_tokens"] == 8192
+        mock_client.get_model_limits.assert_called_once_with(
+            "opencode-go", "deepseek-v4-pro", cleaner.logger
+        )
+
+    @patch("cleanup_base._models_dev_client")
+    def test_limit_fallback_only_fills_missing_sides(self, mock_client):
+        """Test that models.dev only fills limits the provider API did not provide."""
+        mock_client.get_model_cost.return_value = (None, None, None, None)
+        mock_client.get_model_limits.return_value = (131072, 8192)
+
+        with patch("cleanup_base.ProviderConfigLoader") as mock_loader_class:
+            mock_loader = Mock()
+            mock_loader.get_provider_config.return_value = {
+                "name": "Test Provider With Limits",
+                "api_url": "https://api.test.com/models",
+                "model_prefix": "test/",
+                "model_detection": {"type": "prefix", "value": "test/"},
+                "max_input_field": "context_length",
+                "max_output_field": None,
+                "pricing": {
+                    "input_field": None,
+                    "output_field": None,
+                    "is_per_million": False,
+                    "free_model_handling": True,
+                    "default_cost": None,
+                    "models_dev_id": "opencode-go",
+                },
+                "model_name_prefix": "",
+                "model_name_cleanup": [],
+                "special_models": [],
+                "order": 5,
+            }
+            mock_loader_class.return_value = mock_loader
+
+            cleaner = ConfigDrivenModelCleaner(
+                "test_with_limits", "config.yaml", dry_run=True, verbose=True
+            )
+
+        # Provider API supplies max_input_tokens; models.dev should only fill output
+        model = {"id": "deepseek-v4-pro", "context_length": 200000}
+        result = cleaner.parse_api_model(model)
+
+        assert result["max_input_tokens"] == 200000
+        assert result["max_output_tokens"] == 8192
+
+    def test_create_model_entry_merges_limits_into_model_info(self):
+        """Test that create_model_entry writes max_* into top-level model_info."""
+        cleaner = self._create_cleaner_with_mock(models_dev_id=None)
+
+        entry = cleaner.create_model_entry(
+            model_id="test/model",
+            api_model_info={
+                "id": "test/model",
+                "input_cost": 1.0e-06,
+                "output_cost": 2.0e-06,
+                "max_input_tokens": 100000,
+                "max_output_tokens": 4096,
+                "model_info": None,
+            },
+            model_name="test-model",
+        )
+
+        assert entry["model_info"]["max_input_tokens"] == 100000
+        assert entry["model_info"]["max_output_tokens"] == 4096
+
+    def test_create_model_entry_preserves_existing_model_info_mode(self):
+        """Test that existing model_info (e.g. mode) is preserved when adding limits."""
+        cleaner = self._create_cleaner_with_mock(models_dev_id=None)
+
+        entry = cleaner.create_model_entry(
+            model_id="test/model",
+            api_model_info={
+                "id": "test/model",
+                "input_cost": 1.0e-06,
+                "output_cost": 2.0e-06,
+                "max_input_tokens": 100000,
+                "max_output_tokens": 4096,
+                "model_info": {"mode": "embedding"},
+            },
+            model_name="test-model",
+        )
+
+        assert entry["model_info"]["mode"] == "embedding"
+        assert entry["model_info"]["max_input_tokens"] == 100000
+        assert entry["model_info"]["max_output_tokens"] == 4096
+
+    def test_create_model_entry_omits_model_info_when_no_limits(self):
+        """Test that model_info is omitted entirely when there is no metadata or limits."""
+        cleaner = self._create_cleaner_with_mock(models_dev_id=None)
+
+        entry = cleaner.create_model_entry(
+            model_id="test/model",
+            api_model_info={
+                "id": "test/model",
+                "input_cost": 1.0e-06,
+                "output_cost": 2.0e-06,
+                "max_input_tokens": None,
+                "max_output_tokens": None,
+                "model_info": None,
+            },
+            model_name="test-model",
+        )
+
+        assert "model_info" not in entry
 
 
 class TestModelsDevClientGetProviderModels:
@@ -775,6 +986,7 @@ class TestFetchAvailableModelsFromModelsDev:
         }
         # Avoid the models.dev fallback inside parse_api_model by giving it
         # a (no-op) tuple return value.
+        mock_client.get_model_limits.return_value = (None, None)
         mock_client.get_model_cost.return_value = (None, None)
 
         cleaner = self._create_cleaner(

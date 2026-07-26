@@ -282,6 +282,105 @@ class TestCostValidation:
 
         assert len(changes) == 0
 
+    def test_limit_added_to_model_info(self, cleaner, sample_config):
+        """Test that token limits are added to model_info when API provides them."""
+        config_models = [(0, "test/model1", "model-1")]
+        api_models = {
+            "model1": {
+                "id": "model1",
+                "input_cost": 1e-06,
+                "output_cost": 2e-06,
+                "max_input_tokens": 100000,
+                "max_output_tokens": 4096,
+            },
+        }
+
+        updated_config, changes, order_changed = cleaner.validate_and_update_costs(
+            sample_config, config_models, api_models
+        )
+
+        assert len(changes) == 1
+        assert "max_input_tokens" in changes[0]["changes"]
+        assert "max_output_tokens" in changes[0]["changes"]
+        model_info = updated_config["model_list"][0].get("model_info", {})
+        assert model_info.get("max_input_tokens") == 100000
+        assert model_info.get("max_output_tokens") == 4096
+
+    def test_limit_updated_in_model_info(self, cleaner, sample_config):
+        """Test that existing token limits are updated when API reports new values."""
+        sample_config["model_list"][0]["model_info"] = {
+            "max_input_tokens": 50000,
+            "max_output_tokens": 2048,
+        }
+        config_models = [(0, "test/model1", "model-1")]
+        api_models = {
+            "model1": {
+                "id": "model1",
+                "input_cost": 1e-06,
+                "output_cost": 2e-06,
+                "max_input_tokens": 100000,
+                "max_output_tokens": 4096,
+            },
+        }
+
+        updated_config, changes, order_changed = cleaner.validate_and_update_costs(
+            sample_config, config_models, api_models
+        )
+
+        assert len(changes) == 1
+        assert changes[0]["changes"]["max_input_tokens"]["old"] == 50000
+        assert changes[0]["changes"]["max_input_tokens"]["new"] == 100000
+        model_info = updated_config["model_list"][0]["model_info"]
+        assert model_info["max_input_tokens"] == 100000
+        assert model_info["max_output_tokens"] == 4096
+
+    def test_stale_limit_removed_preserves_mode(self, cleaner, sample_config):
+        """Test that a limit the API no longer reports is removed, but mode is kept."""
+        sample_config["model_list"][0]["model_info"] = {
+            "max_input_tokens": 50000,
+            "mode": "embedding",
+        }
+        config_models = [(0, "test/model1", "model-1")]
+        # API no longer reports max_input_tokens (omitted)
+        api_models = {
+            "model1": {
+                "id": "model1",
+                "input_cost": 1e-06,
+                "output_cost": 2e-06,
+            },
+        }
+
+        updated_config, changes, order_changed = cleaner.validate_and_update_costs(
+            sample_config, config_models, api_models
+        )
+
+        assert len(changes) == 1
+        assert changes[0]["changes"]["max_input_tokens"]["new"] is None
+        model_info = updated_config["model_list"][0]["model_info"]
+        assert "max_input_tokens" not in model_info
+        assert model_info.get("mode") == "embedding"
+
+    def test_stale_limit_removed_drops_empty_model_info(self, cleaner, sample_config):
+        """Test that model_info is dropped entirely when only limits were removed."""
+        sample_config["model_list"][0]["model_info"] = {
+            "max_input_tokens": 50000,
+        }
+        config_models = [(0, "test/model1", "model-1")]
+        api_models = {
+            "model1": {
+                "id": "model1",
+                "input_cost": 1e-06,
+                "output_cost": 2e-06,
+            },
+        }
+
+        updated_config, changes, order_changed = cleaner.validate_and_update_costs(
+            sample_config, config_models, api_models
+        )
+
+        assert len(changes) == 1
+        assert "model_info" not in updated_config["model_list"][0]
+
 
 class TestModelAddition:
     """Tests for adding models to config."""
