@@ -561,6 +561,44 @@ class ModelsDevClient:
 
         return max_input, max_output
 
+    def get_model_provider_npm(
+        self,
+        provider_id: str,
+        model_id: str,
+        logger: Optional[logging.Logger] = None,
+    ) -> Optional[str]:
+        """
+        Get the provider npm package for a model from models.dev.
+
+        Returns the npm package name (e.g., ``"@ai-sdk/anthropic"``) from the
+        model's ``provider.npm`` field, or ``None`` if the field is absent.
+
+        Args:
+            provider_id: The models.dev provider ID (e.g., "opencode-go")
+            model_id: The model ID as used by the provider
+            logger: Optional logger for debug output
+
+        Returns:
+            The npm package string, or None if not found.
+        """
+        self._ensure_loaded(logger)
+
+        if self._data is None:
+            return None
+
+        provider = self._data.get(provider_id, {})
+        models = provider.get("models", {})
+        model = models.get(model_id, {})
+        provider_info = model.get("provider", {}) or {}
+        npm = provider_info.get("npm")
+
+        if npm and logger:
+            logger.debug(
+                f"Provider npm for {model_id} in {provider_id}: {npm}"
+            )
+
+        return npm
+
     def clear_cache(self) -> None:
         """Clear cached data, allowing a fresh fetch on next access."""
         self._data = None

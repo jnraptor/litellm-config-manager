@@ -457,5 +457,270 @@ class TestModelsPopulator:
         assert "beta" not in data["models"]["brand-new"]["providers"]
 
 
+# ==============================================================================
+# OpenCode Go API prefix tests
+# ==============================================================================
+
+
+class TestOpenCodeGoApiPrefix:
+    """Tests that opencode-go models get the correct openai/ or anthropic/ prefix."""
+
+    def _make_providers_yaml(self, tmp_path) -> Path:
+        """Create a minimal providers.yaml with opencode-go."""
+        providers = {
+            "providers": {
+                "opencode-go": {
+                    "name": "OpenCode Go",
+                    "api_url": "https://opencode.ai/zen/go/v1/models",
+                    "model_prefix": "openai/",
+                    "model_detection": {"type": "api_base", "value": "opencode.ai/zen/go"},
+                    "model_prefixes": [
+                        {"prefix": "openai/", "api_base": "https://opencode.ai/zen/go/v1"},
+                        {"prefix": "anthropic/", "api_base": "https://opencode.ai/zen/go"},
+                    ],
+                    "pricing": {
+                        "input_field": None,
+                        "output_field": None,
+                        "is_per_million": False,
+                        "free_model_handling": True,
+                        "default_cost": None,
+                        "models_dev_id": "opencode-go",
+                    },
+                    "model_name_prefix": "",
+                    "model_name_cleanup": [],
+                    "special_models": [],
+                    "api_base_config": {"url": "https://opencode.ai/zen/go/v1", "api_key_env": "OPENCODE_API_KEY"},
+                    "api_key_env": "OPENCODE_API_KEY",
+                },
+            }
+        }
+        providers_path = tmp_path / "providers.yaml"
+        with open(providers_path, "w") as f:
+            yaml.dump(providers, f)
+        return providers_path
+
+    def test_opencode_go_anthropic_prefix(self, tmp_path, monkeypatch):
+        """Models with provider.npm=@ai-sdk/anthropic get anthropic/ prefix."""
+        from cleanup_base import ConfigDrivenModelCleaner, _models_dev_client
+
+        providers_path = self._make_providers_yaml(tmp_path)
+        models_path = tmp_path / "models.yaml"
+        models_path.write_text("models:\n")
+
+        # Mock fetch_available_models to return a model
+        def fake_fetch(self):
+            return {"minimax-m3": {"id": "minimax-m3"}}
+
+        monkeypatch.setattr(
+            ConfigDrivenModelCleaner, "fetch_available_models", fake_fetch
+        )
+
+        # Mock models.dev to return anthropic provider npm
+        monkeypatch.setattr(
+            _models_dev_client,
+            "get_model_provider_npm",
+            lambda provider_id, model_id, logger=None: "@ai-sdk/anthropic",
+        )
+
+        populator = ModelsPopulator(
+            providers_config_path=str(providers_path),
+            models_config_path=str(models_path),
+            dry_run=True,
+            verbose=False,
+        )
+        result = populator.populate("minimax-m3")
+        assert result["providers"]["opencode-go"] == "anthropic/minimax-m3"
+
+    def test_opencode_go_openai_prefix(self, tmp_path, monkeypatch):
+        """Models with provider.npm absent or @ai-sdk/openai get openai/ prefix."""
+        from cleanup_base import ConfigDrivenModelCleaner, _models_dev_client
+
+        providers_path = self._make_providers_yaml(tmp_path)
+        models_path = tmp_path / "models.yaml"
+        models_path.write_text("models:\n")
+
+        def fake_fetch(self):
+            return {"kimi-k3": {"id": "kimi-k3"}}
+
+        monkeypatch.setattr(
+            ConfigDrivenModelCleaner, "fetch_available_models", fake_fetch
+        )
+
+        # Mock models.dev to return None (no provider field)
+        monkeypatch.setattr(
+            _models_dev_client,
+            "get_model_provider_npm",
+            lambda provider_id, model_id, logger=None: None,
+        )
+
+        populator = ModelsPopulator(
+            providers_config_path=str(providers_path),
+            models_config_path=str(models_path),
+            dry_run=True,
+            verbose=False,
+        )
+        result = populator.populate("kimi-k3")
+        assert result["providers"]["opencode-go"] == "openai/kimi-k3"
+
+    def test_opencode_go_grok_openai_prefix(self, tmp_path, monkeypatch):
+        """Models with provider.npm=@ai-sdk/openai get openai/ prefix."""
+        from cleanup_base import ConfigDrivenModelCleaner, _models_dev_client
+
+        providers_path = self._make_providers_yaml(tmp_path)
+        models_path = tmp_path / "models.yaml"
+        models_path.write_text("models:\n")
+
+        def fake_fetch(self):
+            return {"grok-4.5": {"id": "grok-4.5"}}
+
+        monkeypatch.setattr(
+            ConfigDrivenModelCleaner, "fetch_available_models", fake_fetch
+        )
+
+        # Mock models.dev to return @ai-sdk/openai
+        monkeypatch.setattr(
+            _models_dev_client,
+            "get_model_provider_npm",
+            lambda provider_id, model_id, logger=None: "@ai-sdk/openai",
+        )
+
+        populator = ModelsPopulator(
+            providers_config_path=str(providers_path),
+            models_config_path=str(models_path),
+            dry_run=True,
+            verbose=False,
+        )
+        result = populator.populate("grok-4.5")
+        assert result["providers"]["opencode-go"] == "openai/grok-4.5"
+
+    def test_non_opencode_go_unaffected(self, tmp_path, monkeypatch):
+        """Non-opencode-go providers are not affected by the prefix logic."""
+        providers = {
+            "providers": {
+                "openrouter": {
+                    "name": "OpenRouter",
+                    "api_url": "https://openrouter.ai/api/v1/models",
+                    "model_prefix": "openrouter/",
+                    "model_detection": {"type": "prefix", "value": "openrouter/"},
+                    "pricing": {
+                        "input_field": "pricing.prompt",
+                        "output_field": "pricing.completion",
+                        "is_per_million": False,
+                        "free_model_handling": True,
+                    },
+                    "model_name_prefix": "",
+                    "model_name_cleanup": [],
+                    "special_models": [],
+                    "api_base_config": None,
+                    "api_key_env": None,
+                },
+            }
+        }
+        providers_path = tmp_path / "providers.yaml"
+        with open(providers_path, "w") as f:
+            yaml.dump(providers, f)
+
+        models_path = tmp_path / "models.yaml"
+        models_path.write_text("models:\n")
+
+        from cleanup_base import ConfigDrivenModelCleaner
+
+        def fake_fetch(self):
+            return {"minimax/minimax-m3": {"id": "minimax/minimax-m3"}}
+
+        monkeypatch.setattr(
+            ConfigDrivenModelCleaner, "fetch_available_models", fake_fetch
+        )
+
+        populator = ModelsPopulator(
+            providers_config_path=str(providers_path),
+            models_config_path=str(models_path),
+            dry_run=True,
+            verbose=False,
+        )
+        result = populator.populate("minimax-m3")
+        # openrouter should NOT get an openai/ or anthropic/ prefix
+        assert result["providers"]["openrouter"] == "minimax/minimax-m3"
+
+
+# ==============================================================================
+# ModelsDevClient.get_model_provider_npm tests
+# ==============================================================================
+
+
+class TestGetModelProviderNpm:
+    """Tests for ModelsDevClient.get_model_provider_npm()."""
+
+    def test_returns_anthropic_npm(self):
+        from cleanup_base import ModelsDevClient
+
+        client = ModelsDevClient()
+        client._data = {
+            "opencode-go": {
+                "models": {
+                    "minimax-m3": {
+                        "provider": {"npm": "@ai-sdk/anthropic"},
+                    }
+                }
+            }
+        }
+        result = client.get_model_provider_npm("opencode-go", "minimax-m3")
+        assert result == "@ai-sdk/anthropic"
+
+    def test_returns_openai_npm(self):
+        from cleanup_base import ModelsDevClient
+
+        client = ModelsDevClient()
+        client._data = {
+            "opencode-go": {
+                "models": {
+                    "grok-4.5": {
+                        "provider": {"npm": "@ai-sdk/openai"},
+                    }
+                }
+            }
+        }
+        result = client.get_model_provider_npm("opencode-go", "grok-4.5")
+        assert result == "@ai-sdk/openai"
+
+    def test_returns_none_when_no_provider_field(self):
+        from cleanup_base import ModelsDevClient
+
+        client = ModelsDevClient()
+        client._data = {
+            "opencode-go": {
+                "models": {
+                    "kimi-k3": {
+                        "id": "kimi-k3",
+                        # No "provider" field
+                    }
+                }
+            }
+        }
+        result = client.get_model_provider_npm("opencode-go", "kimi-k3")
+        assert result is None
+
+    def test_returns_none_when_model_not_found(self):
+        from cleanup_base import ModelsDevClient
+
+        client = ModelsDevClient()
+        client._data = {
+            "opencode-go": {
+                "models": {}
+            }
+        }
+        result = client.get_model_provider_npm("opencode-go", "nonexistent")
+        assert result is None
+
+    def test_returns_none_when_data_not_loaded(self):
+        from cleanup_base import ModelsDevClient
+
+        client = ModelsDevClient()
+        # Prevent _ensure_loaded from fetching real API data
+        client._load_failed = True
+        result = client.get_model_provider_npm("opencode-go", "minimax-m3")
+        assert result is None
+
+
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])

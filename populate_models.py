@@ -31,6 +31,7 @@ from cleanup_base import (
     ConfigDrivenModelCleaner,
     ModelMappingLoader,
     ProviderConfigLoader,
+    _models_dev_client,
     setup_logging,
 )
 from cleanup_ollama_models import OllamaModelCleaner
@@ -325,6 +326,16 @@ class ModelsPopulator:
 
             matched_id, score, match_type = find_model_in_api(model_key, api_models)
             if matched_id:
+                # For opencode-go, determine API prefix from models.dev provider.npm
+                if provider_name == "opencode-go":
+                    npm = _models_dev_client.get_model_provider_npm(
+                        "opencode-go", matched_id, self.logger
+                    )
+                    if npm == "@ai-sdk/anthropic":
+                        matched_id = f"anthropic/{matched_id}"
+                    else:
+                        # @ai-sdk/openai, @ai-sdk/openai-compatible, or absent
+                        matched_id = f"openai/{matched_id}"
                 self.logger.info(
                     f"  ✅ {provider_name}: {matched_id} (score={score:.2f}, {match_type})"
                 )

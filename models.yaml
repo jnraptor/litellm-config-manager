@@ -228,8 +228,9 @@ models:
       openrouter: moonshotai/kimi-k3
       kilo: moonshotai/kimi-k3
       fireworks: accounts/fireworks/models/kimi-k3
-      opencode-go: kimi-k3
-      requesty: fireworks/kimi-k3
+      opencode-zen: kimi-k3
+      opencode-go: openai/kimi-k3
+      requesty: nebius/kimi-k3
   grok-4.5:
     display_name: grok-4.5
     description: ''
