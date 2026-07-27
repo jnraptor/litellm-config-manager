@@ -470,17 +470,6 @@ model_list:
     max_output_tokens: 32768
 - model_name: glm-5.1
   litellm_params:
-    model: fireworks_ai/accounts/fireworks/models/glm-5p1
-    order: 4
-    api_key: os.environ/FIREWORKS_AI_API_KEY
-    input_cost_per_token: 1.4e-06
-    output_cost_per_token: 4.4e-06
-    cache_read_input_token_cost: 2.6e-07
-  model_info:
-    max_input_tokens: 202800
-    max_output_tokens: 131072
-- model_name: glm-5.1
-  litellm_params:
     model: openai/z-ai/glm-5.1
     order: 4
     api_base: https://api.kilo.ai/api/gateway
@@ -561,9 +550,9 @@ model_list:
   litellm_params:
     model: openrouter/z-ai/glm-5.2
     order: 5
-    input_cost_per_token: 6.692e-07
-    output_cost_per_token: 2.1032e-06
-    cache_read_input_token_cost: 1.2428e-07
+    input_cost_per_token: 7.742e-07
+    output_cost_per_token: 2.4332e-06
+    cache_read_input_token_cost: 1.4378e-07
   model_info:
     max_input_tokens: 1048576
     max_output_tokens: 131072
@@ -853,9 +842,25 @@ model_list:
   litellm_params:
     model: openai/kimi-k3
     order: 1
+    api_base: https://opencode.ai/zen/go/v1
+    api_key: os.environ/OPENCODE_API_KEY
     input_cost_per_token: 3.0e-06
     output_cost_per_token: 1.5e-05
     cache_read_input_token_cost: 3.0e-07
+  model_info:
+    max_input_tokens: 1048576
+    max_output_tokens: 131072
+- model_name: kimi-k3
+  litellm_params:
+    model: fireworks_ai/accounts/fireworks/models/kimi-k3
+    order: 4
+    api_key: os.environ/FIREWORKS_AI_API_KEY
+    input_cost_per_token: 3.0e-06
+    output_cost_per_token: 1.5e-05
+    cache_read_input_token_cost: 3.0e-07
+  model_info:
+    max_input_tokens: 1048576
+    max_output_tokens: 131072
 - model_name: kimi-k3
   litellm_params:
     model: openai/moonshotai/kimi-k3
@@ -1014,9 +1019,9 @@ model_list:
     order: 4
     api_base: https://api.kilo.ai/api/gateway
     api_key: os.environ/KILO_API_KEY
-    input_cost_per_token: 1.05e-07
+    input_cost_per_token: 1.4e-07
     output_cost_per_token: 2.8e-07
-    cache_read_input_token_cost: 2.8e-08
+    cache_read_input_token_cost: 3.0e-09
   model_info:
     max_input_tokens: 1050000
     max_output_tokens: 131072
@@ -1073,15 +1078,6 @@ model_list:
     output_cost_per_token: 1.2e-06
     order: 1
     cache_read_input_token_cost: 6.0e-08
-  model_info:
-    max_input_tokens: 204800
-    max_output_tokens: 131072
-- model_name: minimax-m2.7
-  litellm_params:
-    model: nvidia_nim/minimaxai/minimax-m2.7
-    order: 3
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
   model_info:
     max_input_tokens: 204800
     max_output_tokens: 131072
@@ -1203,15 +1199,6 @@ model_list:
   model_name: mistral-medium-3-5
   model_info:
     base_model: azure_ai/mistral-medium-3-5
-- model_name: mistral-small-4
-  litellm_params:
-    model: nvidia_nim/mistralai/mistral-small-4-119b-2603
-    order: 3
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
-  model_info:
-    max_input_tokens: 128000
-    max_output_tokens: 8192
 - model_name: mistral-small-4
   litellm_params:
     model: mistral/mistral-small-latest
