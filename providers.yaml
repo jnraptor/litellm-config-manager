@@ -240,6 +240,10 @@ providers:
       api_base: https://opencode.ai/zen/go/v1
     - prefix: anthropic/
       api_base: https://opencode.ai/zen/go
+    - prefix: text-completion-openai/
+      api_base: https://opencode.ai/zen/go/v1/responses
+    responses_model_ids:
+    - gpt-5.6-luna
     pricing:
       input_field: null
       output_field: null

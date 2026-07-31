@@ -550,9 +550,9 @@ model_list:
   litellm_params:
     model: openrouter/z-ai/glm-5.2
     order: 5
-    input_cost_per_token: 1.19e-06
-    output_cost_per_token: 3.74e-06
-    cache_read_input_token_cost: 2.21e-07
+    input_cost_per_token: 1.232e-06
+    output_cost_per_token: 3.872e-06
+    cache_read_input_token_cost: 2.288e-07
   model_info:
     max_input_tokens: 1048576
     max_output_tokens: 128000
@@ -594,9 +594,9 @@ model_list:
     base_model: azure/gpt-5.4-nano
 - model_name: gpt-5.6-luna
   litellm_params:
-    model: openai/gpt-5.6-luna
+    model: text-completion-openai/gpt-5.6-luna
     order: 1
-    api_base: https://opencode.ai/zen/go/v1
+    api_base: https://opencode.ai/zen/go/v1/responses
     api_key: os.environ/OPENCODE_API_KEY
     input_cost_per_token: 1.0000000000000001e-07
     output_cost_per_token: 6.0e-07
@@ -615,18 +615,6 @@ model_list:
     output_cost_per_token: 6.000000000000001e-07
     cache_creation_input_token_cost: 1.2500000000000002e-07
     cache_read_input_token_cost: 1.0e-08
-  model_info:
-    max_input_tokens: 1050000
-    max_output_tokens: 128000
-- model_name: gpt-5.6-luna
-  litellm_params:
-    model: openai/openai-responses/gpt-5.6-luna
-    order: 5
-    api_base: https://router.requesty.ai/v1
-    api_key: os.environ/REQUESTY_API_KEY
-    input_cost_per_token: 2.0e-07
-    output_cost_per_token: 1.2e-06
-    cache_read_input_token_cost: 2.0e-08
   model_info:
     max_input_tokens: 1050000
     max_output_tokens: 128000
@@ -657,9 +645,14 @@ model_list:
   litellm_params:
     model: openai/grok-4.5
     order: 1
+    api_base: https://opencode.ai/zen/go/v1
+    api_key: os.environ/OPENCODE_API_KEY
     input_cost_per_token: 2.0e-06
     output_cost_per_token: 6.0e-06
     cache_read_input_token_cost: 5.0e-07
+  model_info:
+    max_input_tokens: 500000
+    max_output_tokens: 500000
 - model_name: grok-4.5
   litellm_params:
     model: openai/x-ai/grok-4.5

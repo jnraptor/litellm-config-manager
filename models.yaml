@@ -236,10 +236,10 @@ models:
     description: ''
     providers:
       openrouter: x-ai/grok-4.5
-      poe: grok-4.5
       kilo: x-ai/grok-4.5
-      opencode-go: grok-4.5
+      opencode-go: openai/grok-4.5
       requesty: xai/grok-4.5
+      poe: grok-4.5
   inkling:
     display_name: inkling
     description: ''
@@ -284,5 +284,5 @@ models:
     providers:
       openrouter: openai/gpt-5.6-luna
       kilo: openai/gpt-5.6-luna
-      opencode-go: openai/gpt-5.6-luna
-      requesty: openai-responses/gpt-5.6-luna
+      opencode-go: text-completion-openai/gpt-5.6-luna
+      requesty: text-completion-openai/gpt-5.6-luna

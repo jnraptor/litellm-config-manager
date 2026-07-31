@@ -544,7 +544,12 @@ class TestOpenCodeGoApiPrefix:
                     "model_prefixes": [
                         {"prefix": "openai/", "api_base": "https://opencode.ai/zen/go/v1"},
                         {"prefix": "anthropic/", "api_base": "https://opencode.ai/zen/go"},
+                        {
+                            "prefix": "text-completion-openai/",
+                            "api_base": "https://opencode.ai/zen/go/v1/responses",
+                        },
                     ],
+                    "responses_model_ids": ["gpt-5.6-luna"],
                     "pricing": {
                         "input_field": None,
                         "output_field": None,
@@ -659,6 +664,36 @@ class TestOpenCodeGoApiPrefix:
         )
         result = populator.populate("grok-4.5")
         assert result["providers"]["opencode-go"] == "openai/grok-4.5"
+
+    def test_opencode_go_responses_prefix(self, tmp_path, monkeypatch):
+        """Responses models use the dedicated LiteLLM route prefix."""
+        from cleanup_base import ConfigDrivenModelCleaner, _models_dev_client
+
+        providers_path = self._make_providers_yaml(tmp_path)
+        models_path = tmp_path / "models.yaml"
+        models_path.write_text("models:\n")
+
+        monkeypatch.setattr(
+            ConfigDrivenModelCleaner,
+            "fetch_available_models",
+            lambda self: {"gpt-5.6-luna": {"id": "gpt-5.6-luna"}},
+        )
+        monkeypatch.setattr(
+            _models_dev_client,
+            "get_model_provider_npm",
+            lambda provider_id, model_id, logger=None: "@ai-sdk/openai",
+        )
+
+        populator = ModelsPopulator(
+            providers_config_path=str(providers_path),
+            models_config_path=str(models_path),
+            dry_run=True,
+        )
+        result = populator.populate("gpt-5.6-luna")
+
+        assert result["providers"]["opencode-go"] == (
+            "text-completion-openai/gpt-5.6-luna"
+        )
 
     def test_non_opencode_go_unaffected(self, tmp_path, monkeypatch):
         """Non-opencode-go providers are not affected by the prefix logic."""

@@ -964,6 +964,44 @@ class TestIntegration:
         assert "openrouter" in model_mapping["providers"]
         assert model_mapping["providers"]["openrouter"] == "vendor/test-model"
 
+    def test_mapped_responses_model_matches_bare_api_id(self, monkeypatch, tmp_path):
+        """Cleanup dry-run accepts LiteLLM-prefixed mapped model IDs."""
+        from cleanup_models import UnifiedModelCleaner
+
+        models_file = tmp_path / "models.yaml"
+        models_file.write_text(
+            "models:\n"
+            "  gpt-5.6-luna:\n"
+            "    display_name: gpt-5.6-luna\n"
+            "    providers:\n"
+            "      opencode-go: text-completion-openai/gpt-5.6-luna\n"
+        )
+        loader = ModelMappingLoader(str(models_file))
+        cleaner = UnifiedModelCleaner(
+            config_path="config.yaml",
+            provider_names=["opencode-go"],
+            dry_run=True,
+        )
+        monkeypatch.setattr(
+            cleaner.cleaners["opencode-go"],
+            "fetch_available_models",
+            lambda: {"gpt-5.6-luna": {"id": "gpt-5.6-luna"}},
+        )
+
+        _, added = cleaner.add_mapped_model("gpt-5.6-luna", loader)
+
+        assert added["opencode-go"] == ["text-completion-openai/gpt-5.6-luna"]
+
+        entry = cleaner.cleaners["opencode-go"].create_model_entry(
+            "text-completion-openai/gpt-5.6-luna",
+            {"input_cost": 1e-7, "output_cost": 6e-7},
+            "gpt-5.6-luna",
+        )
+        assert entry["litellm_params"]["model"] == "text-completion-openai/gpt-5.6-luna"
+        assert entry["litellm_params"]["api_base"] == (
+            "https://opencode.ai/zen/go/v1/responses"
+        )
+
 
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])

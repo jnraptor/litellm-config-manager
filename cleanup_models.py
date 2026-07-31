@@ -326,7 +326,10 @@ class UnifiedModelCleaner:
                     self.logger.info(
                         f"  DRY RUN: Would add {provider_model_id} as '{display_name}'"
                     )
-                    if provider_model_id in api_models:
+                    # Mapped IDs include LiteLLM routing prefixes (for example,
+                    # text-completion-openai/), while provider APIs return bare IDs.
+                    api_model_id = cleaner.get_api_model_id(provider_model_id)
+                    if api_model_id in api_models:
                         added_models_by_provider[provider_name] = [provider_model_id]
                     else:
                         self.logger.warning(
