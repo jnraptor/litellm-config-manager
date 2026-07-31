@@ -17,7 +17,7 @@ Author: Generated for LiteLLM Config Management
 """
 
 import sys
-from typing import Dict, Any, Optional
+from typing import Any
 
 import requests
 
@@ -34,7 +34,7 @@ class OllamaModelCleaner(ConfigDrivenModelCleaner):
         """Initialize the Ollama model cleaner."""
         super().__init__("ollama", config_path, dry_run, verbose)
 
-    def fetch_available_models(self) -> Dict[str, Dict[str, Any]]:
+    def fetch_available_models(self) -> dict[str, dict[str, Any]]:
         """
         Fetch available models from Ollama API.
 
@@ -75,7 +75,7 @@ class OllamaModelCleaner(ConfigDrivenModelCleaner):
             )
             raise
 
-    def parse_api_model(self, model: Dict[str, Any]) -> Dict[str, Any]:
+    def parse_api_model(self, model: dict[str, Any]) -> dict[str, Any]:
         """
         Parse a model from the Ollama API response.
 

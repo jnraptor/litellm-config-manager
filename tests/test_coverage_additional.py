@@ -8,13 +8,13 @@ Tests for the 4 key uncovered areas identified in coverage analysis:
 5. Provider deletion (--delete-provider)
 """
 
-import json
 import logging
-import pytest
+import sys
 import tempfile
 from pathlib import Path
-from unittest.mock import Mock, patch, MagicMock, mock_open
-import sys
+from unittest.mock import patch
+
+import pytest
 import yaml
 
 # Add parent directory to path
@@ -998,9 +998,7 @@ class TestIntegration:
             "gpt-5.6-luna",
         )
         assert entry["litellm_params"]["model"] == "openai/gpt-5.6-luna"
-        assert entry["litellm_params"]["api_base"] == (
-            "https://opencode.ai/zen/go/v1"
-        )
+        assert entry["litellm_params"]["api_base"] == ("https://opencode.ai/zen/go/v1")
 
 
 if __name__ == "__main__":

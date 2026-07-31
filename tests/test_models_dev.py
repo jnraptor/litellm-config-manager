@@ -9,18 +9,16 @@ Tests cover:
 - Integration with ConfigDrivenModelCleaner.parse_api_model fallback
 """
 
-import pytest
 import logging
-from unittest.mock import Mock, patch, MagicMock
+from unittest.mock import Mock, patch
+
+import pytest
 import requests
 
 from cleanup_base import (
-    ModelsDevClient,
     ConfigDrivenModelCleaner,
-    _models_dev_client,
-    costs_are_equal,
+    ModelsDevClient,
 )
-
 
 # Sample models.dev API response structure
 SAMPLE_MODELS_DEV_DATA = {

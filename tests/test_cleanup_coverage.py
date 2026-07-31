@@ -10,12 +10,11 @@ Tests focus on:
 - Report generation
 """
 
-import json
 import logging
-import pytest
-from pathlib import Path
-from unittest.mock import Mock, patch, MagicMock
 import sys
+from pathlib import Path
+
+import pytest
 
 # Add parent directory to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -23,12 +22,9 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from cleanup_base import (
     BaseModelCleaner,
     ConfigDrivenModelCleaner,
-    ProviderConfigLoader,
-    costs_are_equal,
-    adjust_cost_for_free_model,
     get_nested_value,
-    sort_model_list,
     is_api_base_model,
+    sort_model_list,
 )
 
 

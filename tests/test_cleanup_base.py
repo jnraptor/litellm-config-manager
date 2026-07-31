@@ -3,18 +3,19 @@
 Tests for cleanup_base.py utilities and base classes.
 """
 
-import pytest
 import logging
-from unittest.mock import Mock, patch, MagicMock
+from unittest.mock import Mock, patch
+
+import pytest
 import requests
 
 from cleanup_base import (
-    setup_logging,
-    costs_are_equal,
-    adjust_cost_for_free_model,
     APIClient,
-    fetch_models_from_api,
     ProviderConfigLoader,
+    adjust_cost_for_free_model,
+    costs_are_equal,
+    fetch_models_from_api,
+    setup_logging,
 )
 
 

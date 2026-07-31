@@ -3,23 +3,21 @@
 Tests for the config validation functionality in cleanup_base.py and cleanup_models.py.
 """
 
-import pytest
-import logging
-from pathlib import Path
-from unittest.mock import Mock, patch
 import sys
-import argparse
+from pathlib import Path
+
+import pytest
 
 # Add parent directory to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from cleanup_base import (
+    FALLBACK_KNOWN_PREFIXES,
+    VALID_MODEL_MODES,
     BaseModelCleaner,
-    ValidationSeverity,
     ValidationIssue,
     ValidationReport,
-    VALID_MODEL_MODES,
-    FALLBACK_KNOWN_PREFIXES,
+    ValidationSeverity,
     _print_validation_report,
     create_provider_main,
 )
@@ -899,12 +897,11 @@ class TestCleanupModelsMainValidate:
             ],
         )
 
-        from cleanup_models import main
-
         # The ProviderConfigLoader singleton may have been loaded before,
         # so we need to reset it or patch it to use our temp providers.yaml
         # Since ProviderConfigLoader is a singleton, patch its _load_config behavior
         from cleanup_base import ProviderConfigLoader
+        from cleanup_models import main
 
         original_new = ProviderConfigLoader.__new__
 

@@ -15,9 +15,9 @@ Usage:
 import argparse
 import logging
 import sys
+from typing import Any
+
 import yaml
-from pathlib import Path
-from typing import Dict, List, Any, Optional
 
 
 def setup_logging(verbose: bool = False) -> logging.Logger:
@@ -41,7 +41,7 @@ def setup_logging(verbose: bool = False) -> logging.Logger:
 
 def load_providers_config(
     providers_path: str, logger: logging.Logger
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """Load the providers configuration file."""
     try:
         logger.info(f"Loading providers configuration from {providers_path}")
@@ -67,7 +67,7 @@ def load_providers_config(
         raise
 
 
-def load_config(config_path: str, logger: logging.Logger) -> Dict[str, Any]:
+def load_config(config_path: str, logger: logging.Logger) -> dict[str, Any]:
     """Load the LiteLLM configuration file."""
     try:
         logger.info(f"Loading configuration from {config_path}")
@@ -91,8 +91,8 @@ def load_config(config_path: str, logger: logging.Logger) -> Dict[str, Any]:
 
 
 def determine_provider_for_model(
-    model_entry: Dict[str, Any], provider_orders: Dict[str, int], logger: logging.Logger
-) -> Optional[str]:
+    model_entry: dict[str, Any], provider_orders: dict[str, int], logger: logging.Logger
+) -> str | None:
     """
     Determine which provider a model belongs to based on its configuration.
 
@@ -132,8 +132,8 @@ def determine_provider_for_model(
 
 
 def update_order_values(
-    config: Dict[str, Any], provider_orders: Dict[str, int], logger: logging.Logger
-) -> tuple[Dict[str, Any], Dict[str, int]]:
+    config: dict[str, Any], provider_orders: dict[str, int], logger: logging.Logger
+) -> tuple[dict[str, Any], dict[str, int]]:
     """
     Update the order values for all models in the configuration.
 
@@ -189,7 +189,7 @@ def update_order_values(
 
 
 def save_config(
-    config: Dict[str, Any], config_path: str, logger: logging.Logger
+    config: dict[str, Any], config_path: str, logger: logging.Logger
 ) -> None:
     """Save the updated configuration to file."""
     try:
@@ -212,7 +212,7 @@ def save_config(
         raise
 
 
-def generate_report(stats: Dict[str, int], logger: logging.Logger) -> None:
+def generate_report(stats: dict[str, int], logger: logging.Logger) -> None:
     """Generate a summary report of the update operation."""
     logger.info("=" * 60)
     logger.info("Order Value Update Summary")
