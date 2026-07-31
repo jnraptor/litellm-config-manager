@@ -225,7 +225,7 @@ All scripts share these capabilities:
 ### Provider-Specific Notes
 
 - **OpenRouter**: Automatically adds both free (`:free`) and paid versions with the same name
-- **OpenCode Go**: Supports multi-prefix detection (`openai/`, `dashscope/`, `anthropic/`) with correct API base routing
+- **OpenCode Go**: Supports OpenAI chat-completions (`openai/`) and Anthropic (`anthropic/`) routes
 - **Nvidia NIM**: All models are free — uses `1e-09` cost for LiteLLM compatibility
 - **Requesty**: Preserves existing model names for load balancing across providers
 

@@ -237,7 +237,7 @@ populate_models.py
 - `pricing.models_dev_id`: maps to a provider ID in `models.dev/api.json` for cost augmentation; used when provider API has no pricing (e.g., `"fireworks-ai"`, `"opencode"`, `"opencode-go"`); also sources `cost.cache_read` / `cost.cache_write` for cache fields
 - `free_variant_suffix`: `":free"` for OpenRouter and Kilo — triggers automatic `:free` variant addition when adding models
 - `special_models`: model IDs exempt from removal validation
-- `model_prefixes`: optional list of `{prefix, api_base}` mappings for providers that serve models under multiple prefixes (e.g., OpenCode Go with `openai/`, `dashscope/`, `anthropic/`)
+- `model_prefixes`: optional list of `{prefix, api_base}` mappings for providers that serve models under multiple prefixes (e.g., OpenCode Go with `openai/` and `anthropic/`)
 
 **`cleanup_models.py`** — `UnifiedModelCleaner` delegates to per-provider `ConfigDrivenModelCleaner` instances; handles multi-provider orchestration, the `--provider all` flag, model deletion via `--delete-model`, provider deletion via `--delete-provider`, and mapped model additions via `--add-mapped-model`.
 
@@ -259,10 +259,10 @@ How each provider's models are detected in `config.yaml`:
 - **Poe**: `litellm_params.api_base` contains `api.poe.com` + model starts with `openai/`
 - **Kilo**: `litellm_params.api_base` = `os.environ/KILO_API_BASE` + model starts with `openai/`
 - **OpenCode Zen**: `litellm_params.api_base` contains `opencode.ai/zen/v1` + model starts with `openai/`
-- **OpenCode Go**: `litellm_params.api_base` contains `opencode.ai/zen/go` + model starts with `openai/`, `dashscope/`, or `anthropic/`
+- **OpenCode Go**: `litellm_params.api_base` contains `opencode.ai/zen/go` + model starts with `openai/` or `anthropic/`
 
 > **Note:** OpenCode Go is the first provider to support multiple model prefixes. The `model_prefixes` field in `providers.yaml` maps each prefix to its corresponding `api_base`:
-> - `openai/` and `dashscope/` → `https://opencode.ai/zen/go/v1`
+> - `openai/` → `https://opencode.ai/zen/go/v1`
 > - `anthropic/` → `https://opencode.ai/zen/go`
 
 ### Adding a New Provider

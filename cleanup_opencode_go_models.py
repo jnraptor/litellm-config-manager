@@ -7,8 +7,8 @@ the current OpenCode Go API and:
 1. Removes any invalid model entries
 2. Adds new models when requested
 
-Supports both OpenAI-compatible models (openai/, dashscope/ prefixes) and
-Anthropic-compatible models (anthropic/ prefix).
+Supports OpenAI-compatible models (openai/ prefix) and Anthropic-compatible
+models (anthropic/ prefix).
 
 Usage:
     python cleanup_opencode_go_models.py [--config config.yaml] [--dry-run] [--verbose]

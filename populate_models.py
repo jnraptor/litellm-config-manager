@@ -368,16 +368,14 @@ class ModelsPopulator:
 
             matched_id, score, match_type = find_model_in_api(model_key, api_models)
             if matched_id:
-                # For opencode-go, determine the API prefix from models.dev and
-                # provider-specific route configuration.
+                # OpenCode Go uses the OpenAI route unless models.dev identifies
+                # the model as Anthropic-compatible.
                 if provider_name == "opencode-go":
                     npm = _models_dev_client.get_model_provider_npm(
                         "opencode-go", matched_id, self.logger
                     )
                     if npm == "@ai-sdk/anthropic":
                         matched_id = f"anthropic/{matched_id}"
-                    elif matched_id in provider_config.get("responses_model_ids", []):
-                        matched_id = f"text-completion-openai/{matched_id}"
                     else:
                         # @ai-sdk/openai, @ai-sdk/openai-compatible, or absent.
                         matched_id = f"openai/{matched_id}"

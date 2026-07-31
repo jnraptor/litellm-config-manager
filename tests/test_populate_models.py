@@ -544,12 +544,7 @@ class TestOpenCodeGoApiPrefix:
                     "model_prefixes": [
                         {"prefix": "openai/", "api_base": "https://opencode.ai/zen/go/v1"},
                         {"prefix": "anthropic/", "api_base": "https://opencode.ai/zen/go"},
-                        {
-                            "prefix": "text-completion-openai/",
-                            "api_base": "https://opencode.ai/zen/go/v1/responses",
-                        },
                     ],
-                    "responses_model_ids": ["gpt-5.6-luna"],
                     "pricing": {
                         "input_field": None,
                         "output_field": None,
@@ -665,8 +660,8 @@ class TestOpenCodeGoApiPrefix:
         result = populator.populate("grok-4.5")
         assert result["providers"]["opencode-go"] == "openai/grok-4.5"
 
-    def test_opencode_go_responses_prefix(self, tmp_path, monkeypatch):
-        """Responses models use the dedicated LiteLLM route prefix."""
+    def test_opencode_go_openai_route_for_all_openai_models(self, tmp_path, monkeypatch):
+        """OpenAI-compatible models use the standard chat-completions route."""
         from cleanup_base import ConfigDrivenModelCleaner, _models_dev_client
 
         providers_path = self._make_providers_yaml(tmp_path)
@@ -691,9 +686,7 @@ class TestOpenCodeGoApiPrefix:
         )
         result = populator.populate("gpt-5.6-luna")
 
-        assert result["providers"]["opencode-go"] == (
-            "text-completion-openai/gpt-5.6-luna"
-        )
+        assert result["providers"]["opencode-go"] == "openai/gpt-5.6-luna"
 
     def test_non_opencode_go_unaffected(self, tmp_path, monkeypatch):
         """Non-opencode-go providers are not affected by the prefix logic."""
