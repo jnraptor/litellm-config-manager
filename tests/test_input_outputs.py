@@ -49,14 +49,15 @@ import json
 import re
 import sys
 from pathlib import Path
-from typing import Dict, List, Tuple, Any, Optional
-from unittest.mock import patch, Mock
+from typing import Any
+from unittest.mock import Mock, patch
+
 import yaml
 
 # Add parent directory to path to import cleanup_base
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from cleanup_base import ConfigDrivenModelCleaner, ProviderConfigLoader
+from cleanup_base import ConfigDrivenModelCleaner
 
 # Try to import pytest for type hints, but don't require it
 try:
@@ -71,13 +72,13 @@ except ImportError:
 class InputOutputTestCase:
     """Represents a single test case from input-and-outputs.md."""
 
-    def __init__(self, provider: str, input_data: Dict, expected_output: Dict):
+    def __init__(self, provider: str, input_data: dict, expected_output: dict):
         self.provider = provider
         self.input_data = input_data
         self.expected_output = expected_output
 
 
-def parse_markdown_file(filepath: str) -> List[InputOutputTestCase]:
+def parse_markdown_file(filepath: str) -> list[InputOutputTestCase]:
     """
     Parse the input-and-outputs.md file to extract test cases.
 
@@ -237,7 +238,7 @@ class MockCleaner(ConfigDrivenModelCleaner):
         # Load defaults from providers.yaml
         self.defaults = providers_data.get("defaults", {})
 
-    def parse_api_model(self, model: Dict[str, Any]) -> Dict[str, Any]:
+    def parse_api_model(self, model: dict[str, Any]) -> dict[str, Any]:
         """
         Override parse_api_model to handle Ollama's different field name.
         Ollama uses 'name' instead of 'id' for the model identifier.
@@ -263,7 +264,7 @@ class MockCleaner(ConfigDrivenModelCleaner):
             return super().parse_api_model(model)
 
 
-def run_test_case(test_case: InputOutputTestCase) -> Tuple[bool, List[str]]:
+def run_test_case(test_case: InputOutputTestCase) -> tuple[bool, list[str]]:
     """
     Run a single test case.
 
@@ -416,7 +417,7 @@ def run_test_case(test_case: InputOutputTestCase) -> Tuple[bool, List[str]]:
     return len(errors) == 0, errors
 
 
-def get_test_cases() -> List[InputOutputTestCase]:
+def get_test_cases() -> list[InputOutputTestCase]:
     """Get all test cases from the markdown file."""
     test_dir = Path(__file__).parent
     markdown_file = test_dir / "input-and-outputs.md"

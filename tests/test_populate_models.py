@@ -540,10 +540,19 @@ class TestOpenCodeGoApiPrefix:
                     "name": "OpenCode Go",
                     "api_url": "https://opencode.ai/zen/go/v1/models",
                     "model_prefix": "openai/",
-                    "model_detection": {"type": "api_base", "value": "opencode.ai/zen/go"},
+                    "model_detection": {
+                        "type": "api_base",
+                        "value": "opencode.ai/zen/go",
+                    },
                     "model_prefixes": [
-                        {"prefix": "openai/", "api_base": "https://opencode.ai/zen/go/v1"},
-                        {"prefix": "anthropic/", "api_base": "https://opencode.ai/zen/go"},
+                        {
+                            "prefix": "openai/",
+                            "api_base": "https://opencode.ai/zen/go/v1",
+                        },
+                        {
+                            "prefix": "anthropic/",
+                            "api_base": "https://opencode.ai/zen/go",
+                        },
                     ],
                     "pricing": {
                         "input_field": None,
@@ -556,7 +565,10 @@ class TestOpenCodeGoApiPrefix:
                     "model_name_prefix": "",
                     "model_name_cleanup": [],
                     "special_models": [],
-                    "api_base_config": {"url": "https://opencode.ai/zen/go/v1", "api_key_env": "OPENCODE_API_KEY"},
+                    "api_base_config": {
+                        "url": "https://opencode.ai/zen/go/v1",
+                        "api_key_env": "OPENCODE_API_KEY",
+                    },
                     "api_key_env": "OPENCODE_API_KEY",
                 },
             }
@@ -660,7 +672,9 @@ class TestOpenCodeGoApiPrefix:
         result = populator.populate("grok-4.5")
         assert result["providers"]["opencode-go"] == "openai/grok-4.5"
 
-    def test_opencode_go_openai_route_for_all_openai_models(self, tmp_path, monkeypatch):
+    def test_opencode_go_openai_route_for_all_openai_models(
+        self, tmp_path, monkeypatch
+    ):
         """OpenAI-compatible models use the standard chat-completions route."""
         from cleanup_base import ConfigDrivenModelCleaner, _models_dev_client
 
@@ -799,11 +813,7 @@ class TestGetModelProviderNpm:
         from cleanup_base import ModelsDevClient
 
         client = ModelsDevClient()
-        client._data = {
-            "opencode-go": {
-                "models": {}
-            }
-        }
+        client._data = {"opencode-go": {"models": {}}}
         result = client.get_model_provider_npm("opencode-go", "nonexistent")
         assert result is None
 

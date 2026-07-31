@@ -22,10 +22,8 @@ import argparse
 import math
 import re
 import sys
-from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any
 
-import yaml
 from dotenv import load_dotenv
 
 from cleanup_base import (
@@ -36,7 +34,6 @@ from cleanup_base import (
     setup_logging,
 )
 from cleanup_ollama_models import OllamaModelCleaner
-
 
 # Vendor / model-family prefixes that are commonly prepended to a model id
 # (e.g. "anthropic/claude-3", "z-ai/glm-5.1"). Stripped during normalization
@@ -153,8 +150,8 @@ def _strip_trailing_suffixes(value: str) -> str:
 
 def find_model_in_api(
     model_key: str,
-    api_models: Dict[str, Dict[str, Any]],
-) -> Tuple[Optional[str], float, str]:
+    api_models: dict[str, dict[str, Any]],
+) -> tuple[str | None, float, str]:
     """
     Find the best match for ``model_key`` in ``api_models``.
 
@@ -184,24 +181,24 @@ def find_model_in_api(
     key_stripped = _strip_trailing_suffixes(_strip_vendor_prefixes(model_key)).lower()
 
     # Tier 1: exact match
-    for api_id in api_models.keys():
+    for api_id in api_models:
         if api_id == model_key:
             return api_id, 1.0, "exact"
 
     # Tier 2: vendor prefix stripped
-    for api_id in api_models.keys():
+    for api_id in api_models:
         api_stripped = _strip_vendor_prefixes(api_id).lower()
         if api_stripped == key_stripped or api_stripped == model_key.lower():
             return api_id, 0.9, "vendor-prefix-stripped"
 
     # Tier 3: normalized comparison
-    for api_id in api_models.keys():
+    for api_id in api_models:
         api_norm = _normalize_for_match(api_id)
         if api_norm == key_norm:
             return api_id, 0.85, "normalized"
 
     # Tier 4: normalized with one extra suffix strip
-    for api_id in api_models.keys():
+    for api_id in api_models:
         api_suf = _strip_trailing_suffixes(api_id)
         api_norm = _normalize_for_match(api_suf)
         if api_norm == key_norm:
@@ -213,8 +210,8 @@ def find_model_in_api(
     # as matching "kimi-k2.7" to "kimi-k2" because the shorter id happens
     # to be a substring of the key.
     if len(key_norm) >= 5:
-        best_sub: Optional[Tuple[str, float, str]] = None
-        for api_id in api_models.keys():
+        best_sub: tuple[str, float, str] | None = None
+        for api_id in api_models:
             api_norm = _normalize_for_match(api_id)
             if key_norm in api_norm and len(key_norm) / len(api_norm) >= 0.5:
                 if best_sub is None or len(api_norm) < len(
@@ -228,8 +225,8 @@ def find_model_in_api(
 
 
 def filter_free_models(
-    api_models: Dict[str, Dict[str, Any]], free_model_cost: float = 1.0e-09
-) -> Dict[str, Dict[str, Any]]:
+    api_models: dict[str, dict[str, Any]], free_model_cost: float = 1.0e-09
+) -> dict[str, dict[str, Any]]:
     """Return only models whose input and output costs are known to be free.
 
     ``free_model_handling`` normalizes zero pricing to the nominal free cost
@@ -237,7 +234,7 @@ def filter_free_models(
     missing, invalid, or only partially available pricing are excluded.
     """
     free_costs = {0.0, float(free_model_cost)}
-    free_models: Dict[str, Dict[str, Any]] = {}
+    free_models: dict[str, dict[str, Any]] = {}
 
     for model_id, model_info in api_models.items():
         if not isinstance(model_info, dict):
@@ -279,7 +276,7 @@ class ModelsPopulator:
         self.logger = setup_logging(verbose, "ModelsPopulator")
         self.providers_loader = ProviderConfigLoader(providers_config_path)
         self.mapping_loader = ModelMappingLoader(models_config_path)
-        self._cleaners: Dict[str, ConfigDrivenModelCleaner] = {}
+        self._cleaners: dict[str, ConfigDrivenModelCleaner] = {}
 
     def _get_cleaner(
         self, provider_name: str, config_path: str
@@ -300,12 +297,12 @@ class ModelsPopulator:
     def populate(
         self,
         model_key: str,
-        display_name: Optional[str] = None,
-        description: Optional[str] = None,
-        provider_filter: Optional[List[str]] = None,
+        display_name: str | None = None,
+        description: str | None = None,
+        provider_filter: list[str] | None = None,
         force: bool = False,
         skip_existing: bool = False,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """
         Populate the model mapping for ``model_key`` across all providers.
 
@@ -341,9 +338,9 @@ class ModelsPopulator:
 
         config_path = "config.yaml"
 
-        found: Dict[str, str] = {}
-        missing: List[str] = []
-        matches: Dict[str, Tuple[str, float, str]] = {}
+        found: dict[str, str] = {}
+        missing: list[str] = []
+        matches: dict[str, tuple[str, float, str]] = {}
 
         for provider_name in providers:
             self.logger.info(f"Checking {provider_name}...")
@@ -401,7 +398,7 @@ class ModelsPopulator:
         # providers are omitted from the file entirely (no null entries).
         providers_map = dict(found)
 
-        mapping_data: Dict[str, Any] = {
+        mapping_data: dict[str, Any] = {
             "display_name": display_name,
             "description": description,
             "providers": providers_map,
@@ -479,7 +476,7 @@ def main() -> int:
     args = parser.parse_args()
     load_dotenv(override=True)
 
-    provider_filter: Optional[List[str]] = None
+    provider_filter: list[str] | None = None
     if args.provider:
         provider_filter = [p.strip() for p in args.provider.split(",") if p.strip()]
 
@@ -518,7 +515,7 @@ def main() -> int:
         for p in sorted(missing):
             print(f"  {p}")
     if args.dry_run:
-        print(f"\nDRY RUN: No changes written")
+        print("\nDRY RUN: No changes written")
     return 0
 
 
