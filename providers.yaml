@@ -206,6 +206,7 @@ providers:
   opencode-zen:
     name: OpenCode Zen
     description: OpenCode Zen model provider
+    free_models_only: true
     api_url: https://opencode.ai/zen/v1/models
     model_prefix: openai/
     model_detection:

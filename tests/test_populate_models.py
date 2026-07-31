@@ -15,6 +15,7 @@ from populate_models import (
     _normalize_for_match,
     _strip_trailing_suffixes,
     _strip_vendor_prefixes,
+    filter_free_models,
     find_model_in_api,
 )
 
@@ -161,6 +162,33 @@ class TestFindModelInApi:
         matched, score, _ = find_model_in_api("kimi-k2.7", api)
         assert matched == "kimi-k2.7-code"
         assert score == 0.6
+
+
+class TestFilterFreeModels:
+    def test_keeps_zero_cost_models(self):
+        models = {
+            "free": {"input_cost": 0.0, "output_cost": 0.0},
+            "paid": {"input_cost": 0.1, "output_cost": 0.2},
+        }
+
+        assert list(filter_free_models(models)) == ["free"]
+
+    def test_keeps_nominal_free_cost_from_models_dev(self):
+        models = {
+            "free": {"input_cost": 1.0e-09, "output_cost": 1.0e-09},
+            "paid": {"input_cost": 1.0e-09, "output_cost": 2.0e-09},
+        }
+
+        assert list(filter_free_models(models)) == ["free"]
+
+    def test_excludes_missing_or_partial_pricing(self):
+        models = {
+            "missing": {"input_cost": None, "output_cost": None},
+            "partial": {"input_cost": 0.0},
+            "invalid": {"input_cost": "unknown", "output_cost": 0.0},
+        }
+
+        assert filter_free_models(models) == {}
 
 
 # ==============================================================================
@@ -362,6 +390,45 @@ class TestModelsPopulator:
         providers = result["providers"]
         assert providers["alpha"] == "alpha/test-model"
         assert providers["beta"] == "beta/test-model"
+
+    def test_free_models_only_provider_filters_before_matching(
+        self, tmp_path, monkeypatch
+    ):
+        providers_path = self._make_providers_yaml(tmp_path)
+        providers = yaml.safe_load(providers_path.read_text())
+        providers["providers"]["alpha"]["free_models_only"] = True
+        providers_path.write_text(yaml.dump(providers))
+
+        models_path = tmp_path / "models.yaml"
+        models_path.write_text("models:\n")
+
+        from cleanup_base import ConfigDrivenModelCleaner
+
+        def fake_fetch(self):
+            return {
+                "alpha/free-model": {
+                    "id": "alpha/free-model",
+                    "input_cost": 0.0,
+                    "output_cost": 0.0,
+                },
+                "alpha/paid-model": {
+                    "id": "alpha/paid-model",
+                    "input_cost": 0.1,
+                    "output_cost": 0.2,
+                },
+            }
+
+        monkeypatch.setattr(
+            ConfigDrivenModelCleaner, "fetch_available_models", fake_fetch
+        )
+
+        populator = ModelsPopulator(
+            providers_config_path=str(providers_path),
+            models_config_path=str(models_path),
+            dry_run=True,
+        )
+        result = populator.populate("paid-model")
+        assert "alpha" not in result["providers"]
 
     def test_populate_dry_run_does_not_write(self, tmp_path, monkeypatch):
         providers_path = self._make_providers_yaml(tmp_path)

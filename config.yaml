@@ -550,9 +550,9 @@ model_list:
   litellm_params:
     model: openrouter/z-ai/glm-5.2
     order: 5
-    input_cost_per_token: 9.66e-07
-    output_cost_per_token: 3.036e-06
-    cache_read_input_token_cost: 1.794e-07
+    input_cost_per_token: 1.19e-06
+    output_cost_per_token: 3.74e-06
+    cache_read_input_token_cost: 2.21e-07
   model_info:
     max_input_tokens: 1048576
     max_output_tokens: 128000
@@ -592,6 +592,55 @@ model_list:
   model_name: gpt-5.4-nano
   model_info:
     base_model: azure/gpt-5.4-nano
+- model_name: gpt-5.6-luna
+  litellm_params:
+    model: openai/gpt-5.6-luna
+    order: 1
+    api_base: https://opencode.ai/zen/go/v1
+    api_key: os.environ/OPENCODE_API_KEY
+    input_cost_per_token: 1.0000000000000001e-07
+    output_cost_per_token: 6.0e-07
+    cache_creation_input_token_cost: 1.25e-07
+    cache_read_input_token_cost: 1.0e-08
+  model_info:
+    max_input_tokens: 1050000
+    max_output_tokens: 128000
+- model_name: gpt-5.6-luna
+  litellm_params:
+    model: openai/openai/gpt-5.6-luna
+    order: 4
+    api_base: https://api.kilo.ai/api/gateway
+    api_key: os.environ/KILO_API_KEY
+    input_cost_per_token: 1.0e-07
+    output_cost_per_token: 6.000000000000001e-07
+    cache_creation_input_token_cost: 1.2500000000000002e-07
+    cache_read_input_token_cost: 1.0e-08
+  model_info:
+    max_input_tokens: 1050000
+    max_output_tokens: 128000
+- model_name: gpt-5.6-luna
+  litellm_params:
+    model: openai/openai-responses/gpt-5.6-luna
+    order: 5
+    api_base: https://router.requesty.ai/v1
+    api_key: os.environ/REQUESTY_API_KEY
+    input_cost_per_token: 2.0e-07
+    output_cost_per_token: 1.2e-06
+    cache_read_input_token_cost: 2.0e-08
+  model_info:
+    max_input_tokens: 1050000
+    max_output_tokens: 128000
+- model_name: gpt-5.6-luna
+  litellm_params:
+    model: openrouter/openai/gpt-5.6-luna
+    order: 5
+    input_cost_per_token: 1.0e-07
+    output_cost_per_token: 6.000000000000001e-07
+    cache_creation_input_token_cost: 1.2500000000000002e-07
+    cache_read_input_token_cost: 1.0e-08
+  model_info:
+    max_input_tokens: 1050000
+    max_output_tokens: 128000
 - litellm_params:
     api_base: os.environ/AZURE_OPENAI_API_BASE
     api_key: os.environ/AZURE_OPENAI_API_KEY
@@ -946,9 +995,9 @@ model_list:
   litellm_params:
     model: openrouter/poolside/laguna-s-2.1
     order: 5
-    input_cost_per_token: 1.0e-07
-    output_cost_per_token: 2.0e-07
-    cache_read_input_token_cost: 1.0e-08
+    input_cost_per_token: 9.0e-08
+    output_cost_per_token: 1.8e-07
+    cache_read_input_token_cost: 9.0e-09
   model_info:
     max_input_tokens: 1048576
     max_output_tokens: 131072
@@ -1358,7 +1407,7 @@ model_list:
     cache_creation_input_token_cost: 1.5625e-06
   model_info:
     max_input_tokens: 1000000
-    max_output_tokens: 65536
+    max_output_tokens: 131072
 - model_name: qwen3.7-max
   litellm_params:
     model: openrouter/qwen/qwen3.7-max
@@ -1369,7 +1418,7 @@ model_list:
     cache_creation_input_token_cost: 1.84375e-06
   model_info:
     max_input_tokens: 1000000
-    max_output_tokens: 65536
+    max_output_tokens: 131072
 - model_name: qwen3.7-plus
   litellm_params:
     model: anthropic/qwen3.7-plus
@@ -1406,7 +1455,7 @@ model_list:
     cache_creation_input_token_cost: 4.0e-07
   model_info:
     max_input_tokens: 1000000
-    max_output_tokens: 65536
+    max_output_tokens: 131072
 - model_name: qwen3.7-plus
   litellm_params:
     model: openrouter/qwen/qwen3.7-plus
@@ -1417,7 +1466,7 @@ model_list:
     cache_creation_input_token_cost: 4.0e-07
   model_info:
     max_input_tokens: 1000000
-    max_output_tokens: 65536
+    max_output_tokens: 131072
 - model_name: smart_router_1
   litellm_params:
     model: auto_router/complexity_router

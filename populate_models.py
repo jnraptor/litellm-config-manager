@@ -19,6 +19,7 @@ Usage:
 """
 
 import argparse
+import math
 import re
 import sys
 from pathlib import Path
@@ -226,6 +227,38 @@ def find_model_in_api(
     return None, 0.0, "no-match"
 
 
+def filter_free_models(
+    api_models: Dict[str, Dict[str, Any]], free_model_cost: float = 1.0e-09
+) -> Dict[str, Dict[str, Any]]:
+    """Return only models whose input and output costs are known to be free.
+
+    ``free_model_handling`` normalizes zero pricing to the nominal free cost
+    configured in providers.yaml, so accept both representations. Models with
+    missing, invalid, or only partially available pricing are excluded.
+    """
+    free_costs = {0.0, float(free_model_cost)}
+    free_models: Dict[str, Dict[str, Any]] = {}
+
+    for model_id, model_info in api_models.items():
+        if not isinstance(model_info, dict):
+            continue
+        try:
+            input_cost = float(model_info["input_cost"])
+            output_cost = float(model_info["output_cost"])
+        except (KeyError, TypeError, ValueError):
+            continue
+
+        if (
+            math.isfinite(input_cost)
+            and math.isfinite(output_cost)
+            and input_cost in free_costs
+            and output_cost in free_costs
+        ):
+            free_models[model_id] = model_info
+
+    return free_models
+
+
 class ModelsPopulator:
     """
     Orchestrates populating ``models.yaml`` for a single canonical model key.
@@ -323,6 +356,15 @@ class ModelsPopulator:
                 )
                 missing.append(provider_name)
                 continue
+
+            provider_config = self.providers_loader.get_provider_config(provider_name)
+            if provider_config.get("free_models_only", False):
+                before_count = len(api_models)
+                api_models = filter_free_models(api_models)
+                self.logger.info(
+                    f"  {provider_name}: restricted to {len(api_models)} free models "
+                    f"({before_count - len(api_models)} excluded)"
+                )
 
             matched_id, score, match_type = find_model_in_api(model_key, api_models)
             if matched_id:
