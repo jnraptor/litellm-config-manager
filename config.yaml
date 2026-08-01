@@ -317,10 +317,10 @@ model_list:
     api_key: os.environ/KILO_API_KEY
     input_cost_per_token: 1.4e-07
     output_cost_per_token: 2.8e-07
-    cache_read_input_token_cost: 2.8e-09
+    cache_read_input_token_cost: 2.8e-08
   model_info:
     max_input_tokens: 1048576
-    max_output_tokens: 384000
+    max_output_tokens: 65536
 - model_name: deepseek-v4-flash
   litellm_params:
     model: openai/sference/deepseek-v4-flash-0731
@@ -337,12 +337,12 @@ model_list:
   litellm_params:
     model: openrouter/deepseek/deepseek-v4-flash-0731
     order: 5
-    input_cost_per_token: 1.4e-07
-    output_cost_per_token: 2.8e-07
-    cache_read_input_token_cost: 2.8e-09
+    input_cost_per_token: 9.0e-08
+    output_cost_per_token: 1.8e-07
+    cache_read_input_token_cost: 1.8e-08
   model_info:
     max_input_tokens: 1048576
-    max_output_tokens: 384000
+    max_output_tokens: 65536
 - model_name: deepseek-v4-pro
   litellm_params:
     model: openai/deepseek-v4-pro
