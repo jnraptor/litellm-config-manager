@@ -132,19 +132,6 @@ model_list:
     max_output_tokens: 128000
 - model_name: claude-opus-4-8
   litellm_params:
-    model: openai/stealth/claude-opus-4.8
-    order: 4
-    api_base: https://api.kilo.ai/api/gateway
-    api_key: os.environ/KILO_API_KEY
-    input_cost_per_token: 4.0e-06
-    output_cost_per_token: 2.0e-05
-    cache_read_input_token_cost: 4.0e-07
-    cache_creation_input_token_cost: 5.0e-06
-  model_info:
-    max_input_tokens: 1000000
-    max_output_tokens: 128000
-- model_name: claude-opus-4-8
-  litellm_params:
     model: openai/anthropic/claude-opus-4-8
     order: 5
     api_base: https://router.requesty.ai/v1
@@ -217,19 +204,6 @@ model_list:
   model_info:
     max_input_tokens: 1000000
     max_output_tokens: 128000
-- model_name: claude-sonnet-4-6
-  litellm_params:
-    model: openai/stealth/claude-sonnet-4.6
-    order: 4
-    api_base: https://api.kilo.ai/api/gateway
-    api_key: os.environ/KILO_API_KEY
-    input_cost_per_token: 2.4e-06
-    output_cost_per_token: 1.2e-05
-    cache_read_input_token_cost: 2.4e-07
-    cache_creation_input_token_cost: 3.0e-06
-  model_info:
-    max_input_tokens: 1000000
-    max_output_tokens: 64000
 - model_name: claude-sonnet-4-6
   litellm_params:
     model: openai/anthropic/claude-sonnet-4-6
@@ -349,6 +323,18 @@ model_list:
     max_output_tokens: 384000
 - model_name: deepseek-v4-flash
   litellm_params:
+    model: openai/sference/deepseek-v4-flash-0731
+    order: 5
+    api_base: https://router.requesty.ai/v1
+    api_key: os.environ/REQUESTY_API_KEY
+    input_cost_per_token: 1.4e-07
+    output_cost_per_token: 2.8e-07
+    cache_read_input_token_cost: 7.0e-08
+  model_info:
+    max_input_tokens: 1048576
+    max_output_tokens: 131072
+- model_name: deepseek-v4-flash
+  litellm_params:
     model: openrouter/deepseek/deepseek-v4-flash-0731
     order: 5
     input_cost_per_token: 1.4e-07
@@ -411,51 +397,6 @@ model_list:
   model_info:
     max_input_tokens: 1048576
     max_output_tokens: 384000
-- model_name: gemini-3.5-flash
-  litellm_params:
-    model: openai/google/gemini-3.5-flash
-    order: 4
-    api_base: https://api.kilo.ai/api/gateway
-    api_key: os.environ/KILO_API_KEY
-    input_cost_per_token: 1.5e-06
-    output_cost_per_token: 9.0e-06
-    cache_read_input_token_cost: 1.5e-07
-    cache_creation_input_token_cost: 8.333333333333334e-08
-  model_info:
-    max_input_tokens: 1048576
-    max_output_tokens: 65536
-- model_name: gemini-3.5-flash
-  litellm_params:
-    model: openrouter/google/gemini-3.5-flash
-    order: 5
-    input_cost_per_token: 1.5e-06
-    output_cost_per_token: 9.0e-06
-    cache_read_input_token_cost: 1.5e-07
-    cache_creation_input_token_cost: 8.333333333333334e-08
-  model_info:
-    max_input_tokens: 1048576
-    max_output_tokens: 65536
-- model_name: gemma-4-31b
-  litellm_params:
-    model: openai/google/gemma-4-31b-it
-    order: 3
-    api_base: https://router.requesty.ai/v1
-    api_key: os.environ/REQUESTY_API_KEY
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
-    cache_read_input_token_cost: 1.0e-09
-  model_info:
-    max_input_tokens: 262144
-    max_output_tokens: 8192
-- model_name: gemma-4-31b
-  litellm_params:
-    model: openrouter/google/gemma-4-31b-it:free
-    order: 3
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
-  model_info:
-    max_input_tokens: 262144
-    max_output_tokens: 32768
 - model_name: glm-5.1
   litellm_params:
     model: openai/glm-5.1
@@ -536,23 +477,23 @@ model_list:
     max_output_tokens: 128000
 - model_name: glm-5.2
   litellm_params:
-    model: openai/zai/glm-5.2
+    model: openai/sference/glm-5.2
     order: 5
     api_base: https://router.requesty.ai/v1
     api_key: os.environ/REQUESTY_API_KEY
-    input_cost_per_token: 1.4e-06
-    output_cost_per_token: 4.4e-06
+    input_cost_per_token: 1.2e-06
+    output_cost_per_token: 4.2e-06
     cache_read_input_token_cost: 2.6e-07
   model_info:
-    max_input_tokens: 1000000
-    max_output_tokens: 128000
+    max_input_tokens: 1048576
+    max_output_tokens: 131072
 - model_name: glm-5.2
   litellm_params:
     model: openrouter/z-ai/glm-5.2
     order: 5
-    input_cost_per_token: 1.12e-06
-    output_cost_per_token: 3.52e-06
-    cache_read_input_token_cost: 2.08e-07
+    input_cost_per_token: 7.6006e-07
+    output_cost_per_token: 2.38876e-06
+    cache_read_input_token_cost: 1.41154e-07
   model_info:
     max_input_tokens: 1048576
     max_output_tokens: 128000
@@ -849,9 +790,9 @@ model_list:
   litellm_params:
     model: openrouter/moonshotai/kimi-k2.6
     order: 5
-    input_cost_per_token: 5.89e-07
-    output_cost_per_token: 2.48e-06
-    cache_read_input_token_cost: 9.92e-08
+    input_cost_per_token: 6.0e-07
+    output_cost_per_token: 3.41e-06
+    cache_read_input_token_cost: 2.0e-07
   model_info:
     max_input_tokens: 262144
     max_output_tokens: 262144
@@ -936,17 +877,16 @@ model_list:
     max_input_tokens: 1048576
 - model_name: kimi-k3
   litellm_params:
-    model: openai/moonshot/kimi-k3
+    model: openai/sference/kimi-k3
     order: 5
     api_base: https://router.requesty.ai/v1
     api_key: os.environ/REQUESTY_API_KEY
-    input_cost_per_token: 3.0e-06
-    output_cost_per_token: 1.5e-05
-    cache_creation_input_token_cost: 1.5e-05
-    cache_read_input_token_cost: 3.0e-07
+    input_cost_per_token: 2.25e-06
+    output_cost_per_token: 1.125e-05
+    cache_read_input_token_cost: 2.25e-07
   model_info:
     max_input_tokens: 1048576
-    max_output_tokens: 1048576
+    max_output_tokens: 262144
 - model_name: kimi-k3
   litellm_params:
     model: openrouter/moonshotai/kimi-k3
@@ -1043,14 +983,6 @@ model_list:
   model_info:
     max_input_tokens: 262144
     max_output_tokens: 32768
-- litellm_params:
-    model: openai/Gemma-4-E2B
-    api_base: os.environ/LLAMA_API_BASE
-    api_key: os.environ/LLAMA_API_KEY
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
-    order: 5
-  model_name: local-llama
 - model_name: mimo-v2.5
   litellm_params:
     model: openai/mimo-v2.5
@@ -1333,38 +1265,6 @@ model_list:
   model_info:
     mode: embedding
     max_input_tokens: 131072
-- model_name: nvidia-nemotron-3-nano-omni
-  litellm_params:
-    model: openai/nvidia/nemotron-3-nano-omni-30b-a3b-reasoning
-    order: 3
-    api_base: https://router.requesty.ai/v1
-    api_key: os.environ/REQUESTY_API_KEY
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
-    cache_read_input_token_cost: 1.0e-09
-  model_info:
-    max_input_tokens: 131072
-    max_output_tokens: 20480
-- model_name: nvidia-nemotron-3-nano-omni
-  litellm_params:
-    model: openai/nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free
-    order: 3
-    api_base: https://api.kilo.ai/api/gateway
-    api_key: os.environ/KILO_API_KEY
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
-  model_info:
-    max_input_tokens: 256000
-    max_output_tokens: 65536
-- model_name: nvidia-nemotron-3-nano-omni
-  litellm_params:
-    model: openrouter/nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free
-    order: 3
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
-  model_info:
-    max_input_tokens: 256000
-    max_output_tokens: 65536
 - litellm_params:
     model: openrouter/openrouter/free
     input_cost_per_token: 1.0e-09

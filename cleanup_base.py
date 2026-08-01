@@ -683,9 +683,7 @@ class BaseModelCleaner(ABC):
             self.logger.error(f"Error saving configuration: {e}")
             raise
 
-    def validate_config(
-        self, config: dict[str, Any] | None = None
-    ) -> ValidationReport:
+    def validate_config(self, config: dict[str, Any] | None = None) -> ValidationReport:
         """
         Validate config.yaml structure without API calls (offline).
 
@@ -2314,9 +2312,7 @@ class ProviderConfigLoader:
                 config_data = yaml.safe_load(file)
 
             if not config_data or "providers" not in config_data:
-                raise ValueError(
-                    "Invalid provider config: missing 'providers' section"
-                )
+                raise ValueError("Invalid provider config: missing 'providers' section")
 
             self._config = config_data
 
@@ -2520,9 +2516,7 @@ class ModelMappingLoader:
         """Get list of all configured canonical model keys."""
         return list(self._config.get("models", {}).keys())
 
-    def get_provider_model_id(
-        self, model_key: str, provider_name: str
-    ) -> str | None:
+    def get_provider_model_id(self, model_key: str, provider_name: str) -> str | None:
         """
         Get the provider-specific model ID for a canonical model.
 
