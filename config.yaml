@@ -300,7 +300,7 @@ model_list:
     max_output_tokens: 128000
 - model_name: deepseek-v4-flash
   litellm_params:
-    model: fireworks_ai/accounts/fireworks/models/deepseek-v4-flash
+    model: fireworks_ai/accounts/fireworks/models/deepseek-v4-flash-0731
     order: 4
     api_key: os.environ/FIREWORKS_AI_API_KEY
     input_cost_per_token: 1.4e-07
@@ -474,7 +474,7 @@ model_list:
     cache_read_input_token_cost: 2.6e-07
   model_info:
     max_input_tokens: 1048576
-    max_output_tokens: 128000
+    max_output_tokens: 131072
 - model_name: glm-5.2
   litellm_params:
     model: openai/sference/glm-5.2
@@ -491,12 +491,12 @@ model_list:
   litellm_params:
     model: openrouter/z-ai/glm-5.2
     order: 5
-    input_cost_per_token: 7.6006e-07
-    output_cost_per_token: 2.38876e-06
-    cache_read_input_token_cost: 1.41154e-07
+    input_cost_per_token: 3.514e-07
+    output_cost_per_token: 1.1044e-06
+    cache_read_input_token_cost: 6.526e-08
   model_info:
     max_input_tokens: 1048576
-    max_output_tokens: 128000
+    max_output_tokens: 131072
 - litellm_params:
     api_base: os.environ/AZURE_OPENAI_API_BASE
     api_key: os.environ/AZURE_OPENAI_API_KEY
