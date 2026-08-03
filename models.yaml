@@ -290,4 +290,7 @@ models:
     display_name: qwen3.8-max
     description: ''
     providers:
+      openrouter: qwen/qwen3.8-max
+      kilo: qwen/qwen3.8-max
       opencode-go: anthropic/qwen3.8-max
+      requesty: novita/qwen/qwen3.8-max

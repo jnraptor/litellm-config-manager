@@ -491,9 +491,9 @@ model_list:
   litellm_params:
     model: openrouter/z-ai/glm-5.2
     order: 5
-    input_cost_per_token: 7.07e-07
-    output_cost_per_token: 2.222e-06
-    cache_read_input_token_cost: 1.313e-07
+    input_cost_per_token: 6.146e-07
+    output_cost_per_token: 1.9316e-06
+    cache_read_input_token_cost: 1.1414e-07
   model_info:
     max_input_tokens: 1048576
     max_output_tokens: 131072
@@ -1383,6 +1383,42 @@ model_list:
     order: 1
     api_base: https://opencode.ai/zen/go
     api_key: os.environ/OPENCODE_API_KEY
+    input_cost_per_token: 2.0e-06
+    output_cost_per_token: 6.0e-06
+    cache_creation_input_token_cost: 2.5e-06
+    cache_read_input_token_cost: 2.5e-07
+  model_info:
+    max_input_tokens: 1000000
+    max_output_tokens: 131072
+- model_name: qwen3.8-max
+  litellm_params:
+    model: openai/qwen/qwen3.8-max
+    order: 4
+    api_base: https://api.kilo.ai/api/gateway
+    api_key: os.environ/KILO_API_KEY
+    input_cost_per_token: 2.0e-06
+    output_cost_per_token: 6.0e-06
+    cache_creation_input_token_cost: 2.5e-06
+    cache_read_input_token_cost: 2.5e-07
+  model_info:
+    max_input_tokens: 1000000
+    max_output_tokens: 131072
+- model_name: qwen3.8-max
+  litellm_params:
+    model: openai/novita/qwen/qwen3.8-max
+    order: 5
+    api_base: https://router.requesty.ai/v1
+    api_key: os.environ/REQUESTY_API_KEY
+    input_cost_per_token: 2.0e-06
+    output_cost_per_token: 6.0e-06
+    cache_read_input_token_cost: 2.5e-07
+  model_info:
+    max_input_tokens: 1000000
+    max_output_tokens: 131072
+- model_name: qwen3.8-max
+  litellm_params:
+    model: openrouter/qwen/qwen3.8-max
+    order: 5
     input_cost_per_token: 2.0e-06
     output_cost_per_token: 6.0e-06
     cache_creation_input_token_cost: 2.5e-06
