@@ -491,9 +491,9 @@ model_list:
   litellm_params:
     model: openrouter/z-ai/glm-5.2
     order: 5
-    input_cost_per_token: 6.146e-07
-    output_cost_per_token: 1.9316e-06
-    cache_read_input_token_cost: 1.1414e-07
+    input_cost_per_token: 6.286e-07
+    output_cost_per_token: 1.9756e-06
+    cache_read_input_token_cost: 1.1674e-07
   model_info:
     max_input_tokens: 1048576
     max_output_tokens: 131072
