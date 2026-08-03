@@ -561,7 +561,7 @@ model_list:
     max_output_tokens: 128000
 - model_name: gpt-5.6-luna
   litellm_params:
-    model: openai/openai-responses/gpt-5.6-luna
+    model: openai/openai/gpt-5.6-luna
     order: 5
     api_base: https://router.requesty.ai/v1
     api_key: os.environ/REQUESTY_API_KEY
