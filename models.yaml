@@ -294,3 +294,10 @@ models:
       kilo: qwen/qwen3.8-max
       opencode-go: anthropic/qwen3.8-max
       requesty: novita/qwen/qwen3.8-max
+  longcat-2.0:
+    display_name: longcat-2.0
+    description: ''
+    providers:
+      openrouter: meituan/longcat-2.0
+      kilo: meituan/longcat-2.0
+      opencode-zen: longcat-2.0-free
