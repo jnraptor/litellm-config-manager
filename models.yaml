@@ -301,3 +301,11 @@ models:
       openrouter: meituan/longcat-2.0
       kilo: meituan/longcat-2.0
       opencode-zen: longcat-2.0-free
+  ling-3.0-tiny:
+    display_name: ling-3.0-tiny
+    description: ''
+    providers:
+      openrouter: inclusionai/ling-3.0-tiny:free
+      kilo: inclusionai/ling-3.0-tiny:free
+      opencode-zen: ling-3.0-tiny-free
+      requesty: novita/inclusionai/ling-3.0-tiny
