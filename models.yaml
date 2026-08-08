@@ -245,10 +245,10 @@ models:
     description: ''
     providers:
       openrouter: thinkingmachines/inkling
-      poe: inkling
       nvidia: thinkingmachines/inkling
       kilo: thinkingmachines/inkling
-      requesty: thinkingmachines/inkling-256k
+      requesty: thinkingmachines/inkling
+      poe: inkling
   laguna-s-2.1:
     display_name: laguna-s-2.1
     description: ''

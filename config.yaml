@@ -473,9 +473,9 @@ model_list:
   litellm_params:
     model: openrouter/z-ai/glm-5.2
     order: 5
-    input_cost_per_token: 5.166e-07
-    output_cost_per_token: 1.6236e-06
-    cache_read_input_token_cost: 9.594e-08
+    input_cost_per_token: 4.186e-07
+    output_cost_per_token: 1.3156e-06
+    cache_read_input_token_cost: 7.774e-08
   model_info:
     max_input_tokens: 1048576
     max_output_tokens: 131072
@@ -688,6 +688,7 @@ model_list:
     cache_read_input_token_cost: 1.6e-07
   model_info:
     max_input_tokens: 1048576
+    max_output_tokens: 262144
 - model_name: inkling
   litellm_params:
     model: openai/thinkingmachines/inkling-256k
@@ -704,12 +705,12 @@ model_list:
   litellm_params:
     model: openrouter/thinkingmachines/inkling
     order: 5
-    input_cost_per_token: 1.0e-06
+    input_cost_per_token: 9.5e-07
     output_cost_per_token: 4.05e-06
-    cache_read_input_token_cost: 1.7e-07
+    cache_read_input_token_cost: 1.6e-07
   model_info:
     max_input_tokens: 1048576
-    max_output_tokens: 1048576
+    max_output_tokens: 262144
 - model_name: jina-embeddings-v4
   litellm_params:
     model: jina_ai/jina-embeddings-v4
@@ -1042,7 +1043,7 @@ model_list:
     api_key: os.environ/KILO_API_KEY
     input_cost_per_token: 1.4e-07
     output_cost_per_token: 2.8e-07
-    cache_read_input_token_cost: 3.0e-09
+    cache_read_input_token_cost: 2.8e-09
   model_info:
     max_input_tokens: 1050000
     max_output_tokens: 131072
@@ -1074,9 +1075,9 @@ model_list:
     order: 4
     api_base: https://api.kilo.ai/api/gateway
     api_key: os.environ/KILO_API_KEY
-    input_cost_per_token: 4.35e-07
-    output_cost_per_token: 8.7e-07
-    cache_read_input_token_cost: 4.0e-09
+    input_cost_per_token: 4.0e-07
+    output_cost_per_token: 1.5e-06
+    cache_read_input_token_cost: 8.0e-08
   model_info:
     max_input_tokens: 1050000
     max_output_tokens: 131072
