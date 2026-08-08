@@ -311,7 +311,7 @@ model_list:
     cache_read_input_token_cost: 2.8e-08
   model_info:
     max_input_tokens: 1048576
-    max_output_tokens: 65536
+    max_output_tokens: 384000
 - model_name: deepseek-v4-flash
   litellm_params:
     model: openai/sference/deepseek-v4-flash-0731
@@ -333,7 +333,7 @@ model_list:
     cache_read_input_token_cost: 1.8e-08
   model_info:
     max_input_tokens: 1048576
-    max_output_tokens: 65536
+    max_output_tokens: 384000
 - model_name: deepseek-v4-pro
   litellm_params:
     model: openai/deepseek-v4-pro
@@ -456,7 +456,7 @@ model_list:
     cache_read_input_token_cost: 2.6e-07
   model_info:
     max_input_tokens: 1048576
-    max_output_tokens: 131072
+    max_output_tokens: 128000
 - model_name: glm-5.2
   litellm_params:
     model: openai/sference/glm-5.2
@@ -473,12 +473,12 @@ model_list:
   litellm_params:
     model: openrouter/z-ai/glm-5.2
     order: 5
-    input_cost_per_token: 4.186e-07
-    output_cost_per_token: 1.3156e-06
-    cache_read_input_token_cost: 7.774e-08
+    input_cost_per_token: 1.82e-07
+    output_cost_per_token: 5.72e-07
+    cache_read_input_token_cost: 3.38e-08
   model_info:
     max_input_tokens: 1048576
-    max_output_tokens: 131072
+    max_output_tokens: 128000
 - litellm_params:
     api_base: os.environ/AZURE_OPENAI_API_BASE
     api_key: os.environ/AZURE_OPENAI_API_KEY
@@ -1119,9 +1119,9 @@ model_list:
   litellm_params:
     model: openrouter/minimax/minimax-m2.7
     order: 5
-    input_cost_per_token: 2.7e-07
-    output_cost_per_token: 1.08e-06
-    cache_read_input_token_cost: 5.4e-08
+    input_cost_per_token: 3.0e-07
+    output_cost_per_token: 1.2e-06
+    cache_read_input_token_cost: 6.0e-08
   model_info:
     max_input_tokens: 204800
     max_output_tokens: 131072
