@@ -3,6 +3,8 @@ general_settings:
   ui_access_mode: admin_only
   user_header_mappings:
     - header_name: X-OpenWebUI-User-Email
+      litellm_user_role: customer
+    - header_name: X-OpenWebUI-User-Id
       litellm_user_role: internal_user
 litellm_settings:
   cache: true
