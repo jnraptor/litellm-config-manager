@@ -1581,4 +1581,4 @@ guardrails:
     mode: pre_call
     api_base: http://10.10.1.1:8787
     api_key: os.environ/HEADROOM_API_KEY
-    default_on: false
+    default_on: true
