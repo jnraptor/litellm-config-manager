@@ -309,3 +309,8 @@ models:
       kilo: inclusionai/ling-3.0-tiny:free
       opencode-zen: ling-3.0-tiny-free
       requesty: novita/inclusionai/ling-3.0-tiny
+  muse-glimmer-30b:
+    display_name: muse-glimmer-30b
+    description: ''
+    providers:
+      nvidia: meta/muse-glimmer-30b
