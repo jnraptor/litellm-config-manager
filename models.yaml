@@ -312,6 +312,7 @@ models:
     display_name: nemotron-3.5-lightning
     description: ''
     providers:
-      openrouter: nvidia/nemotron-3.5-lightning:free
+      openrouter: nvidia/nemotron-3.5-lightning
       nvidia: nvidia/nemotron-3.5-lightning-30b-a3b
-      kilo: nvidia/nemotron-3.5-lightning:free
+      kilo: nvidia/nemotron-3.5-lightning
+      opencode-zen: nemotron-3.5-lightning-free
