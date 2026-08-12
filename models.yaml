@@ -215,12 +215,6 @@ models:
       poe: claude-sonnet-5
       kilo: anthropic/claude-sonnet-5
       requesty: anthropic/claude-sonnet-5
-  tencent-hy3:
-    display_name: tencent-hy3
-    description: ''
-    providers:
-      openrouter: tencent/hy3
-      kilo: tencent/hy3
   kimi-k3:
     display_name: kimi-k3
     description: ''
@@ -260,8 +254,9 @@ models:
     description: ''
     providers:
       openrouter: tencent/hy3
-      kilo: tencent/hy3:free
+      kilo: tencent/hy3
       opencode-go: openai/hy3
+      opencode-zen: hy3-free
       requesty: novita/tencent/hy3
   claude-opus-5:
     display_name: claude-opus-5
