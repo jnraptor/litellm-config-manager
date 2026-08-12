@@ -260,8 +260,8 @@ models:
     description: ''
     providers:
       openrouter: tencent/hy3
-      kilo: tencent/hy3
-      opencode-go: hy3
+      kilo: tencent/hy3:free
+      opencode-go: openai/hy3
       requesty: novita/tencent/hy3
   claude-opus-5:
     display_name: claude-opus-5
