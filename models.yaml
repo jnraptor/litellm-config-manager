@@ -241,7 +241,8 @@ models:
       openrouter: thinkingmachines/inkling
       nvidia: thinkingmachines/inkling
       kilo: thinkingmachines/inkling
-      requesty: thinkingmachines/inkling
+      requesty: thinkingmachines/inkling-256k
+      fireworks: accounts/fireworks/models/inkling
   laguna-s-2.1:
     display_name: laguna-s-2.1
     description: ''
@@ -303,6 +304,8 @@ models:
       openrouter: meta/muse-glimmer-30b
       nvidia: meta/muse-glimmer-30b
       kilo: meta/muse-glimmer-30b
+      requesty: nvidia/muse-glimmer-30b
+      fireworks: accounts/fireworks/models/muse-glimmer-30b
   nemotron-3.5-lightning:
     display_name: nemotron-3.5-lightning
     description: ''
@@ -311,3 +314,5 @@ models:
       nvidia: nvidia/nemotron-3.5-lightning-30b-a3b
       kilo: nvidia/nemotron-3.5-lightning
       opencode-zen: nemotron-3.5-lightning-free
+      requesty: nvidia/nemotron-3.5-lightning-30b-a3b
+      fireworks: accounts/fireworks/models/nemotron-lightning-3p5-30b-a3b

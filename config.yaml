@@ -774,6 +774,11 @@ model_list:
     max_output_tokens: 16384
 - model_name: inkling
   litellm_params:
+    model: fireworks_ai/accounts/fireworks/models/inkling
+    order: 4
+    api_key: os.environ/FIREWORKS_AI_API_KEY
+- model_name: inkling
+  litellm_params:
     model: openai/thinkingmachines/inkling
     order: 4
     api_base: https://api.kilo.ai/api/gateway
@@ -1307,6 +1312,11 @@ model_list:
     output_cost_per_token: 1.0e-09
 - model_name: muse-glimmer-30b
   litellm_params:
+    model: fireworks_ai/accounts/fireworks/models/muse-glimmer-30b
+    order: 4
+    api_key: os.environ/FIREWORKS_AI_API_KEY
+- model_name: muse-glimmer-30b
+  litellm_params:
     model: openai/meta/muse-glimmer-30b
     order: 4
     api_base: https://api.kilo.ai/api/gateway
@@ -1367,6 +1377,11 @@ model_list:
   model_info:
     max_input_tokens: 1000000
     max_output_tokens: 65536
+- model_name: nemotron-3.5-lightning
+  litellm_params:
+    model: fireworks_ai/accounts/fireworks/models/nemotron-lightning-3p5-30b-a3b
+    order: 4
+    api_key: os.environ/FIREWORKS_AI_API_KEY
 - model_name: nemotron-3.5-lightning
   litellm_params:
     model: openai/nvidia/nemotron-3.5-lightning
