@@ -198,6 +198,7 @@ providers:
     special_models:
     - accounts/fireworks/models/qwen3-embedding-8b
     - accounts/fireworks/models/qwen3-reranker-8b
+    - accounts/fireworks/models/deepseek-v4-pro-0813
     api_base_config:
       api_key_env: FIREWORKS_AI_API_KEY
     api_key_env: FIREWORKS_AI_API_KEY
