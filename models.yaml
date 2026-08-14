@@ -316,3 +316,10 @@ models:
       opencode-zen: nemotron-3.5-lightning-free
       requesty: nvidia/nemotron-3.5-lightning-30b-a3b
       fireworks: accounts/fireworks/models/nemotron-lightning-3p5-30b-a3b
+  gemini-3.7-flash:
+    display_name: gemini-3.7-flash
+    description: ''
+    providers:
+      openrouter: google/gemini-3.7-flash
+      kilo: google/gemini-3.7-flash
+      requesty: vertex/gemini-3.7-flash
