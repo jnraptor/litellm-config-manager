@@ -323,3 +323,8 @@ models:
       openrouter: google/gemini-3.7-flash
       kilo: google/gemini-3.7-flash
       requesty: vertex/gemini-3.7-flash
+  glm-5.3:
+    display_name: glm-5.3
+    description: ''
+    providers:
+      opencode-go: openai/glm-5.3
