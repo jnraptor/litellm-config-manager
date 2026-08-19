@@ -328,7 +328,10 @@ models:
     display_name: glm-5.3
     description: ''
     providers:
+      openrouter: z-ai/glm-5.3
+      kilo: z-ai/glm-5.3
       opencode-go: openai/glm-5.3
+      requesty: zai/glm-5.3
   muse-spark-1.2:
     display_name: muse-spark-1.2
     description: ''
