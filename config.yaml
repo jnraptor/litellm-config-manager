@@ -580,9 +580,9 @@ model_list:
   litellm_params:
     model: openrouter/z-ai/glm-5.2
     order: 5
-    input_cost_per_token: 4.76e-07
-    output_cost_per_token: 1.496e-06
-    cache_read_input_token_cost: 8.84e-08
+    input_cost_per_token: 9.66e-07
+    output_cost_per_token: 3.036e-06
+    cache_read_input_token_cost: 1.932e-07
   model_info:
     max_input_tokens: 1048576
     max_output_tokens: 131072
@@ -640,10 +640,10 @@ model_list:
     order: 1
     api_base: https://opencode.ai/zen/go/v1
     api_key: os.environ/OPENCODE_API_KEY
-    input_cost_per_token: 1.0000000000000001e-07
-    output_cost_per_token: 6.0e-07
-    cache_creation_input_token_cost: 1.25e-07
-    cache_read_input_token_cost: 1.0e-08
+    input_cost_per_token: 2.0000000000000002e-07
+    output_cost_per_token: 1.2e-06
+    cache_creation_input_token_cost: 2.5e-07
+    cache_read_input_token_cost: 2.0e-08
   model_info:
     max_input_tokens: 1050000
     max_output_tokens: 128000
@@ -941,9 +941,9 @@ model_list:
   litellm_params:
     model: openrouter/moonshotai/kimi-k2.6
     order: 5
-    input_cost_per_token: 5.605e-07
-    output_cost_per_token: 2.36e-06
-    cache_read_input_token_cost: 9.44e-08
+    input_cost_per_token: 9.405e-07
+    output_cost_per_token: 3.96e-06
+    cache_read_input_token_cost: 1.584e-07
   model_info:
     max_input_tokens: 262144
     max_output_tokens: 262144
@@ -1356,8 +1356,7 @@ model_list:
     api_base: https://api.kilo.ai/api/gateway
     api_key: os.environ/KILO_API_KEY
     input_cost_per_token: 3.0e-07
-    output_cost_per_token: 1.2e-06
-    cache_read_input_token_cost: 4.0e-08
+    output_cost_per_token: 1.1e-06
   model_info:
     max_input_tokens: 131072
 - model_name: muse-glimmer-30b
@@ -1370,6 +1369,39 @@ model_list:
   model_info:
     max_input_tokens: 131072
     max_output_tokens: 131072
+- model_name: muse-spark-1.2
+  litellm_params:
+    model: openai/muse-spark-1.2-contributor
+    order: 1
+    api_base: https://opencode.ai/zen/go/v1
+    api_key: os.environ/OPENCODE_API_KEY
+    input_cost_per_token: 1.0000000000000001e-07
+    output_cost_per_token: 2.0000000000000002e-07
+    cache_read_input_token_cost: 2.0e-09
+  model_info:
+    max_input_tokens: 1048576
+    max_output_tokens: 131072
+- model_name: muse-spark-1.2
+  litellm_params:
+    model: openai/meta/muse-spark-1.2
+    order: 4
+    api_base: https://api.kilo.ai/api/gateway
+    api_key: os.environ/KILO_API_KEY
+    input_cost_per_token: 1.25e-06
+    output_cost_per_token: 4.25e-06
+    cache_read_input_token_cost: 1.5e-07
+  model_info:
+    max_input_tokens: 1048576
+- model_name: muse-spark-1.2
+  litellm_params:
+    model: openrouter/meta/muse-spark-1.2
+    order: 5
+    input_cost_per_token: 1.25e-06
+    output_cost_per_token: 4.25e-06
+    cache_read_input_token_cost: 1.5e-07
+  model_info:
+    max_input_tokens: 1048576
+    max_output_tokens: 1048576
 - model_name: nemotron-3.5-lightning
   litellm_params:
     model: nvidia_nim/nvidia/nemotron-3.5-lightning-30b-a3b

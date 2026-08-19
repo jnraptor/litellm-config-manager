@@ -329,3 +329,10 @@ models:
     description: ''
     providers:
       opencode-go: openai/glm-5.3
+  muse-spark-1.2:
+    display_name: muse-spark-1.2
+    description: ''
+    providers:
+      openrouter: meta/muse-spark-1.2
+      kilo: meta/muse-spark-1.2
+      opencode-go: openai/muse-spark-1.2-contributor
