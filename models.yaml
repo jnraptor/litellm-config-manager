@@ -339,3 +339,4 @@ models:
       openrouter: meta/muse-spark-1.2
       kilo: meta/muse-spark-1.2
       opencode-go: openai/muse-spark-1.2-contributor
+      opencode-zen: muse-spark-1.2-contributor-free
