@@ -328,6 +328,12 @@ model_list:
     max_output_tokens: 384000
 - model_name: deepseek-v4-flash
   litellm_params:
+    model: nvidia_nim/deepseek-ai/deepseek-v4-flash-0731
+    order: 3
+    input_cost_per_token: 1.0e-09
+    output_cost_per_token: 1.0e-09
+- model_name: deepseek-v4-flash
+  litellm_params:
     model: fireworks_ai/accounts/fireworks/models/deepseek-v4-flash-0731
     order: 4
     api_key: os.environ/FIREWORKS_AI_API_KEY
