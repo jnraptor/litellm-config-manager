@@ -348,3 +348,10 @@ models:
       kilo: stealth/ox-alpha
       opencode-go: openai/ox-alpha-free
       opencode-zen: x-preview-f-free
+  deepseek-v4-flash-vision-exp:
+    display_name: deepseek-v4-flash-vision-exp
+    description: ''
+    providers:
+      openrouter: deepseek/deepseek-v4-flash-vision-exp
+      kilo: deepseek/deepseek-v4-flash-vision-exp
+      opencode-go: openai/deepseek-v4-flash-vision-exp
