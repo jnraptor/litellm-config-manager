@@ -928,9 +928,9 @@ model_list:
   litellm_params:
     model: openrouter/moonshotai/kimi-k2.6
     order: 5
-    input_cost_per_token: 5.605e-07
-    output_cost_per_token: 2.36e-06
-    cache_read_input_token_cost: 9.44e-08
+    input_cost_per_token: 9.5e-07
+    output_cost_per_token: 4.0e-06
+    cache_read_input_token_cost: 1.6e-07
   model_info:
     max_input_tokens: 262144
     max_output_tokens: 262144
@@ -973,9 +973,9 @@ model_list:
   litellm_params:
     model: openrouter/moonshotai/kimi-k2.7-code
     order: 5
-    input_cost_per_token: 7.1e-07
-    output_cost_per_token: 3.5e-06
-    cache_read_input_token_cost: 1.5e-07
+    input_cost_per_token: 6.7e-07
+    output_cost_per_token: 3.4e-06
+    cache_read_input_token_cost: 1.7e-07
   model_info:
     max_input_tokens: 262144
     max_output_tokens: 262144
@@ -1282,12 +1282,13 @@ model_list:
     cache_read_input_token_cost: 4.0e-08
   model_info:
     max_input_tokens: 131072
+    max_output_tokens: 131072
 - model_name: muse-glimmer-30b
   litellm_params:
     model: openrouter/meta/muse-glimmer-30b
     order: 5
-    input_cost_per_token: 3.5e-07
-    output_cost_per_token: 1.5e-06
+    input_cost_per_token: 3.0e-07
+    output_cost_per_token: 1.1e-06
     cache_read_input_token_cost: 4.0e-08
   model_info:
     max_input_tokens: 131072
@@ -1446,6 +1447,38 @@ model_list:
   model_info:
     max_input_tokens: 200000
     max_output_tokens: 8000
+- model_name: ox-alpha
+  litellm_params:
+    model: openai/stealth/ox-alpha
+    order: 3
+    api_base: https://api.kilo.ai/api/gateway
+    api_key: os.environ/KILO_API_KEY
+    input_cost_per_token: 1.0e-09
+    output_cost_per_token: 1.0e-09
+  model_info:
+    max_input_tokens: 1048576
+    max_output_tokens: 131072
+- model_name: ox-alpha
+  litellm_params:
+    model: openai/x-preview-f-free
+    order: 3
+    api_base: https://opencode.ai/zen/v1
+    api_key: os.environ/OPENCODE_API_KEY
+    input_cost_per_token: 1.0e-09
+    output_cost_per_token: 1.0e-09
+    cache_read_input_token_cost: 1.0e-09
+  model_info:
+    max_input_tokens: 1000000
+    max_output_tokens: 131072
+- model_name: ox-alpha
+  litellm_params:
+    model: openrouter/stealth/ox-alpha
+    order: 3
+    input_cost_per_token: 1.0e-09
+    output_cost_per_token: 1.0e-09
+  model_info:
+    max_input_tokens: 1048576
+    max_output_tokens: 131072
 - model_name: qwen3-embedding-8b
   litellm_params:
     model: fireworks_ai/accounts/fireworks/models/qwen3-embedding-8b

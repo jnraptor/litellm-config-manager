@@ -340,3 +340,10 @@ models:
       kilo: meta/muse-spark-1.2
       opencode-go: openai/muse-spark-1.2-contributor
       opencode-zen: muse-spark-1.2-contributor-free
+  ox-alpha:
+    display_name: ox-alpha
+    description: ''
+    providers:
+      openrouter: stealth/ox-alpha
+      kilo: stealth/ox-alpha
+      opencode-zen: x-preview-f-free
