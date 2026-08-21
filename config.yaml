@@ -354,7 +354,7 @@ model_list:
     cache_read_input_token_cost: 2.8e-08
   model_info:
     max_input_tokens: 1310720
-    max_output_tokens: 393216
+    max_output_tokens: 384000
 - model_name: deepseek-v4-flash
   litellm_params:
     model: openai/sference/deepseek-v4-flash-0731
@@ -371,12 +371,12 @@ model_list:
   litellm_params:
     model: openrouter/deepseek/deepseek-v4-flash-0731
     order: 5
-    input_cost_per_token: 1.4e-07
-    output_cost_per_token: 2.8e-07
-    cache_read_input_token_cost: 2.8e-08
+    input_cost_per_token: 8.0e-08
+    output_cost_per_token: 1.8e-07
+    cache_read_input_token_cost: 1.6e-08
   model_info:
     max_input_tokens: 1310720
-    max_output_tokens: 393216
+    max_output_tokens: 384000
 - model_name: deepseek-v4-pro
   litellm_params:
     model: openai/deepseek-v4-pro
@@ -488,15 +488,6 @@ model_list:
     input_cost_per_token: 1.4e-06
     output_cost_per_token: 4.4e-06
     cache_read_input_token_cost: 2.6e-07
-  model_info:
-    max_input_tokens: 1000000
-    max_output_tokens: 131072
-- model_name: glm-5.2
-  litellm_params:
-    model: nvidia_nim/z-ai/glm-5.2
-    order: 3
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
   model_info:
     max_input_tokens: 1000000
     max_output_tokens: 131072
@@ -1453,6 +1444,18 @@ model_list:
   model_info:
     max_input_tokens: 200000
     max_output_tokens: 8000
+- model_name: ox-alpha
+  litellm_params:
+    model: openai/ox-alpha-free
+    order: 3
+    api_base: https://opencode.ai/zen/go/v1
+    api_key: os.environ/OPENCODE_API_KEY
+    input_cost_per_token: 1.0e-09
+    output_cost_per_token: 1.0e-09
+    cache_read_input_token_cost: 1.0e-09
+  model_info:
+    max_input_tokens: 1000000
+    max_output_tokens: 131072
 - model_name: ox-alpha
   litellm_params:
     model: openai/stealth/ox-alpha

@@ -346,4 +346,5 @@ models:
     providers:
       openrouter: stealth/ox-alpha
       kilo: stealth/ox-alpha
+      opencode-go: openai/ox-alpha-free
       opencode-zen: x-preview-f-free
