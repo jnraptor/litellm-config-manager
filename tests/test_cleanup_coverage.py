@@ -451,8 +451,14 @@ class TestModelAddition:
         assert len(added) == 1
         assert config["model_list"][0]["model_name"] == "my-custom-name"
 
-    def test_name_conflict_resolution(self, cleaner, api_models):
-        """Test that name conflicts are resolved by appending counter."""
+    def test_same_provider_name_conflict_joins_group(self, cleaner, api_models):
+        """Test that a name conflict within the same provider joins the group.
+
+        A provider may serve the same logical model under several IDs
+        (e.g., different upstreams), so a second model whose generated name
+        matches an existing same-provider group must join that group instead
+        of being renamed to "{name}-1".
+        """
         config = {
             "model_list": [
                 {
@@ -462,13 +468,34 @@ class TestModelAddition:
             ]
         }
 
-        # Adding a model with a different model_id but same generated name
-        # The model_id "new-model" doesn't exist yet, but the name "new-model" does
+        # Adding a model with a different model_id but same generated name.
+        # The model_id "new-model" doesn't exist yet, but the name does.
         config, added = cleaner.add_model_to_config(config, ["new-model"], api_models)
 
-        # Should add the model with a modified name (new-model-1)
+        # Should join the existing "new-model" group (no "-1" suffix)
         assert len(added) == 1
-        assert config["model_list"][1]["model_name"] == "new-model-1"
+        assert len(config["model_list"]) == 2
+        assert config["model_list"][0]["model_name"] == "new-model"
+        assert config["model_list"][1]["model_name"] == "new-model"
+
+    def test_add_variant_into_existing_group(self, cleaner, api_models):
+        """Test adding another provider variant into an existing group."""
+        config = {
+            "model_list": [
+                {
+                    "model_name": "shared-group",
+                    "litellm_params": {"model": "test/new-model"},
+                }
+            ]
+        }
+
+        config, added = cleaner.add_model_to_config(
+            config, ["another-model"], api_models, custom_model_name="shared-group"
+        )
+
+        assert added == ["another-model"]
+        names = [entry["model_name"] for entry in config["model_list"]]
+        assert names == ["shared-group", "shared-group"]
 
 
 class TestModelNameGeneration:

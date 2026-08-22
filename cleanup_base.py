@@ -1873,12 +1873,16 @@ class BaseModelCleaner(ABC):
             else:
                 model_name = self.generate_model_name(api_lookup_id)
 
-            # Handle name conflicts
-            original_name = model_name
-            counter = 1
-            while model_name in existing_names:
-                model_name = f"{original_name}-{counter}"
-                counter += 1
+            # Handle name conflicts: a model_name group may contain multiple
+            # models from the same provider (e.g., a provider serving the same
+            # model through several upstreams such as "deepinfra/x" and
+            # "fireworks/x", or free variants). Join the existing group
+            # instead of creating a separate "{name}-N" group.
+            if model_name in existing_names:
+                self.logger.info(
+                    f"Adding '{model_id}' to existing '{model_name}' group "
+                    f"({self.PROVIDER_NAME})"
+                )
 
             # Create and add base model entry
             # Pass full model_id (may include prefix) for multi-prefix providers
@@ -1996,11 +2000,9 @@ class BaseModelCleaner(ABC):
             else:
                 model_name = self.generate_model_name(model_id)
 
-            original_name = model_name
-            counter = 1
-            while model_name in existing_names:
-                model_name = f"{original_name}-{counter}"
-                counter += 1
+            # Same-provider name collisions are allowed: the new entry joins
+            # the existing model_name group (see add_model_to_config).
+            joins_existing_group = model_name in existing_names
 
             model_preview = {
                 "id": model_id,
@@ -2009,6 +2011,7 @@ class BaseModelCleaner(ABC):
                 "output_cost": adjust_cost_for_free_model(
                     model_info.get("output_cost")
                 ),
+                "joins_existing_group": joins_existing_group,
                 "free_variant": None,
             }
 
@@ -2055,6 +2058,11 @@ class BaseModelCleaner(ABC):
                 self.logger.info(
                     f"[DRY-RUN]   - Model '{model['id']}' with name '{model['name']}'"
                 )
+                if model["joins_existing_group"]:
+                    self.logger.info(
+                        f"[DRY-RUN]     Joins existing '{model['name']}' group "
+                        f"({self.PROVIDER_NAME})"
+                    )
                 self.logger.info(f"[DRY-RUN]     Input cost: {model['input_cost']}")
                 self.logger.info(f"[DRY-RUN]     Output cost: {model['output_cost']}")
 
