@@ -513,9 +513,11 @@ class ModelsDevClient:
         if value is None:
             return None
         try:
-            return int(float(value))
+            limit = int(float(value))
         except (ValueError, TypeError):
             return None
+        # Zero/negative limits are meaningless placeholder data
+        return limit if limit > 0 else None
 
     def get_model_limits(
         self,
@@ -659,7 +661,7 @@ class BaseModelCleaner(ABC):
             raise
 
     def save_config(self, config: dict[str, Any]) -> None:
-        """Save the updated configuration back to the file."""
+        """Save the updated configuration back to the file with all keys sorted alphabetically."""
         if self.dry_run:
             self.logger.info("DRY RUN: Would save configuration to file")
             return
@@ -672,7 +674,7 @@ class BaseModelCleaner(ABC):
                     config,
                     file,
                     default_flow_style=False,
-                    sort_keys=False,
+                    sort_keys=True,
                     allow_unicode=True,
                     width=1000,
                 )
@@ -2645,7 +2647,8 @@ class ConfigDrivenModelCleaner(BaseModelCleaner):
 
         # Set class attributes from configuration
         self.PROVIDER_NAME = self.provider_config.get("name", provider_name)
-        self.API_URL = self.provider_config["api_url"]
+        # api_url may be null when use_models_dev_for_listing is true
+        self.API_URL = self.provider_config.get("api_url") or ""
         self.MODEL_PREFIX = self.provider_config["model_prefix"]
         self.SPECIAL_MODELS = set(self.provider_config.get("special_models", []))
         self.PROVIDER_ORDER = self.provider_config.get("order", 2)
@@ -2723,7 +2726,13 @@ class ConfigDrivenModelCleaner(BaseModelCleaner):
 
             if detection_type == "prefix":
                 # Prefix-based detection
-                if model_id.startswith(self.MODEL_PREFIX):
+                if self._model_prefixes:
+                    # Multi-prefix providers: match any configured prefix
+                    if any(
+                        model_id.startswith(p["prefix"]) for p in self._model_prefixes
+                    ):
+                        is_provider_model = True
+                elif model_id.startswith(self.MODEL_PREFIX):
                     is_provider_model = True
 
             elif detection_type == "api_base":

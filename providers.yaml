@@ -304,6 +304,35 @@ providers:
       api_key_env: REQUESTY_API_KEY
     api_key_env: REQUESTY_API_KEY
     order: 5
+  azure_ai:
+    name: Azure AI
+    description: Azure AI Foundry model provider (covers azure_ai/ + azure/ litellm prefixes)
+    api_url: null
+    use_models_dev_for_listing: true
+    model_prefix: azure_ai/
+    model_prefixes:
+    - prefix: azure_ai/
+    - prefix: azure/
+    model_detection:
+      type: prefix
+      value: azure_ai/
+    pricing:
+      input_field: null
+      output_field: null
+      is_per_million: false
+      free_model_handling: true
+      default_cost: null
+      models_dev_id: azure
+    max_input_field: null
+    max_output_field: null
+    model_name_prefix: ''
+    model_name_cleanup: []
+    special_models:
+    - mistral-medium-3-5
+    - mistral-document-ai-2512
+    api_base_config: null
+    api_key_env: null
+    order: 4
 defaults:
   timeout: 30
   retry_count: 3

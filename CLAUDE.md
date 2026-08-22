@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Repository Overview
 
-This is a LiteLLM configuration management repository with Python scripts for managing model configurations across multiple AI providers: OpenRouter, Vercel AI Gateway, Poe, Kilo, Nvidia NIM, Ollama, Fireworks, OpenCode Zen, and OpenCode Go. The main config file (`config.yaml`) contains LiteLLM model definitions with routing strategies and cost information.
+This is a LiteLLM configuration management repository with Python scripts for managing model configurations across multiple AI providers: OpenRouter, Vercel AI Gateway, Poe, Kilo, Nvidia NIM, Ollama, Fireworks, OpenCode Zen, OpenCode Go, and Azure AI. The main config file (`config.yaml`) contains LiteLLM model definitions with routing strategies and cost information.
 
 ## Development Commands
 
@@ -234,7 +234,8 @@ populate_models.py
 - `pricing.cache_read_field` / `pricing.cache_write_field`: dot-notation paths for cache pricing (OpenRouter, Vercel, Kilo, Poe, Requesty); omit for providers that use models.dev or have no cache pricing
 - `pricing.is_per_million` + `pricing.divisor`: conversion to per-token cost
 - `pricing.default_cost`: used when API has no pricing (Nvidia: `1.0e-09`)
-- `pricing.models_dev_id`: maps to a provider ID in `models.dev/api.json` for cost augmentation; used when provider API has no pricing (e.g., `"fireworks-ai"`, `"opencode"`, `"opencode-go"`); also sources `cost.cache_read` / `cost.cache_write` for cache fields
+- `pricing.models_dev_id`: maps to a provider ID in `models.dev/api.json` for cost augmentation; used when provider API has no pricing (e.g., `"fireworks-ai"`, `"opencode"`, `"opencode-go"`, `"azure"`); also sources `cost.cache_read` / `cost.cache_write` for cache fields
+- `api_url: null` + `use_models_dev_for_listing: true`: the provider has no models endpoint; the entire catalog (listing + pricing + limits) comes from models.dev (Azure AI, Fireworks uses this for listing only)
 - `free_variant_suffix`: `":free"` for OpenRouter and Kilo — triggers automatic `:free` variant addition when adding models
 - `special_models`: model IDs exempt from removal validation
 - `model_prefixes`: optional list of `{prefix, api_base}` mappings for providers that serve models under multiple prefixes (e.g., OpenCode Go with `openai/` and `anthropic/`)
@@ -260,6 +261,7 @@ How each provider's models are detected in `config.yaml`:
 - **Kilo**: `litellm_params.api_base` = `os.environ/KILO_API_BASE` + model starts with `openai/`
 - **OpenCode Zen**: `litellm_params.api_base` contains `opencode.ai/zen/v1` + model starts with `openai/`
 - **OpenCode Go**: `litellm_params.api_base` contains `opencode.ai/zen/go` + model starts with `openai/` or `anthropic/`
+- **Azure AI**: `litellm_params.model` starts with `azure_ai/` or `azure/` (multi-prefix via `model_prefixes`; no models endpoint — listing, pricing, and limits all come from models.dev provider id `azure`). Models absent from the models.dev catalog are pinned via `special_models` (bare IDs after prefix stripping).
 
 > **Note:** OpenCode Go is the first provider to support multiple model prefixes. The `model_prefixes` field in `providers.yaml` maps each prefix to its corresponding `api_base`:
 > - `openai/` → `https://opencode.ai/zen/go/v1`

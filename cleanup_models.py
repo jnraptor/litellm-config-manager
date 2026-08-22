@@ -16,7 +16,7 @@ against their current APIs and:
 9. Prunes ``special_models`` entries in ``providers.yaml`` that are now
    available through the provider's normal models source
 
-Supported providers: openrouter, requesty, vercel, poe, nvidia, kilo, ollama, opencode-zen, opencode-go, all
+Supported providers: openrouter, requesty, vercel, poe, nvidia, kilo, ollama, opencode-zen, opencode-go, azure_ai, all
 
 Usage:
     python cleanup_models.py --provider openrouter [--config config.yaml] [--dry-run] [--verbose]
@@ -558,7 +558,7 @@ def main():
 6. Deletes providers, removing their models from config.yaml and disabling
    them in providers.yaml
 
-Supported providers: openrouter, vercel, poe, nvidia, kilo, ollama, fireworks, opencode-zen, opencode-go, all
+Supported providers: openrouter, vercel, poe, nvidia, kilo, ollama, fireworks, opencode-zen, opencode-go, azure_ai, all
 
 Examples:
   %(prog)s --provider openrouter                           # Process OpenRouter models
