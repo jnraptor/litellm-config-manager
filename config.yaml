@@ -1744,4 +1744,4 @@ router_settings:
   redis_host: 10.10.1.1
   redis_password: ''
   redis_port: 6379
-  routing_strategy: simple-shuffle
+  routing_strategy: cost-based-routing
