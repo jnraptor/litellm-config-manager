@@ -374,11 +374,11 @@ model_list:
     max_output_tokens: 131072
   model_name: deepseek-v4-flash
 - litellm_params:
-    cache_read_input_token_cost: 2.8e-08
-    input_cost_per_token: 1.4e-07
+    cache_read_input_token_cost: 1.316e-08
+    input_cost_per_token: 6.58e-08
     model: openrouter/deepseek/deepseek-v4-flash-0731
     order: 5
-    output_cost_per_token: 2.8e-07
+    output_cost_per_token: 1.316e-07
   model_info:
     max_input_tokens: 1310720
     max_output_tokens: 131072
@@ -830,11 +830,11 @@ model_list:
 - litellm_params:
     api_base: https://api.kilo.ai/api/gateway
     api_key: os.environ/KILO_API_KEY
-    cache_read_input_token_cost: 3.5e-08
-    input_cost_per_token: 1.4e-07
+    cache_read_input_token_cost: 3.3e-08
+    input_cost_per_token: 1.32e-07
     model: openai/tencent/hy3
     order: 4
-    output_cost_per_token: 5.8e-07
+    output_cost_per_token: 5.28e-07
   model_info:
     max_input_tokens: 262144
     max_output_tokens: 128000
@@ -1221,11 +1221,11 @@ model_list:
     max_input_tokens: 204800
   model_name: minimax-m2.7
 - litellm_params:
-    cache_read_input_token_cost: 4.8e-08
-    input_cost_per_token: 2.4e-07
+    cache_read_input_token_cost: 6.0e-08
+    input_cost_per_token: 3.0e-07
     model: openrouter/minimax/minimax-m2.7
     order: 5
-    output_cost_per_token: 9.6e-07
+    output_cost_per_token: 1.2e-06
   model_info:
     max_input_tokens: 204800
     max_output_tokens: 131072
