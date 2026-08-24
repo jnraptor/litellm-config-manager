@@ -289,7 +289,7 @@ models:
     providers:
       openrouter: meituan/longcat-2.0
       kilo: meituan/longcat-2.0
-      opencode-zen: longcat-2.0-free
+      opencode-go: openai/longcat-2.0
   ling-3.0-tiny:
     display_name: ling-3.0-tiny
     description: ''
