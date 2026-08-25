@@ -862,51 +862,6 @@ model_list:
     max_output_tokens: 128000
   model_name: hy3
 - litellm_params:
-    api_key: os.environ/FIREWORKS_AI_API_KEY
-    cache_read_input_token_cost: 1.7000000000000001e-07
-    input_cost_per_token: 1.0e-06
-    model: fireworks_ai/accounts/fireworks/models/inkling
-    order: 4
-    output_cost_per_token: 4.05e-06
-  model_info:
-    max_input_tokens: 1048576
-    max_output_tokens: 1048576
-  model_name: inkling
-- litellm_params:
-    api_base: https://api.kilo.ai/api/gateway
-    api_key: os.environ/KILO_API_KEY
-    cache_read_input_token_cost: 1.6e-07
-    input_cost_per_token: 9.5e-07
-    model: openai/thinkingmachines/inkling
-    order: 4
-    output_cost_per_token: 4.05e-06
-  model_info:
-    max_input_tokens: 1048576
-    max_output_tokens: 262144
-  model_name: inkling
-- litellm_params:
-    api_base: https://router.requesty.ai/v1
-    api_key: os.environ/REQUESTY_API_KEY
-    cache_read_input_token_cost: 2.992e-07
-    input_cost_per_token: 1.496e-06
-    model: openai/thinkingmachines/inkling-256k
-    order: 5
-    output_cost_per_token: 3.744e-06
-  model_info:
-    max_input_tokens: 262144
-    max_output_tokens: 32768
-  model_name: inkling
-- litellm_params:
-    cache_read_input_token_cost: 1.6e-07
-    input_cost_per_token: 9.5e-07
-    model: openrouter/thinkingmachines/inkling
-    order: 5
-    output_cost_per_token: 4.05e-06
-  model_info:
-    max_input_tokens: 1048576
-    max_output_tokens: 262144
-  model_name: inkling
-- litellm_params:
     api_key: os.environ/JINA_AI_API_KEY
     model: jina_ai/jina-embeddings-v4
     order: 5
@@ -1717,49 +1672,6 @@ model_list:
       complex: 400
       simple: 15
   model_name: smart_router_1
-- litellm_params:
-    input_cost_per_token: 1.0e-09
-    model: nvidia_nim/stepfun-ai/step-3.7-flash
-    order: 3
-    output_cost_per_token: 1.0e-09
-  model_info:
-    max_input_tokens: 256000
-    max_output_tokens: 16384
-  model_name: step-3.7-flash
-- litellm_params:
-    api_base: https://api.kilo.ai/api/gateway
-    api_key: os.environ/KILO_API_KEY
-    cache_read_input_token_cost: 1.0e-09
-    input_cost_per_token: 1.0e-09
-    model: openai/stepfun/step-3.7-flash:free
-    order: 3
-    output_cost_per_token: 1.0e-09
-  model_info:
-    max_input_tokens: 262144
-    max_output_tokens: 262144
-  model_name: step-3.7-flash
-- litellm_params:
-    api_base: https://api.kilo.ai/api/gateway
-    api_key: os.environ/KILO_API_KEY
-    cache_read_input_token_cost: 4.0e-08
-    input_cost_per_token: 2.0e-07
-    model: openai/stepfun/step-3.7-flash
-    order: 4
-    output_cost_per_token: 1.15e-06
-  model_info:
-    max_input_tokens: 262144
-    max_output_tokens: 256000
-  model_name: step-3.7-flash
-- litellm_params:
-    cache_read_input_token_cost: 4.0e-08
-    input_cost_per_token: 2.0e-07
-    model: openrouter/stepfun/step-3.7-flash
-    order: 5
-    output_cost_per_token: 1.15e-06
-  model_info:
-    max_input_tokens: 262144
-    max_output_tokens: 256000
-  model_name: step-3.7-flash
 router_settings:
   enable_pre_call_checks: true
   fallbacks:
