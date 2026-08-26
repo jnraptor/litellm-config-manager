@@ -1491,50 +1491,6 @@ model_list:
     max_output_tokens: 8000
   model_name: or-free
 - litellm_params:
-    api_base: https://opencode.ai/zen/go/v1
-    api_key: os.environ/OPENCODE_API_KEY
-    cache_read_input_token_cost: 1.0e-09
-    input_cost_per_token: 1.0e-09
-    model: openai/ox-alpha-free
-    order: 3
-    output_cost_per_token: 1.0e-09
-  model_info:
-    max_input_tokens: 1000000
-    max_output_tokens: 131072
-  model_name: ox-alpha
-- litellm_params:
-    api_base: https://api.kilo.ai/api/gateway
-    api_key: os.environ/KILO_API_KEY
-    input_cost_per_token: 1.0e-09
-    model: openai/stealth/ox-alpha
-    order: 3
-    output_cost_per_token: 1.0e-09
-  model_info:
-    max_input_tokens: 1048576
-    max_output_tokens: 131072
-  model_name: ox-alpha
-- litellm_params:
-    api_base: https://opencode.ai/zen/v1
-    api_key: os.environ/OPENCODE_API_KEY
-    cache_read_input_token_cost: 1.0e-09
-    input_cost_per_token: 1.0e-09
-    model: openai/x-preview-f-free
-    order: 3
-    output_cost_per_token: 1.0e-09
-  model_info:
-    max_input_tokens: 1000000
-    max_output_tokens: 131072
-  model_name: ox-alpha
-- litellm_params:
-    input_cost_per_token: 1.0e-09
-    model: openrouter/stealth/ox-alpha
-    order: 3
-    output_cost_per_token: 1.0e-09
-  model_info:
-    max_input_tokens: 1048576
-    max_output_tokens: 131072
-  model_name: ox-alpha
-- litellm_params:
     api_key: os.environ/FIREWORKS_AI_API_KEY
     input_cost_per_token: 1.0e-08
     model: fireworks_ai/accounts/fireworks/models/qwen3-embedding-8b
