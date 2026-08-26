@@ -355,3 +355,11 @@ models:
       openrouter: deepseek/deepseek-v4-flash-vision-exp
       kilo: deepseek/deepseek-v4-flash-vision-exp
       opencode-go: openai/deepseek-v4-flash-vision-exp
+  grok-4.6:
+    display_name: grok-4.6
+    description: ''
+    providers:
+      openrouter: x-ai/grok-4.6
+      kilo: x-ai/grok-4.6
+      opencode-go: openai/grok-4.6
+      requesty: xai/grok-4.6

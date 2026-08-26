@@ -746,53 +746,53 @@ model_list:
     base_model: azure/gpt-image-2
     mode: image_generation
   model_name: gpt-image-2
-- litellm_params:
+- model_name: grok-4.6
+  litellm_params:
+    model: openai/grok-4.6
+    order: 1
     api_base: https://opencode.ai/zen/go/v1
     api_key: os.environ/OPENCODE_API_KEY
-    cache_read_input_token_cost: 3.0e-07
     input_cost_per_token: 2.0e-06
-    model: openai/grok-4.5
-    order: 1
     output_cost_per_token: 6.0e-06
+    cache_read_input_token_cost: 5.0e-07
   model_info:
     max_input_tokens: 500000
     max_output_tokens: 500000
-  model_name: grok-4.5
-- litellm_params:
+- model_name: grok-4.6
+  litellm_params:
+    model: openai/x-ai/grok-4.6
+    order: 4
     api_base: https://api.kilo.ai/api/gateway
     api_key: os.environ/KILO_API_KEY
-    cache_read_input_token_cost: 3.0e-07
     input_cost_per_token: 2.0e-06
-    model: openai/x-ai/grok-4.5
-    order: 4
     output_cost_per_token: 6.0e-06
+    cache_read_input_token_cost: 5.0e-07
   model_info:
     max_input_tokens: 500000
     max_output_tokens: 450000
-  model_name: grok-4.5
-- litellm_params:
+- model_name: grok-4.6
+  litellm_params:
+    model: openai/xai/grok-4.6
+    order: 5
     api_base: https://router.requesty.ai/v1
     api_key: os.environ/REQUESTY_API_KEY
+    input_cost_per_token: 1.8e-06
+    output_cost_per_token: 5.4e-06
     cache_creation_input_token_cost: 1.8e-06
     cache_read_input_token_cost: 4.5e-07
-    input_cost_per_token: 1.8e-06
-    model: openai/xai/grok-4.5
-    order: 5
-    output_cost_per_token: 5.4e-06
   model_info:
     max_input_tokens: 500000
     max_output_tokens: 0
-  model_name: grok-4.5
-- litellm_params:
-    cache_read_input_token_cost: 3.0e-07
-    input_cost_per_token: 2.0e-06
-    model: openrouter/x-ai/grok-4.5
+- model_name: grok-4.6
+  litellm_params:
+    model: openrouter/x-ai/grok-4.6
     order: 5
+    input_cost_per_token: 2.0e-06
     output_cost_per_token: 6.0e-06
+    cache_read_input_token_cost: 5.0e-07
   model_info:
     max_input_tokens: 500000
     max_output_tokens: 450000
-  model_name: grok-4.5
 - litellm_params:
     api_base: https://opencode.ai/zen/go/v1
     api_key: os.environ/OPENCODE_API_KEY
