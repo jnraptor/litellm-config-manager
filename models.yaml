@@ -363,3 +363,9 @@ models:
       kilo: x-ai/grok-4.6
       opencode-go: openai/grok-4.6
       requesty: xai/grok-4.6
+  glm-5.3-flash:
+    display_name: glm-5.3-flash
+    description: ''
+    providers:
+      openrouter: z-ai/glm-5.3-flash
+      opencode-go: openai/glm-5.3-flash
