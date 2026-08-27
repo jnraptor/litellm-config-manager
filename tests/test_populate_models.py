@@ -310,6 +310,83 @@ class TestModelMappingLoaderSave:
         assert data["models"]["minimax-m3"]["providers"]["kilo"] == "minimax/minimax-m3"
 
 
+class TestModelMappingLoaderDelete:
+    """Tests for ModelMappingLoader.delete_model_mapping()."""
+
+    def _write_models_yaml(self, path):
+        path.write_text(
+            "models:\n"
+            "  glm-5:\n"
+            "    display_name: zai-glm-5\n"
+            "    providers:\n"
+            "      openrouter: z-ai/glm-5\n"
+            "  minimax-m3:\n"
+            "    display_name: minimax-m3\n"
+            "    providers:\n"
+            "      openrouter: minimax/minimax-m3\n"
+        )
+
+    def test_delete_by_key_removes_entry(self, tmp_path):
+        path = tmp_path / "models.yaml"
+        self._write_models_yaml(path)
+        loader = ModelMappingLoader(str(path))
+        removed = loader.delete_model_mapping("glm-5")
+        assert removed == ["glm-5"]
+        assert loader.get_model_mapping("glm-5") is None
+        assert loader.get_model_mapping("minimax-m3") is not None
+        with open(path) as f:
+            data = yaml.safe_load(f)
+        assert "glm-5" not in data["models"]
+        assert "minimax-m3" in data["models"]
+
+    def test_delete_by_display_name_removes_entry(self, tmp_path):
+        path = tmp_path / "models.yaml"
+        self._write_models_yaml(path)
+        loader = ModelMappingLoader(str(path))
+        removed = loader.delete_model_mapping("zai-glm-5")
+        assert removed == ["glm-5"]
+        with open(path) as f:
+            data = yaml.safe_load(f)
+        assert "glm-5" not in data["models"]
+
+    def test_delete_nonexistent_returns_empty(self, tmp_path):
+        path = tmp_path / "models.yaml"
+        self._write_models_yaml(path)
+        original = path.read_text()
+        loader = ModelMappingLoader(str(path))
+        removed = loader.delete_model_mapping("nonexistent")
+        assert removed == []
+        assert path.read_text() == original
+
+    def test_delete_dry_run_does_not_write(self, tmp_path):
+        path = tmp_path / "models.yaml"
+        self._write_models_yaml(path)
+        original = path.read_text()
+        loader = ModelMappingLoader(str(path))
+        removed = loader.delete_model_mapping("glm-5", dry_run=True)
+        assert removed == ["glm-5"]
+        assert path.read_text() == original
+        assert not path.with_suffix(".yaml.backup").exists()
+        # In-memory cache is untouched on dry run
+        assert loader.get_model_mapping("glm-5") is not None
+
+    def test_delete_creates_backup(self, tmp_path):
+        path = tmp_path / "models.yaml"
+        self._write_models_yaml(path)
+        loader = ModelMappingLoader(str(path))
+        loader.delete_model_mapping("glm-5")
+        backup = path.with_suffix(".yaml.backup")
+        assert backup.exists()
+        assert "glm-5:" in backup.read_text()
+
+    def test_delete_missing_file_returns_empty(self, tmp_path):
+        path = tmp_path / "models.yaml"
+        loader = ModelMappingLoader(str(path))
+        removed = loader.delete_model_mapping("glm-5")
+        assert removed == []
+        assert not path.exists()
+
+
 # ==============================================================================
 # ModelsPopulator integration
 # ==============================================================================

@@ -10,7 +10,8 @@ against their current APIs and:
 4. Adds new models when requested
 5. Supports both regular and embedding models (where applicable)
 6. Supports mapped models for simplified multi-provider addition
-7. Supports deleting models by model_name from the configuration
+7. Supports deleting models by model_name from the configuration and
+   from models.yaml
 8. Supports deleting providers, removing their models from config.yaml and
    disabling them in providers.yaml
 9. Prunes ``special_models`` entries in ``providers.yaml`` that are now
@@ -554,7 +555,7 @@ def main():
 2. Validates models against the current API and removes invalid entries
 3. Updates model costs when they differ from API pricing
 4. Adds one or more models to the configuration
-5. Deletes models by model_name from the configuration
+5. Deletes models by model_name from the configuration and models.yaml
 6. Deletes providers, removing their models from config.yaml and disabling
    them in providers.yaml
 
@@ -695,11 +696,27 @@ Mapped Model Addition (simplified multi-provider workflow):
             _, removed = cleaner.delete_model_from_config(config, args.delete_model)
             if not args.dry_run:
                 cleaner.save_config(config)
+
+            # Remove matching entries from models.yaml (if any)
+            mapping_loader = ModelMappingLoader(args.models_config)
+            mappings_removed = []
+            for model_name in args.delete_model:
+                if mapping_loader.delete_model_mapping(
+                    model_name, dry_run=args.dry_run
+                ):
+                    mappings_removed.append(model_name)
+
             print(f"\n{'=' * 60}")
             print("Model Deletion Summary")
             print(f"{'=' * 60}")
             print(f"Requested: {', '.join(args.delete_model)}")
             print(f"Removed: {removed} entries")
+            if mappings_removed:
+                print(
+                    f"Removed from {args.models_config}: {', '.join(mappings_removed)}"
+                )
+            else:
+                print(f"No matching entries in {args.models_config}")
             if args.dry_run:
                 print("\nDRY RUN: No actual changes were made")
             else:

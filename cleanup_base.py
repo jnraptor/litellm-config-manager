@@ -2609,6 +2609,69 @@ class ModelMappingLoader:
                 width=1000,
             )
 
+    def delete_model_mapping(
+        self,
+        model_name: str,
+        dry_run: bool = False,
+    ) -> list[str]:
+        """
+        Delete model mappings matching ``model_name`` from models.yaml.
+
+        A mapping matches when its canonical key or its ``display_name``
+        equals ``model_name``. On a real run, updates the in-memory cache
+        and rewrites the entire file via ``yaml.dump`` (same behavior and
+        caveats as ``save()``). Honors ``dry_run`` by only reporting the
+        matches.
+
+        Args:
+            model_name: Model name to match (canonical key or display name)
+            dry_run: If True, log the action but do not mutate or write
+
+        Returns:
+            List of canonical keys that were (or would be) removed
+        """
+        models = self._config.get("models", {})
+        matched_keys = [
+            key
+            for key, mapping in models.items()
+            if key == model_name or mapping.get("display_name") == model_name
+        ]
+
+        if not matched_keys:
+            return []
+
+        if dry_run:
+            self._logger.info(
+                f"DRY RUN: Would delete {', '.join(matched_keys)} "
+                f"from {self._config_path}"
+            )
+            return matched_keys
+
+        for key in matched_keys:
+            del models[key]
+        self._logger.info(f"Deleted {', '.join(matched_keys)} from {self._config_path}")
+
+        if self._config_path.exists():
+            backup_path = self._config_path.with_suffix(
+                self._config_path.suffix + ".backup"
+            )
+            backup_path.write_text(
+                self._config_path.read_text(encoding="utf-8"),
+                encoding="utf-8",
+            )
+
+        with open(self._config_path, "w", encoding="utf-8") as f:
+            yaml.dump(
+                self._config,
+                f,
+                default_flow_style=False,
+                sort_keys=False,
+                allow_unicode=True,
+                width=1000,
+            )
+
+        return matched_keys
+
 
 class ConfigDrivenModelCleaner(BaseModelCleaner):
     """
