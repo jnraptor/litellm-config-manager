@@ -368,4 +368,13 @@ models:
     description: ''
     providers:
       openrouter: z-ai/glm-5.3-flash
+      kilo: z-ai/glm-5.3-flash
       opencode-go: openai/glm-5.3-flash
+      requesty: zai/glm-5.3-flash
+  qwen3.8-flash:
+    display_name: qwen3.8-flash
+    description: ''
+    providers:
+      openrouter: qwen/qwen3.8-flash
+      kilo: qwen/qwen3.8-flash
+      requesty: alibaba/qwen3.8-flash
