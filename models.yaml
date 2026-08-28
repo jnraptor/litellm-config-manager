@@ -371,3 +371,10 @@ models:
       kilo: qwen/qwen3.8-flash
       opencode-go: anthropic/qwen3.8-flash
       requesty: alibaba/qwen3.8-flash
+  hy4-preview:
+    display_name: hy4-preview
+    description: ''
+    providers:
+      openrouter: tencent/hy4-preview
+      kilo: tencent/hy4-preview
+      opencode-go: openai/hy4-preview
