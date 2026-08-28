@@ -369,4 +369,5 @@ models:
     providers:
       openrouter: qwen/qwen3.8-flash
       kilo: qwen/qwen3.8-flash
+      opencode-go: anthropic/qwen3.8-flash
       requesty: alibaba/qwen3.8-flash
