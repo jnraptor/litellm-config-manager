@@ -377,6 +377,102 @@ class TestCostValidation:
         assert len(changes) == 1
         assert "model_info" not in updated_config["model_list"][0]
 
+    def test_supports_flags_added_to_model_info(self, cleaner, sample_config):
+        """Test that supports_* flags are added to model_info from modalities."""
+        config_models = [(0, "test/model1", "model-1")]
+        api_models = {
+            "model1": {
+                "id": "model1",
+                "input_cost": 1e-06,
+                "output_cost": 2e-06,
+                "modalities": {"input": ["text", "image"], "output": ["text"]},
+            },
+        }
+
+        updated_config, changes, order_changed = cleaner.validate_and_update_costs(
+            sample_config, config_models, api_models
+        )
+
+        assert len(changes) == 1
+        assert "supports" in changes[0]["changes"]
+        model_info = updated_config["model_list"][0]["model_info"]
+        assert model_info["supports_vision"] is True
+        assert "supports_pdf_input" not in model_info
+
+    def test_supports_flags_updated_in_model_info(self, cleaner, sample_config):
+        """Test that new supports_* flags are added when the source reports them."""
+        sample_config["model_list"][0]["model_info"] = {
+            "supports_vision": True
+        }
+        config_models = [(0, "test/model1", "model-1")]
+        api_models = {
+            "model1": {
+                "id": "model1",
+                "input_cost": 1e-06,
+                "output_cost": 2e-06,
+                "modalities": {
+                    "input": ["text", "image", "pdf"],
+                    "output": ["text"],
+                },
+            },
+        }
+
+        updated_config, changes, order_changed = cleaner.validate_and_update_costs(
+            sample_config, config_models, api_models
+        )
+
+        assert len(changes) == 1
+        assert changes[0]["changes"]["supports"]["new"] == {
+            "supports_pdf_input": True
+        }
+        model_info = updated_config["model_list"][0]["model_info"]
+        assert model_info["supports_vision"] is True
+        assert model_info["supports_pdf_input"] is True
+
+    def test_supports_flags_not_removed_when_source_silent(self, cleaner, sample_config):
+        """ADDITIVE semantics: supports_* flags survive when the API stops reporting."""
+        sample_config["model_list"][0]["model_info"] = {
+            "supports_vision": True
+        }
+        config_models = [(0, "test/model1", "model-1")]
+        # API omits modalities entirely (e.g. provider without a models.dev id)
+        api_models = {
+            "model1": {
+                "id": "model1",
+                "input_cost": 1e-06,
+                "output_cost": 2e-06,
+            },
+        }
+
+        updated_config, changes, order_changed = cleaner.validate_and_update_costs(
+            sample_config, config_models, api_models
+        )
+
+        assert len(changes) == 0
+        model_info = updated_config["model_list"][0]["model_info"]
+        assert model_info["supports_vision"] is True
+
+    def test_supports_change_is_logged(self, cleaner, sample_config, caplog):
+        """The per-model change log prints the supports flags update."""
+        import logging
+
+        config_models = [(0, "test/model1", "model-1")]
+        api_models = {
+            "model1": {
+                "id": "model1",
+                "input_cost": 1e-06,
+                "output_cost": 2e-06,
+                "modalities": {"input": ["text", "image"], "output": ["text"]},
+            },
+        }
+
+        caplog.set_level(logging.INFO)
+        with caplog.at_level(logging.INFO, logger=cleaner.logger.name):
+            cleaner.validate_and_update_costs(sample_config, config_models, api_models)
+
+        assert "Supports flags:" in caplog.text
+        assert "supports_vision" in caplog.text
+
 
 class TestModelAddition:
     """Tests for adding models to config."""

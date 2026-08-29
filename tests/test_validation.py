@@ -542,6 +542,87 @@ class TestValidateConfig:
                 f"Mode {mode} should be valid"
             )
 
+    def test_valid_supports_flags(self, cleaner):
+        config = {
+            "model_list": [
+                {
+                    "model_name": "model-1",
+                    "litellm_params": {
+                        "model": "openrouter/gpt-4",
+                    },
+                    "model_info": {
+                        "supports_vision": True,
+                        "supports_pdf_input": True,
+                        "supports_audio_input": True,
+                        "supports_audio_output": True,
+                    },
+                }
+            ]
+        }
+        report = cleaner.validate_config(config)
+        assert not any(i.category == "supports" for i in report.issues)
+
+    def test_invalid_supports_flag_warning(self, cleaner):
+        config = {
+            "model_list": [
+                {
+                    "model_name": "model-1",
+                    "litellm_params": {
+                        "model": "openrouter/gpt-4",
+                    },
+                    "model_info": {"supports_vision": "yes"},
+                }
+            ]
+        }
+        report = cleaner.validate_config(config)
+        # Warning-level only: no errors
+        assert not report.has_errors
+        assert any(
+            i.category == "supports"
+            and i.severity == ValidationSeverity.WARNING
+            for i in report.issues
+        )
+
+    def test_malformed_supports_flag_warning(self, cleaner):
+        config = {
+            "model_list": [
+                {
+                    "model_name": "model-1",
+                    "litellm_params": {
+                        "model": "openrouter/gpt-4",
+                    },
+                    "model_info": {"supports_pdf_input": 1},
+                }
+            ]
+        }
+        report = cleaner.validate_config(config)
+        assert not report.has_errors
+        assert any(i.category == "supports" for i in report.issues)
+
+    def test_non_bool_supports_flags_do_not_crash(self, cleaner):
+        """Non-boolean supports_* flag values warn, not crash."""
+        config = {
+            "model_list": [
+                {
+                    "model_name": "model-1",
+                    "litellm_params": {
+                        "model": "openrouter/gpt-4",
+                    },
+                    "model_info": {
+                        "supports_vision": "yes",
+                        "supports_audio_input": 5,
+                    },
+                }
+            ]
+        }
+        report = cleaner.validate_config(config)
+        assert not report.has_errors
+        supports_issues = [
+            i for i in report.issues if i.category == "supports"
+        ]
+        assert supports_issues
+        assert any("must be a boolean" in i.message for i in supports_issues)
+
     def test_unknown_provider_prefix_warning(self, cleaner):
         config = {
             "model_list": [

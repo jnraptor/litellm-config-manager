@@ -166,6 +166,8 @@ pytest tests/test_cleanup_base.py::test_costs_are_equal -v
 - `test_cleanup_coverage.py` — Tests for model validation, cost updating, model addition
 - `test_input_outputs.py` — Integration tests validating expected input/output transformations from `tests/input-and-outputs.md` (includes `opencode-go` and `opencode-go-anthropic` test cases)
 - `test_coverage_additional.py` — Tests for UnifiedModelCleaner, file I/O, free variants, ModelMappingLoader
+- `test_models_dev.py` — Tests for ModelsDevClient and models.dev cost/limit/modality augmentation
+- `test_opencode_sync.py` — Tests for `build_opencode_models()` / `regenerate_opencode_json()` and the save_config sync hook
 - `test_populate_models.py` — Tests for `populate_models.py` fuzzy matching tiers, `_format_model_block` / `_replace_model_block` YAML editing, `ModelMappingLoader.save()`, and `ModelsPopulator` end-to-end
 
 **Adding New Tests:**
@@ -234,7 +236,8 @@ populate_models.py
 - `pricing.cache_read_field` / `pricing.cache_write_field`: dot-notation paths for cache pricing (OpenRouter, Vercel, Kilo, Poe, Requesty); omit for providers that use models.dev or have no cache pricing
 - `pricing.is_per_million` + `pricing.divisor`: conversion to per-token cost
 - `pricing.default_cost`: used when API has no pricing (Nvidia: `1.0e-09`)
-- `pricing.models_dev_id`: maps to a provider ID in `models.dev/api.json` for cost augmentation; used when provider API has no pricing (e.g., `"fireworks-ai"`, `"opencode"`, `"opencode-go"`, `"azure"`); also sources `cost.cache_read` / `cost.cache_write` for cache fields
+- `pricing.models_dev_id`: maps to a provider ID in `models.dev/api.json` for cost augmentation; used when provider API has no pricing (e.g., `"fireworks-ai"`, `"opencode"`, `"opencode-go"`, `"azure"`); also sources `cost.cache_read` / `cost.cache_write` for cache fields and `modalities.input/output` for the `model_info.supports_*` flags
+- `modalities_default`: per-provider or top-level fallback modalities (e.g. `{input: [text], output: [text]}`) applied when models.dev/API reports none for a model; the top-level key in `providers.yaml` applies to all providers unless overridden per provider
 - `api_url: null` + `use_models_dev_for_listing: true`: the provider has no models endpoint; the entire catalog (listing + pricing + limits) comes from models.dev (Azure AI, Fireworks uses this for listing only)
 - `free_variant_suffix`: `":free"` for OpenRouter and Kilo — triggers automatic `:free` variant addition when adding models
 - `special_models`: model IDs exempt from removal validation
@@ -299,6 +302,10 @@ Cache fields are only present when the provider API reports cache pricing. They 
 
 **Free Model Handling:** Free models use `1.0e-09` costs for LiteLLM compatibility (LiteLLM requires non-zero costs). `adjust_cost_for_free_model()` converts `0.0` → `1.0e-09` for all cost fields — input, output, and both cache fields.
 
+**Modalities (`model_info.supports_*`):** LiteLLM does not understand the opencode `model_info.modalities` dict, so config.yaml instead carries boolean flags under `model_info`: `supports_vision` (image input), `supports_pdf_input` (pdf input), `supports_audio_input` (audio input) and `supports_audio_output` (audio output). Video is intentionally ignored (LiteLLM does not support it). Only flags that are True are emitted. Sources, in order: models.dev `modalities.input/output` (when `pricing.models_dev_id` is set), then the provider-level `modalities_default` in `providers.yaml`, then a top-level global `modalities_default`. During cleanup, flags are synced with **additive** semantics: updated when a source reports them, never deleted when the source stops reporting (unlike limits/cache costs).
+
+**opencode.json Sync:** Every time a cleanup script saves `config.yaml` (unified or per-provider scripts), `opencode.json` next to it is regenerated via `regenerate_opencode_json()` in `cleanup_base.py`. Only `provider.litellm.models` is replaced — `$schema`, `npm`, `name`, `options.baseURL`, and other providers are preserved. The models map is rebuilt by `build_opencode_models()`: keyed by `model_name` (sorted; load-balanced duplicates collapse to one entry using max limits), with `limit.context`/`limit.output` from `model_info.max_input_tokens/max_output_tokens` (omitted when unknown) and `modalities` derived from the `model_info.supports_*` flags via `supports_to_modalities()` (default text/text). Models whose entries are ALL in `OPENCODE_SKIP_MODES` (`embedding`, `rerank`, `image_generation`) are excluded. A `.json.backup` is written before each update; `--dry-run` previews without writing; sync failures never fail the cleanup run.
+
 **Free Variants (OpenRouter, Kilo):** When adding a model via `--add-model`, if a `<model-id>:free` variant exists in the API, it is automatically added with the same `model_name` for load balancing.
 
 **Load Balancing:** Multiple entries sharing the same `model_name` distribute requests across providers.
@@ -308,5 +315,5 @@ Cache fields are only present when the provider API reports cache pricing. They 
 ## GitHub Actions
 
 - **Manual trigger:** Workflow dispatch accepts `--add-model` and optional `--model-name`
-- **Process:** dry-run → apply (remove invalid, update costs, sort) → add model if specified → auto-commit if changed
+- **Process:** dry-run → apply (remove invalid, update costs, sort) → add model if specified → auto-commit `config.yaml` and `opencode.json` if changed
 - Workflows: `cleanup-all-models-unified.yml` (unified) + one per provider

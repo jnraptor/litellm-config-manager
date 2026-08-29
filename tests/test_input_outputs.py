@@ -233,6 +233,9 @@ class MockCleaner(ConfigDrivenModelCleaner):
         self._model_prefixes = self.provider_config.get("model_prefixes")
         self._max_input_field = self.provider_config.get("max_input_field")
         self._max_output_field = self.provider_config.get("max_output_field")
+        self._modalities_default = self.provider_config.get(
+            "modalities_default", providers_data.get("modalities_default")
+        )
         self._models_dev_id = self._pricing_config.get("models_dev_id")
 
         # Load defaults from providers.yaml
@@ -284,6 +287,11 @@ def run_test_case(test_case: InputOutputTestCase) -> tuple[bool, list[str]]:
     mock_client = Mock()
     mock_client.get_model_cost.return_value = (None, None, None, None)
     mock_client.get_model_limits.return_value = (None, None)
+    # These fixtures validate provider-specific parsing only; disable the
+    # modalities pipeline (models.dev lookup + providers.yaml default) so the
+    # expected model_info blocks in input-and-outputs.md stay unchanged.
+    mock_client.get_model_modalities.return_value = None
+    cleaner._modalities_default = None
     try:
         with patch("cleanup_base._models_dev_client", mock_client):
             parsed_model = cleaner.parse_api_model(test_case.input_data)

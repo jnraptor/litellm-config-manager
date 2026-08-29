@@ -40,6 +40,8 @@ model_list:
     base_model: azure_ai/gpt-5.6-luna
     max_input_tokens: 1050000
     max_output_tokens: 128000
+    supports_vision: true
+    supports_pdf_input: true
   model_name: az-gpt-5.6-luna
 - litellm_params:
     api_base: os.environ/AZURE_OPENAI_API_BASE
@@ -56,6 +58,8 @@ model_list:
     base_model: azure_ai/gpt-5.6-sol
     max_input_tokens: 1050000
     max_output_tokens: 128000
+    supports_vision: true
+    supports_pdf_input: true
   model_name: az-gpt-5.6-sol
 - litellm_params:
     api_base: os.environ/AZURE_OPENAI_API_BASE
@@ -72,6 +76,8 @@ model_list:
     base_model: azure_ai/gpt-5.6-terra
     max_input_tokens: 1050000
     max_output_tokens: 128000
+    supports_vision: true
+    supports_pdf_input: true
   model_name: az-gpt-5.6-terra
 - litellm_params:
     api_base: os.environ/AZURE_MAI_API_BASE_EASTUS
@@ -144,6 +150,8 @@ model_list:
   model_info:
     max_input_tokens: 200000
     max_output_tokens: 64000
+    supports_vision: true
+    supports_pdf_input: true
   model_name: claude-haiku-4-5
 - litellm_params:
     api_base: https://router.requesty.ai/v1
@@ -168,6 +176,8 @@ model_list:
   model_info:
     max_input_tokens: 200000
     max_output_tokens: 64000
+    supports_vision: true
+    supports_pdf_input: true
   model_name: claude-haiku-4-5
 - litellm_params:
     api_base: https://api.kilo.ai/api/gateway
@@ -181,6 +191,8 @@ model_list:
   model_info:
     max_input_tokens: 1000000
     max_output_tokens: 128000
+    supports_vision: true
+    supports_pdf_input: true
   model_name: claude-opus-4-8
 - litellm_params:
     api_base: https://router.requesty.ai/v1
@@ -205,6 +217,8 @@ model_list:
   model_info:
     max_input_tokens: 1000000
     max_output_tokens: 128000
+    supports_vision: true
+    supports_pdf_input: true
   model_name: claude-opus-4-8
 - litellm_params:
     api_base: https://api.kilo.ai/api/gateway
@@ -218,6 +232,8 @@ model_list:
   model_info:
     max_input_tokens: 1000000
     max_output_tokens: 128000
+    supports_vision: true
+    supports_pdf_input: true
   model_name: claude-opus-5
 - litellm_params:
     api_base: https://router.requesty.ai/v1
@@ -242,6 +258,8 @@ model_list:
   model_info:
     max_input_tokens: 1000000
     max_output_tokens: 128000
+    supports_vision: true
+    supports_pdf_input: true
   model_name: claude-opus-5
 - litellm_params:
     api_base: https://api.kilo.ai/api/gateway
@@ -255,6 +273,8 @@ model_list:
   model_info:
     max_input_tokens: 1000000
     max_output_tokens: 128000
+    supports_vision: true
+    supports_pdf_input: true
   model_name: claude-sonnet-4-6
 - litellm_params:
     api_base: https://router.requesty.ai/v1
@@ -279,6 +299,8 @@ model_list:
   model_info:
     max_input_tokens: 1000000
     max_output_tokens: 128000
+    supports_vision: true
+    supports_pdf_input: true
   model_name: claude-sonnet-4-6
 - litellm_params:
     api_base: https://api.kilo.ai/api/gateway
@@ -292,6 +314,8 @@ model_list:
   model_info:
     max_input_tokens: 1000000
     max_output_tokens: 128000
+    supports_vision: true
+    supports_pdf_input: true
   model_name: claude-sonnet-5
 - litellm_params:
     api_base: https://router.requesty.ai/v1
@@ -316,6 +340,8 @@ model_list:
   model_info:
     max_input_tokens: 1000000
     max_output_tokens: 128000
+    supports_vision: true
+    supports_pdf_input: true
   model_name: claude-sonnet-5
 - litellm_params:
     api_base: https://opencode.ai/zen/go/v1
@@ -385,6 +411,7 @@ model_list:
   model_info:
     max_input_tokens: 1000000
     max_output_tokens: 384000
+    supports_vision: true
   model_name: deepseek-v4-flash-vision-exp
 - litellm_params:
     api_base: https://api.kilo.ai/api/gateway
@@ -397,6 +424,7 @@ model_list:
   model_info:
     max_input_tokens: 1048576
     max_output_tokens: 384000
+    supports_vision: true
   model_name: deepseek-v4-flash-vision-exp
 - litellm_params:
     cache_read_input_token_cost: 7.0e-09
@@ -407,6 +435,7 @@ model_list:
   model_info:
     max_input_tokens: 1048576
     max_output_tokens: 384000
+    supports_vision: true
   model_name: deepseek-v4-flash-vision-exp
 - litellm_params:
     api_base: https://opencode.ai/zen/go/v1
@@ -487,6 +516,9 @@ model_list:
   model_info:
     max_input_tokens: 1048576
     max_output_tokens: 65536
+    supports_vision: true
+    supports_pdf_input: true
+    supports_audio_input: true
   model_name: gemini-3.7-flash
 - litellm_params:
     api_base: https://router.requesty.ai/v1
@@ -510,6 +542,9 @@ model_list:
   model_info:
     max_input_tokens: 1048576
     max_output_tokens: 65536
+    supports_vision: true
+    supports_pdf_input: true
+    supports_audio_input: true
   model_name: gemini-3.7-flash
 - litellm_params:
     api_base: https://opencode.ai/zen/go/v1
@@ -626,6 +661,8 @@ model_list:
   model_info:
     max_input_tokens: 1000000
     max_output_tokens: 131072
+    supports_vision: true
+    supports_pdf_input: true
 - model_name: glm-5.3-flash
   litellm_params:
     model: openai/z-ai/glm-5.3-flash
@@ -638,6 +675,7 @@ model_list:
   model_info:
     max_input_tokens: 1310720
     max_output_tokens: 131072
+    supports_vision: true
 - model_name: glm-5.3-flash
   litellm_params:
     model: openai/zai/glm-5.3-flash
@@ -660,6 +698,7 @@ model_list:
   model_info:
     max_input_tokens: 1310720
     max_output_tokens: 131072
+    supports_vision: true
 - litellm_params:
     api_base: os.environ/AZURE_OPENAI_API_BASE
     api_key: os.environ/AZURE_OPENAI_API_KEY
@@ -674,6 +713,7 @@ model_list:
     base_model: azure/gpt-5-nano
     max_input_tokens: 400000
     max_output_tokens: 128000
+    supports_vision: true
   model_name: gpt-5-nano
 - litellm_params:
     api_base: os.environ/AZURE_OPENAI_API_BASE
@@ -689,6 +729,8 @@ model_list:
     base_model: azure/gpt-5.4-mini
     max_input_tokens: 400000
     max_output_tokens: 128000
+    supports_vision: true
+    supports_pdf_input: true
   model_name: gpt-5.4-mini
 - litellm_params:
     api_base: os.environ/AZURE_OPENAI_API_BASE
@@ -704,6 +746,8 @@ model_list:
     base_model: azure/gpt-5.4-nano
     max_input_tokens: 400000
     max_output_tokens: 128000
+    supports_vision: true
+    supports_pdf_input: true
   model_name: gpt-5.4-nano
 - litellm_params:
     api_base: https://opencode.ai/zen/go/v1
@@ -717,6 +761,8 @@ model_list:
   model_info:
     max_input_tokens: 1050000
     max_output_tokens: 128000
+    supports_vision: true
+    supports_pdf_input: true
   model_name: gpt-5.6-luna
 - litellm_params:
     api_base: os.environ/AZURE_OPENAI_API_BASE
@@ -733,6 +779,8 @@ model_list:
     base_model: azure_ai/gpt-5.6-luna
     max_input_tokens: 1050000
     max_output_tokens: 128000
+    supports_vision: true
+    supports_pdf_input: true
   model_name: gpt-5.6-luna
 - litellm_params:
     api_base: https://api.kilo.ai/api/gateway
@@ -746,6 +794,8 @@ model_list:
   model_info:
     max_input_tokens: 1050000
     max_output_tokens: 128000
+    supports_vision: true
+    supports_pdf_input: true
   model_name: gpt-5.6-luna
 - litellm_params:
     api_base: https://router.requesty.ai/v1
@@ -769,6 +819,8 @@ model_list:
   model_info:
     max_input_tokens: 1050000
     max_output_tokens: 128000
+    supports_vision: true
+    supports_pdf_input: true
   model_name: gpt-5.6-luna
 - litellm_params:
     api_base: os.environ/AZURE_OPENAI_API_BASE
@@ -782,6 +834,7 @@ model_list:
   model_info:
     base_model: azure/gpt-image-2
     mode: image_generation
+    supports_vision: true
   model_name: gpt-image-2
 - model_name: grok-4.6
   litellm_params:
@@ -795,6 +848,7 @@ model_list:
   model_info:
     max_input_tokens: 500000
     max_output_tokens: 500000
+    supports_vision: true
 - model_name: grok-4.6
   litellm_params:
     model: openai/x-ai/grok-4.6
@@ -807,6 +861,8 @@ model_list:
   model_info:
     max_input_tokens: 500000
     max_output_tokens: 450000
+    supports_vision: true
+    supports_pdf_input: true
 - model_name: grok-4.6
   litellm_params:
     model: openai/xai/grok-4.6
@@ -830,6 +886,8 @@ model_list:
   model_info:
     max_input_tokens: 500000
     max_output_tokens: 450000
+    supports_vision: true
+    supports_pdf_input: true
 - litellm_params:
     api_base: https://opencode.ai/zen/go/v1
     api_key: os.environ/OPENCODE_API_KEY
@@ -959,6 +1017,7 @@ model_list:
   model_info:
     max_input_tokens: 262144
     max_output_tokens: 65536
+    supports_vision: true
   model_name: kimi-k2.6
 - litellm_params:
     api_key: os.environ/FIREWORKS_AI_API_KEY
@@ -970,6 +1029,7 @@ model_list:
   model_info:
     max_input_tokens: 262000
     max_output_tokens: 262000
+    supports_vision: true
   model_name: kimi-k2.6
 - litellm_params:
     api_base: https://api.kilo.ai/api/gateway
@@ -982,6 +1042,7 @@ model_list:
   model_info:
     max_input_tokens: 262144
     max_output_tokens: 235929
+    supports_vision: true
   model_name: kimi-k2.6
 - litellm_params:
     cache_read_input_token_cost: 1.6e-07
@@ -992,6 +1053,7 @@ model_list:
   model_info:
     max_input_tokens: 262144
     max_output_tokens: 235929
+    supports_vision: true
   model_name: kimi-k2.6
 - litellm_params:
     api_base: https://opencode.ai/zen/go/v1
@@ -1004,6 +1066,7 @@ model_list:
   model_info:
     max_input_tokens: 262144
     max_output_tokens: 262144
+    supports_vision: true
   model_name: kimi-k2.7
 - litellm_params:
     api_key: os.environ/FIREWORKS_AI_API_KEY
@@ -1015,6 +1078,7 @@ model_list:
   model_info:
     max_input_tokens: 262000
     max_output_tokens: 262000
+    supports_vision: true
   model_name: kimi-k2.7
 - litellm_params:
     api_base: https://api.kilo.ai/api/gateway
@@ -1027,6 +1091,7 @@ model_list:
   model_info:
     max_input_tokens: 262144
     max_output_tokens: 235929
+    supports_vision: true
   model_name: kimi-k2.7
 - litellm_params:
     cache_read_input_token_cost: 1.8e-07
@@ -1037,6 +1102,7 @@ model_list:
   model_info:
     max_input_tokens: 262144
     max_output_tokens: 235929
+    supports_vision: true
   model_name: kimi-k2.7
 - litellm_params:
     api_base: https://opencode.ai/zen/go/v1
@@ -1049,6 +1115,7 @@ model_list:
   model_info:
     max_input_tokens: 1048576
     max_output_tokens: 131072
+    supports_vision: true
   model_name: kimi-k3
 - litellm_params:
     api_key: os.environ/FIREWORKS_AI_API_KEY
@@ -1060,6 +1127,7 @@ model_list:
   model_info:
     max_input_tokens: 1048576
     max_output_tokens: 131072
+    supports_vision: true
   model_name: kimi-k3
 - litellm_params:
     api_base: https://api.kilo.ai/api/gateway
@@ -1072,6 +1140,7 @@ model_list:
   model_info:
     max_input_tokens: 1048576
     max_output_tokens: 943718
+    supports_vision: true
   model_name: kimi-k3
 - litellm_params:
     api_base: https://router.requesty.ai/v1
@@ -1094,6 +1163,7 @@ model_list:
   model_info:
     max_input_tokens: 1048576
     max_output_tokens: 943718
+    supports_vision: true
   model_name: kimi-k3
 - model_name: longcat-2.0
   litellm_params:
@@ -1140,6 +1210,8 @@ model_list:
   model_info:
     max_input_tokens: 1000000
     max_output_tokens: 128000
+    supports_vision: true
+    supports_audio_input: true
   model_name: mimo-v2.5
 - litellm_params:
     api_base: https://opencode.ai/zen/v1
@@ -1152,6 +1224,8 @@ model_list:
   model_info:
     max_input_tokens: 200000
     max_output_tokens: 32000
+    supports_vision: true
+    supports_audio_input: true
   model_name: mimo-v2.5
 - litellm_params:
     api_base: https://api.kilo.ai/api/gateway
@@ -1164,6 +1238,8 @@ model_list:
   model_info:
     max_input_tokens: 1050000
     max_output_tokens: 131072
+    supports_vision: true
+    supports_audio_input: true
   model_name: mimo-v2.5
 - litellm_params:
     cache_read_input_token_cost: 2.8e-09
@@ -1174,6 +1250,8 @@ model_list:
   model_info:
     max_input_tokens: 1050000
     max_output_tokens: 131072
+    supports_vision: true
+    supports_audio_input: true
   model_name: mimo-v2.5
 - litellm_params:
     api_base: https://opencode.ai/zen/go/v1
@@ -1254,6 +1332,7 @@ model_list:
   model_info:
     max_input_tokens: 1000000
     max_output_tokens: 131072
+    supports_vision: true
   model_name: minimax-m3
 - litellm_params:
     api_key: os.environ/FIREWORKS_AI_API_KEY
@@ -1265,6 +1344,7 @@ model_list:
   model_info:
     max_input_tokens: 512000
     max_output_tokens: 512000
+    supports_vision: true
   model_name: minimax-m3
 - litellm_params:
     api_base: https://api.kilo.ai/api/gateway
@@ -1277,6 +1357,7 @@ model_list:
   model_info:
     max_input_tokens: 1048576
     max_output_tokens: 512000
+    supports_vision: true
   model_name: minimax-m3
 - litellm_params:
     api_base: https://router.requesty.ai/v1
@@ -1299,6 +1380,7 @@ model_list:
   model_info:
     max_input_tokens: 1048576
     max_output_tokens: 512000
+    supports_vision: true
   model_name: minimax-m3
 - litellm_params:
     api_key: os.environ/MISTRAL_API_KEY
@@ -1311,6 +1393,7 @@ model_list:
   model_info:
     max_input_tokens: 262144
     max_output_tokens: 262144
+    supports_vision: true
   model_name: mistral-medium-3-5
 - litellm_params:
     api_base: os.environ/AZURE_AI_API_BASE_EASTUS
@@ -1335,6 +1418,7 @@ model_list:
   model_info:
     max_input_tokens: 256000
     max_output_tokens: 256000
+    supports_vision: true
   model_name: mistral-small-4
 - litellm_params:
     api_base: https://opencode.ai/zen/v1
@@ -1416,6 +1500,7 @@ model_list:
   model_info:
     max_input_tokens: 200000
     max_output_tokens: 8000
+    supports_vision: true
   model_name: or-free
 - litellm_params:
     api_key: os.environ/FIREWORKS_AI_API_KEY
@@ -1447,6 +1532,7 @@ model_list:
   model_info:
     max_input_tokens: 1000000
     max_output_tokens: 65536
+    supports_vision: true
   model_name: qwen3.7-plus
 - litellm_params:
     api_key: os.environ/FIREWORKS_AI_API_KEY
@@ -1458,6 +1544,7 @@ model_list:
   model_info:
     max_input_tokens: 262144
     max_output_tokens: 65536
+    supports_vision: true
   model_name: qwen3.7-plus
 - litellm_params:
     api_base: https://api.kilo.ai/api/gateway
@@ -1471,6 +1558,7 @@ model_list:
   model_info:
     max_input_tokens: 1000000
     max_output_tokens: 131072
+    supports_vision: true
   model_name: qwen3.7-plus
 - litellm_params:
     cache_creation_input_token_cost: 4.0e-07
@@ -1482,6 +1570,7 @@ model_list:
   model_info:
     max_input_tokens: 1000000
     max_output_tokens: 131072
+    supports_vision: true
   model_name: qwen3.7-plus
 - model_name: qwen3.8-flash
   litellm_params:
@@ -1496,6 +1585,7 @@ model_list:
   model_info:
     max_input_tokens: 1000000
     max_output_tokens: 131072
+    supports_vision: true
 - model_name: qwen3.8-flash
   litellm_params:
     model: openai/qwen/qwen3.8-flash
@@ -1509,6 +1599,7 @@ model_list:
   model_info:
     max_input_tokens: 1000000
     max_output_tokens: 131072
+    supports_vision: true
 - model_name: qwen3.8-flash
   litellm_params:
     model: openai/alibaba/qwen3.8-flash
@@ -1533,6 +1624,7 @@ model_list:
   model_info:
     max_input_tokens: 1000000
     max_output_tokens: 131072
+    supports_vision: true
 - litellm_params:
     api_base: https://opencode.ai/zen/go
     api_key: os.environ/OPENCODE_API_KEY
@@ -1545,6 +1637,7 @@ model_list:
   model_info:
     max_input_tokens: 1000000
     max_output_tokens: 131072
+    supports_vision: true
   model_name: qwen3.8-max
 - litellm_params:
     api_key: os.environ/FIREWORKS_AI_API_KEY
@@ -1569,6 +1662,7 @@ model_list:
   model_info:
     max_input_tokens: 1000000
     max_output_tokens: 131072
+    supports_vision: true
   model_name: qwen3.8-max
 - litellm_params:
     api_base: https://router.requesty.ai/v1
@@ -1593,6 +1687,7 @@ model_list:
   model_info:
     max_input_tokens: 1000000
     max_output_tokens: 131072
+    supports_vision: true
   model_name: qwen3.8-max
 - litellm_params:
     complexity_router_config:

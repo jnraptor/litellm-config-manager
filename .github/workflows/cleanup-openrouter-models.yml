@@ -59,7 +59,7 @@ jobs:
       - name: Check for changes
         id: verify-changed-files
         run: |
-          if git diff --quiet config.yaml; then
+          if git diff --quiet config.yaml opencode.json; then
             echo "changed=false" >> $GITHUB_OUTPUT
           else
             echo "changed=true" >> $GITHUB_OUTPUT
@@ -70,7 +70,7 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add config.yaml
+          git add config.yaml opencode.json
           git commit -m "Auto-cleanup invalid OpenRouter models, update costs, and manage models"
           git push
           

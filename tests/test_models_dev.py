@@ -46,6 +46,10 @@ SAMPLE_MODELS_DEV_DATA = {
                     "context": 202752,
                     "output": 8192,
                 },
+                "modalities": {
+                    "input": ["text"],
+                    "output": ["text"],
+                },
             },
             "accounts/fireworks/models/free-model": {
                 "id": "accounts/fireworks/models/free-model",
@@ -85,6 +89,10 @@ SAMPLE_MODELS_DEV_DATA = {
                 "limit": {
                     "context": 131072,
                     "output": 8192,
+                },
+                "modalities": {
+                    "input": ["text", "image"],
+                    "output": ["text"],
                 },
             },
             "no-limit-model": {
@@ -413,6 +421,91 @@ class TestModelsDevClient:
         assert models["no-limit-model"]["max_input_tokens"] is None
         assert models["no-limit-model"]["max_output_tokens"] is None
 
+    def test_get_provider_models_includes_modalities(self):
+        """Test that get_provider_models exposes normalized modalities."""
+        client = ModelsDevClient()
+        client._data = SAMPLE_MODELS_DEV_DATA
+
+        models = client.get_provider_models("opencode-go")
+
+        assert models["deepseek-v4-pro"]["modalities"] == {
+            "input": ["text", "image"],
+            "output": ["text"],
+        }
+        # Model without a modalities block should expose None
+        assert models["no-limit-model"]["modalities"] is None
+
+
+class TestGetModelModalities:
+    """Tests for ModelsDevClient.get_model_modalities()."""
+
+    def test_modalities_present(self):
+        """Test modality extraction from models.dev modalities.input/output."""
+        client = ModelsDevClient()
+        client._data = SAMPLE_MODELS_DEV_DATA
+
+        result = client.get_model_modalities("opencode-go", "deepseek-v4-pro")
+
+        assert result == {"input": ["text", "image"], "output": ["text"]}
+
+    def test_modalities_partial(self):
+        """Test that only the sides present in the API are returned."""
+        client = ModelsDevClient()
+        client._data = {
+            "p": {
+                "models": {
+                    "m": {"modalities": {"input": ["TEXT"]}},
+                }
+            }
+        }
+
+        result = client.get_model_modalities("p", "m")
+
+        assert result == {"input": ["text"]}
+
+    def test_modalities_missing_model(self):
+        """Test that unknown model returns None."""
+        client = ModelsDevClient()
+        client._data = SAMPLE_MODELS_DEV_DATA
+
+        assert client.get_model_modalities("opencode-go", "does-not-exist") is None
+
+    def test_modalities_missing_field(self):
+        """Test that a model without modalities returns None."""
+        client = ModelsDevClient()
+        client._data = SAMPLE_MODELS_DEV_DATA
+
+        assert (
+            client.get_model_modalities(
+                "fireworks-ai", "accounts/fireworks/models/deepseek-v4-pro"
+            )
+            is None
+        )
+
+    def test_modalities_invalid_shape(self):
+        """Test that non-dict / empty modalities values return None."""
+        client = ModelsDevClient()
+        client._data = {
+            "p": {
+                "models": {
+                    "bad-type": {"modalities": ["text"]},
+                    "empty": {"modalities": {"input": [], "output": []}},
+                    "not-a-dict": {"modalities": "text"},
+                }
+            }
+        }
+
+        assert client.get_model_modalities("p", "bad-type") is None
+        assert client.get_model_modalities("p", "empty") is None
+        assert client.get_model_modalities("p", "not-a-dict") is None
+
+    def test_modalities_data_not_loaded(self):
+        """Test that unloaded data returns None when load fails."""
+        client = ModelsDevClient()
+        client._load_failed = True
+
+        assert client.get_model_modalities("opencode-go", "deepseek-v4-pro") is None
+
 
 class TestParseApiModelWithModelsDevFallback:
     """Tests for ConfigDrivenModelCleaner.parse_api_model with models.dev fallback."""
@@ -440,6 +533,7 @@ class TestParseApiModelWithModelsDevFallback:
                 "special_models": [],
                 "order": 4,
             }
+            mock_loader.get_global.return_value = None
             mock_loader_class.return_value = mock_loader
 
             cleaner = ConfigDrivenModelCleaner(
@@ -684,6 +778,103 @@ class TestParseApiModelWithModelsDevFallback:
                 "output_cost": 2.0e-06,
                 "max_input_tokens": None,
                 "max_output_tokens": None,
+                "model_info": None,
+            },
+            model_name="test-model",
+        )
+
+        assert "model_info" not in entry
+
+    def test_modalities_fallback_from_models_dev(self):
+        """Test that modalities are filled from models.dev when models_dev_id is set."""
+        mock_client = Mock()
+        mock_client.get_model_cost.return_value = (None, None, None, None)
+        mock_client.get_model_limits.return_value = (None, None)
+        mock_client.get_model_modalities.return_value = {
+            "input": ["text", "image"],
+            "output": ["text"],
+        }
+
+        cleaner = self._create_cleaner_with_mock(models_dev_id="opencode-go")
+
+        with patch("cleanup_base._models_dev_client", mock_client):
+            result = cleaner.parse_api_model({"id": "deepseek-v4-pro"})
+
+        assert result["modalities"] == {"input": ["text", "image"], "output": ["text"]}
+        mock_client.get_model_modalities.assert_called_once_with(
+            "opencode-go", "deepseek-v4-pro", cleaner.logger
+        )
+
+    def test_modalities_default_when_no_source(self):
+        """Test provider-level modalities_default applies when models.dev lacks data."""
+        mock_client = Mock()
+        mock_client.get_model_cost.return_value = (None, None, None, None)
+        mock_client.get_model_limits.return_value = (None, None)
+        mock_client.get_model_modalities.return_value = None
+
+        cleaner = self._create_cleaner_with_mock(models_dev_id="opencode-go")
+        cleaner._modalities_default = {"input": ["text"], "output": ["text"]}
+
+        with patch("cleanup_base._models_dev_client", mock_client):
+            result = cleaner.parse_api_model({"id": "no-limit-model"})
+
+        assert result["modalities"] == {"input": ["text"], "output": ["text"]}
+
+    def test_modalities_none_without_any_source(self):
+        """Test modalities stay None when neither models.dev nor defaults provide them."""
+        mock_client = Mock()
+        mock_client.get_model_cost.return_value = (None, None, None, None)
+        mock_client.get_model_limits.return_value = (None, None)
+        mock_client.get_model_modalities.return_value = None
+
+        cleaner = self._create_cleaner_with_mock(models_dev_id=None)
+
+        with patch("cleanup_base._models_dev_client", mock_client):
+            result = cleaner.parse_api_model({"id": "some-model"})
+
+        assert result["modalities"] is None
+        mock_client.get_model_modalities.assert_not_called()
+
+    def test_create_model_entry_merges_supports_flags_into_model_info(self):
+        """Test that create_model_entry writes supports_* flags into model_info."""
+        cleaner = self._create_cleaner_with_mock(models_dev_id=None)
+
+        entry = cleaner.create_model_entry(
+            model_id="test/model",
+            api_model_info={
+                "id": "test/model",
+                "input_cost": 1.0e-06,
+                "output_cost": 2.0e-06,
+                "max_input_tokens": None,
+                "max_output_tokens": None,
+                "modalities": {
+                    "input": ["text", "image", "pdf", "audio"],
+                    "output": ["text", "audio"],
+                },
+                "model_info": None,
+            },
+            model_name="test-model",
+        )
+
+        assert entry["model_info"]["supports_vision"] is True
+        assert entry["model_info"]["supports_pdf_input"] is True
+        assert entry["model_info"]["supports_audio_input"] is True
+        assert entry["model_info"]["supports_audio_output"] is True
+        assert "modalities" not in entry["model_info"]
+
+    def test_create_model_entry_omits_empty_modalities(self):
+        """Test that falsy modalities are not written to model_info."""
+        cleaner = self._create_cleaner_with_mock(models_dev_id=None)
+
+        entry = cleaner.create_model_entry(
+            model_id="test/model",
+            api_model_info={
+                "id": "test/model",
+                "input_cost": 1.0e-06,
+                "output_cost": 2.0e-06,
+                "max_input_tokens": None,
+                "max_output_tokens": None,
+                "modalities": None,
                 "model_info": None,
             },
             model_name="test-model",

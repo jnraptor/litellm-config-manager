@@ -20,8 +20,10 @@ Author: LiteLLM Config Management
 """
 
 import argparse
+import json
 import logging
 import os
+import shutil
 import sys
 import time
 from abc import ABC, abstractmethod
@@ -37,6 +39,8 @@ import yaml
 __all__ = [
     "DEFAULT_CONFIG_FILE",
     "FALLBACK_KNOWN_PREFIXES",
+    "OPENCODE_SKIP_MODES",
+    "VALID_MODALITIES",
     "VALID_MODEL_MODES",
     "APIClient",
     "BaseModelCleaner",
@@ -48,11 +52,13 @@ __all__ = [
     "ValidationReport",
     "ValidationSeverity",
     "adjust_cost_for_free_model",
+    "build_opencode_models",
     "costs_are_equal",
     "create_provider_main",
     "fetch_models_from_api",
     "get_nested_value",
     "is_api_base_model",
+    "regenerate_opencode_json",
     "setup_common_args",
     "setup_logging",
     "sort_model_list",
@@ -207,6 +213,15 @@ VALID_MODEL_MODES = frozenset(
         "ocr",
     }
 )
+
+# Model modes that are not chat-style models and are therefore excluded from
+# opencode.json (the opencode harness consumes only conversational models).
+OPENCODE_SKIP_MODES = frozenset({"embedding", "rerank", "image_generation"})
+
+# Valid input/output modality values for model_info.modalities validation.
+# Mirrors the opencode config schema enum (https://opencode.ai/config.json):
+# text, audio, image, video, pdf.
+VALID_MODALITIES = frozenset({"text", "image", "audio", "video", "pdf"})
 
 FALLBACK_KNOWN_PREFIXES = frozenset(
     {
@@ -443,6 +458,7 @@ class ModelsDevClient:
                 "cache_creation_cost": cache_creation_cost,
                 "max_input_tokens": self._parse_limit(limit.get("context")),
                 "max_output_tokens": self._parse_limit(limit.get("output")),
+                "modalities": self._parse_modalities(model_data.get("modalities")),
                 "model_info": None,
             }
 
@@ -563,6 +579,72 @@ class ModelsDevClient:
 
         return max_input, max_output
 
+    @staticmethod
+    def _parse_modalities(value: Any) -> dict[str, list[str]] | None:
+        """
+        Normalize a models.dev ``modalities`` object.
+
+        Args:
+            value: The raw modalities value, expected to be a dict with
+                   ``input`` and/or ``output`` lists of strings.
+
+        Returns:
+            Dict of {"input": [...], "output": [...]} with at least one
+            non-empty side, or None if missing/invalid.
+        """
+        if not isinstance(value, dict):
+            return None
+
+        parsed: dict[str, list[str]] = {}
+        for side in ("input", "output"):
+            items = value.get(side)
+            if isinstance(items, list):
+                cleaned = [str(i).lower() for i in items if i]
+                if cleaned:
+                    parsed[side] = cleaned
+
+        return parsed if parsed else None
+
+    def get_model_modalities(
+        self,
+        provider_id: str,
+        model_id: str,
+        logger: logging.Logger | None = None,
+    ) -> dict[str, list[str]] | None:
+        """
+        Get input/output modalities for a model from models.dev.
+
+        Reads the model's ``modalities.input`` / ``modalities.output`` fields
+        (e.g., ``{"input": ["text", "image"], "output": ["text"]}``). Used to
+        populate ``model_info.modalities`` in config.yaml so downstream
+        consumers (opencode.json) know which models accept images etc.
+
+        Args:
+            provider_id: The models.dev provider ID (e.g., "fireworks-ai")
+            model_id: The model ID as used by the provider
+            logger: Optional logger for debug output
+
+        Returns:
+            Dict like {"input": [...], "output": [...]} (only sides present
+            in the API data), or None if not found or API unavailable.
+        """
+        self._ensure_loaded(logger)
+
+        if self._data is None:
+            return None
+
+        provider = self._data.get(provider_id, {})
+        models = provider.get("models", {})
+        model = models.get(model_id, {}) or {}
+        modalities = self._parse_modalities(model.get("modalities"))
+
+        if modalities and logger:
+            logger.debug(
+                f"Modalities from models.dev for {model_id}: {modalities}"
+            )
+
+        return modalities
+
     def get_model_provider_npm(
         self,
         provider_id: str,
@@ -607,6 +689,274 @@ class ModelsDevClient:
 
 # Global models.dev client instance (shared across all cleaners)
 _models_dev_client = ModelsDevClient()
+
+
+def modalities_to_supports(
+    modalities: Any,
+) -> dict[str, bool]:
+    """
+    Convert a modalities dict to LiteLLM-supported ``supports_*`` flags.
+
+    LiteLLM does not understand the opencode ``model_info.modalities`` dict
+    (``{input: [...], output: [...]}``), so config.yaml instead carries boolean
+    flags under ``model_info``. Only flags that are True are emitted (additive
+    semantics — a model that stops reporting a modality keeps its flag).
+
+    Video is intentionally ignored because LiteLLM does not support it.
+
+    Args:
+        modalities: A dict like ``{"input": ["text", "image"], "output": [...]}``
+                    or None.
+
+    Returns:
+        Dict of ``supports_*`` boolean flags (only True entries), e.g.
+        ``{"supports_vision": True, "supports_pdf_input": True}``.
+    """
+    if not isinstance(modalities, dict):
+        return {}
+    input_mods = set(modalities.get("input") or [])
+    output_mods = set(modalities.get("output") or [])
+    flags: dict[str, bool] = {}
+    if "image" in input_mods:
+        flags["supports_vision"] = True
+    if "pdf" in input_mods:
+        flags["supports_pdf_input"] = True
+    if "audio" in input_mods:
+        flags["supports_audio_input"] = True
+    if "audio" in output_mods:
+        flags["supports_audio_output"] = True
+    return flags
+
+
+def supports_to_modalities(model_info: Any) -> dict[str, list[str]] | None:
+    """
+    Reconstruct an opencode modalities dict from ``supports_*`` flags.
+
+    Inverse of :func:`modalities_to_supports`. Reads ``supports_vision``,
+    ``supports_pdf_input``, ``supports_audio_input`` and
+    ``supports_audio_output`` from ``model_info`` and builds the opencode
+    ``{input: [...], output: [...]}`` dict. Returns None when no flags are set
+    (so callers fall back to the text/text default).
+
+    Args:
+        model_info: The ``model_info`` dict from a config.yaml entry.
+
+    Returns:
+        A modalities dict, or None if no ``supports_*`` flags are present.
+    """
+    if not isinstance(model_info, dict):
+        return None
+    input_mods = ["text"]
+    output_mods = ["text"]
+    if model_info.get("supports_vision"):
+        input_mods.append("image")
+    if model_info.get("supports_pdf_input"):
+        input_mods.append("pdf")
+    if model_info.get("supports_audio_input"):
+        input_mods.append("audio")
+    if model_info.get("supports_audio_output"):
+        output_mods.append("audio")
+    if input_mods == ["text"] and output_mods == ["text"]:
+        return None
+    return {"input": input_mods, "output": output_mods}
+
+
+def build_opencode_models(config: dict[str, Any]) -> dict[str, dict[str, Any]]:
+    """
+    Build the opencode.json ``provider.litellm.models`` map from config.yaml.
+
+    Iterates ``config["model_list"]``, groups entries by ``model_name`` (entries
+    sharing a name are LiteLLM load-balance duplicates and collapse to one
+    opencode model), and derives limits/modalities from ``model_info``.
+
+    - ``model_info.max_input_tokens``  → ``limit.context``
+    - ``model_info.max_output_tokens`` → ``limit.output``
+      (max across duplicate entries; omitted when unknown)
+    - ``model_info.supports_*`` flags  → ``modalities`` (derived via
+      :func:`supports_to_modalities`; defaults to text input/output when absent)
+    - Entries whose ``model_info.mode`` is in :data:`OPENCODE_SKIP_MODES`
+      (embedding, rerank, image_generation) are excluded unless another entry
+      with the same name is chat-capable.
+
+    Args:
+        config: Parsed LiteLLM config.yaml dictionary.
+
+    Returns:
+        Dict keyed by model_name with sorted keys for stable diffs.
+    """
+    default_modalities = {"input": ["text"], "output": ["text"]}
+    grouped: dict[str, dict[str, Any]] = {}
+
+    for entry in config.get("model_list", []) or []:
+        if not isinstance(entry, dict):
+            continue
+        name = entry.get("model_name")
+        if not name:
+            continue
+
+        model_info = entry.get("model_info")
+        model_info = model_info if isinstance(model_info, dict) else {}
+        mode = model_info.get("mode")
+        is_chat = mode is None or mode not in OPENCODE_SKIP_MODES
+
+        max_input = model_info.get("max_input_tokens")
+        max_output = model_info.get("max_output_tokens")
+        modalities = supports_to_modalities(model_info)
+
+        existing = grouped.get(name)
+        if existing is None:
+            grouped[name] = {
+                "name": name,
+                "chat": is_chat,
+                "max_input": max_input if isinstance(max_input, int) else None,
+                "max_output": max_output if isinstance(max_output, int) else None,
+                "modalities": modalities,
+            }
+            continue
+
+        existing["chat"] = existing["chat"] or is_chat
+        if isinstance(max_input, int):
+            existing["max_input"] = max(
+                existing["max_input"] if existing["max_input"] is not None else 0,
+                max_input,
+            )
+        if isinstance(max_output, int):
+            existing["max_output"] = max(
+                existing["max_output"] if existing["max_output"] is not None else 0,
+                max_output,
+            )
+        # Union-merge modalities across duplicate entries so a capability
+        # reported by any provider variant is preserved (e.g. one entry with
+        # vision and another with audio keeps both).
+        if modalities is not None:
+            if existing["modalities"] is None:
+                existing["modalities"] = modalities
+            else:
+                merged: dict[str, list[str]] = {}
+                for side in ("input", "output"):
+                    sides = [
+                        m.get(side) or []
+                        for m in (existing["modalities"], modalities)
+                    ]
+                    # Dedupe while preserving first-seen order.
+                    merged[side] = list(dict.fromkeys(sides[0] + sides[1]))
+                existing["modalities"] = merged
+
+    models: dict[str, dict[str, Any]] = {}
+    for name, data in grouped.items():
+        if not data["chat"]:
+            continue
+        model: dict[str, Any] = {"name": data["name"]}
+        # The opencode schema requires BOTH context and output in `limit`, so
+        # only emit it when both are known (a partial limit is schema-invalid).
+        if data["max_input"] is not None and data["max_output"] is not None:
+            model["limit"] = {
+                "context": data["max_input"],
+                "output": data["max_output"],
+            }
+        model["modalities"] = data["modalities"] or default_modalities
+        models[name] = model
+
+    return {key: models[key] for key in sorted(models)}
+
+
+def regenerate_opencode_json(
+    config: dict[str, Any],
+    opencode_path: str | Path,
+    logger: logging.Logger | None = None,
+    dry_run: bool = False,
+) -> bool:
+    """
+    Regenerate the ``provider.litellm.models`` section of opencode.json.
+
+    Keeps the opencode harness config in sync with config.yaml after every
+    save. The wrapper (``$schema``, provider ``npm``/``name``/``options``,
+    any other top-level keys or providers) is preserved untouched — only the
+    litellm models map is replaced with content derived from ``config`` via
+    :func:`build_opencode_models`.
+
+    Args:
+        config: Parsed LiteLLM config.yaml dictionary.
+        opencode_path: Path to opencode.json.
+        logger: Optional logger.
+        dry_run: If True, log what would change without writing.
+
+    Returns:
+        True if the file was written (or would be written in dry-run mode),
+        False if it was missing, unchanged, or skipped (no litellm section).
+        Errors are logged as warnings and never raised.
+    """
+    logger = logger or logging.getLogger("opencode_sync")
+    path = Path(opencode_path)
+
+    if not path.exists():
+        logger.debug(f"No opencode.json at {path}; skipping sync")
+        return False
+
+    try:
+        with open(path, "r", encoding="utf-8") as file:
+            opencode = json.load(file)
+    except (OSError, json.JSONDecodeError) as e:
+        logger.warning(f"Could not read {path} for opencode sync: {e}")
+        return False
+
+    if not isinstance(opencode, dict):
+        logger.warning(f"{path} is not a JSON object; skipping opencode sync")
+        return False
+
+    providers = opencode.get("provider")
+    if not isinstance(providers, dict) or "litellm" not in providers:
+        logger.warning(
+            f"{path} has no provider.litellm section; skipping opencode sync"
+        )
+        return False
+
+    litellm = providers["litellm"]
+    if not isinstance(litellm, dict):
+        logger.warning(
+            f"{path} provider.litellm is not an object; skipping opencode sync"
+        )
+        return False
+
+    new_models = build_opencode_models(config)
+    if litellm.get("models") == new_models:
+        logger.debug("opencode.json already up to date; no changes needed")
+        return False
+
+    if dry_run:
+        old_count = len(litellm.get("models") or {})
+        logger.info(
+            f"[DRY-RUN] Would update {path}: {old_count} → {len(new_models)} "
+            f"opencode models"
+        )
+        return True
+
+    backup_path = path.with_suffix(".json.backup")
+    try:
+        shutil.copy2(path, backup_path)
+        litellm["models"] = new_models
+        # Serialize before writing so a serialization error can't leave a
+        # truncated file, then write to a temp file and atomically replace so a
+        # mid-write failure never leaves opencode.json truncated.
+        content = json.dumps(opencode, indent=2, ensure_ascii=False) + "\n"
+        tmp_path = path.with_suffix(".json.tmp")
+        with open(tmp_path, "w", encoding="utf-8") as file:
+            file.write(content)
+        os.replace(tmp_path, path)
+        logger.info(
+            f"Updated opencode.json at {path} with {len(new_models)} models "
+            f"(backup at {backup_path})"
+        )
+        return True
+    except OSError as e:
+        logger.warning(f"Failed to write {path}: {e}")
+        if backup_path.exists():
+            try:
+                shutil.copy2(backup_path, path)
+                logger.info(f"Restored {path} from backup")
+            except OSError as restore_error:
+                logger.warning(f"Could not restore {path} from backup: {restore_error}")
+        return False
 
 
 class BaseModelCleaner(ABC):
@@ -684,6 +1034,18 @@ class BaseModelCleaner(ABC):
         except Exception as e:
             self.logger.error(f"Error saving configuration: {e}")
             raise
+
+        # Keep opencode.json in sync with the updated LiteLLM config.
+        # Failures here must never break the cleanup run.
+        try:
+            regenerate_opencode_json(
+                config,
+                self.config_path.parent / "opencode.json",
+                logger=self.logger,
+                dry_run=False,
+            )
+        except Exception as e:
+            self.logger.warning(f"opencode.json sync failed: {e}")
 
     def validate_config(self, config: dict[str, Any] | None = None) -> ValidationReport:
         """
@@ -1006,6 +1368,34 @@ class BaseModelCleaner(ABC):
                                 suggestion=f"Use one of: {', '.join(sorted(VALID_MODEL_MODES))}",
                             )
                         )
+
+                    # Check 11b: model_info.supports_* flags must be booleans
+                    for flag in (
+                        "supports_vision",
+                        "supports_pdf_input",
+                        "supports_audio_input",
+                        "supports_audio_output",
+                    ):
+                        if flag in model_info and not isinstance(
+                            model_info[flag], bool
+                        ):
+                            report.issues.append(
+                                ValidationIssue(
+                                    severity=ValidationSeverity.WARNING,
+                                    category="supports",
+                                    entry_index=index,
+                                    model_name=model_name,
+                                    model_id=model_id,
+                                    message=(
+                                        f"model_info.{flag} must be a boolean "
+                                        f"(True/False), got "
+                                        f"{model_info[flag]!r}"
+                                    ),
+                                    suggestion=(
+                                        f"Set model_info.{flag} to True or False"
+                                    ),
+                                )
+                            )
 
                 # Check 13: Unknown provider prefix
                 has_known_prefix = any(
@@ -1670,6 +2060,35 @@ class BaseModelCleaner(ABC):
                 limit_changed |= _sync_limit("max_input_tokens", api_max_input)
                 limit_changed |= _sync_limit("max_output_tokens", api_max_output)
 
+                # Sync supports_* flags into model_info with ADDITIVE semantics:
+                # update when the source reports them, never delete when it
+                # stops (providers without a models.dev id rely on defaults).
+                api_supports = modalities_to_supports(
+                    api_model_info.get("modalities")
+                )
+                if api_supports:
+                    current_supports = current_model_info or {}
+                    new_flags = {
+                        k: v
+                        for k, v in api_supports.items()
+                        if current_supports.get(k) != v
+                    }
+                    if new_flags:
+                        limit_changed = True
+                        change_info["changes"]["supports"] = {
+                            "old": {
+                                k: current_supports.get(k) for k in new_flags
+                            },
+                            "new": new_flags,
+                        }
+                        if current_model_info is None:
+                            current_model_info = {}
+                            model_entry["model_info"] = current_model_info
+                        current_model_info.update(new_flags)
+                        self.logger.debug(
+                            f"Supports flags change for {model_id}: {new_flags}"
+                        )
+
                 # Drop model_info entirely if it became empty (e.g. only limits were removed)
                 if current_model_info is not None and not current_model_info:
                     del model_entry["model_info"]
@@ -1770,6 +2189,13 @@ class BaseModelCleaner(ABC):
                 pct_change = ((new_val - old_val) / old_val) * 100
                 pct_str = f" ({pct_change:+.1f}%)"
             self.logger.info(f"  Cache creation cost: {old_str} → {new_str}{pct_str}")
+
+        if "supports" in change_info["changes"]:
+            old_val = change_info["changes"]["supports"]["old"]
+            new_val = change_info["changes"]["supports"]["new"]
+            old_str = str(old_val) if old_val is not None else "None"
+            new_str = str(new_val) if new_val is not None else "None"
+            self.logger.info(f"  Supports flags: {old_str} → {new_str}")
 
     def generate_model_name(self, model_id: str, prefix: str = "") -> str:
         """
@@ -2356,6 +2782,23 @@ class ProviderConfigLoader:
 
         return providers[provider_name]
 
+    def get_global(self, key: str, default: Any = None) -> Any:
+        """
+        Get a top-level (non-``providers``) key from providers.yaml.
+
+        Used for global settings such as ``modalities_default`` and ``defaults``.
+
+        Args:
+            key: Top-level key name.
+            default: Value returned when the key is absent.
+
+        Returns:
+            The raw value from providers.yaml, or ``default``.
+        """
+        if not self._config:
+            self._load_config()
+        return self._config.get(key, default)
+
     def list_providers(self, include_disabled: bool = False) -> list[str]:
         """
         Get list of all configured provider names.
@@ -2739,6 +3182,14 @@ class ConfigDrivenModelCleaner(BaseModelCleaner):
         self._max_input_field = self.provider_config.get("max_input_field")
         self._max_output_field = self.provider_config.get("max_output_field")
 
+        # Default input/output modalities for models whose source (models.dev,
+        # provider API) does not report them. Provider-level value overrides a
+        # top-level ``modalities_default`` in providers.yaml.
+        self._modalities_default = self.provider_config.get(
+            "modalities_default",
+            self._provider_loader.get_global("modalities_default"),
+        )
+
         # models.dev cost augmentation (for providers without pricing in their API)
         self._models_dev_id = self._pricing_config.get("models_dev_id")
 
@@ -3024,6 +3475,7 @@ class ConfigDrivenModelCleaner(BaseModelCleaner):
             "cache_creation_cost": None,
             "max_input_tokens": None,
             "max_output_tokens": None,
+            "modalities": None,
             "model_info": model.get("model_info"),
         }
 
@@ -3161,6 +3613,22 @@ class ConfigDrivenModelCleaner(BaseModelCleaner):
                 model_info["max_input_tokens"] = dev_max_input
             if dev_max_output is not None and model_info["max_output_tokens"] is None:
                 model_info["max_output_tokens"] = dev_max_output
+
+        # Resolve input/output modalities: models.dev first, then the
+        # provider-level modalities_default from providers.yaml.
+        dev_modalities = None
+        if self._models_dev_id:
+            dev_modalities = _models_dev_client.get_model_modalities(
+                self._models_dev_id, model["id"], self.logger
+            )
+        if isinstance(dev_modalities, dict) and dev_modalities:
+            model_info["modalities"] = dev_modalities
+        else:
+            default_modalities = getattr(self, "_modalities_default", None)
+            if default_modalities:
+                model_info["modalities"] = ModelsDevClient._parse_modalities(
+                    default_modalities
+                )
 
         return model_info
 
@@ -3323,6 +3791,12 @@ class ConfigDrivenModelCleaner(BaseModelCleaner):
             model_info_section["max_input_tokens"] = max_input
         if max_output is not None:
             model_info_section["max_output_tokens"] = max_output
+        # Convert modalities to LiteLLM-supported supports_* flags. config.yaml
+        # cannot carry the opencode modalities dict, so only the boolean flags
+        # (vision / pdf / audio) are written here.
+        model_info_section.update(
+            modalities_to_supports(api_model_info.get("modalities"))
+        )
         if model_info_section:
             entry["model_info"] = model_info_section
 

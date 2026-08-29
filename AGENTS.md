@@ -37,6 +37,7 @@ pytest tests/ -v --cov=. --cov-report=term
 - `test_coverage_additional.py` — UnifiedModelCleaner, file I/O, free variants
 - `test_validation.py` — Config validation (ValidationReport, validate_config, --validate CLI)
 - `test_models_dev.py` — ModelsDevClient and models.dev cost augmentation tests
+- `test_opencode_sync.py` — opencode.json regeneration (`build_opencode_models`, `regenerate_opencode_json`, save_config hook)
 - `test_populate_models.py` — populate_models.py fuzzy matching and YAML block editing
 
 ### Test Coverage
@@ -64,7 +65,8 @@ Current coverage: ~72%
 - `ConfigDrivenModelCleaner` — Provider-specific implementation
 - `UnifiedModelCleaner` — Multi-provider orchestration (cleanup, add mapped models, delete models by name)
 - `ModelMappingLoader` — Loads and saves model mappings from `models.yaml` (full rewrite via `yaml.dump`)
-- `ModelsDevClient` — Fetches cost data (input, output, cache read/write) from models.dev API for providers without pricing
+- `ModelsDevClient` — Fetches cost data (input, output, cache read/write) and modalities from models.dev API for providers without pricing
+- `build_opencode_models()` / `regenerate_opencode_json()` — module-level functions in `cleanup_base.py` that rebuild `provider.litellm.models` in `opencode.json` from `config.yaml` on every save (both unified and per-provider scripts)
 - `ModelsPopulator` — Populates `models.yaml` for a single model key across all providers
 
 For full details, see [CLAUDE.md](./CLAUDE.md).

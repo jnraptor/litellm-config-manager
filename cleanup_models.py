@@ -45,6 +45,7 @@ from cleanup_base import (
     ProviderConfigLoader,
     ValidationReport,
     _print_validation_report,
+    regenerate_opencode_json,
     setup_logging,
 )
 from cleanup_base import (
@@ -118,6 +119,16 @@ class UnifiedModelCleaner:
         """Save the updated configuration back to the file (with backup)."""
         if self.dry_run:
             self.logger.info("DRY RUN: Would save configuration to file")
+            # Preview the opencode.json sync too, without writing anything.
+            try:
+                regenerate_opencode_json(
+                    config,
+                    self.config_path.parent / "opencode.json",
+                    logger=self.logger,
+                    dry_run=True,
+                )
+            except Exception as e:
+                self.logger.warning(f"opencode.json sync preview failed: {e}")
             return
 
         backup_path = self.config_path.with_suffix(".yaml.backup")
@@ -137,6 +148,18 @@ class UnifiedModelCleaner:
                 backup_path.rename(self.config_path)
                 self.logger.info("Restored configuration from backup")
             raise
+
+        # Keep opencode.json in sync with the updated LiteLLM config.
+        # Failures here must never break the cleanup run.
+        try:
+            regenerate_opencode_json(
+                config,
+                self.config_path.parent / "opencode.json",
+                logger=self.logger,
+                dry_run=False,
+            )
+        except Exception as e:
+            self.logger.warning(f"opencode.json sync failed: {e}")
 
     def sort_model_list(self, config: dict[str, Any]) -> tuple[dict[str, Any], bool]:
         """Sort the model list by model_name alphabetically."""
