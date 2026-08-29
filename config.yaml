@@ -1499,15 +1499,6 @@ model_list:
   model_name: nomic-embed-text
 - litellm_params:
     input_cost_per_token: 1.0e-09
-    model: openrouter/nvidia/llama-nemotron-embed-vl-1b-v2:free
-    order: 3
-    output_cost_per_token: 1.0e-09
-  model_info:
-    max_input_tokens: 131072
-    mode: embedding
-  model_name: nvidia-llama-nemotron-embed-vl-1b-v2
-- litellm_params:
-    input_cost_per_token: 1.0e-09
     model: openrouter/openrouter/free
     order: 3
     output_cost_per_token: 1.0e-09
