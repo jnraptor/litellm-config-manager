@@ -125,6 +125,7 @@ providers:
     api_base_config: null
     api_key_env: null
     order: 5
+    enabled: false
   kilo:
     name: Kilo
     description: Kilo AI model provider
