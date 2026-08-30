@@ -391,11 +391,11 @@ model_list:
     max_output_tokens: 131072
   model_name: deepseek-v4-flash
 - litellm_params:
-    cache_read_input_token_cost: 9.0e-09
-    input_cost_per_token: 4.5e-08
+    cache_read_input_token_cost: 1.6e-08
+    input_cost_per_token: 6.5e-08
     model: openrouter/deepseek/deepseek-v4-flash-0731
     order: 5
-    output_cost_per_token: 9.0e-08
+    output_cost_per_token: 1.8e-07
   model_info:
     max_input_tokens: 1310720
     max_output_tokens: 943718
@@ -891,25 +891,13 @@ model_list:
 - litellm_params:
     api_base: https://opencode.ai/zen/go/v1
     api_key: os.environ/OPENCODE_API_KEY
-    cache_read_input_token_cost: 4.375e-09
-    input_cost_per_token: 1.75e-08
+    cache_read_input_token_cost: 3.5e-08
+    input_cost_per_token: 1.4e-07
     model: openai/hy3
     order: 1
-    output_cost_per_token: 7.25e-08
+    output_cost_per_token: 5.8e-07
   model_info:
     max_input_tokens: 256000
-    max_output_tokens: 64000
-  model_name: hy3
-- litellm_params:
-    api_base: https://opencode.ai/zen/v1
-    api_key: os.environ/OPENCODE_API_KEY
-    cache_read_input_token_cost: 1.0e-09
-    input_cost_per_token: 1.0e-09
-    model: openai/hy3-free
-    order: 3
-    output_cost_per_token: 1.0e-09
-  model_info:
-    max_input_tokens: 190000
     max_output_tokens: 64000
   model_name: hy3
 - litellm_params:
@@ -927,11 +915,11 @@ model_list:
 - litellm_params:
     api_base: https://api.kilo.ai/api/gateway
     api_key: os.environ/KILO_API_KEY
-    cache_read_input_token_cost: 2.0625e-08
-    input_cost_per_token: 8.25e-08
+    cache_read_input_token_cost: 3.5e-08
+    input_cost_per_token: 1.4e-07
     model: openai/tencent/hy3
     order: 4
-    output_cost_per_token: 3.3e-07
+    output_cost_per_token: 5.8e-07
   model_info:
     max_input_tokens: 262144
     max_output_tokens: 128000
@@ -949,11 +937,11 @@ model_list:
     max_output_tokens: 262144
   model_name: hy3
 - litellm_params:
-    cache_read_input_token_cost: 2.0625e-08
-    input_cost_per_token: 8.25e-08
+    cache_read_input_token_cost: 3.3e-08
+    input_cost_per_token: 1.32e-07
     model: openrouter/tencent/hy3
     order: 5
-    output_cost_per_token: 3.3e-07
+    output_cost_per_token: 5.28e-07
   model_info:
     max_input_tokens: 262144
     max_output_tokens: 128000
