@@ -321,6 +321,7 @@ models:
     providers:
       openrouter: z-ai/glm-5.3
       kilo: z-ai/glm-5.3
+      fireworks: accounts/fireworks/models/glm-5p3
       opencode-go: openai/glm-5.3
       requesty: zai/glm-5.3
   deepseek-v4-flash-vision-exp:
@@ -344,6 +345,7 @@ models:
     providers:
       openrouter: z-ai/glm-5.3-flash
       kilo: z-ai/glm-5.3-flash
+      fireworks: accounts/fireworks/models/glm-5p3-flash
       opencode-go: openai/glm-5.3-flash
       requesty: zai/glm-5.3-flash
   qwen3.8-flash:
