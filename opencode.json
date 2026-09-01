@@ -575,6 +575,23 @@
             ]
           }
         },
+        "muse-glimmer-30b": {
+          "name": "muse-glimmer-30b",
+          "limit": {
+            "context": 131072,
+            "output": 131072
+          },
+          "modalities": {
+            "input": [
+              "text",
+              "image",
+              "pdf"
+            ],
+            "output": [
+              "text"
+            ]
+          }
+        },
         "nemotron-3.5-lightning": {
           "name": "nemotron-3.5-lightning",
           "limit": {
