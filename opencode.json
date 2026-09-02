@@ -256,21 +256,6 @@
             ]
           }
         },
-        "glm-5.2": {
-          "name": "glm-5.2",
-          "limit": {
-            "context": 1048576,
-            "output": 262144
-          },
-          "modalities": {
-            "input": [
-              "text"
-            ],
-            "output": [
-              "text"
-            ]
-          }
-        },
         "glm-5.3": {
           "name": "glm-5.3",
           "limit": {
@@ -370,23 +355,6 @@
             ]
           }
         },
-        "grok-4.6": {
-          "name": "grok-4.6",
-          "limit": {
-            "context": 500000,
-            "output": 500000
-          },
-          "modalities": {
-            "input": [
-              "text",
-              "image",
-              "pdf"
-            ],
-            "output": [
-              "text"
-            ]
-          }
-        },
         "hy3": {
           "name": "hy3",
           "limit": {
@@ -459,21 +427,6 @@
             "input": [
               "text",
               "image"
-            ],
-            "output": [
-              "text"
-            ]
-          }
-        },
-        "longcat-2.0": {
-          "name": "longcat-2.0",
-          "limit": {
-            "context": 1048756,
-            "output": 262144
-          },
-          "modalities": {
-            "input": [
-              "text"
             ],
             "output": [
               "text"
@@ -612,22 +565,6 @@
           "limit": {
             "context": 200000,
             "output": 8000
-          },
-          "modalities": {
-            "input": [
-              "text",
-              "image"
-            ],
-            "output": [
-              "text"
-            ]
-          }
-        },
-        "qwen3.7-plus": {
-          "name": "qwen3.7-plus",
-          "limit": {
-            "context": 1000000,
-            "output": 131072
           },
           "modalities": {
             "input": [

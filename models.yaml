@@ -1,24 +1,11 @@
 models:
-  nemotron-3-super:
-    display_name: nvidia-nemotron-3-super
-    description: nemotron-3-super-120b-a12b
-    providers:
-      openrouter: nvidia/nemotron-3-super-120b-a12b:free
-      nvidia: nvidia/nemotron-3-super-120b-a12b
-      ollama: nemotron-3-super
-  nemotron-3-nano-omni:
-    display_name: nemotron-3-nano-omni
-    description: Nemotron 3 Nano Omni is an omni-modal reasoning model that understands images, video, speech, text.
-    providers:
-      openrouter: nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free
-      nvidia: nvidia/nemotron-3-nano-omni-30b-a3b-reasoning
   mimo-v2.5:
     display_name: mimo-v2.5
     description: mimo-v2.5
     providers:
       openrouter: xiaomi/mimo-v2.5
       kilo: xiaomi/mimo-v2.5
-      poe: mimo-v2.5
+      poe: mimo-v2.5-el
       vercel: xiaomi/mimo-v2.5
       opencode-zen: mimo-v2.5-free
   mimo-v2.5-pro:
@@ -29,65 +16,24 @@ models:
       kilo: xiaomi/mimo-v2.5-pro
       poe: mimo-v2.5-pro
       vercel: xiaomi/mimo-v2.5-pro
-  moonshotai-kimi-k2.5:
-    display_name: moonshotai-kimi-k2.5
-    description: GLM-5 model by Z.ai
-    providers:
-      openrouter: moonshotai/kimi-k2.5
-      kilo: moonshotai/kimi-k2.5
-      fireworks: accounts/fireworks/models/kimi-k2p5
-      ollama: kimi-k2.5
-      poe: kimi-k2.5-fw
-      nvidia: moonshotai/kimi-k2.5
-  moonshotai-kimi-k2.6:
-    display_name: moonshotai-kimi-k2.6
+  kimi-k2.6:
+    display_name: kimi-k2.6
     description: GLM-5 model by Z.ai
     providers:
       openrouter: moonshotai/kimi-k2.6
       kilo: moonshotai/kimi-k2.6
       fireworks: accounts/fireworks/models/kimi-k2p6
-      poe: kimi-k2.6-fw
+      poe: kimi-k2.6
       nvidia: moonshotai/kimi-k2.6
-  glm-5.1:
-    display_name: zai-glm-5.1
-    description: GLM-5.1 model by Z.ai
-    providers:
-      openrouter: z-ai/glm-5.1
-      kilo: z-ai/glm-5.1
-      fireworks: accounts/fireworks/models/glm-5p1
-      ollama: glm-5.1
-      poe: glm-5.1-fw
-      nvidia: z-ai/glm-5.1
-      vercel: zai/glm-5.1
-  gemma-4-31b:
-    display_name: gemma-4-31b
-    description: gemma 4 model by Google
-    providers:
-      openrouter: google/gemma-4-31b-it
-      kilo: google/gemma-4-31b-it
-      ollama: gemma4:31b
-      poe: gemma-4-31b
-      nvidia: google/gemma-4-31b-it
-      vercel: google/gemma-4-31b-it
-  qwen3.6-plus:
-    display_name: qwen3.6-plus
-    description: Qwen 3.6 Plus model by Alibaba
-    providers:
-      openrouter: qwen/qwen3.6-plus
-      kilo: qwen/qwen3.6-plus
-      poe: qwen3.6-plus
-      vercel: alibaba/qwen3.6-plus
   deepseek-v4-flash:
     display_name: deepseek-v4-flash
     description: Deepseek v4 Flash model
     providers:
-      openrouter: deepseek/deepseek-v4-flash
-      kilo: deepseek/deepseek-v4-flash
-      fireworks: accounts/fireworks/models/deepseek-v4-flash
-      poe: deepseek-v4-flash-el
-      nvidia: deepseek-ai/deepseek-v4-flash
-      vercel: deepseek/deepseek-v4-flash
-      opencode-zen: deepseek-v4-flash-free
+      openrouter: deepseek/deepseek-v4-flash-0731
+      kilo: deepseek/deepseek-v4-flash-0731
+      fireworks: accounts/fireworks/models/deepseek-v4-flash-0731
+      poe: ds-v4-flash-0731-el
+      requesty: sference/deepseek-v4-flash-0731
   deepseek-v4-pro:
     display_name: deepseek-v4-pro
     description: Deepseek v4 Pro model
@@ -98,30 +44,14 @@ models:
       fireworks: accounts/fireworks/models/deepseek-v4-pro-0813
       opencode-go: openai/deepseek-v4-pro
       requesty: fireworks/deepseek-v4-pro-0813
-  qwen3.7-max:
-    display_name: qwen3.7-max
-    description: Qwen3.7-Max
-    providers:
-      openrouter: qwen/qwen3.7-max
-      kilo: qwen/qwen3.7-max
-      poe: qwen3.7-max-t
-      vercel: alibaba/qwen3.7-max
-      opencode-go: anthropic/qwen3.7-max
-  gemini-3.5-flash:
-    display_name: gemini-3.5-flash
-    description: Gemini 3.5 Flash
-    providers:
-      openrouter: google/gemini-3.5-flash
-      kilo: google/gemini-3.5-flash
-      poe: gemini-3.5-flash
-      vercel: google/gemini-3.5-flash
+      poe: deepseek-v4-pro-0813-el
   minimax-m3:
     display_name: minimax-m3
     description: Minimax M3
     providers:
       openrouter: minimax/minimax-m3
       vercel: minimax/minimax-m3
-      poe: minimax-m3-el
+      poe: minimax-m3
       nvidia: minimaxai/minimax-m3
       kilo: minimax/minimax-m3
       opencode-go: anthropic/minimax-m3
@@ -145,31 +75,6 @@ models:
       poe: claude-sonnet-4.6
       kilo: stealth/claude-sonnet-4.6
       requesty: anthropic/claude-sonnet-4-6
-  step-3.7-flash:
-    display_name: step-3.7-flash
-    description: ''
-    providers:
-      openrouter: stepfun/step-3.7-flash
-      vercel: stepfun/step-3.7-flash
-      nvidia: stepfun-ai/step-3.7-flash
-      kilo: stepfun/step-3.7-flash
-  qwen3.7-plus:
-    display_name: qwen3.7-plus
-    description: ''
-    providers:
-      openrouter: qwen/qwen3.7-plus
-      vercel: alibaba/qwen3.7-plus
-      poe: qwen3.7-plus
-      kilo: qwen/qwen3.7-plus
-      opencode-go: qwen3.7-plus
-  nemotron-3-ultra-550b-a55b:
-    display_name: nemotron-3-ultra-550b-a55b
-    description: ''
-    providers:
-      openrouter: nvidia/nemotron-3-ultra-550b-a55b:free
-      nvidia: nvidia/nemotron-3-ultra-550b-a55b
-      kilo: nvidia/nemotron-3-ultra-550b-a55b:free
-      opencode-zen: nemotron-3-ultra-free
   claude-haiku-4-5:
     display_name: claude-haiku-4-5
     description: ''
@@ -188,24 +93,6 @@ models:
       poe: kimi-k2.7-code
       kilo: moonshotai/kimi-k2.7-code
       opencode-go: openai/kimi-k2.7-code
-  glm-5.2:
-    display_name: glm-5.2
-    description: ''
-    providers:
-      openrouter: z-ai/glm-5.2
-      vercel: zai/glm-5.2
-      poe: glm-5.2
-      kilo: z-ai/glm-5.2
-      requesty: zai/glm-5.2
-      fireworks: accounts/fireworks/models/glm-5p2
-      opencode-go: openai/glm-5.2
-  north-mini-code:
-    display_name: north-mini-code
-    description: ''
-    providers:
-      openrouter: cohere/north-mini-code:free
-      kilo: cohere/north-mini-code:free
-      opencode-zen: north-mini-code-free
   claude-sonnet-5:
     display_name: claude-sonnet-5
     description: ''
@@ -220,36 +107,11 @@ models:
     description: ''
     providers:
       openrouter: moonshotai/kimi-k3
-      nvidia: moonshotai/kimi-k3
+      poe: kimi-k3
       kilo: moonshotai/kimi-k3
       fireworks: accounts/fireworks/models/kimi-k3
       opencode-go: openai/kimi-k3
       requesty: sference/kimi-k3
-  grok-4.5:
-    display_name: grok-4.5
-    description: ''
-    providers:
-      openrouter: x-ai/grok-4.5
-      kilo: x-ai/grok-4.5
-      opencode-go: openai/grok-4.5
-      requesty: xai/grok-4.5
-      poe: grok-4.5
-  inkling:
-    display_name: inkling
-    description: ''
-    providers:
-      openrouter: thinkingmachines/inkling
-      nvidia: thinkingmachines/inkling
-      kilo: thinkingmachines/inkling
-      requesty: thinkingmachines/inkling-256k
-      fireworks: accounts/fireworks/models/inkling
-  laguna-s-2.1:
-    display_name: laguna-s-2.1
-    description: ''
-    providers:
-      openrouter: poolside/laguna-s-2.1
-      kilo: poolside/laguna-s-2.1
-      opencode-zen: laguna-s-2.1-free
   hy3:
     display_name: hy3
     description: ''
@@ -259,6 +121,7 @@ models:
       opencode-go: openai/hy3
       opencode-zen: hy3-free
       requesty: novita/tencent/hy3
+      poe: hy3
   claude-opus-5:
     display_name: claude-opus-5
     description: ''
@@ -283,21 +146,7 @@ models:
       fireworks: accounts/fireworks/models/qwen3p8-max
       opencode-go: openai/qwen3.8-max
       requesty: alibaba/qwen3.8-max
-  longcat-2.0:
-    display_name: longcat-2.0
-    description: ''
-    providers:
-      openrouter: meituan/longcat-2.0
-      kilo: meituan/longcat-2.0
-      opencode-go: openai/longcat-2.0
-  ling-3.0-tiny:
-    display_name: ling-3.0-tiny
-    description: ''
-    providers:
-      openrouter: inclusionai/ling-3.0-tiny:free
-      kilo: inclusionai/ling-3.0-tiny:free
-      opencode-zen: ling-3.0-tiny-free
-      requesty: novita/inclusionai/ling-3.0-tiny
+      poe: qwen3.8-max-el
   nemotron-3.5-lightning:
     display_name: nemotron-3.5-lightning
     description: ''
@@ -313,6 +162,7 @@ models:
     description: ''
     providers:
       openrouter: google/gemini-3.7-flash
+      poe: gemini-3.7-flash
       kilo: google/gemini-3.7-flash
       requesty: vertex/gemini-3.7-flash
   glm-5.3:
@@ -324,6 +174,7 @@ models:
       fireworks: accounts/fireworks/models/glm-5p3
       opencode-go: openai/glm-5.3
       requesty: zai/glm-5.3
+      poe: glm-5.3-el
   deepseek-v4-flash-vision-exp:
     display_name: deepseek-v4-flash-vision-exp
     description: ''
@@ -331,19 +182,12 @@ models:
       openrouter: deepseek/deepseek-v4-flash-vision-exp
       kilo: deepseek/deepseek-v4-flash-vision-exp
       opencode-go: openai/deepseek-v4-flash-vision-exp
-  grok-4.6:
-    display_name: grok-4.6
-    description: ''
-    providers:
-      openrouter: x-ai/grok-4.6
-      kilo: x-ai/grok-4.6
-      opencode-go: openai/grok-4.6
-      requesty: xai/grok-4.6
   glm-5.3-flash:
     display_name: glm-5.3-flash
     description: ''
     providers:
       openrouter: z-ai/glm-5.3-flash
+      poe: glm-5.3-flash-el
       kilo: z-ai/glm-5.3-flash
       fireworks: accounts/fireworks/models/glm-5p3-flash
       opencode-go: openai/glm-5.3-flash
@@ -353,6 +197,7 @@ models:
     description: ''
     providers:
       openrouter: qwen/qwen3.8-flash
+      poe: qwen3.8-flash-el
       kilo: qwen/qwen3.8-flash
       opencode-go: anthropic/qwen3.8-flash
       requesty: alibaba/qwen3.8-flash
@@ -368,6 +213,7 @@ models:
     description: ''
     providers:
       openrouter: meta/muse-glimmer-30b
+      poe: muse-glimmer-30b-el
       kilo: meta/muse-glimmer-30b
       fireworks: accounts/fireworks/models/muse-glimmer-30b
       requesty: nvidia/muse-glimmer-30b

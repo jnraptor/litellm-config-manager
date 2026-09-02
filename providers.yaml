@@ -95,7 +95,7 @@ providers:
       api_key_env: POE_API_KEY
     api_key_env: POE_API_KEY
     order: 4
-    enabled: false
+    enabled: true
   nvidia:
     name: Nvidia
     description: Nvidia NIM model provider (free models)
