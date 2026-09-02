@@ -24,8 +24,9 @@ python cleanup_models.py --provider nvidia --add-model meta/llama-3.1-8b-instruc
 # Add model with custom name (single model only)
 python cleanup_models.py --provider openrouter --add-model gpt-4 --model-name "My GPT-4" [--dry-run]
 
-# Add mapped model across multiple providers (simplified workflow)
+# Add mapped models across multiple providers (simplified workflow, one or many)
 python cleanup_models.py --provider all --add-mapped-model glm-5 [--dry-run]
+python cleanup_models.py --provider all --add-mapped-model glm-5 glm-6 [--dry-run]
 
 # Delete models by model_name
 python cleanup_models.py --provider all --delete-model "model_name" [--dry-run]
@@ -33,8 +34,13 @@ python cleanup_models.py --provider all --delete-model "model_name" [--dry-run]
 # Delete a provider: remove its models from config.yaml and disable it in providers.yaml
 python cleanup_models.py --provider all --delete-provider "openrouter" [--dry-run]
 
-# Auto-populate models.yaml by fuzzy-matching a model across providers
+# Auto-populate models.yaml by fuzzy-matching one or more models across providers
 python populate_models.py minimax-m3 [--dry-run] [--force] [--provider openrouter,kilo]
+python populate_models.py minimax-m3 glm-5.1 [--dry-run]
+
+# Bypass or tune the on-disk HTTP cache (any cleanup/populate script)
+python cleanup_models.py --provider all --no-cache          # always fetch fresh
+python populate_models.py minimax-m3 --cache-ttl 3600       # 1-hour freshness window
 
 # List available mapped models
 grep -E "^[a-z0-9-]+:$" models.yaml | tr -d ':'
@@ -81,6 +87,9 @@ python populate_models.py minimax-m3 --dry-run
 # Apply
 python populate_models.py glm-5.1
 
+# Populate several models in one run (each provider API is hit only once)
+python populate_models.py minimax-m3 glm-5.1
+
 # Limit to specific providers
 python populate_models.py minimax-m3 --provider openrouter,kilo,vercel
 
@@ -102,7 +111,25 @@ python populate_models.py minimax-m3 --skip-existing
 `populate_models.py` rewrites the entire `models.yaml` file (via
 `yaml.dump`), so any hand-written comments will be lost. A `.yaml.backup` is
 written before each save. See `tests/test_populate_models.py` for the full
-matching test matrix.
+matching test matrix. `--display-name` / `--description` are only valid when
+populating a single model.
+
+### On-Disk HTTP Cache
+
+All HTTP fetches (models.dev `api.json` **and** every provider's models
+endpoint) go through `APIClient` in `cleanup_base.py`, which serves responses
+from three layers: in-memory (per process) → **on-disk cache** (`.cache/api/`,
+gitignored) → network. The disk cache is enabled by default with a 10-minute
+TTL, so repeated script runs within that window do not re-download anything.
+Cached files are keyed by a SHA-256 hash of the URL + headers (API keys are
+never written to disk) and stored atomically as
+`{"fetched_at": ..., "url": ..., "data": ...}`. TTL-expired or corrupt entries
+are treated as misses.
+
+Every script accepts `--no-cache` (bypass read + write entirely) and
+`--cache-ttl SECONDS` (override the freshness window). The cache is configured
+via `configure_disk_cache()` in `cleanup_base.py`; tests disable it globally
+in `tests/conftest.py`.
 
 ### Provider-Specific Scripts
 
@@ -221,12 +248,12 @@ populate_models.py
 
 - `get_nested_value(data, field_path)` — module-level utility for dot-notation dict access (e.g., `"pricing.prompt"`)
 - `costs_are_equal()` — relative-tolerance comparison for scientific notation floats
-- `APIClient` — HTTP fetch with retry logic and response caching
+- `APIClient` — HTTP fetch with retry logic and two cache layers (in-memory + on-disk via `configure_disk_cache()`; see "On-Disk HTTP Cache" above)
 - `ModelsDevClient` — fetches and caches cost data from `https://models.dev/api.json`; provides per-token costs (input, output, and cache read/write from `cost.cache_read` / `cost.cache_write`) for providers whose own APIs don't include pricing (e.g., Fireworks, OpenCode Zen, OpenCode Go)
 - `BaseModelCleaner` — abstract base with YAML load/save, sort, validate, cost update, add model
 - `ConfigDrivenModelCleaner` — reads `providers.yaml`; implements all abstract methods based on config; handles free variant logic via `_free_variant_suffix`; falls back to `ModelsDevClient` for pricing when `pricing.models_dev_id` is configured
 - `ModelMappingLoader` — loads and saves `models.yaml`; `save()` rewrites the whole file via `yaml.dump` (hand-written comments will be lost)
-- `ModelsPopulator` (`populate_models.py`) — fuzzy-matches a model key across all configured providers and writes the resulting mappings to `models.yaml` (via `ModelMappingLoader.save()`)
+- `ModelsPopulator` (`populate_models.py`) — fuzzy-matches one or more model keys across all configured providers (fetching each provider once per run) and writes the resulting mappings to `models.yaml` (via `ModelMappingLoader.save()`)
 - `create_provider_main(cleaner_class, description, epilog)` — factory that returns a `main()` function; used by all 8 provider scripts so each is ~48 lines
 
 **`providers.yaml`** — single source of truth for all provider settings:
@@ -243,7 +270,7 @@ populate_models.py
 - `special_models`: model IDs exempt from removal validation
 - `model_prefixes`: optional list of `{prefix, api_base}` mappings for providers that serve models under multiple prefixes (e.g., OpenCode Go with `openai/` and `anthropic/`)
 
-**`cleanup_models.py`** — `UnifiedModelCleaner` delegates to per-provider `ConfigDrivenModelCleaner` instances; handles multi-provider orchestration, the `--provider all` flag, model deletion via `--delete-model`, provider deletion via `--delete-provider`, and mapped model additions via `--add-mapped-model`.
+**`cleanup_models.py`** — `UnifiedModelCleaner` delegates to per-provider `ConfigDrivenModelCleaner` instances; handles multi-provider orchestration, the `--provider all` flag, model deletion via `--delete-model`, provider deletion via `--delete-provider`, and mapped model additions via `--add-mapped-model` (one or more keys; each provider is fetched once per run and the config is sorted + saved once at the end).
 
 **`models.yaml`** — defines canonical model mappings for simplified multi-provider addition:
 

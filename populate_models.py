@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """
-Populate models.yaml with a new model across all configured providers.
+Populate models.yaml with new model(s) across all configured providers.
 
 Fetches the available model list from every provider defined in
-``providers.yaml`` and tries to locate the given model key in each one using
+``providers.yaml`` and tries to locate each given model key in each one using
 fuzzy matching (so ``glm-5.1`` matches ``glm-5-1``, ``glm-5p1``, etc.). Writes
-the results back to ``models.yaml`` as a new (or updated) canonical mapping,
+the results back to ``models.yaml`` as new (or updated) canonical mappings,
 commenting out any provider where the model was not found.
 
 Usage:
@@ -16,6 +16,12 @@ Usage:
     python populate_models.py minimax-m3 --dry-run --verbose
     python populate_models.py minimax-m3 --force              # overwrite existing entry
     python populate_models.py minimax-m3 --skip-existing       # leave existing entry alone
+    python populate_models.py minimax-m3 glm-5.1               # multiple models in one run
+
+Provider model lists (and models.dev data) are cached on disk under
+``.cache/api/`` for 10 minutes by default, so repeated runs do not re-download
+them. Use ``--no-cache`` to bypass the cache and ``--cache-ttl`` to change the
+freshness window.
 """
 
 import argparse
@@ -31,6 +37,7 @@ from cleanup_base import (
     ModelMappingLoader,
     ProviderConfigLoader,
     _models_dev_client,
+    configure_disk_cache,
     setup_logging,
 )
 from cleanup_ollama_models import OllamaModelCleaner
@@ -258,9 +265,10 @@ def filter_free_models(
 
 class ModelsPopulator:
     """
-    Orchestrates populating ``models.yaml`` for a single canonical model key.
+    Orchestrates populating ``models.yaml`` for canonical model keys.
 
-    For each configured provider, fetches the available models, runs fuzzy
+    For each configured provider, fetches the available models (once per
+    provider per run, reused across all ``populate()`` calls), runs fuzzy
     matching, and records the result. The collected mappings are then written
     back to ``models.yaml`` via :class:`ModelMappingLoader`.
     """
@@ -277,6 +285,9 @@ class ModelsPopulator:
         self.providers_loader = ProviderConfigLoader(providers_config_path)
         self.mapping_loader = ModelMappingLoader(models_config_path)
         self._cleaners: dict[str, ConfigDrivenModelCleaner] = {}
+        # Per-provider fetch results (or exceptions), so populating multiple
+        # models in one run only hits each provider API once.
+        self._api_models_cache: dict[str, Any] = {}
 
     def _get_cleaner(
         self, provider_name: str, config_path: str
@@ -293,6 +304,33 @@ class ModelsPopulator:
             )
         self._cleaners[provider_name] = cleaner
         return cleaner
+
+    def _fetch_provider_models(
+        self, provider_name: str, config_path: str
+    ) -> dict[str, dict[str, Any]]:
+        """
+        Fetch (or reuse) the available-models list for a provider.
+
+        Results are cached per provider for the lifetime of this populator so
+        that populating multiple models in one run only hits each provider
+        API once. Fetch failures are cached too and re-raised on subsequent
+        requests for the same provider.
+        """
+        if provider_name in self._api_models_cache:
+            cached = self._api_models_cache[provider_name]
+            if isinstance(cached, Exception):
+                raise cached
+            return cached
+
+        try:
+            cleaner = self._get_cleaner(provider_name, config_path)
+            api_models = cleaner.fetch_available_models()
+        except Exception as exc:
+            self._api_models_cache[provider_name] = exc
+            raise
+
+        self._api_models_cache[provider_name] = api_models
+        return api_models
 
     def populate(
         self,
@@ -345,8 +383,7 @@ class ModelsPopulator:
         for provider_name in providers:
             self.logger.info(f"Checking {provider_name}...")
             try:
-                cleaner = self._get_cleaner(provider_name, config_path)
-                api_models = cleaner.fetch_available_models()
+                api_models = self._fetch_provider_models(provider_name, config_path)
             except Exception as exc:
                 self.logger.warning(
                     f"  Failed to fetch models from {provider_name}: {exc}"
@@ -421,23 +458,24 @@ class ModelsPopulator:
 def main() -> int:
     parser = argparse.ArgumentParser(
         description=(
-            "Populate models.yaml with a model across all providers, using "
-            "fuzzy matching to handle provider-specific naming variations."
+            "Populate models.yaml with one or more models across all providers, "
+            "using fuzzy matching to handle provider-specific naming variations."
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=__doc__,
     )
     parser.add_argument(
-        "model_key",
-        help="Canonical model key to look up (e.g. minimax-m3, glm-5.1)",
+        "model_keys",
+        nargs="+",
+        help="Canonical model key(s) to look up (e.g. minimax-m3 glm-5.1)",
     )
     parser.add_argument(
         "--display-name",
-        help="Display name to use (default: model_key)",
+        help="Display name to use (default: model_key; single model only)",
     )
     parser.add_argument(
         "--description",
-        help="Description for the model entry",
+        help="Description for the model entry (single model only)",
     )
     parser.add_argument(
         "--provider",
@@ -472,9 +510,32 @@ def main() -> int:
         action="store_true",
         help="Do not touch a pre-existing entry",
     )
+    parser.add_argument(
+        "--no-cache",
+        action="store_true",
+        help="Bypass the on-disk HTTP cache (fetch everything fresh)",
+    )
+    parser.add_argument(
+        "--cache-ttl",
+        type=float,
+        default=None,
+        metavar="SECONDS",
+        help="On-disk HTTP cache TTL in seconds (default: 600)",
+    )
 
     args = parser.parse_args()
     load_dotenv(override=True)
+
+    if (args.display_name or args.description) and len(args.model_keys) > 1:
+        parser.error(
+            "--display-name and --description can only be used when populating "
+            "a single model"
+        )
+
+    configure_disk_cache(
+        enabled=False if args.no_cache else None,
+        ttl=args.cache_ttl,
+    )
 
     provider_filter: list[str] | None = None
     if args.provider:
@@ -487,36 +548,47 @@ def main() -> int:
         verbose=args.verbose,
     )
 
-    try:
-        mapping = populator.populate(
-            model_key=args.model_key,
-            display_name=args.display_name,
-            description=args.description,
-            provider_filter=provider_filter,
-            force=args.force,
-            skip_existing=args.skip_existing,
-        )
-    except Exception as exc:
-        print(f"Error: {exc}", file=sys.stderr)
-        return 1
+    results: list[tuple[str, dict[str, Any] | None]] = []
+    failed = False
+    for model_key in args.model_keys:
+        try:
+            mapping = populator.populate(
+                model_key=model_key,
+                display_name=args.display_name,
+                description=args.description,
+                provider_filter=provider_filter,
+                force=args.force,
+                skip_existing=args.skip_existing,
+            )
+            results.append((model_key, mapping))
+        except Exception as exc:
+            print(f"Error: {exc}", file=sys.stderr)
+            results.append((model_key, None))
+            failed = True
 
-    providers_map = mapping.get("providers", {})
-    found = [p for p, v in providers_map.items() if v]
-    missing = [p for p, v in providers_map.items() if not v]
-    print(f"\n{'=' * 60}")
-    print(f"Populate Summary: {args.model_key}")
-    print(f"{'=' * 60}")
-    if found:
-        print(f"\nFound ({len(found)}):")
-        for p in sorted(found):
-            print(f"  {p}: {providers_map[p]}")
-    if missing:
-        print(f"\nNot found / commented ({len(missing)}):")
-        for p in sorted(missing):
-            print(f"  {p}")
+    for model_key, mapping in results:
+        print(f"\n{'=' * 60}")
+        print(f"Populate Summary: {model_key}")
+        print(f"{'=' * 60}")
+        if mapping is None:
+            print("\nFailed (see error above)")
+            continue
+        providers_map = mapping.get("providers", {})
+        found = [p for p, v in providers_map.items() if v]
+        missing = [p for p, v in providers_map.items() if not v]
+        if found:
+            print(f"\nFound ({len(found)}):")
+            for p in sorted(found):
+                print(f"  {p}: {providers_map[p]}")
+        if missing:
+            print(f"\nNot found / commented ({len(missing)}):")
+            for p in sorted(missing):
+                print(f"  {p}")
+
     if args.dry_run:
         print("\nDRY RUN: No changes written")
-    return 0
+
+    return 1 if failed else 0
 
 
 if __name__ == "__main__":

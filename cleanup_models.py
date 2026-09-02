@@ -24,8 +24,14 @@ Usage:
     python cleanup_models.py --provider all [--config config.yaml] [--dry-run] [--verbose]
     python cleanup_models.py --provider requesty --add-model "model1 model2"
     python cleanup_models.py --provider all --add-mapped-model glm-5 [--dry-run]
+    python cleanup_models.py --provider all --add-mapped-model glm-5 glm-6 [--dry-run]
     python cleanup_models.py --provider all --delete-model "model_name" [--dry-run]
     python cleanup_models.py --provider all --delete-provider "openrouter" [--dry-run]
+
+Provider model lists (and models.dev data) are cached on disk under
+``.cache/api/`` for 10 minutes by default, so repeated runs do not re-download
+them. Use ``--no-cache`` to bypass the cache and ``--cache-ttl`` to change the
+freshness window.
 
 Author: Unified script for LiteLLM Config Management
 """
@@ -45,6 +51,7 @@ from cleanup_base import (
     ProviderConfigLoader,
     ValidationReport,
     _print_validation_report,
+    configure_disk_cache,
     regenerate_opencode_json,
     setup_logging,
 )
@@ -290,6 +297,136 @@ class UnifiedModelCleaner:
 
         return results
 
+    def add_mapped_models(
+        self,
+        model_keys: list[str],
+        mapping_loader: ModelMappingLoader,
+        config: dict[str, Any] | None = None,
+    ) -> tuple[dict[str, Any], dict[str, dict[str, list[str]]]]:
+        """
+        Add multiple mapped models across all configured providers.
+
+        Uses the models.yaml mappings to add the same logical models from
+        multiple providers with shared display names for load balancing.
+        The config is loaded once, each provider's available models are
+        fetched at most once (reused across all model keys), and the sorted
+        config is saved once at the end.
+
+        Args:
+            model_keys: Canonical model keys from models.yaml
+            mapping_loader: The ModelMappingLoader instance
+            config: Optional pre-loaded config (will load if not provided)
+
+        Returns:
+            Tuple of (updated_config, dict of model_key -> dict of
+            provider -> list of added model IDs). Keys missing from
+            models.yaml are logged as errors and omitted from the results.
+        """
+        if config is None:
+            config = self.load_config()
+
+        # Resolve mappings upfront; unknown keys are reported and skipped.
+        valid_mappings: dict[str, dict[str, Any]] = {}
+        for model_key in model_keys:
+            mapping = mapping_loader.get_model_mapping(model_key)
+            if not mapping:
+                self.logger.error(
+                    f"Model '{model_key}' not found in models.yaml. "
+                    f"Available: {', '.join(mapping_loader.list_mapped_models())}"
+                )
+                continue
+            valid_mappings[model_key] = mapping
+
+        # Fetch each provider's available models at most once per run.
+        api_models_cache: dict[str, Any] = {}
+
+        def _fetch_api_models(provider_name: str) -> dict[str, dict[str, Any]]:
+            if provider_name not in api_models_cache:
+                try:
+                    api_models_cache[provider_name] = self.cleaners[
+                        provider_name
+                    ].fetch_available_models()
+                except Exception as e:
+                    api_models_cache[provider_name] = e
+            cached = api_models_cache[provider_name]
+            if isinstance(cached, Exception):
+                raise cached
+            return cached
+
+        added_by_model: dict[str, dict[str, list[str]]] = {}
+
+        for model_key, mapping in valid_mappings.items():
+            display_name = mapping.get("display_name", model_key)
+            provider_mappings = mapping.get("providers", {})
+
+            self.logger.info(f"\n{'=' * 60}")
+            self.logger.info(f"Adding mapped model: {model_key}")
+            self.logger.info(f"Display name: {display_name}")
+            self.logger.info(f"{'=' * 60}")
+
+            added_models_by_provider: dict[str, list[str]] = {}
+
+            for provider_name in self.provider_names:
+                provider_model_id = provider_mappings.get(provider_name)
+                if not provider_model_id:
+                    self.logger.info(f"\nSkipping {provider_name}: No mapping defined")
+                    continue
+
+                self.logger.info(f"\nProcessing {provider_name}: {provider_model_id}")
+
+                cleaner = self.cleaners.get(provider_name)
+                if not cleaner:
+                    self.logger.warning(f"No cleaner found for {provider_name}")
+                    continue
+
+                try:
+                    api_models = _fetch_api_models(provider_name)
+
+                    if self.dry_run:
+                        self.logger.info(
+                            f"  DRY RUN: Would add {provider_model_id} as '{display_name}'"
+                        )
+                        # Mapped IDs include LiteLLM routing prefixes (for example,
+                        # text-completion-openai/), while provider APIs return bare IDs.
+                        api_model_id = cleaner.get_api_model_id(provider_model_id)
+                        if api_model_id in api_models:
+                            added_models_by_provider[provider_name] = [
+                                provider_model_id
+                            ]
+                        else:
+                            self.logger.warning(
+                                f"  Model {provider_model_id} not found in {provider_name} API"
+                            )
+                    else:
+                        config, added = cleaner.add_model_to_config(
+                            config, [provider_model_id], api_models, display_name
+                        )
+                        if added:
+                            added_models_by_provider[provider_name] = added
+                            self.logger.info(
+                                f"  ✅ Added {len(added)} model(s) from {provider_name}"
+                            )
+                        else:
+                            self.logger.warning(
+                                f"  ⚠️ No models added from {provider_name}"
+                            )
+
+                except Exception as e:
+                    self.logger.error(f"  Error adding model from {provider_name}: {e}")
+                    added_models_by_provider[provider_name] = [f"Error: {e!s}"]
+
+            added_by_model[model_key] = added_models_by_provider
+
+        # Sort and save once after all additions
+        if not self.dry_run and any(
+            any(added for added in by_provider.values())
+            for by_provider in added_by_model.values()
+        ):
+            config, _ = self.sort_model_list(config)
+            self.save_config(config)
+
+        return config, added_by_model
+
     def add_mapped_model(
         self,
         model_key: str,
@@ -297,90 +434,24 @@ class UnifiedModelCleaner:
         config: dict[str, Any] | None = None,
     ) -> tuple[dict[str, Any], dict[str, list[str]]]:
         """
-        Add a mapped model across all configured providers.
+        Add a single mapped model across all configured providers.
 
-        Uses the models.yaml mapping to add the same logical model from multiple
-        providers with a shared display name for load balancing.
-
-        Args:
-            model_key: The canonical model key from models.yaml
-            mapping_loader: The ModelMappingLoader instance
-            config: Optional pre-loaded config (will load if not provided)
+        Thin wrapper over :meth:`add_mapped_models` kept for backwards
+        compatibility. Raises ValueError if the key is not in models.yaml.
 
         Returns:
             Tuple of (updated_config, dict of provider -> list of added model IDs)
         """
-        if config is None:
-            config = self.load_config()
-
-        mapping = mapping_loader.get_model_mapping(model_key)
-        if not mapping:
+        if not mapping_loader.get_model_mapping(model_key):
             raise ValueError(
                 f"Model '{model_key}' not found in models.yaml. "
                 f"Available: {', '.join(mapping_loader.list_mapped_models())}"
             )
 
-        display_name = mapping.get("display_name", model_key)
-        provider_mappings = mapping.get("providers", {})
-
-        self.logger.info(f"\n{'=' * 60}")
-        self.logger.info(f"Adding mapped model: {model_key}")
-        self.logger.info(f"Display name: {display_name}")
-        self.logger.info(f"{'=' * 60}")
-
-        added_models_by_provider: dict[str, list[str]] = {}
-
-        for provider_name in self.provider_names:
-            provider_model_id = provider_mappings.get(provider_name)
-            if not provider_model_id:
-                self.logger.info(f"\nSkipping {provider_name}: No mapping defined")
-                continue
-
-            self.logger.info(f"\nProcessing {provider_name}: {provider_model_id}")
-
-            cleaner = self.cleaners.get(provider_name)
-            if not cleaner:
-                self.logger.warning(f"No cleaner found for {provider_name}")
-                continue
-
-            try:
-                api_models = cleaner.fetch_available_models()
-
-                if self.dry_run:
-                    self.logger.info(
-                        f"  DRY RUN: Would add {provider_model_id} as '{display_name}'"
-                    )
-                    # Mapped IDs include LiteLLM routing prefixes (for example,
-                    # text-completion-openai/), while provider APIs return bare IDs.
-                    api_model_id = cleaner.get_api_model_id(provider_model_id)
-                    if api_model_id in api_models:
-                        added_models_by_provider[provider_name] = [provider_model_id]
-                    else:
-                        self.logger.warning(
-                            f"  Model {provider_model_id} not found in {provider_name} API"
-                        )
-                else:
-                    config, added = cleaner.add_model_to_config(
-                        config, [provider_model_id], api_models, display_name
-                    )
-                    if added:
-                        added_models_by_provider[provider_name] = added
-                        self.logger.info(
-                            f"  ✅ Added {len(added)} model(s) from {provider_name}"
-                        )
-                    else:
-                        self.logger.warning(f"  ⚠️ No models added from {provider_name}")
-
-            except Exception as e:
-                self.logger.error(f"  Error adding model from {provider_name}: {e}")
-                added_models_by_provider[provider_name] = [f"Error: {e!s}"]
-
-        # Sort after all additions
-        if not self.dry_run and any(added_models_by_provider.values()):
-            config, _ = self.sort_model_list(config)
-            self.save_config(config)
-
-        return config, added_models_by_provider
+        config, added_by_model = self.add_mapped_models(
+            [model_key], mapping_loader, config
+        )
+        return config, added_by_model.get(model_key, {})
 
     def delete_model_from_config(
         self,
@@ -594,6 +665,7 @@ Examples:
 
 Mapped Model Addition (simplified multi-provider workflow):
   %(prog)s --provider all --add-mapped-model glm-5         # Add glm-5 from all providers
+  %(prog)s --provider all --add-mapped-model glm-5 glm-6   # Add multiple mapped models
         """,
     )
 
@@ -626,7 +698,11 @@ Mapped Model Addition (simplified multi-provider workflow):
     )
     parser.add_argument(
         "--add-mapped-model",
-        help="Add a mapped model from models.yaml across configured providers (e.g., 'glm-5')",
+        nargs="+",
+        help=(
+            "Add one or more mapped models from models.yaml across configured "
+            "providers (e.g., 'glm-5' or 'glm-5 glm-6')"
+        ),
     )
     parser.add_argument(
         "--models-config",
@@ -651,11 +727,28 @@ Mapped Model Addition (simplified multi-provider workflow):
         action="store_true",
         help="Validate config.yaml structure without API calls (offline)",
     )
+    parser.add_argument(
+        "--no-cache",
+        action="store_true",
+        help="Bypass the on-disk HTTP cache (fetch everything fresh)",
+    )
+    parser.add_argument(
+        "--cache-ttl",
+        type=float,
+        default=None,
+        metavar="SECONDS",
+        help="On-disk HTTP cache TTL in seconds (default: 600)",
+    )
 
     args = parser.parse_args()
 
     try:
         load_dotenv(override=True)
+
+        configure_disk_cache(
+            enabled=False if args.no_cache else None,
+            ttl=args.cache_ttl,
+        )
 
         loader = ProviderConfigLoader()
         available_providers = loader.list_providers()
@@ -783,37 +876,43 @@ Mapped Model Addition (simplified multi-provider workflow):
         # Handle mapped model addition
         if args.add_mapped_model:
             mapping_loader = ModelMappingLoader(args.models_config)
-            config, added_by_provider = cleaner.add_mapped_model(
+            config, added_by_model = cleaner.add_mapped_models(
                 args.add_mapped_model, mapping_loader
             )
 
             print(f"\n{'=' * 60}")
-            print(f"Mapped Model Addition Summary: {args.add_mapped_model}")
+            print("Mapped Model Addition Summary")
             print(f"{'=' * 60}")
 
+            not_found = [k for k in args.add_mapped_model if k not in added_by_model]
+            if not_found:
+                print(f"\nNot found in {args.models_config}: {', '.join(not_found)}")
+
             total_added = 0
-            for provider_name, added_models in added_by_provider.items():
-                if added_models and not any(
-                    str(m).startswith("Error:") for m in added_models
-                ):
-                    count = len(added_models)
-                    total_added += count
-                    print(f"\n{provider_name}: {count} model(s) added")
-                    for model in added_models:
-                        print(f"  - {model}")
-                elif added_models and any(
-                    str(m).startswith("Error:") for m in added_models
-                ):
-                    print(f"\n{provider_name}: Error adding model")
-                    for msg in added_models:
-                        print(f"  - {msg}")
+            for model_key, added_by_provider in added_by_model.items():
+                print(f"\n{model_key}:")
+                for provider_name, added_models in added_by_provider.items():
+                    if added_models and not any(
+                        str(m).startswith("Error:") for m in added_models
+                    ):
+                        count = len(added_models)
+                        total_added += count
+                        print(f"\n{provider_name}: {count} model(s) added")
+                        for model in added_models:
+                            print(f"  - {model}")
+                    elif added_models and any(
+                        str(m).startswith("Error:") for m in added_models
+                    ):
+                        print(f"\n{provider_name}: Error adding model")
+                        for msg in added_models:
+                            print(f"  - {msg}")
 
             if args.dry_run:
                 print("\nDRY RUN: No actual changes were made")
             else:
                 print(f"\n✅ Total models added: {total_added}")
 
-            return 0
+            return 1 if not_found else 0
 
         if len(provider_names) == 1:
             provider_add_models = (

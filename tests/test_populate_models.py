@@ -904,5 +904,198 @@ class TestGetModelProviderNpm:
         assert result is None
 
 
+class TestPopulateMultipleModels:
+    """Tests for populating several models in one run (per-provider fetch reuse)."""
+
+    @staticmethod
+    def _make_providers_yaml(tmp_path):
+        providers = {
+            "providers": {
+                "alpha": {
+                    "name": "Alpha",
+                    "api_url": "https://alpha.test/v1/models",
+                    "model_prefix": "alpha/",
+                    "model_detection": {"type": "prefix", "value": "alpha/"},
+                    "pricing": {
+                        "input_field": "pricing.prompt",
+                        "output_field": "pricing.completion",
+                        "is_per_million": False,
+                        "free_model_handling": True,
+                    },
+                    "model_name_prefix": "",
+                    "model_name_cleanup": [],
+                    "special_models": [],
+                    "api_base_config": None,
+                    "api_key_env": None,
+                },
+                "beta": {
+                    "name": "Beta",
+                    "api_url": "https://beta.test/v1/models",
+                    "model_prefix": "beta/",
+                    "model_detection": {"type": "prefix", "value": "beta/"},
+                    "pricing": {
+                        "input_field": None,
+                        "output_field": None,
+                        "is_per_million": False,
+                        "free_model_handling": True,
+                        "default_cost": 1.0e-09,
+                    },
+                    "model_name_prefix": "",
+                    "model_name_cleanup": [],
+                    "special_models": [],
+                    "api_base_config": None,
+                    "api_key_env": None,
+                },
+            }
+        }
+        providers_path = tmp_path / "providers.yaml"
+        with open(providers_path, "w") as f:
+            yaml.dump(providers, f)
+        return providers_path
+
+    def test_multiple_models_reuse_provider_fetches(self, tmp_path, monkeypatch):
+        providers_path = self._make_providers_yaml(tmp_path)
+        models_path = tmp_path / "models.yaml"
+        models_path.write_text("models:\n")
+
+        from cleanup_base import ConfigDrivenModelCleaner
+
+        fetch_calls: list[str] = []
+
+        def fake_fetch(self):
+            key = self.PROVIDER_NAME.lower()
+            fetch_calls.append(key)
+            return {
+                "alpha": {
+                    "alpha/model-a": {"id": "alpha/model-a"},
+                    "alpha/model-b": {"id": "alpha/model-b"},
+                },
+                "beta": {
+                    "beta/model-a": {"id": "beta/model-a"},
+                    "beta/model-b": {"id": "beta/model-b"},
+                },
+            }.get(key, {})
+
+        monkeypatch.setattr(
+            ConfigDrivenModelCleaner, "fetch_available_models", fake_fetch
+        )
+
+        populator = ModelsPopulator(
+            providers_config_path=str(providers_path),
+            models_config_path=str(models_path),
+            dry_run=False,
+            verbose=False,
+        )
+
+        populator.populate("model-a")
+        populator.populate("model-b")
+
+        # Each provider hit exactly once across both models
+        assert sorted(fetch_calls) == ["alpha", "beta"]
+
+        loader = ModelMappingLoader(str(models_path))
+        mapping_a = loader.get_model_mapping("model-a")
+        mapping_b = loader.get_model_mapping("model-b")
+        assert mapping_a is not None
+        assert mapping_b is not None
+        assert mapping_a["providers"] == {
+            "alpha": "alpha/model-a",
+            "beta": "beta/model-a",
+        }
+        assert mapping_b["providers"] == {
+            "alpha": "alpha/model-b",
+            "beta": "beta/model-b",
+        }
+
+    def test_fetch_failure_cached_per_provider(self, tmp_path, monkeypatch):
+        providers_path = self._make_providers_yaml(tmp_path)
+        models_path = tmp_path / "models.yaml"
+        models_path.write_text("models:\n")
+
+        from cleanup_base import ConfigDrivenModelCleaner
+
+        calls = {"count": 0}
+
+        def failing_fetch(self):
+            if self.PROVIDER_NAME.lower() == "alpha":
+                calls["count"] += 1
+                raise RuntimeError("alpha down")
+            return {"beta/model-a": {"id": "beta/model-a"}}
+
+        monkeypatch.setattr(
+            ConfigDrivenModelCleaner, "fetch_available_models", failing_fetch
+        )
+
+        populator = ModelsPopulator(
+            providers_config_path=str(providers_path),
+            models_config_path=str(models_path),
+            dry_run=True,
+        )
+
+        populator.populate("model-a")
+        populator.populate("model-b")
+
+        # alpha's failure is cached; only one fetch attempt total
+        assert calls["count"] == 1
+
+
+class TestPopulateCli:
+    """Tests for populate_models.py main() CLI behavior."""
+
+    def test_display_name_with_multiple_models_is_rejected(self, monkeypatch):
+        from populate_models import main
+
+        monkeypatch.setattr(
+            sys,
+            "argv",
+            ["populate_models.py", "model-a", "model-b", "--display-name", "Shared"],
+        )
+        with pytest.raises(SystemExit) as excinfo:
+            main()
+        assert excinfo.value.code == 2
+
+    def test_description_with_multiple_models_is_rejected(self, monkeypatch):
+        from populate_models import main
+
+        monkeypatch.setattr(
+            sys,
+            "argv",
+            ["populate_models.py", "model-a", "model-b", "--description", "d"],
+        )
+        with pytest.raises(SystemExit) as excinfo:
+            main()
+        assert excinfo.value.code == 2
+
+    def test_main_continues_after_failure_and_returns_nonzero(
+        self, monkeypatch, capsys
+    ):
+        import populate_models
+
+        calls: list[str] = []
+
+        def fake_populate(self, model_key, **kwargs):
+            calls.append(model_key)
+            if model_key == "bad-model":
+                raise RuntimeError("boom")
+            return {
+                "display_name": model_key,
+                "description": "",
+                "providers": {"alpha": "alpha/x"},
+            }
+
+        monkeypatch.setattr(populate_models.ModelsPopulator, "populate", fake_populate)
+        monkeypatch.setattr(
+            sys, "argv", ["populate_models.py", "good-model", "bad-model"]
+        )
+
+        rc = populate_models.main()
+
+        assert rc == 1
+        assert calls == ["good-model", "bad-model"]
+        out = capsys.readouterr().out
+        assert "Populate Summary: good-model" in out
+        assert "Populate Summary: bad-model" in out
+
+
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])

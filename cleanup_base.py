@@ -20,6 +20,7 @@ Author: LiteLLM Config Management
 """
 
 import argparse
+import hashlib
 import json
 import logging
 import os
@@ -53,6 +54,7 @@ __all__ = [
     "ValidationSeverity",
     "adjust_cost_for_free_model",
     "build_opencode_models",
+    "configure_disk_cache",
     "costs_are_equal",
     "create_provider_main",
     "fetch_models_from_api",
@@ -241,6 +243,116 @@ FALLBACK_KNOWN_PREFIXES = frozenset(
 )
 
 
+@dataclass
+class DiskCacheConfig:
+    """Configuration for the on-disk HTTP response cache."""
+
+    enabled: bool = True
+    ttl: float = 600.0
+    directory: Path = Path(".cache/api")
+
+
+_disk_cache_config = DiskCacheConfig()
+
+
+def configure_disk_cache(
+    *,
+    enabled: bool | None = None,
+    ttl: float | None = None,
+    directory: str | Path | None = None,
+) -> None:
+    """
+    Configure the on-disk HTTP response cache used by all APIClient instances.
+
+    The cache is enabled by default with a 10-minute TTL and stores responses
+    in ``.cache/api/`` (gitignored). Call this early in a script's ``main()``
+    to honor CLI flags such as ``--no-cache`` / ``--cache-ttl``.
+
+    Args:
+        enabled: Whether to read/write the disk cache (None = keep current)
+        ttl: Max age in seconds for a cached response (None = keep current)
+        directory: Cache directory path (None = keep current)
+    """
+    if enabled is not None:
+        _disk_cache_config.enabled = enabled
+    if ttl is not None:
+        _disk_cache_config.ttl = ttl
+    if directory is not None:
+        _disk_cache_config.directory = Path(directory)
+
+
+def _disk_cache_path(cache_key: str) -> Path:
+    """Return the cache file path for a request cache key."""
+    digest = hashlib.sha256(cache_key.encode("utf-8")).hexdigest()
+    return _disk_cache_config.directory / f"{digest}.json"
+
+
+def _read_disk_cache(
+    url: str,
+    cache_key: str,
+    logger: logging.Logger | None = None,
+) -> dict[str, Any] | None:
+    """
+    Read a response from the disk cache if present and within TTL.
+
+    Returns the cached payload dict (``{"fetched_at": ..., "data": ...}``) or
+    None on miss/expiry/corruption. Never raises.
+    """
+    if not _disk_cache_config.enabled:
+        return None
+
+    path = _disk_cache_path(cache_key)
+    try:
+        if not path.is_file():
+            return None
+        with open(path, "r", encoding="utf-8") as file:
+            payload = json.load(file)
+        fetched_at = payload.get("fetched_at")
+        data = payload.get("data")
+        if not isinstance(fetched_at, (int, float)) or data is None:
+            return None
+        if time.time() - fetched_at > _disk_cache_config.ttl:
+            return None
+        if logger:
+            logger.debug(f"Disk cache hit for {url}")
+        return payload
+    except (OSError, ValueError, TypeError) as e:
+        if logger:
+            logger.debug(f"Disk cache read failed for {url}: {e}")
+        return None
+
+
+def _write_disk_cache(
+    url: str,
+    cache_key: str,
+    data: Any,
+    logger: logging.Logger | None = None,
+) -> None:
+    """
+    Write a response to the disk cache (best-effort; never raises).
+
+    The file is written atomically via a temporary file + rename so that
+    concurrent runs never observe a partially-written cache entry.
+    """
+    if not _disk_cache_config.enabled:
+        return
+
+    path = _disk_cache_path(cache_key)
+    tmp_path = path.with_name(path.name + ".tmp")
+    try:
+        tmp_path.parent.mkdir(parents=True, exist_ok=True)
+        with open(tmp_path, "w", encoding="utf-8") as file:
+            json.dump({"fetched_at": time.time(), "url": url, "data": data}, file)
+        tmp_path.replace(path)
+    except (OSError, ValueError, TypeError) as e:
+        if logger:
+            logger.debug(f"Disk cache write failed for {url}: {e}")
+        try:
+            tmp_path.unlink(missing_ok=True)
+        except OSError:
+            pass
+
+
 class APIClient:
     """
     HTTP client for API requests with retry logic and caching.
@@ -286,6 +398,10 @@ class APIClient:
         """
         Fetch JSON data from URL with retry logic.
 
+        Responses are served from (in order): the in-memory cache, the
+        on-disk cache (when enabled and within its TTL), and finally the
+        network. Successful network responses are written to both caches.
+
         Args:
             url: The URL to fetch
             headers: Optional request headers
@@ -304,6 +420,12 @@ class APIClient:
                 logger.debug(f"Using cached response for {url}")
             return self._cache[cache_key]
 
+        if self.use_cache:
+            payload = _read_disk_cache(url, cache_key, logger)
+            if payload is not None:
+                self._cache[cache_key] = payload["data"]
+                return payload["data"]
+
         last_exception = None
 
         for attempt in range(self.max_retries):
@@ -314,6 +436,7 @@ class APIClient:
 
                 if self.use_cache:
                     self._cache[cache_key] = data
+                    _write_disk_cache(url, cache_key, data, logger)
 
                 return data
 
@@ -639,9 +762,7 @@ class ModelsDevClient:
         modalities = self._parse_modalities(model.get("modalities"))
 
         if modalities and logger:
-            logger.debug(
-                f"Modalities from models.dev for {model_id}: {modalities}"
-            )
+            logger.debug(f"Modalities from models.dev for {model_id}: {modalities}")
 
         return modalities
 
@@ -835,8 +956,7 @@ def build_opencode_models(config: dict[str, Any]) -> dict[str, dict[str, Any]]:
                 merged: dict[str, list[str]] = {}
                 for side in ("input", "output"):
                     sides = [
-                        m.get(side) or []
-                        for m in (existing["modalities"], modalities)
+                        m.get(side) or [] for m in (existing["modalities"], modalities)
                     ]
                     # Dedupe while preserving first-seen order.
                     merged[side] = list(dict.fromkeys(sides[0] + sides[1]))
@@ -2063,9 +2183,7 @@ class BaseModelCleaner(ABC):
                 # Sync supports_* flags into model_info with ADDITIVE semantics:
                 # update when the source reports them, never delete when it
                 # stops (providers without a models.dev id rely on defaults).
-                api_supports = modalities_to_supports(
-                    api_model_info.get("modalities")
-                )
+                api_supports = modalities_to_supports(api_model_info.get("modalities"))
                 if api_supports:
                     current_supports = current_model_info or {}
                     new_flags = {
@@ -2076,9 +2194,7 @@ class BaseModelCleaner(ABC):
                     if new_flags:
                         limit_changed = True
                         change_info["changes"]["supports"] = {
-                            "old": {
-                                k: current_supports.get(k) for k in new_flags
-                            },
+                            "old": {k: current_supports.get(k) for k in new_flags},
                             "new": new_flags,
                         }
                         if current_model_info is None:
@@ -2549,6 +2665,20 @@ def setup_common_args(
     parser.add_argument(
         "--model-name",
         help="Custom model name to use when adding a single model. Only valid when --add-model is used with exactly one model.",
+    )
+
+    parser.add_argument(
+        "--no-cache",
+        action="store_true",
+        help="Bypass the on-disk HTTP cache (fetch everything fresh)",
+    )
+
+    parser.add_argument(
+        "--cache-ttl",
+        type=float,
+        default=None,
+        metavar="SECONDS",
+        help="On-disk HTTP cache TTL in seconds (default: 600)",
     )
 
 
@@ -3950,6 +4080,10 @@ def create_provider_main(cleaner_class, description: str, epilog: str = ""):
             help="Validate config.yaml structure without API calls (offline)",
         )
         args = parser.parse_args()
+        configure_disk_cache(
+            enabled=False if args.no_cache else None,
+            ttl=args.cache_ttl,
+        )
         validate_model_name_arg(args, parser)
 
         if args.validate:

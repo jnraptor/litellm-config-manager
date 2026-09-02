@@ -18,6 +18,7 @@ import requests
 from cleanup_base import (
     ConfigDrivenModelCleaner,
     ModelsDevClient,
+    configure_disk_cache,
 )
 
 # Sample models.dev API response structure
@@ -304,6 +305,36 @@ class TestModelsDevClient:
 
         client._ensure_loaded()  # Should not retry
         assert client._data is None  # Still None
+
+    @patch.object(requests.Session, "get")
+    def test_disk_cache_shared_across_clients(self, mock_get, tmp_path):
+        """A second ModelsDevClient is served from the on-disk HTTP cache."""
+        configure_disk_cache(enabled=True, directory=tmp_path / "cache")
+        mock_response = Mock()
+        mock_response.json.return_value = SAMPLE_MODELS_DEV_DATA
+        mock_response.raise_for_status = Mock()
+        mock_get.return_value = mock_response
+
+        first = ModelsDevClient()
+        first.get_provider_models("fireworks-ai")
+        second = ModelsDevClient()
+        second.get_provider_models("fireworks-ai")
+
+        assert mock_get.call_count == 1
+
+    @patch.object(requests.Session, "get")
+    def test_disk_cache_bypassed_when_disabled(self, mock_get, tmp_path):
+        """With the disk cache disabled, each client refetches from network."""
+        configure_disk_cache(enabled=False, directory=tmp_path / "cache")
+        mock_response = Mock()
+        mock_response.json.return_value = SAMPLE_MODELS_DEV_DATA
+        mock_response.raise_for_status = Mock()
+        mock_get.return_value = mock_response
+
+        ModelsDevClient().get_provider_models("fireworks-ai")
+        ModelsDevClient().get_provider_models("fireworks-ai")
+
+        assert mock_get.call_count == 2
 
     def test_clear_cache(self):
         """Test cache clearing allows fresh fetch."""

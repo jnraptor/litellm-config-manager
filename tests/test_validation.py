@@ -578,8 +578,7 @@ class TestValidateConfig:
         # Warning-level only: no errors
         assert not report.has_errors
         assert any(
-            i.category == "supports"
-            and i.severity == ValidationSeverity.WARNING
+            i.category == "supports" and i.severity == ValidationSeverity.WARNING
             for i in report.issues
         )
 
@@ -617,9 +616,7 @@ class TestValidateConfig:
         }
         report = cleaner.validate_config(config)
         assert not report.has_errors
-        supports_issues = [
-            i for i in report.issues if i.category == "supports"
-        ]
+        supports_issues = [i for i in report.issues if i.category == "supports"]
         assert supports_issues
         assert any("must be a boolean" in i.message for i in supports_issues)
 

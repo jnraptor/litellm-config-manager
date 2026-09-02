@@ -182,6 +182,7 @@ models:
       openrouter: deepseek/deepseek-v4-flash-vision-exp
       kilo: deepseek/deepseek-v4-flash-vision-exp
       opencode-go: openai/deepseek-v4-flash-vision-exp
+      fireworks: accounts/fireworks/models/deepseek-v4-flash-vision-exp
   glm-5.3-flash:
     display_name: glm-5.3-flash
     description: ''

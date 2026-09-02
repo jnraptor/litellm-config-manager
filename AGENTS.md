@@ -38,7 +38,9 @@ pytest tests/ -v --cov=. --cov-report=term
 - `test_validation.py` — Config validation (ValidationReport, validate_config, --validate CLI)
 - `test_models_dev.py` — ModelsDevClient and models.dev cost augmentation tests
 - `test_opencode_sync.py` — opencode.json regeneration (`build_opencode_models`, `regenerate_opencode_json`, save_config hook)
-- `test_populate_models.py` — populate_models.py fuzzy matching and YAML block editing
+- `test_populate_models.py` — populate_models.py fuzzy matching, multi-model population, and YAML block editing
+
+Note: `tests/conftest.py` disables the on-disk HTTP cache (`.cache/api/`) for all tests; cache-specific tests re-enable it with a per-test `tmp_path` directory.
 
 ### Test Coverage
 
@@ -57,7 +59,7 @@ Current coverage: ~72%
 - **cleanup_base.py** — All shared logic (~2444 lines)
 - **cleanup_models.py** — Unified cleanup script
 - **cleanup_opencode_go_models.py** — OpenCode Go provider script (multi-prefix support)
-- **populate_models.py** — Auto-populate `models.yaml` with a model across all providers using fuzzy matching
+- **populate_models.py** — Auto-populate `models.yaml` with one or more models across all providers using fuzzy matching
 
 ## Key Classes
 
@@ -66,7 +68,8 @@ Current coverage: ~72%
 - `UnifiedModelCleaner` — Multi-provider orchestration (cleanup, add mapped models, delete models by name)
 - `ModelMappingLoader` — Loads and saves model mappings from `models.yaml` (full rewrite via `yaml.dump`)
 - `ModelsDevClient` — Fetches cost data (input, output, cache read/write) and modalities from models.dev API for providers without pricing
+- `configure_disk_cache()` — Configures the on-disk HTTP cache in `cleanup_base.py` (default: on, 10-minute TTL, `.cache/api/`); CLI scripts expose `--no-cache` / `--cache-ttl`
 - `build_opencode_models()` / `regenerate_opencode_json()` — module-level functions in `cleanup_base.py` that rebuild `provider.litellm.models` in `opencode.json` from `config.yaml` on every save (both unified and per-provider scripts)
-- `ModelsPopulator` — Populates `models.yaml` for a single model key across all providers
+- `ModelsPopulator` — Populates `models.yaml` for one or more model keys across all providers (each provider fetched once per run)
 
 For full details, see [CLAUDE.md](./CLAUDE.md).

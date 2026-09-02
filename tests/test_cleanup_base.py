@@ -3,7 +3,9 @@
 Tests for cleanup_base.py utilities and base classes.
 """
 
+import json
 import logging
+import time
 from unittest.mock import Mock, patch
 
 import pytest
@@ -12,7 +14,9 @@ import requests
 from cleanup_base import (
     APIClient,
     ProviderConfigLoader,
+    _disk_cache_path,
     adjust_cost_for_free_model,
+    configure_disk_cache,
     costs_are_equal,
     fetch_models_from_api,
     setup_logging,
@@ -376,3 +380,127 @@ class TestPruneSpecialModels:
 
         assert removed == []
         assert "special_models" not in loader.get_provider_config("openrouter")
+
+
+class TestDiskCache:
+    """Tests for the on-disk HTTP response cache layer in APIClient."""
+
+    @staticmethod
+    def _mock_response(payload):
+        response = Mock()
+        response.json.return_value = payload
+        response.raise_for_status = Mock()
+        return response
+
+    @patch.object(requests.Session, "get")
+    def test_disk_cache_hit_across_clients(self, mock_get, tmp_path):
+        """A second APIClient instance is served from disk without HTTP."""
+        configure_disk_cache(enabled=True, directory=tmp_path / "cache")
+        mock_get.return_value = self._mock_response({"data": [{"id": "model1"}]})
+
+        first = APIClient()
+        result1 = first.fetch("https://api.example.com/models")
+        second = APIClient()
+        result2 = second.fetch("https://api.example.com/models")
+
+        assert result1 == result2 == {"data": [{"id": "model1"}]}
+        assert mock_get.call_count == 1
+
+    @patch.object(requests.Session, "get")
+    def test_disk_cache_disabled_never_touches_disk(self, mock_get, tmp_path):
+        configure_disk_cache(enabled=False, directory=tmp_path / "cache")
+        mock_get.return_value = self._mock_response({"data": []})
+
+        APIClient().fetch("https://api.example.com/models")
+        APIClient().fetch("https://api.example.com/models")
+
+        assert mock_get.call_count == 2
+        assert not (tmp_path / "cache").exists()
+
+    @patch.object(requests.Session, "get")
+    def test_use_cache_false_skips_disk(self, mock_get, tmp_path):
+        configure_disk_cache(enabled=True, directory=tmp_path / "cache")
+        mock_get.return_value = self._mock_response({"data": []})
+
+        APIClient(use_cache=False).fetch("https://api.example.com/models")
+        APIClient(use_cache=False).fetch("https://api.example.com/models")
+
+        assert mock_get.call_count == 2
+        assert not (tmp_path / "cache").exists()
+
+    @patch.object(requests.Session, "get")
+    def test_disk_cache_ttl_expiry_triggers_refetch(self, mock_get, tmp_path):
+        configure_disk_cache(enabled=True, directory=tmp_path / "cache")
+        url = "https://api.example.com/models"
+        path = _disk_cache_path(APIClient()._get_cache_key(url, None))
+        path.parent.mkdir(parents=True, exist_ok=True)
+        stale = {"fetched_at": time.time() - 10_000, "url": url, "data": {"data": []}}
+        path.write_text(json.dumps(stale))
+
+        mock_get.return_value = self._mock_response({"data": [{"id": "fresh"}]})
+
+        result = APIClient().fetch(url)
+
+        assert result == {"data": [{"id": "fresh"}]}
+        assert mock_get.call_count == 1
+
+    @patch.object(requests.Session, "get")
+    def test_disk_cache_respects_custom_ttl(self, mock_get, tmp_path):
+        configure_disk_cache(enabled=True, directory=tmp_path / "cache", ttl=60)
+        url = "https://api.example.com/models"
+        path = _disk_cache_path(APIClient()._get_cache_key(url, None))
+        path.parent.mkdir(parents=True, exist_ok=True)
+        # 61s old — just past the 60s TTL → miss
+        stale = {"fetched_at": time.time() - 61, "url": url, "data": {"data": []}}
+        path.write_text(json.dumps(stale))
+
+        mock_get.return_value = self._mock_response({"data": [{"id": "fresh"}]})
+
+        APIClient().fetch(url)
+        assert mock_get.call_count == 1
+
+        # The refetch above rewrote the entry; a new client is served from disk
+        APIClient().fetch(url)
+        assert mock_get.call_count == 1
+
+    @patch.object(requests.Session, "get")
+    def test_disk_cache_corrupt_file_treated_as_miss(self, mock_get, tmp_path):
+        configure_disk_cache(enabled=True, directory=tmp_path / "cache")
+        url = "https://api.example.com/models"
+        path = _disk_cache_path(APIClient()._get_cache_key(url, None))
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text("{not valid json")
+
+        mock_get.return_value = self._mock_response({"data": [{"id": "fresh"}]})
+
+        result = APIClient().fetch(url)
+
+        assert result == {"data": [{"id": "fresh"}]}
+        assert mock_get.call_count == 1
+
+    @patch.object(requests.Session, "get")
+    def test_disk_cache_does_not_store_headers(self, mock_get, tmp_path):
+        """API keys passed via headers must never reach the cache file."""
+        configure_disk_cache(enabled=True, directory=tmp_path / "cache")
+        mock_get.return_value = self._mock_response({"data": []})
+
+        APIClient().fetch(
+            "https://api.example.com/models",
+            headers={"Authorization": "Bearer super-secret-key"},
+        )
+
+        cache_dir = tmp_path / "cache"
+        contents = "".join(p.read_text() for p in cache_dir.glob("*.json"))
+        assert "super-secret-key" not in contents
+
+    @patch.object(requests.Session, "get")
+    def test_disk_cache_write_failure_never_raises(self, mock_get, tmp_path):
+        """An unwritable cache directory must not break the fetch."""
+        configure_disk_cache(enabled=True, directory=tmp_path / "blocker" / "cache")
+        (tmp_path / "blocker").write_text("not a directory")
+        mock_get.return_value = self._mock_response({"data": [{"id": "ok"}]})
+
+        result = APIClient().fetch("https://api.example.com/models")
+
+        assert result == {"data": [{"id": "ok"}]}
+        assert mock_get.call_count == 1

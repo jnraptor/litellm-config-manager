@@ -39,7 +39,9 @@ def reset_singletons():
     ProviderConfigLoader._config_path = None
 
 
-def make_entry(name, model_id, mode=None, max_input=None, max_output=None, supports=None):
+def make_entry(
+    name, model_id, mode=None, max_input=None, max_output=None, supports=None
+):
     entry = {
         "model_name": name,
         "litellm_params": {"model": model_id, "order": 5},
@@ -93,7 +95,9 @@ class TestBuildOpencodeModels:
         config = {
             "model_list": [
                 make_entry("glm-5", "openrouter/z-ai/glm-5", max_input=100000),
-                make_entry("glm-5", "kilo/z-ai/glm-5", max_input=202752, max_output=8192),
+                make_entry(
+                    "glm-5", "kilo/z-ai/glm-5", max_input=202752, max_output=8192
+                ),
             ]
         }
 
@@ -112,9 +116,7 @@ class TestBuildOpencodeModels:
 
     def test_partial_limits_omitted(self):
         """A limit with only one side is schema-invalid, so it is omitted."""
-        config = {
-            "model_list": [make_entry("m1", "openrouter/m1", max_output=4096)]
-        }
+        config = {"model_list": [make_entry("m1", "openrouter/m1", max_output=4096)]}
 
         models = build_opencode_models(config)
 
@@ -178,9 +180,7 @@ class TestBuildOpencodeModels:
         config = {
             "model_list": [
                 make_entry("m", "openrouter/m"),
-                make_entry(
-                    "m", "kilo/m", supports={"supports_vision": True}
-                ),
+                make_entry("m", "kilo/m", supports={"supports_vision": True}),
             ]
         }
 

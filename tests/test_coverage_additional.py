@@ -1000,6 +1000,104 @@ class TestIntegration:
         assert entry["litellm_params"]["model"] == "openai/gpt-5.6-luna"
         assert entry["litellm_params"]["api_base"] == ("https://opencode.ai/zen/go/v1")
 
+    def test_add_mapped_models_multiple_keys_fetch_once(self, monkeypatch, tmp_path):
+        """Multiple mapped models share one fetch per provider and one save."""
+        from cleanup_models import UnifiedModelCleaner
+
+        models_file = tmp_path / "models.yaml"
+        models_file.write_text(
+            "models:\n"
+            "  model-a:\n"
+            "    display_name: model-a\n"
+            "    providers:\n"
+            "      opencode-go: openai/model-a\n"
+            "  model-b:\n"
+            "    display_name: model-b\n"
+            "    providers:\n"
+            "      opencode-go: openai/model-b\n"
+        )
+        loader = ModelMappingLoader(str(models_file))
+        cleaner = UnifiedModelCleaner(
+            config_path="config.yaml",
+            provider_names=["opencode-go"],
+            dry_run=False,
+        )
+        fetch_calls: list[int] = []
+
+        def fake_fetch():
+            fetch_calls.append(1)
+            return {"model-a": {"id": "model-a"}, "model-b": {"id": "model-b"}}
+
+        monkeypatch.setattr(
+            cleaner.cleaners["opencode-go"], "fetch_available_models", fake_fetch
+        )
+        monkeypatch.setattr(
+            cleaner.cleaners["opencode-go"],
+            "add_model_to_config",
+            lambda config, model_ids, api_models, display_name: (
+                config,
+                list(model_ids),
+            ),
+        )
+        save_calls: list[dict] = []
+        monkeypatch.setattr(
+            cleaner, "save_config", lambda config: save_calls.append(config)
+        )
+
+        _, added_by_model = cleaner.add_mapped_models(["model-a", "model-b"], loader)
+
+        assert len(fetch_calls) == 1
+        assert added_by_model["model-a"]["opencode-go"] == ["openai/model-a"]
+        assert added_by_model["model-b"]["opencode-go"] == ["openai/model-b"]
+        assert len(save_calls) == 1
+
+    def test_add_mapped_models_unknown_key_continues(self, monkeypatch, tmp_path):
+        """Keys missing from models.yaml are logged and skipped, not fatal."""
+        from cleanup_models import UnifiedModelCleaner
+
+        models_file = tmp_path / "models.yaml"
+        models_file.write_text(
+            "models:\n"
+            "  model-a:\n"
+            "    display_name: model-a\n"
+            "    providers:\n"
+            "      opencode-go: openai/model-a\n"
+        )
+        loader = ModelMappingLoader(str(models_file))
+        cleaner = UnifiedModelCleaner(
+            config_path="config.yaml",
+            provider_names=["opencode-go"],
+            dry_run=True,
+        )
+        monkeypatch.setattr(
+            cleaner.cleaners["opencode-go"],
+            "fetch_available_models",
+            lambda: {"model-a": {"id": "model-a"}},
+        )
+
+        _, added_by_model = cleaner.add_mapped_models(
+            ["does-not-exist", "model-a"], loader
+        )
+
+        assert "does-not-exist" not in added_by_model
+        assert added_by_model["model-a"]["opencode-go"] == ["openai/model-a"]
+
+    def test_add_mapped_model_unknown_key_raises(self, tmp_path):
+        """Backwards-compatible single-model wrapper still raises ValueError."""
+        from cleanup_models import UnifiedModelCleaner
+
+        models_file = tmp_path / "models.yaml"
+        models_file.write_text("models:\n")
+        loader = ModelMappingLoader(str(models_file))
+        cleaner = UnifiedModelCleaner(
+            config_path="config.yaml",
+            provider_names=["opencode-go"],
+            dry_run=True,
+        )
+
+        with pytest.raises(ValueError):
+            cleaner.add_mapped_model("missing", loader)
+
 
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])

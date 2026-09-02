@@ -401,9 +401,7 @@ class TestCostValidation:
 
     def test_supports_flags_updated_in_model_info(self, cleaner, sample_config):
         """Test that new supports_* flags are added when the source reports them."""
-        sample_config["model_list"][0]["model_info"] = {
-            "supports_vision": True
-        }
+        sample_config["model_list"][0]["model_info"] = {"supports_vision": True}
         config_models = [(0, "test/model1", "model-1")]
         api_models = {
             "model1": {
@@ -422,18 +420,16 @@ class TestCostValidation:
         )
 
         assert len(changes) == 1
-        assert changes[0]["changes"]["supports"]["new"] == {
-            "supports_pdf_input": True
-        }
+        assert changes[0]["changes"]["supports"]["new"] == {"supports_pdf_input": True}
         model_info = updated_config["model_list"][0]["model_info"]
         assert model_info["supports_vision"] is True
         assert model_info["supports_pdf_input"] is True
 
-    def test_supports_flags_not_removed_when_source_silent(self, cleaner, sample_config):
+    def test_supports_flags_not_removed_when_source_silent(
+        self, cleaner, sample_config
+    ):
         """ADDITIVE semantics: supports_* flags survive when the API stops reporting."""
-        sample_config["model_list"][0]["model_info"] = {
-            "supports_vision": True
-        }
+        sample_config["model_list"][0]["model_info"] = {"supports_vision": True}
         config_models = [(0, "test/model1", "model-1")]
         # API omits modalities entirely (e.g. provider without a models.dev id)
         api_models = {
