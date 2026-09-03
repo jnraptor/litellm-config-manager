@@ -81,21 +81,6 @@
             ]
           }
         },
-        "big-pickle": {
-          "name": "big-pickle",
-          "limit": {
-            "context": 200000,
-            "output": 32000
-          },
-          "modalities": {
-            "input": [
-              "text"
-            ],
-            "output": [
-              "text"
-            ]
-          }
-        },
         "claude-haiku-4-5": {
           "name": "claude-haiku-4-5",
           "limit": {
@@ -427,38 +412,6 @@
             "input": [
               "text",
               "image"
-            ],
-            "output": [
-              "text"
-            ]
-          }
-        },
-        "mimo-v2.5": {
-          "name": "mimo-v2.5",
-          "limit": {
-            "context": 1050000,
-            "output": 131072
-          },
-          "modalities": {
-            "input": [
-              "text",
-              "image",
-              "audio"
-            ],
-            "output": [
-              "text"
-            ]
-          }
-        },
-        "mimo-v2.5-pro": {
-          "name": "mimo-v2.5-pro",
-          "limit": {
-            "context": 1050000,
-            "output": 131072
-          },
-          "modalities": {
-            "input": [
-              "text"
             ],
             "output": [
               "text"

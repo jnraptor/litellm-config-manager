@@ -230,6 +230,7 @@ providers:
       api_key_env: OPENCODE_API_KEY
     api_key_env: OPENCODE_API_KEY
     order: 5
+    enabled: false
   opencode-go:
     name: OpenCode Go
     description: OpenCode Go model provider (OpenAI and Anthropic compatible APIs)

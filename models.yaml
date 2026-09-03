@@ -1,21 +1,4 @@
 models:
-  mimo-v2.5:
-    display_name: mimo-v2.5
-    description: mimo-v2.5
-    providers:
-      openrouter: xiaomi/mimo-v2.5
-      kilo: xiaomi/mimo-v2.5
-      poe: mimo-v2.5-el
-      vercel: xiaomi/mimo-v2.5
-      opencode-zen: mimo-v2.5-free
-  mimo-v2.5-pro:
-    display_name: mimo-v2.5-pro
-    description: mimo-v2.5-pro
-    providers:
-      openrouter: xiaomi/mimo-v2.5-pro
-      kilo: xiaomi/mimo-v2.5-pro
-      poe: mimo-v2.5-pro
-      vercel: xiaomi/mimo-v2.5-pro
   kimi-k2.6:
     display_name: kimi-k2.6
     description: GLM-5 model by Z.ai
