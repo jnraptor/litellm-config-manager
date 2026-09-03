@@ -201,3 +201,11 @@ models:
       kilo: meta/muse-glimmer-30b
       fireworks: accounts/fireworks/models/muse-glimmer-30b
       requesty: nvidia/muse-glimmer-30b
+  gemini-3.8-flash:
+    display_name: gemini-3.8-flash
+    description: ''
+    providers:
+      openrouter: google/gemini-3.8-flash
+      poe: gemini-3.8-flash
+      kilo: google/gemini-3.8-flash
+      requesty: vertex/gemini-3.8-flash

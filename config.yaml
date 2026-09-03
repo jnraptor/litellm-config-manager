@@ -504,59 +504,59 @@ model_list:
   model_name: gemini-3.5-flash-lite
 - litellm_params:
     api_key: os.environ/GEMINI_API_KEY
-    model: gemini/gemini-3.7-flash
+    model: gemini/gemini-3.8-flash
     order: 3
-  model_name: gemini-3.7-flash
-- litellm_params:
+  model_name: gemini-3.8-flash
+- model_name: gemini-3.8-flash
+  litellm_params:
+    model: openai/google/gemini-3.8-flash
+    order: 4
     api_base: https://api.kilo.ai/api/gateway
     api_key: os.environ/KILO_API_KEY
+    input_cost_per_token: 7.5e-07
+    output_cost_per_token: 3.75e-06
     cache_creation_input_token_cost: 4.1667e-08
     cache_read_input_token_cost: 7.5e-08
-    input_cost_per_token: 7.5e-07
-    model: openai/google/gemini-3.7-flash
-    order: 4
-    output_cost_per_token: 3.75e-06
   model_info:
     max_input_tokens: 1048576
     max_output_tokens: 65536
     supports_vision: true
     supports_pdf_input: true
     supports_audio_input: true
-  model_name: gemini-3.7-flash
-- model_name: gemini-3.7-flash
+- model_name: gemini-3.8-flash
   litellm_params:
-    model: poe/gemini-3.7-flash
+    model: poe/gemini-3.8-flash
     order: 4
     api_key: os.environ/POE_API_KEY
     input_cost_per_token: 7.576e-07
     output_cost_per_token: 3.7879e-06
     cache_read_input_token_cost: 7.58e-08
-- litellm_params:
+- model_name: gemini-3.8-flash
+  litellm_params:
+    model: openai/vertex/gemini-3.8-flash
+    order: 5
     api_base: https://router.requesty.ai/v1
     api_key: os.environ/REQUESTY_API_KEY
-    cache_read_input_token_cost: 7.5e-08
     input_cost_per_token: 7.5e-07
-    model: openai/vertex/gemini-3.7-flash
-    order: 5
     output_cost_per_token: 3.75e-06
+    cache_read_input_token_cost: 7.5e-08
   model_info:
     max_input_tokens: 1048576
     max_output_tokens: 65535
-  model_name: gemini-3.7-flash
-- litellm_params:
+- model_name: gemini-3.8-flash
+  litellm_params:
+    model: openrouter/google/gemini-3.8-flash
+    order: 5
+    input_cost_per_token: 7.5e-07
+    output_cost_per_token: 3.75e-06
     cache_creation_input_token_cost: 4.16666666666667e-08
     cache_read_input_token_cost: 7.5e-08
-    input_cost_per_token: 7.5e-07
-    model: openrouter/google/gemini-3.7-flash
-    order: 5
-    output_cost_per_token: 3.75e-06
   model_info:
     max_input_tokens: 1048576
     max_output_tokens: 65536
     supports_vision: true
     supports_pdf_input: true
     supports_audio_input: true
-  model_name: gemini-3.7-flash
 - model_name: glm-5.3
   litellm_params:
     model: fireworks_ai/accounts/fireworks/models/glm-5p3
