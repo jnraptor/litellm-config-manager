@@ -209,3 +209,12 @@ models:
       poe: gemini-3.8-flash
       kilo: google/gemini-3.8-flash
       requesty: vertex/gemini-3.8-flash
+  inkling:
+    display_name: inkling
+    description: ''
+    providers:
+      openrouter: thinkingmachines/inkling
+      poe: inkling
+      kilo: thinkingmachines/inkling
+      fireworks: accounts/fireworks/models/inkling
+      requesty: thinkingmachines/inkling

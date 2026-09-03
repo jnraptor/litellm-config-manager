@@ -370,6 +370,23 @@
             ]
           }
         },
+        "inkling": {
+          "name": "inkling",
+          "limit": {
+            "context": 1048576,
+            "output": 1048576
+          },
+          "modalities": {
+            "input": [
+              "text",
+              "image",
+              "audio"
+            ],
+            "output": [
+              "text"
+            ]
+          }
+        },
         "kimi-k2.6": {
           "name": "kimi-k2.6",
           "limit": {
