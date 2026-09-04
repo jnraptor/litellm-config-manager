@@ -287,7 +287,7 @@ providers:
   requesty:
     name: Requesty
     description: Requesty AI model provider
-    api_url: https://router.requesty.ai/v1/models
+    api_url: https://router.requesty.ai/v1/models/managed
     model_prefix: openai/
     model_detection:
       type: api_base
