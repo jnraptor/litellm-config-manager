@@ -466,38 +466,6 @@
             ]
           }
         },
-        "mistral-medium-3-5": {
-          "name": "mistral-medium-3-5",
-          "limit": {
-            "context": 262144,
-            "output": 262144
-          },
-          "modalities": {
-            "input": [
-              "text",
-              "image"
-            ],
-            "output": [
-              "text"
-            ]
-          }
-        },
-        "mistral-small-4": {
-          "name": "mistral-small-4",
-          "limit": {
-            "context": 256000,
-            "output": 256000
-          },
-          "modalities": {
-            "input": [
-              "text",
-              "image"
-            ],
-            "output": [
-              "text"
-            ]
-          }
-        },
         "muse-glimmer-30b": {
           "name": "muse-glimmer-30b",
           "limit": {

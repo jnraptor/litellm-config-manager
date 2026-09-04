@@ -283,6 +283,7 @@ providers:
       api_key_env: MISTRAL_API_KEY
     api_key_env: MISTRAL_API_KEY
     order: 4
+    enabled: false
   requesty:
     name: Requesty
     description: Requesty AI model provider
