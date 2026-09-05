@@ -266,6 +266,7 @@ populate_models.py
 - `pricing.models_dev_id`: maps to a provider ID in `models.dev/api.json` for cost augmentation; used when provider API has no pricing (e.g., `"fireworks-ai"`, `"opencode"`, `"opencode-go"`, `"azure"`); also sources `cost.cache_read` / `cost.cache_write` for cache fields and `modalities.input/output` for the `model_info.supports_*` flags
 - `modalities_default`: per-provider or top-level fallback modalities (e.g. `{input: [text], output: [text]}`) applied when models.dev/API reports none for a model; the top-level key in `providers.yaml` applies to all providers unless overridden per provider
 - `api_url: null` + `use_models_dev_for_listing: true`: the provider has no models endpoint; the entire catalog (listing + pricing + limits) comes from models.dev (Azure AI, Fireworks uses this for listing only)
+- `alt_api_urls`: optional list of supplementary model-listing endpoints whose models are merged add-only into the catalog (main `api_url` wins on ID conflicts, earlier alt URLs win over later ones); fetch failures log a warning and continue; also merged when `use_models_dev_for_listing: true` (example: requesty `/v1/models/managed` + `/v1/models/all`)
 - `free_variant_suffix`: `":free"` for OpenRouter and Kilo — triggers automatic `:free` variant addition when adding models
 - `special_models`: model IDs exempt from removal validation
 - `model_prefixes`: optional list of `{prefix, api_base}` mappings for providers that serve models under multiple prefixes (e.g., OpenCode Go with `openai/` and `anthropic/`)

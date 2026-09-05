@@ -244,6 +244,7 @@ models:
     providers:
       openrouter: openai/gpt-6-astra
       kilo: openai/gpt-6-astra
+      requesty: openai/gpt-6-astra
   gpt-5-nano:
     display_name: gpt-5-nano
     description: ''

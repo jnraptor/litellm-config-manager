@@ -288,6 +288,8 @@ providers:
     name: Requesty
     description: Requesty AI model provider
     api_url: https://router.requesty.ai/v1/models/managed
+    alt_api_urls:
+    - https://router.requesty.ai/v1/models/all
     model_prefix: openai/
     model_detection:
       type: api_base

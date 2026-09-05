@@ -1245,3 +1245,224 @@ class TestFetchAvailableModelsFromModelsDev:
         ] == pytest.approx(1.5e-06)
         # The new embedding-only model was added
         assert "accounts/fireworks/models/embedding-only" in result
+
+
+class TestAltApiUrls:
+    """Tests for alt_api_urls merging in fetch_available_models()."""
+
+    def _create_cleaner(self, **overrides):
+        """Reuse the helper from TestFetchAvailableModelsFromModelsDev."""
+        return TestFetchAvailableModelsFromModelsDev()._create_cleaner(**overrides)
+
+    @patch("cleanup_base._models_dev_client")
+    def test_alt_url_models_added(self, mock_client):
+        """Alt URL models are merged into the main api_url catalog."""
+        mock_client.get_model_cost.return_value = (None, None, None, None)
+        mock_client.get_model_limits.return_value = (None, None)
+
+        cleaner = self._create_cleaner(
+            alt_api_urls=["https://api.fireworks.ai/inference/v1/models/all"],
+            use_models_dev_for_listing=False,
+        )
+
+        main_response = {"data": [{"id": "main-model"}]}
+        alt_response = {"data": [{"id": "alt-only-model"}]}
+
+        with patch(
+            "cleanup_base.fetch_models_from_api",
+            side_effect=[main_response, alt_response],
+        ):
+            result = cleaner.fetch_available_models()
+
+        assert "main-model" in result
+        assert "alt-only-model" in result
+
+    @patch("cleanup_base._models_dev_client")
+    def test_main_api_url_wins_on_conflict(self, mock_client):
+        """Shared IDs: the main api_url entry is never overwritten by an alt URL."""
+        mock_client.get_model_limits.return_value = (None, None)
+
+        cleaner = self._create_cleaner(
+            alt_api_urls=["https://api.fireworks.ai/inference/v1/models/all"],
+            use_models_dev_for_listing=False,
+            pricing={
+                "input_field": "input_price",
+                "output_field": None,
+                "is_per_million": False,
+                "free_model_handling": False,
+                "default_cost": None,
+                "models_dev_id": "fireworks-ai",
+            },
+        )
+
+        main_response = {"data": [{"id": "shared-model", "input_price": "0.000001"}]}
+        alt_response = {"data": [{"id": "shared-model", "input_price": "0.000009"}]}
+
+        with patch(
+            "cleanup_base.fetch_models_from_api",
+            side_effect=[main_response, alt_response],
+        ):
+            result = cleaner.fetch_available_models()
+
+        assert result["shared-model"]["input_cost"] == pytest.approx(1e-06)
+
+    @patch("cleanup_base._models_dev_client")
+    def test_earlier_alt_url_wins_and_both_contribute(self, mock_client):
+        """Multiple alt URLs: earlier wins on shared IDs; both add new IDs."""
+        mock_client.get_model_limits.return_value = (None, None)
+
+        cleaner = self._create_cleaner(
+            alt_api_urls=[
+                "https://api.fireworks.ai/inference/v1/models/all",
+                "https://api.fireworks.ai/inference/v1/models/more",
+            ],
+            use_models_dev_for_listing=False,
+            pricing={
+                "input_field": "input_price",
+                "output_field": None,
+                "is_per_million": False,
+                "free_model_handling": False,
+                "default_cost": None,
+                "models_dev_id": "fireworks-ai",
+            },
+        )
+
+        main_response = {"data": [{"id": "main-model", "input_price": "0.000001"}]}
+        alt1_response = {
+            "data": [
+                {"id": "shared-alt", "input_price": "0.000002"},
+                {"id": "alt1-only", "input_price": "0.000003"},
+            ]
+        }
+        alt2_response = {
+            "data": [
+                {"id": "shared-alt", "input_price": "0.000009"},
+                {"id": "alt2-only", "input_price": "0.000004"},
+            ]
+        }
+
+        with patch(
+            "cleanup_base.fetch_models_from_api",
+            side_effect=[main_response, alt1_response, alt2_response],
+        ):
+            result = cleaner.fetch_available_models()
+
+        # Earlier alt URL wins on the shared ID
+        assert result["shared-alt"]["input_cost"] == pytest.approx(2e-06)
+        # Both alt URLs contributed their unique IDs
+        assert "main-model" in result
+        assert "alt1-only" in result
+        assert "alt2-only" in result
+
+    @patch("cleanup_base._models_dev_client")
+    def test_alt_url_network_failure_warns_and_continues(self, mock_client):
+        """A failed alt URL logs a warning; remaining URLs are still fetched."""
+        mock_client.get_model_cost.return_value = (None, None, None, None)
+        mock_client.get_model_limits.return_value = (None, None)
+
+        cleaner = self._create_cleaner(
+            alt_api_urls=[
+                "https://api.fireworks.ai/inference/v1/models/fail",
+                "https://api.fireworks.ai/inference/v1/models/all",
+            ],
+            use_models_dev_for_listing=False,
+        )
+
+        side_effects = [
+            {"data": [{"id": "main-model"}]},
+            requests.RequestException("network down"),
+            {"data": [{"id": "second-alt-model"}]},
+        ]
+
+        with (
+            patch("cleanup_base.fetch_models_from_api", side_effect=side_effects),
+            patch.object(cleaner.logger, "warning") as mock_warning,
+        ):
+            result = cleaner.fetch_available_models()
+
+        assert "main-model" in result
+        assert "second-alt-model" in result
+        mock_warning.assert_called_once()
+        assert "models/fail" in mock_warning.call_args[0][0]
+
+    @patch("cleanup_base._models_dev_client")
+    def test_alt_url_invalid_response_warns_and_continues(self, mock_client):
+        """An invalid alt URL response (ValueError) logs a warning and continues."""
+        mock_client.get_model_cost.return_value = (None, None, None, None)
+        mock_client.get_model_limits.return_value = (None, None)
+
+        cleaner = self._create_cleaner(
+            alt_api_urls=[
+                "https://api.fireworks.ai/inference/v1/models/broken",
+                "https://api.fireworks.ai/inference/v1/models/all",
+            ],
+            use_models_dev_for_listing=False,
+        )
+
+        side_effects = [
+            {"data": [{"id": "main-model"}]},
+            ValueError("Invalid API response format: missing 'data' field"),
+            {"data": [{"id": "second-alt-model"}]},
+        ]
+
+        with (
+            patch("cleanup_base.fetch_models_from_api", side_effect=side_effects),
+            patch.object(cleaner.logger, "warning") as mock_warning,
+        ):
+            result = cleaner.fetch_available_models()
+
+        assert "main-model" in result
+        assert "second-alt-model" in result
+        mock_warning.assert_called_once()
+        assert "models/broken" in mock_warning.call_args[0][0]
+
+    @patch("cleanup_base._models_dev_client")
+    def test_models_dev_mode_alt_url_add_only(self, mock_client):
+        """With use_models_dev_for_listing, alt URLs never overwrite models.dev entries."""
+        mock_client.get_provider_models.return_value = {
+            "shared-model": {
+                "id": "shared-model",
+                "input_cost": 1.5e-06,
+                "output_cost": 2.5e-06,
+                "model_info": None,
+            }
+        }
+        mock_client.get_model_cost.return_value = (None, None, None, None)
+        mock_client.get_model_limits.return_value = (None, None)
+
+        cleaner = self._create_cleaner(
+            alt_api_urls=["https://api.fireworks.ai/inference/v1/models/all"],
+        )
+
+        alt_response = {
+            "data": [
+                {"id": "shared-model"},
+                {"id": "alt-only-model"},
+            ]
+        }
+
+        with patch("cleanup_base.fetch_models_from_api", return_value=alt_response):
+            result = cleaner.fetch_available_models()
+
+        # models.dev entry was not overwritten (alt parse would yield None costs)
+        assert result["shared-model"]["input_cost"] == pytest.approx(1.5e-06)
+        assert result["shared-model"]["output_cost"] == pytest.approx(2.5e-06)
+        # The new alt-only model was added
+        assert "alt-only-model" in result
+
+    def test_requesty_config_has_expected_alt_url(self):
+        """providers.yaml requesty block loads with the expected alt URL."""
+        from pathlib import Path
+
+        from cleanup_base import ProviderConfigLoader
+
+        providers_path = Path(__file__).parent.parent / "providers.yaml"
+        ProviderConfigLoader.reset()
+        try:
+            loader = ProviderConfigLoader(str(providers_path))
+            config = loader.get_provider_config("requesty")
+            assert config["alt_api_urls"] == [
+                "https://router.requesty.ai/v1/models/all"
+            ]
+        finally:
+            ProviderConfigLoader.reset()

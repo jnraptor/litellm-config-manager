@@ -953,6 +953,18 @@ model_list:
     supports_pdf_input: true
 - model_name: gpt-6-astra
   litellm_params:
+    model: openai/openai/gpt-6-astra
+    order: 5
+    api_base: https://router.requesty.ai/v1
+    api_key: os.environ/REQUESTY_API_KEY
+    input_cost_per_token: 5.0e-06
+    output_cost_per_token: 2.5e-05
+    cache_read_input_token_cost: 5.0e-07
+  model_info:
+    max_input_tokens: 1050000
+    max_output_tokens: 128000
+- model_name: gpt-6-astra
+  litellm_params:
     model: openrouter/openai/gpt-6-astra
     order: 5
     input_cost_per_token: 1.0e-05

@@ -229,6 +229,7 @@ class MockCleaner(ConfigDrivenModelCleaner):
         self._api_base_config = self.provider_config.get("api_base_config")
         self._api_key_env = self.provider_config.get("api_key_env")
         self._embeddings_api_url = self.provider_config.get("embeddings_api_url")
+        self._alt_api_urls = self.provider_config.get("alt_api_urls") or []
         self._free_variant_suffix = self.provider_config.get("free_variant_suffix")
         self._model_prefixes = self.provider_config.get("model_prefixes")
         self._max_input_field = self.provider_config.get("max_input_field")

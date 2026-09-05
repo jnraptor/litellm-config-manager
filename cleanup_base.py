@@ -3305,6 +3305,7 @@ class ConfigDrivenModelCleaner(BaseModelCleaner):
         self._api_base_config = self.provider_config.get("api_base_config")
         self._api_key_env = self.provider_config.get("api_key_env")
         self._embeddings_api_url = self.provider_config.get("embeddings_api_url")
+        self._alt_api_urls = list(self.provider_config.get("alt_api_urls") or [])
         self._free_variant_suffix = self.provider_config.get("free_variant_suffix")
         self._model_prefixes = self.provider_config.get("model_prefixes")
 
@@ -3443,6 +3444,10 @@ class ConfigDrivenModelCleaner(BaseModelCleaner):
                     model_info = self.parse_api_model(model)
                     available_models[model_info["id"]] = model_info
 
+            # Fetch models from supplementary alt URLs (add-only)
+            if self._alt_api_urls:
+                self._fetch_alt_api_models(available_models, headers)
+
             # Fetch embedding models if configured
             if self._embeddings_api_url:
                 self._fetch_embedding_models(available_models, headers)
@@ -3463,9 +3468,11 @@ class ConfigDrivenModelCleaner(BaseModelCleaner):
         Fetch the full model catalog for this provider from models.dev.
 
         Requires ``use_models_dev_for_listing: true`` and a configured
-        ``pricing.models_dev_id``. Fails fast if either precondition is not met
-        or models.dev data is unavailable. Embedding models listed in
-        ``embeddings_api_url`` are still merged, but only when their IDs are
+        ``pricing.models_dev_id``.         Fails fast if either precondition is not met
+        or models.dev data is unavailable. Models listed in
+        ``alt_api_urls`` are merged add-only (models.dev entries are never
+        overwritten). Embedding models listed in
+        ``embeddings_api_url`` are also merged, but only when their IDs are
         not already present in the models.dev catalog.
         """
         if not self._models_dev_id:
@@ -3493,6 +3500,10 @@ class ConfigDrivenModelCleaner(BaseModelCleaner):
                 model_info["output_cost"] = adjust_cost_for_free_model(
                     model_info.get("output_cost")
                 )
+
+        # Merge models from alt_api_urls (only add new IDs)
+        if self._alt_api_urls:
+            self._fetch_alt_api_models(available_models, self._build_api_headers())
 
         # Merge embedding models from embeddings_api_url (only add new IDs)
         if self._embeddings_api_url:
@@ -3559,6 +3570,47 @@ class ConfigDrivenModelCleaner(BaseModelCleaner):
                     )
         except requests.RequestException as e:
             self.logger.warning(f"Could not fetch embedding models: {e}")
+
+    def _fetch_alt_api_models(
+        self,
+        available_models: dict[str, dict[str, Any]],
+        headers: dict[str, str] | None,
+    ) -> None:
+        """
+        Fetch models from supplementary alt_api_urls endpoints.
+
+        Add-only merge: entries already present in ``available_models`` (from
+        the main ``api_url`` or from models.dev) are never overwritten, and
+        earlier alt URLs win over later ones on ID conflicts. A failed alt URL
+        (network error or invalid response) logs a warning and the remaining
+        URLs are still fetched.
+        """
+        for alt_url in self._alt_api_urls:
+            try:
+                alt_data = fetch_models_from_api(alt_url, self.logger, headers=headers)
+            except (requests.RequestException, ValueError) as e:
+                self.logger.warning(
+                    f"Could not fetch models from alt URL {alt_url}: {e}"
+                )
+                continue
+
+            added = 0
+            skipped_existing = 0
+            for model in alt_data["data"]:
+                if isinstance(model, dict) and "id" in model:
+                    model_id = model["id"]
+                    # Add-only merge: existing entries (main api_url,
+                    # models.dev, or an earlier alt URL) always win.
+                    if model_id in available_models:
+                        skipped_existing += 1
+                        continue
+                    model_info = self.parse_api_model(model)
+                    available_models[model_info["id"]] = model_info
+                    added += 1
+            self.logger.debug(
+                f"Alt URL merge for {self.PROVIDER_NAME} ({alt_url}): "
+                f"added={added}, skipped_existing={skipped_existing}"
+            )
 
     def check_for_free_variant(
         self, model_id: str, api_models: dict[str, dict[str, Any]]
