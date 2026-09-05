@@ -27,9 +27,8 @@ litellm_settings:
 model_list:
 - litellm_params:
     api_base: os.environ/AZURE_MAI_API_BASE_EASTUS
-    extra_body:
-      api-version: preview
-    headers:
+    api_key: os.environ/AZURE_AI_API_KEY_EASTUS
+    extra_headers:
       Content-Type: application/json
       api-key: os.environ/AZURE_AI_API_KEY_EASTUS
     model: openai/MAI-Image-2.5
@@ -40,9 +39,8 @@ model_list:
   model_name: az-mai-image-2.5
 - litellm_params:
     api_base: os.environ/AZURE_MAI_API_BASE_EASTUS
-    extra_body:
-      api-version: preview
-    headers:
+    api_key: os.environ/AZURE_AI_API_KEY_EASTUS
+    extra_headers:
       Content-Type: application/json
       api-key: os.environ/AZURE_AI_API_KEY_EASTUS
     model: openai/MAI-Image-2.5-Flash
@@ -53,9 +51,8 @@ model_list:
   model_name: az-mai-image-2.5-flash
 - litellm_params:
     api_base: os.environ/AZURE_MAI_API_BASE_EASTUS
-    extra_body:
-      api-version: preview
-    headers:
+    api_key: os.environ/AZURE_AI_API_KEY_EASTUS
+    extra_headers:
       Content-Type: application/json
       api-key: os.environ/AZURE_AI_API_KEY_EASTUS
     model: openai/MAI-Image-2.6
@@ -66,9 +63,8 @@ model_list:
   model_name: az-mai-image-2.6
 - litellm_params:
     api_base: os.environ/AZURE_MAI_API_BASE_EASTUS
-    extra_body:
-      api-version: preview
-    headers:
+    api_key: os.environ/AZURE_AI_API_KEY_EASTUS
+    extra_headers:
       Content-Type: application/json
       api-key: os.environ/AZURE_AI_API_KEY_EASTUS
     model: openai/MAI-Image-2.6-Flash
@@ -1551,20 +1547,6 @@ model_list:
     max_input_tokens: 262144
     max_output_tokens: 131072
   model_name: qwen3.8-max
-- litellm_params:
-    api_base: https://api.kilo.ai/api/gateway
-    api_key: os.environ/KILO_API_KEY
-    cache_creation_input_token_cost: 2.5e-06
-    cache_read_input_token_cost: 2.5e-07
-    input_cost_per_token: 2.0e-06
-    model: openai/qwen/qwen3.8-max
-    order: 4
-    output_cost_per_token: 6.0e-06
-  model_info:
-    max_input_tokens: 1000000
-    max_output_tokens: 131072
-    supports_vision: true
-  model_name: qwen3.8-max
 - model_name: qwen3.8-max
   litellm_params:
     model: poe/qwen3.8-max-el
@@ -1588,18 +1570,6 @@ model_list:
     supports_pdf_input: true
   model_name: qwen3.8-max
 - litellm_params:
-    cache_creation_input_token_cost: 2.5e-06
-    cache_read_input_token_cost: 2.5e-07
-    input_cost_per_token: 2.0e-06
-    model: openrouter/qwen/qwen3.8-max
-    order: 5
-    output_cost_per_token: 6.0e-06
-  model_info:
-    max_input_tokens: 1000000
-    max_output_tokens: 131072
-    supports_vision: true
-  model_name: qwen3.8-max
-- litellm_params:
     complexity_router_config:
       tiers:
         COMPLEX: gpt-5.6-luna
@@ -1619,8 +1589,6 @@ model_list:
 router_settings:
   enable_pre_call_checks: true
   fallbacks:
-  - az-gpt-5.6-luna:
-    - gpt-5.6-luna
   - az-mistral-medium-3-5:
     - mistral-medium-3-5
   redis_host: 10.10.1.1
