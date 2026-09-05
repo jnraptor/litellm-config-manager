@@ -337,6 +337,7 @@ providers:
     special_models:
     - mistral-medium-3-5
     - mistral-document-ai-2512
+    - gpt-6-astra
     api_base_config: null
     api_key_env: null
     order: 4

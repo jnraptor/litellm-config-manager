@@ -323,6 +323,23 @@
             ]
           }
         },
+        "gpt-6-astra": {
+          "name": "gpt-6-astra",
+          "limit": {
+            "context": 1050000,
+            "output": 128000
+          },
+          "modalities": {
+            "input": [
+              "text",
+              "image",
+              "pdf"
+            ],
+            "output": [
+              "text"
+            ]
+          }
+        },
         "hy3": {
           "name": "hy3",
           "limit": {
