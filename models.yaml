@@ -128,12 +128,12 @@ models:
     display_name: qwen3.8-max
     description: ''
     providers:
-      openrouter: qwen/qwen3.8-max
-      kilo: qwen/qwen3.8-max
+      openrouter: qwen/qwen3.8-max-0902
+      poe: qwen3.8-max-0902-el
+      kilo: qwen/qwen3.8-max-0902
       fireworks: accounts/fireworks/models/qwen3p8-max
+      requesty: qwen3.8-max
       opencode-go: openai/qwen3.8-max
-      requesty: alibaba/qwen3.8-max
-      poe: qwen3.8-max-el
   nemotron-3.5-lightning:
     display_name: nemotron-3.5-lightning
     description: ''
