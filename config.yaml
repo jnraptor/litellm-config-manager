@@ -1691,8 +1691,10 @@ model_list:
 router_settings:
   enable_pre_call_checks: true
   fallbacks:
-  - az-mistral-medium-3-5:
-    - mistral-medium-3-5
+  - mai-image-2.6:
+    - mai-image-2.5
+  - mai-image-2.6-flash:
+    - mai-image-2.5-flash
   redis_host: 10.10.1.1
   redis_password: ''
   redis_port: 6379
