@@ -26,70 +26,11 @@ litellm_settings:
   modify_params: true
 model_list:
 - litellm_params:
-    api_base: os.environ/AZURE_MAI_API_BASE_EASTUS
-    api_key: os.environ/AZURE_AI_API_KEY_EASTUS
-    extra_headers:
-      Content-Type: application/json
-      api-key: os.environ/AZURE_AI_API_KEY_EASTUS
-    model: openai/MAI-Image-2.5
-    rpm: 2
-  model_info:
-    base_model: azure_ai/mai-image-2.5
-    mode: image_generation
-  model_name: az-mai-image-2.5
-- litellm_params:
-    api_base: os.environ/AZURE_MAI_API_BASE_EASTUS
-    api_key: os.environ/AZURE_AI_API_KEY_EASTUS
-    extra_headers:
-      Content-Type: application/json
-      api-key: os.environ/AZURE_AI_API_KEY_EASTUS
-    model: openai/MAI-Image-2.5-Flash
-    rpm: 2
-  model_info:
-    base_model: azure_ai/mai-image-2.5-flash
-    mode: image_generation
-  model_name: az-mai-image-2.5-flash
-- litellm_params:
-    api_base: os.environ/AZURE_MAI_API_BASE_EASTUS
-    api_key: os.environ/AZURE_AI_API_KEY_EASTUS
-    extra_headers:
-      Content-Type: application/json
-      api-key: os.environ/AZURE_AI_API_KEY_EASTUS
-    model: openai/MAI-Image-2.6
-    rpm: 2
-  model_info:
-    base_model: azure_ai/mai-image-2.6
-    mode: image_generation
-  model_name: az-mai-image-2.6
-- litellm_params:
-    api_base: os.environ/AZURE_MAI_API_BASE_EASTUS
-    api_key: os.environ/AZURE_AI_API_KEY_EASTUS
-    extra_headers:
-      Content-Type: application/json
-      api-key: os.environ/AZURE_AI_API_KEY_EASTUS
-    model: openai/MAI-Image-2.6-Flash
-    rpm: 2
-  model_info:
-    base_model: azure_ai/mai-image-2.6-flash
-    mode: image_generation
-  model_name: az-mai-image-2.6-flash
-- litellm_params:
-    api_base: os.environ/AZURE_AI_API_BASE_EASTUS
-    api_key: os.environ/AZURE_AI_API_KEY_EASTUS
-    input_cost_per_token: 1.5e-06
-    model: azure_ai/mistral-medium-3-5
-    order: 5
-    output_cost_per_token: 7.5e-06
-    rpm: 20
-    tpm: 20000
-  model_info:
-    base_model: azure_ai/mistral-medium-3-5
-  model_name: az-mistral-medium-3-5
-- litellm_params:
     api_base: os.environ/AZURE_AI_API_BASE_EASTUS
     api_key: os.environ/AZURE_AI_API_KEY_EASTUS
     model: azure_ai/mistral-document-ai-2512
     rpm: 10
+    order: 4
   model_info:
     mode: ocr
   model_name: az-ocr
@@ -356,7 +297,7 @@ model_list:
     output_cost_per_token: 1.32e-06
   model_info:
     max_input_tokens: 1310720
-    max_output_tokens: 943718
+    max_output_tokens: 131072
   model_name: deepseek-v4-flash
 - model_name: deepseek-v4-flash
   litellm_params:
@@ -378,14 +319,14 @@ model_list:
     max_output_tokens: 131072
   model_name: deepseek-v4-flash
 - litellm_params:
-    cache_read_input_token_cost: 1.6e-08
-    input_cost_per_token: 6.5e-08
+    cache_read_input_token_cost: 9.996e-09
+    input_cost_per_token: 4.998e-08
     model: openrouter/deepseek/deepseek-v4-flash-0731
     order: 5
-    output_cost_per_token: 1.8e-07
+    output_cost_per_token: 9.996e-08
   model_info:
     max_input_tokens: 1310720
-    max_output_tokens: 943718
+    max_output_tokens: 131072
   model_name: deepseek-v4-flash
 - litellm_params:
     api_key: os.environ/FIREWORKS_AI_API_KEY
@@ -466,11 +407,11 @@ model_list:
     max_output_tokens: 131072
   model_name: deepseek-v4-pro
 - litellm_params:
-    cache_read_input_token_cost: 1.9316e-08
-    input_cost_per_token: 5.7948e-07
+    cache_read_input_token_cost: 3.7356e-08
+    input_cost_per_token: 1.12068e-06
     model: openrouter/deepseek/deepseek-v4-pro-0813
     order: 5
-    output_cost_per_token: 1.73844e-06
+    output_cost_per_token: 3.36204e-06
   model_info:
     max_input_tokens: 1048576
     max_output_tokens: 384000
@@ -993,11 +934,11 @@ model_list:
 - litellm_params:
     api_base: https://api.kilo.ai/api/gateway
     api_key: os.environ/KILO_API_KEY
-    cache_read_input_token_cost: 2.0625e-08
-    input_cost_per_token: 8.25e-08
+    cache_read_input_token_cost: 3.5e-08
+    input_cost_per_token: 1.4e-07
     model: openai/tencent/hy3
     order: 4
-    output_cost_per_token: 3.3e-07
+    output_cost_per_token: 5.8e-07
   model_info:
     max_input_tokens: 262144
     max_output_tokens: 128000
@@ -1023,11 +964,11 @@ model_list:
     max_output_tokens: 262144
   model_name: hy3
 - litellm_params:
-    cache_read_input_token_cost: 2.0625e-08
-    input_cost_per_token: 8.25e-08
+    cache_read_input_token_cost: 3.3e-08
+    input_cost_per_token: 1.32e-07
     model: openrouter/tencent/hy3
     order: 5
-    output_cost_per_token: 3.3e-07
+    output_cost_per_token: 5.28e-07
   model_info:
     max_input_tokens: 262144
     max_output_tokens: 128000
@@ -1324,6 +1265,70 @@ model_list:
     supports_vision: true
   model_name: kimi-k3
 - litellm_params:
+    api_base: os.environ/AZURE_MAI_API_BASE_EASTUS
+    api_key: os.environ/AZURE_AI_API_KEY_EASTUS
+    extra_headers:
+      Content-Type: application/json
+      api-key: os.environ/AZURE_AI_API_KEY_EASTUS
+    model: openai/MAI-Image-2.5
+    rpm: 2
+    order: 4
+  model_info:
+    base_model: azure_ai/mai-image-2.5
+    mode: image_generation
+  model_name: mai-image-2.5
+- litellm_params:
+    api_base: os.environ/AZURE_MAI_API_BASE_EASTUS
+    api_key: os.environ/AZURE_AI_API_KEY_EASTUS
+    extra_headers:
+      Content-Type: application/json
+      api-key: os.environ/AZURE_AI_API_KEY_EASTUS
+    model: openai/MAI-Image-2.5-Flash
+    order: 4
+    rpm: 2
+  model_info:
+    base_model: azure_ai/mai-image-2.5-flash
+    mode: image_generation
+  model_name: mai-image-2.5-flash
+- litellm_params:
+    api_base: os.environ/AZURE_MAI_API_BASE_EASTUS
+    api_key: os.environ/AZURE_AI_API_KEY_EASTUS
+    extra_headers:
+      Content-Type: application/json
+      api-key: os.environ/AZURE_AI_API_KEY_EASTUS
+    model: openai/MAI-Image-2.6
+    rpm: 2
+    order: 4
+  model_info:
+    base_model: azure_ai/mai-image-2.6
+    mode: image_generation
+  model_name: mai-image-2.6
+- model_name: mai-image-2.6
+  litellm_params:
+    model: openrouter/microsoft/mai-image-2.6
+    order: 5
+  model_info:
+    mode: image_generation
+- litellm_params:
+    api_base: os.environ/AZURE_MAI_API_BASE_EASTUS
+    api_key: os.environ/AZURE_AI_API_KEY_EASTUS
+    extra_headers:
+      Content-Type: application/json
+      api-key: os.environ/AZURE_AI_API_KEY_EASTUS
+    model: openai/MAI-Image-2.6-Flash
+    rpm: 2
+    order: 4
+  model_info:
+    base_model: azure_ai/mai-image-2.6-flash
+    mode: image_generation
+  model_name: mai-image-2.6-flash
+- model_name: mai-image-2.6-flash
+  litellm_params:
+    model: openrouter/microsoft/mai-image-2.6-flash
+    order: 5
+  model_info:
+    mode: image_generation
+- litellm_params:
     api_base: https://api.kilo.ai/api/gateway
     api_key: os.environ/KILO_API_KEY
     cache_read_input_token_cost: 6.0e-08
@@ -1402,6 +1407,18 @@ model_list:
     max_output_tokens: 512000
     supports_vision: true
   model_name: minimax-m3
+- litellm_params:
+    api_base: os.environ/AZURE_AI_API_BASE_EASTUS
+    api_key: os.environ/AZURE_AI_API_KEY_EASTUS
+    input_cost_per_token: 1.5e-06
+    model: azure_ai/mistral-medium-3-5
+    order: 4
+    output_cost_per_token: 7.5e-06
+    rpm: 20
+    tpm: 20000
+  model_info:
+    base_model: azure_ai/mistral-medium-3-5
+  model_name: mistral-medium-3-5
 - model_name: muse-glimmer-30b
   litellm_params:
     model: openai/muse-glimmer-30b

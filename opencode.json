@@ -8,17 +8,6 @@
         "baseURL": "http://localhost:4000/v1"
       },
       "models": {
-        "az-mistral-medium-3-5": {
-          "name": "az-mistral-medium-3-5",
-          "modalities": {
-            "input": [
-              "text"
-            ],
-            "output": [
-              "text"
-            ]
-          }
-        },
         "az-ocr": {
           "name": "az-ocr",
           "modalities": {
@@ -119,7 +108,7 @@
           "name": "deepseek-v4-flash",
           "limit": {
             "context": 1310720,
-            "output": 943718
+            "output": 384000
           },
           "modalities": {
             "input": [
@@ -461,6 +450,17 @@
             "input": [
               "text",
               "image"
+            ],
+            "output": [
+              "text"
+            ]
+          }
+        },
+        "mistral-medium-3-5": {
+          "name": "mistral-medium-3-5",
+          "modalities": {
+            "input": [
+              "text"
             ],
             "output": [
               "text"

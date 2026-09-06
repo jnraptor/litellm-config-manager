@@ -254,3 +254,13 @@ models:
       kilo: openai/gpt-5-nano
       requesty: gpt-5-nano@eu
       azure_ai: gpt-5-nano
+  mai-image-2.6-flash:
+    display_name: mai-image-2.6-flash
+    description: ''
+    providers:
+      openrouter: microsoft/mai-image-2.6-flash
+  mai-image-2.6:
+    display_name: mai-image-2.6
+    description: ''
+    providers:
+      openrouter: microsoft/mai-image-2.6
