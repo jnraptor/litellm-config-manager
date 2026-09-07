@@ -264,3 +264,11 @@ models:
     description: ''
     providers:
       openrouter: microsoft/mai-image-2.6
+  gpt-image-2:
+    display_name: gpt-image-2
+    description: ''
+    providers:
+      openrouter: openai/gpt-image-2
+      poe: gpt-image-2
+      requesty: azure/openai/gpt-image-2
+      azure_ai: gpt-image-2
