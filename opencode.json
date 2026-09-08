@@ -108,7 +108,7 @@
           "name": "deepseek-v4-flash",
           "limit": {
             "context": 1310720,
-            "output": 384000
+            "output": 943718
           },
           "modalities": {
             "input": [
@@ -324,36 +324,6 @@
               "text",
               "image",
               "pdf"
-            ],
-            "output": [
-              "text"
-            ]
-          }
-        },
-        "hy3": {
-          "name": "hy3",
-          "limit": {
-            "context": 262144,
-            "output": 262144
-          },
-          "modalities": {
-            "input": [
-              "text"
-            ],
-            "output": [
-              "text"
-            ]
-          }
-        },
-        "hy4-preview": {
-          "name": "hy4-preview",
-          "limit": {
-            "context": 1048576,
-            "output": 64000
-          },
-          "modalities": {
-            "input": [
-              "text"
             ],
             "output": [
               "text"

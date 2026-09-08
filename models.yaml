@@ -98,16 +98,6 @@ models:
       fireworks: accounts/fireworks/models/kimi-k3
       opencode-go: openai/kimi-k3
       requesty: sference/kimi-k3
-  hy3:
-    display_name: hy3
-    description: ''
-    providers:
-      openrouter: tencent/hy3
-      kilo: tencent/hy3
-      opencode-go: openai/hy3
-      opencode-zen: hy3-free
-      requesty: novita/tencent/hy3
-      poe: hy3
   claude-opus-5:
     display_name: claude-opus-5
     description: ''
@@ -189,13 +179,6 @@ models:
       kilo: qwen/qwen3.8-flash
       opencode-go: anthropic/qwen3.8-flash
       requesty: alibaba/qwen3.8-flash
-  hy4-preview:
-    display_name: hy4-preview
-    description: ''
-    providers:
-      openrouter: tencent/hy4-preview
-      kilo: tencent/hy4-preview
-      opencode-go: openai/hy4-preview
   muse-glimmer-30b:
     display_name: muse-glimmer-30b
     description: ''
