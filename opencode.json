@@ -123,7 +123,7 @@
           "name": "deepseek-v4-flash-vision-exp",
           "limit": {
             "context": 1048576,
-            "output": 384000
+            "output": 943718
           },
           "modalities": {
             "input": [
@@ -182,7 +182,7 @@
         "glm-5.3": {
           "name": "glm-5.3",
           "limit": {
-            "context": 1310720,
+            "context": 1048576,
             "output": 1048576
           },
           "modalities": {
