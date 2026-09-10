@@ -216,3 +216,10 @@ models:
       poe: gpt-image-2
       requesty: azure/openai/gpt-image-2
       azure_ai: gpt-image-2
+  deepseek-v4.1-flash:
+    display_name: deepseek-v4.1-flash
+    description: ''
+    providers:
+      openrouter: deepseek/deepseek-v4.1-flash
+      kilo: deepseek/deepseek-v4.1-flash
+      requesty: deepseek-v4.1-flash
