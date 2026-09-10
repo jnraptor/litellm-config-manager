@@ -221,5 +221,6 @@ models:
     description: ''
     providers:
       openrouter: deepseek/deepseek-v4.1-flash
+      poe: deepseek-v4.1-flash
       kilo: deepseek/deepseek-v4.1-flash
       requesty: deepseek-v4.1-flash

@@ -407,11 +407,11 @@ model_list:
     max_output_tokens: 131072
   model_name: deepseek-v4-pro
 - litellm_params:
-    cache_read_input_token_cost: 2.0958e-08
-    input_cost_per_token: 6.5868e-07
+    cache_read_input_token_cost: 1.8438e-08
+    input_cost_per_token: 5.7948e-07
     model: openrouter/deepseek/deepseek-v4-pro-0813
     order: 5
-    output_cost_per_token: 1.97604e-06
+    output_cost_per_token: 1.73844e-06
   model_info:
     max_input_tokens: 1048576
     max_output_tokens: 393216
@@ -431,6 +431,14 @@ model_list:
     supports_vision: true
 - model_name: deepseek-v4.1-flash
   litellm_params:
+    model: poe/deepseek-v4.1-flash
+    order: 4
+    api_key: os.environ/POE_API_KEY
+    input_cost_per_token: 3.03e-07
+    output_cost_per_token: 1.2121e-06
+    cache_read_input_token_cost: 6.1e-09
+- model_name: deepseek-v4.1-flash
+  litellm_params:
     model: openai/deepseek-v4.1-flash
     order: 5
     api_base: https://router.requesty.ai/v1
@@ -441,6 +449,7 @@ model_list:
   model_info:
     max_input_tokens: 1048576
     max_output_tokens: 393216
+    supports_vision: true
 - model_name: deepseek-v4.1-flash
   litellm_params:
     model: openrouter/deepseek/deepseek-v4.1-flash
