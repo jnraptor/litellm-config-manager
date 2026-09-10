@@ -139,7 +139,7 @@
           "name": "deepseek-v4-pro",
           "limit": {
             "context": 1048576,
-            "output": 393216
+            "output": 384000
           },
           "modalities": {
             "input": [
@@ -182,7 +182,7 @@
         "glm-5.3": {
           "name": "glm-5.3",
           "limit": {
-            "context": 1048576,
+            "context": 1310720,
             "output": 1048576
           },
           "modalities": {
@@ -324,55 +324,6 @@
               "text",
               "image",
               "pdf"
-            ],
-            "output": [
-              "text"
-            ]
-          }
-        },
-        "inkling": {
-          "name": "inkling",
-          "limit": {
-            "context": 1048576,
-            "output": 1048576
-          },
-          "modalities": {
-            "input": [
-              "text",
-              "image",
-              "audio"
-            ],
-            "output": [
-              "text"
-            ]
-          }
-        },
-        "kimi-k2.6": {
-          "name": "kimi-k2.6",
-          "limit": {
-            "context": 262144,
-            "output": 262144
-          },
-          "modalities": {
-            "input": [
-              "text",
-              "image"
-            ],
-            "output": [
-              "text"
-            ]
-          }
-        },
-        "kimi-k2.7": {
-          "name": "kimi-k2.7",
-          "limit": {
-            "context": 262144,
-            "output": 262144
-          },
-          "modalities": {
-            "input": [
-              "text",
-              "image"
             ],
             "output": [
               "text"

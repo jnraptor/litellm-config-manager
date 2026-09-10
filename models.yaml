@@ -1,14 +1,4 @@
 models:
-  kimi-k2.6:
-    display_name: kimi-k2.6
-    description: GLM-5 model by Z.ai
-    providers:
-      openrouter: moonshotai/kimi-k2.6
-      poe: kimi-k2.6
-      kilo: moonshotai/kimi-k2.6
-      fireworks: accounts/fireworks/models/kimi-k2p6
-      requesty: kimi-k2.6
-      nvidia: moonshotai/kimi-k2.6
   deepseek-v4-flash:
     display_name: deepseek-v4-flash
     description: Deepseek v4 Flash model
@@ -68,17 +58,6 @@ models:
       poe: claude-haiku-4.5
       kilo: anthropic/claude-haiku-4.5
       requesty: anthropic/claude-haiku-4-5
-  kimi-k2.7:
-    display_name: kimi-k2.7
-    description: ''
-    providers:
-      openrouter: moonshotai/kimi-k2.7-code
-      poe: kimi-k2.7-code
-      kilo: moonshotai/kimi-k2.7-code
-      fireworks: accounts/fireworks/models/kimi-k2p7-code
-      requesty: kimi-k2.7-code
-      vercel: moonshotai/kimi-k2.7-code
-      opencode-go: openai/kimi-k2.7-code
   claude-sonnet-5:
     display_name: claude-sonnet-5
     description: ''
@@ -196,15 +175,6 @@ models:
       poe: gemini-3.8-flash
       kilo: google/gemini-3.8-flash
       requesty: vertex/gemini-3.8-flash
-  inkling:
-    display_name: inkling
-    description: ''
-    providers:
-      openrouter: thinkingmachines/inkling
-      poe: inkling
-      kilo: thinkingmachines/inkling
-      fireworks: accounts/fireworks/models/inkling
-      requesty: thinkingmachines/inkling
   gpt-5.6-terra:
     display_name: gpt-5.6-terra
     description: ''
