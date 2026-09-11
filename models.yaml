@@ -223,4 +223,5 @@ models:
       openrouter: deepseek/deepseek-v4.1-flash
       poe: deepseek-v4.1-flash
       kilo: deepseek/deepseek-v4.1-flash
+      fireworks: accounts/fireworks/models/deepseek-v4p1-flash
       requesty: deepseek-v4.1-flash
