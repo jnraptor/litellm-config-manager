@@ -944,11 +944,11 @@ model_list:
     supports_vision: true
   model_name: kimi-k3
 - litellm_params:
-    cache_read_input_token_cost: 2.61e-07
-    input_cost_per_token: 2.34e-06
+    cache_read_input_token_cost: 2.35e-07
+    input_cost_per_token: 2.1e-06
     model: openrouter/moonshotai/kimi-k3
     order: 5
-    output_cost_per_token: 1.17e-05
+    output_cost_per_token: 1.053e-05
   model_info:
     max_input_tokens: 1048576
     max_output_tokens: 943718
