@@ -104,52 +104,6 @@
             ]
           }
         },
-        "deepseek-v4-flash": {
-          "name": "deepseek-v4-flash",
-          "limit": {
-            "context": 1310720,
-            "output": 943718
-          },
-          "modalities": {
-            "input": [
-              "text"
-            ],
-            "output": [
-              "text"
-            ]
-          }
-        },
-        "deepseek-v4-flash-vision-exp": {
-          "name": "deepseek-v4-flash-vision-exp",
-          "limit": {
-            "context": 1048576,
-            "output": 943718
-          },
-          "modalities": {
-            "input": [
-              "text",
-              "image"
-            ],
-            "output": [
-              "text"
-            ]
-          }
-        },
-        "deepseek-v4-pro": {
-          "name": "deepseek-v4-pro",
-          "limit": {
-            "context": 1048576,
-            "output": 384000
-          },
-          "modalities": {
-            "input": [
-              "text"
-            ],
-            "output": [
-              "text"
-            ]
-          }
-        },
         "deepseek-v4.1-flash": {
           "name": "deepseek-v4.1-flash",
           "limit": {

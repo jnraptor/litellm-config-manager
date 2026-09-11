@@ -1,24 +1,4 @@
 models:
-  deepseek-v4-flash:
-    display_name: deepseek-v4-flash
-    description: Deepseek v4 Flash model
-    providers:
-      openrouter: deepseek/deepseek-v4-flash-0731
-      kilo: deepseek/deepseek-v4-flash-0731
-      fireworks: accounts/fireworks/models/deepseek-v4-flash-0731
-      poe: ds-v4-flash-0731-el
-      requesty: sference/deepseek-v4-flash-0731
-  deepseek-v4-pro:
-    display_name: deepseek-v4-pro
-    description: Deepseek v4 Pro model
-    providers:
-      openrouter: deepseek/deepseek-v4-pro-0813
-      nvidia: deepseek-ai/deepseek-v4-pro-0813
-      kilo: deepseek/deepseek-v4-pro-0813
-      fireworks: accounts/fireworks/models/deepseek-v4-pro-0813
-      opencode-go: openai/deepseek-v4-pro
-      requesty: fireworks/deepseek-v4-pro-0813
-      poe: deepseek-v4-pro-0813-el
   minimax-m3:
     display_name: minimax-m3
     description: Minimax M3
@@ -131,14 +111,6 @@ models:
       opencode-go: openai/glm-5.3
       requesty: zai/glm-5.3
       poe: glm-5.3-el
-  deepseek-v4-flash-vision-exp:
-    display_name: deepseek-v4-flash-vision-exp
-    description: ''
-    providers:
-      openrouter: deepseek/deepseek-v4-flash-vision-exp
-      kilo: deepseek/deepseek-v4-flash-vision-exp
-      opencode-go: openai/deepseek-v4-flash-vision-exp
-      fireworks: accounts/fireworks/models/deepseek-v4-flash-vision-exp
   glm-5.3-flash:
     display_name: glm-5.3-flash
     description: ''
