@@ -2,6 +2,10 @@ general_settings:
   store_prompts_in_spend_logs: true
   disable_env_credential_login: true
   ui_access_mode: admin_only
+  use_x_forwarded_for: true
+  mcp_trusted_proxy_ranges:
+  - 10.10.1.0/24
+  - 100.64.0.0/10
   user_header_mappings:
   - header_name: X-OpenWebUI-User-Email
     litellm_user_role: customer
@@ -944,11 +948,11 @@ model_list:
     supports_vision: true
   model_name: kimi-k3
 - litellm_params:
-    cache_read_input_token_cost: 2.35e-07
-    input_cost_per_token: 2.1e-06
+    cache_read_input_token_cost: 2.63169e-07
+    input_cost_per_token: 2.30272875e-06
     model: openrouter/moonshotai/kimi-k3
     order: 5
-    output_cost_per_token: 1.053e-05
+    output_cost_per_token: 1.1550195e-05
   model_info:
     max_input_tokens: 1048576
     max_output_tokens: 943718
@@ -1121,11 +1125,10 @@ model_list:
 - litellm_params:
     api_base: https://api.kilo.ai/api/gateway
     api_key: os.environ/KILO_API_KEY
-    cache_read_input_token_cost: 4.0e-08
-    input_cost_per_token: 8.0e-08
+    input_cost_per_token: 6.5e-08
     model: openai/nvidia/nemotron-3.5-lightning
     order: 4
-    output_cost_per_token: 2.0e-07
+    output_cost_per_token: 1.8e-07
   model_info:
     max_input_tokens: 262144
     max_output_tokens: 131072
