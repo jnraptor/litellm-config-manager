@@ -417,6 +417,22 @@
               "text"
             ]
           }
+        },
+        "union-alpha": {
+          "name": "union-alpha",
+          "limit": {
+            "context": 262144,
+            "output": 131072
+          },
+          "modalities": {
+            "input": [
+              "text",
+              "image"
+            ],
+            "output": [
+              "text"
+            ]
+          }
         }
       }
     }

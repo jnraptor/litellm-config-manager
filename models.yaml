@@ -197,3 +197,9 @@ models:
       kilo: deepseek/deepseek-v4.1-flash
       fireworks: accounts/fireworks/models/deepseek-v4p1-flash
       requesty: deepseek-v4.1-flash
+  union-alpha:
+    display_name: union-alpha
+    description: ''
+    providers:
+      openrouter: stealth/union-alpha
+      kilo: stealth/union-alpha
