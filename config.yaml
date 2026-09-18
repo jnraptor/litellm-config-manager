@@ -331,9 +331,9 @@ model_list:
   litellm_params:
     model: openrouter/deepseek/deepseek-v4.1-flash
     order: 5
-    input_cost_per_token: 1.5e-07
-    output_cost_per_token: 6.0e-07
-    cache_read_input_token_cost: 3.0e-09
+    input_cost_per_token: 3.0e-07
+    output_cost_per_token: 1.2e-06
+    cache_read_input_token_cost: 6.0e-09
   model_info:
     max_input_tokens: 1048576
     max_output_tokens: 384000
@@ -822,7 +822,7 @@ model_list:
     order: 4
     api_key: os.environ/POE_API_KEY
     input_cost_per_token: 5.0505e-06
-    output_cost_per_token: 3.23232e-05
+    output_cost_per_token: 3.0303e-05
     cache_read_input_token_cost: 1.2626e-06
   model_info:
     mode: image_generation
@@ -901,11 +901,11 @@ model_list:
     supports_vision: true
   model_name: kimi-k3
 - litellm_params:
-    cache_read_input_token_cost: 3.0e-07
-    input_cost_per_token: 3.0e-06
+    cache_read_input_token_cost: 2.3e-07
+    input_cost_per_token: 2.1e-06
     model: openrouter/moonshotai/kimi-k3
     order: 5
-    output_cost_per_token: 1.5e-05
+    output_cost_per_token: 1.095e-05
   model_info:
     max_input_tokens: 1048576
     max_output_tokens: 943718
@@ -1255,28 +1255,6 @@ model_list:
     complexity_router_default_model: glm-5.3-flash
     model: auto_router/complexity_router
   model_name: smart_router_1
-- model_name: union-alpha
-  litellm_params:
-    model: openai/stealth/union-alpha
-    order: 3
-    api_base: https://api.kilo.ai/api/gateway
-    api_key: os.environ/KILO_API_KEY
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
-  model_info:
-    max_input_tokens: 262144
-    max_output_tokens: 131072
-    supports_vision: true
-- model_name: union-alpha
-  litellm_params:
-    model: openrouter/stealth/union-alpha
-    order: 3
-    input_cost_per_token: 1.0e-09
-    output_cost_per_token: 1.0e-09
-  model_info:
-    max_input_tokens: 262144
-    max_output_tokens: 131072
-    supports_vision: true
 router_settings:
   enable_pre_call_checks: true
   fallbacks:
