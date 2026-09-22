@@ -845,6 +845,24 @@ model_list:
     max_output_tokens: 128000
     supports_vision: true
     supports_pdf_input: true
+- litellm_params:
+    api_base: os.environ/AZURE_OPENAI_API_BASE_SWEDEN
+    api_key: os.environ/AZURE_OPENAI_API_KEY_SWEDEN
+    cache_creation_input_token_cost: 1.25e-07
+    cache_read_input_token_cost: 1.0e-08
+    input_cost_per_token: 1.0000000000000001e-07
+    model: azure_ai/gpt-6-luna
+    order: 4
+    output_cost_per_token: 5.0e-07
+    rpm: 150
+    tpm: 150000
+  model_info:
+    base_model: azure_ai/gpt-6-luna
+    max_input_tokens: 1050000
+    max_output_tokens: 128000
+    supports_vision: true
+    supports_pdf_input: true
+  model_name: gpt-6-luna
 - model_name: gpt-6-luna
   litellm_params:
     model: openai/openai/gpt-6-luna
@@ -885,6 +903,24 @@ model_list:
     max_output_tokens: 128000
     supports_vision: true
     supports_pdf_input: true
+- litellm_params:
+    api_base: os.environ/AZURE_OPENAI_API_BASE
+    api_key: os.environ/AZURE_OPENAI_API_KEY
+    cache_creation_input_token_cost: 2.5e-06
+    cache_read_input_token_cost: 2.0000000000000002e-07
+    input_cost_per_token: 2.0e-06
+    model: azure_ai/gpt-6-sol
+    order: 4
+    output_cost_per_token: 1.0e-05
+    rpm: 150
+    tpm: 150000
+  model_info:
+    base_model: azure_ai/gpt-6-sol
+    max_input_tokens: 1050000
+    max_output_tokens: 128000
+    supports_vision: true
+    supports_pdf_input: true
+  model_name: gpt-6-sol
 - model_name: gpt-6-sol
   litellm_params:
     model: openai/openai/gpt-6-sol
