@@ -203,9 +203,11 @@ models:
     providers:
       openrouter: xiaomi/mimo-v2.6-flash
       kilo: xiaomi/mimo-v2.6-flash
+      requesty: xiaomi/mimo-v2.6-flash
   mimo-v2.6-pro:
     display_name: mimo-v2.6-pro
     description: ''
     providers:
       openrouter: xiaomi/mimo-v2.6-pro
       kilo: xiaomi/mimo-v2.6-pro
+      requesty: xiaomi/mimo-v2.6-pro
