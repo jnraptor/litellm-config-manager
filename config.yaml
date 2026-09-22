@@ -186,6 +186,49 @@ model_list:
     supports_vision: true
     supports_pdf_input: true
   model_name: claude-opus-5
+- model_name: claude-opus-5-5
+  litellm_params:
+    model: openai/anthropic/claude-opus-5.5
+    order: 4
+    api_base: https://api.kilo.ai/api/gateway
+    api_key: os.environ/KILO_API_KEY
+    input_cost_per_token: 4.0e-06
+    output_cost_per_token: 2.0e-05
+    cache_creation_input_token_cost: 5.0e-06
+    cache_read_input_token_cost: 2.0e-07
+  model_info:
+    max_input_tokens: 1000000
+    max_output_tokens: 128000
+    supports_vision: true
+    supports_pdf_input: true
+- model_name: claude-opus-5-5
+  litellm_params:
+    model: openai/claude-opus-5-5
+    order: 5
+    api_base: https://router.requesty.ai/v1
+    api_key: os.environ/REQUESTY_API_KEY
+    input_cost_per_token: 5.0e-06
+    output_cost_per_token: 2.5e-05
+    cache_creation_input_token_cost: 6.25e-06
+    cache_read_input_token_cost: 5.0e-07
+  model_info:
+    max_input_tokens: 1000000
+    max_output_tokens: 128000
+    supports_vision: true
+    supports_pdf_input: true
+- model_name: claude-opus-5-5
+  litellm_params:
+    model: openrouter/anthropic/claude-opus-5.5
+    order: 5
+    input_cost_per_token: 4.0e-06
+    output_cost_per_token: 2.0e-05
+    cache_creation_input_token_cost: 5.0e-06
+    cache_read_input_token_cost: 2.0e-07
+  model_info:
+    max_input_tokens: 1000000
+    max_output_tokens: 128000
+    supports_vision: true
+    supports_pdf_input: true
 - litellm_params:
     api_base: https://api.kilo.ai/api/gateway
     api_key: os.environ/KILO_API_KEY
@@ -304,7 +347,7 @@ model_list:
     cache_read_input_token_cost: 6.0e-09
   model_info:
     max_input_tokens: 1048576
-    max_output_tokens: 384000
+    max_output_tokens: 943718
     supports_vision: true
 - model_name: deepseek-v4.1-flash
   litellm_params:
@@ -331,12 +374,12 @@ model_list:
   litellm_params:
     model: openrouter/deepseek/deepseek-v4.1-flash
     order: 5
-    input_cost_per_token: 1.5e-07
-    output_cost_per_token: 6.0e-07
-    cache_read_input_token_cost: 3.0e-09
+    input_cost_per_token: 1.0e-07
+    output_cost_per_token: 5.0e-07
+    cache_read_input_token_cost: 1.0e-08
   model_info:
     max_input_tokens: 1048576
-    max_output_tokens: 384000
+    max_output_tokens: 943718
     supports_vision: true
 - litellm_params:
     api_key: os.environ/GEMINI_API_KEY
@@ -444,11 +487,11 @@ model_list:
     max_output_tokens: 1048576
   model_name: glm-5.3
 - litellm_params:
-    cache_read_input_token_cost: 1.2142e-07
-    input_cost_per_token: 6.538e-07
+    cache_read_input_token_cost: 1.0426e-07
+    input_cost_per_token: 5.614e-07
     model: openrouter/z-ai/glm-5.3
     order: 5
-    output_cost_per_token: 2.0548e-06
+    output_cost_per_token: 1.7644e-06
   model_info:
     max_input_tokens: 1310720
     max_output_tokens: 131072
@@ -797,6 +840,86 @@ model_list:
     output_cost_per_token: 5.0e-05
     cache_creation_input_token_cost: 1.25e-05
     cache_read_input_token_cost: 1.0e-06
+  model_info:
+    max_input_tokens: 1050000
+    max_output_tokens: 128000
+    supports_vision: true
+    supports_pdf_input: true
+- model_name: gpt-6-luna
+  litellm_params:
+    model: openai/openai/gpt-6-luna
+    order: 4
+    api_base: https://api.kilo.ai/api/gateway
+    api_key: os.environ/KILO_API_KEY
+    input_cost_per_token: 1.0e-07
+    output_cost_per_token: 5.0e-07
+    cache_creation_input_token_cost: 1.25e-07
+    cache_read_input_token_cost: 1.0e-08
+  model_info:
+    max_input_tokens: 1050000
+    max_output_tokens: 128000
+    supports_vision: true
+    supports_pdf_input: true
+- model_name: gpt-6-luna
+  litellm_params:
+    model: openai/gpt-6-luna
+    order: 5
+    api_base: https://router.requesty.ai/v1
+    api_key: os.environ/REQUESTY_API_KEY
+    input_cost_per_token: 1.0e-07
+    output_cost_per_token: 5.0e-07
+    cache_read_input_token_cost: 1.0e-08
+  model_info:
+    max_input_tokens: 1050000
+    max_output_tokens: 128000
+- model_name: gpt-6-luna
+  litellm_params:
+    model: openrouter/openai/gpt-6-luna
+    order: 5
+    input_cost_per_token: 1.0e-07
+    output_cost_per_token: 5.0e-07
+    cache_creation_input_token_cost: 1.25e-07
+    cache_read_input_token_cost: 1.0e-08
+  model_info:
+    max_input_tokens: 1050000
+    max_output_tokens: 128000
+    supports_vision: true
+    supports_pdf_input: true
+- model_name: gpt-6-sol
+  litellm_params:
+    model: openai/openai/gpt-6-sol
+    order: 4
+    api_base: https://api.kilo.ai/api/gateway
+    api_key: os.environ/KILO_API_KEY
+    input_cost_per_token: 2.0e-06
+    output_cost_per_token: 1.0e-05
+    cache_creation_input_token_cost: 2.5e-06
+    cache_read_input_token_cost: 2.0e-07
+  model_info:
+    max_input_tokens: 1050000
+    max_output_tokens: 128000
+    supports_vision: true
+    supports_pdf_input: true
+- model_name: gpt-6-sol
+  litellm_params:
+    model: openai/gpt-6-sol
+    order: 5
+    api_base: https://router.requesty.ai/v1
+    api_key: os.environ/REQUESTY_API_KEY
+    input_cost_per_token: 2.0e-06
+    output_cost_per_token: 1.0e-05
+    cache_read_input_token_cost: 2.0e-07
+  model_info:
+    max_input_tokens: 1050000
+    max_output_tokens: 128000
+- model_name: gpt-6-sol
+  litellm_params:
+    model: openrouter/openai/gpt-6-sol
+    order: 5
+    input_cost_per_token: 2.0e-06
+    output_cost_per_token: 1.0e-05
+    cache_creation_input_token_cost: 2.5e-06
+    cache_read_input_token_cost: 2.0e-07
   model_info:
     max_input_tokens: 1050000
     max_output_tokens: 128000

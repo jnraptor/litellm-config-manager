@@ -211,3 +211,27 @@ models:
       openrouter: xiaomi/mimo-v2.6-pro
       kilo: xiaomi/mimo-v2.6-pro
       requesty: xiaomi/mimo-v2.6-pro
+  claude-opus-5-5:
+    display_name: claude-opus-5-5
+    description: ''
+    providers:
+      openrouter: anthropic/claude-opus-5.5
+      kilo: anthropic/claude-opus-5.5
+      requesty: claude-opus-5-5
+      #azure_ai: claude-opus-5-5
+  gpt-6-sol:
+    display_name: gpt-6-sol
+    description: ''
+    providers:
+      openrouter: openai/gpt-6-sol
+      kilo: openai/gpt-6-sol
+      requesty: gpt-6-sol
+      #azure_ai: gpt-6-sol
+  gpt-6-luna:
+    display_name: gpt-6-luna
+    description: ''
+    providers:
+      openrouter: openai/gpt-6-luna
+      kilo: openai/gpt-6-luna
+      requesty: gpt-6-luna
+      #azure_ai: gpt-6-luna

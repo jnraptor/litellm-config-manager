@@ -70,6 +70,23 @@
             ]
           }
         },
+        "claude-opus-5-5": {
+          "name": "claude-opus-5-5",
+          "limit": {
+            "context": 1000000,
+            "output": 128000
+          },
+          "modalities": {
+            "input": [
+              "text",
+              "image",
+              "pdf"
+            ],
+            "output": [
+              "text"
+            ]
+          }
+        },
         "claude-sonnet-4-6": {
           "name": "claude-sonnet-4-6",
           "limit": {
@@ -108,7 +125,7 @@
           "name": "deepseek-v4.1-flash",
           "limit": {
             "context": 1048576,
-            "output": 393216
+            "output": 943718
           },
           "modalities": {
             "input": [
@@ -284,6 +301,40 @@
         },
         "gpt-6-astra": {
           "name": "gpt-6-astra",
+          "limit": {
+            "context": 1050000,
+            "output": 128000
+          },
+          "modalities": {
+            "input": [
+              "text",
+              "image",
+              "pdf"
+            ],
+            "output": [
+              "text"
+            ]
+          }
+        },
+        "gpt-6-luna": {
+          "name": "gpt-6-luna",
+          "limit": {
+            "context": 1050000,
+            "output": 128000
+          },
+          "modalities": {
+            "input": [
+              "text",
+              "image",
+              "pdf"
+            ],
+            "output": [
+              "text"
+            ]
+          }
+        },
+        "gpt-6-sol": {
+          "name": "gpt-6-sol",
           "limit": {
             "context": 1050000,
             "output": 128000
