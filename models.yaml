@@ -197,3 +197,15 @@ models:
       kilo: deepseek/deepseek-v4.1-flash
       fireworks: accounts/fireworks/models/deepseek-v4p1-flash
       requesty: deepseek-v4.1-flash
+  mimo-v2.6-flash:
+    display_name: mimo-v2.6-flash
+    description: ''
+    providers:
+      openrouter: xiaomi/mimo-v2.6-flash
+      kilo: xiaomi/mimo-v2.6-flash
+  mimo-v2.6-pro:
+    display_name: mimo-v2.6-pro
+    description: ''
+    providers:
+      openrouter: xiaomi/mimo-v2.6-pro
+      kilo: xiaomi/mimo-v2.6-pro
