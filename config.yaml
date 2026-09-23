@@ -415,6 +415,22 @@ model_list:
     model: azure/gpt-5-nano
     order: 4
     output_cost_per_token: 4.0e-07
+    rpm: 250
+    tpm: 250000
+  model_info:
+    base_model: azure/gpt-5-nano
+    max_input_tokens: 400000
+    max_output_tokens: 128000
+    supports_vision: true
+  model_name: gpt-5-nano
+- litellm_params:
+    api_base: os.environ/AZURE_OPENAI_API_BASE
+    api_key: os.environ/AZURE_OPENAI_API_KEY
+    cache_read_input_token_cost: 1.0e-08
+    input_cost_per_token: 5.0e-08
+    model: azure/gpt-5-nano
+    order: 4
+    output_cost_per_token: 4.0e-07
     rpm: 100
     tpm: 100000
   model_info:
