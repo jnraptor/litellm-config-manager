@@ -11,24 +11,6 @@ models:
       opencode-go: anthropic/minimax-m3
       requesty: minimaxi/minimax-m3
       fireworks: accounts/fireworks/models/minimax-m3
-  claude-opus-4-8:
-    display_name: claude-opus-4-8
-    description: ''
-    providers:
-      openrouter: anthropic/claude-opus-4.8
-      vercel: anthropic/claude-opus-4.8
-      poe: claude-opus-4.8
-      kilo: anthropic/claude-opus-4.8
-      requesty: anthropic/claude-opus-4-8
-  claude-sonnet-4-6:
-    display_name: claude-sonnet-4-6
-    description: ''
-    providers:
-      openrouter: anthropic/claude-sonnet-4.6
-      vercel: anthropic/claude-sonnet-4.6
-      poe: claude-sonnet-4.6
-      kilo: stealth/claude-sonnet-4.6
-      requesty: anthropic/claude-sonnet-4-6
   claude-haiku-4-5:
     display_name: claude-haiku-4-5
     description: ''
@@ -57,13 +39,6 @@ models:
       fireworks: accounts/fireworks/models/kimi-k3
       opencode-go: openai/kimi-k3
       requesty: sference/kimi-k3
-  claude-opus-5:
-    display_name: claude-opus-5
-    description: ''
-    providers:
-      openrouter: anthropic/claude-opus-5
-      kilo: anthropic/claude-opus-5
-      requesty: anthropic/claude-opus-5
   gpt-5.6-luna:
     display_name: gpt-5.6-luna
     description: ''
@@ -218,7 +193,6 @@ models:
       openrouter: anthropic/claude-opus-5.5
       kilo: anthropic/claude-opus-5.5
       requesty: claude-opus-5-5
-      #azure_ai: claude-opus-5-5
   gpt-6-sol:
     display_name: gpt-6-sol
     description: ''
@@ -226,7 +200,6 @@ models:
       openrouter: openai/gpt-6-sol
       kilo: openai/gpt-6-sol
       requesty: gpt-6-sol
-      #azure_ai: gpt-6-sol
   gpt-6-luna:
     display_name: gpt-6-luna
     description: ''
@@ -234,4 +207,3 @@ models:
       openrouter: openai/gpt-6-luna
       kilo: openai/gpt-6-luna
       requesty: gpt-6-luna
-      #azure_ai: gpt-6-luna

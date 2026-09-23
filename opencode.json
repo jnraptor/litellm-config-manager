@@ -36,59 +36,8 @@
             ]
           }
         },
-        "claude-opus-4-8": {
-          "name": "claude-opus-4-8",
-          "limit": {
-            "context": 1000000,
-            "output": 128000
-          },
-          "modalities": {
-            "input": [
-              "text",
-              "image",
-              "pdf"
-            ],
-            "output": [
-              "text"
-            ]
-          }
-        },
-        "claude-opus-5": {
-          "name": "claude-opus-5",
-          "limit": {
-            "context": 1000000,
-            "output": 128000
-          },
-          "modalities": {
-            "input": [
-              "text",
-              "image",
-              "pdf"
-            ],
-            "output": [
-              "text"
-            ]
-          }
-        },
         "claude-opus-5-5": {
           "name": "claude-opus-5-5",
-          "limit": {
-            "context": 1000000,
-            "output": 128000
-          },
-          "modalities": {
-            "input": [
-              "text",
-              "image",
-              "pdf"
-            ],
-            "output": [
-              "text"
-            ]
-          }
-        },
-        "claude-sonnet-4-6": {
-          "name": "claude-sonnet-4-6",
           "limit": {
             "context": 1000000,
             "output": 128000
@@ -208,40 +157,6 @@
             "input": [
               "text",
               "image"
-            ],
-            "output": [
-              "text"
-            ]
-          }
-        },
-        "gpt-5.4-mini": {
-          "name": "gpt-5.4-mini",
-          "limit": {
-            "context": 400000,
-            "output": 128000
-          },
-          "modalities": {
-            "input": [
-              "text",
-              "image",
-              "pdf"
-            ],
-            "output": [
-              "text"
-            ]
-          }
-        },
-        "gpt-5.4-nano": {
-          "name": "gpt-5.4-nano",
-          "limit": {
-            "context": 400000,
-            "output": 128000
-          },
-          "modalities": {
-            "input": [
-              "text",
-              "image",
-              "pdf"
             ],
             "output": [
               "text"
