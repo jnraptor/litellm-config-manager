@@ -373,7 +373,7 @@ model_list:
     cache_read_input_token_cost: 3.0e-08
   model_info:
     max_input_tokens: 1310720
-    max_output_tokens: 131072
+    max_output_tokens: 128000
     supports_vision: true
 - model_name: glm-5.3-flash
   litellm_params:
@@ -401,11 +401,11 @@ model_list:
     model: openrouter/z-ai/glm-5.3-flash
     order: 5
     input_cost_per_token: 4.5e-08
-    output_cost_per_token: 6.0e-07
-    cache_read_input_token_cost: 2.85e-08
+    output_cost_per_token: 1.4e-07
+    cache_read_input_token_cost: 1.0e-08
   model_info:
     max_input_tokens: 1310720
-    max_output_tokens: 131072
+    max_output_tokens: 128000
     supports_vision: true
 - litellm_params:
     api_base: os.environ/AZURE_OPENAI_API_BASE_SWEDEN
