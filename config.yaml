@@ -112,10 +112,10 @@ model_list:
     order: 5
     api_base: https://router.requesty.ai/v1
     api_key: os.environ/REQUESTY_API_KEY
-    input_cost_per_token: 5.0e-06
-    output_cost_per_token: 2.5e-05
-    cache_creation_input_token_cost: 6.25e-06
-    cache_read_input_token_cost: 5.0e-07
+    input_cost_per_token: 4.0e-06
+    output_cost_per_token: 2.0e-05
+    cache_creation_input_token_cost: 5.0e-06
+    cache_read_input_token_cost: 2.0e-07
   model_info:
     max_input_tokens: 1000000
     max_output_tokens: 128000
@@ -200,7 +200,7 @@ model_list:
     cache_read_input_token_cost: 6.0e-09
   model_info:
     max_input_tokens: 1048576
-    max_output_tokens: 393216
+    max_output_tokens: 131072
     supports_vision: true
 - model_name: deepseek-v4.1-flash
   litellm_params:
@@ -227,12 +227,12 @@ model_list:
   litellm_params:
     model: openrouter/deepseek/deepseek-v4.1-flash
     order: 5
-    input_cost_per_token: 1.5e-07
-    output_cost_per_token: 6.0e-07
-    cache_read_input_token_cost: 3.0e-09
+    input_cost_per_token: 1.4e-07
+    output_cost_per_token: 4.2e-07
+    cache_read_input_token_cost: 4.2e-09
   model_info:
     max_input_tokens: 1048576
-    max_output_tokens: 393216
+    max_output_tokens: 131072
     supports_vision: true
 - litellm_params:
     api_key: os.environ/GEMINI_API_KEY
@@ -373,7 +373,7 @@ model_list:
     cache_read_input_token_cost: 3.0e-08
   model_info:
     max_input_tokens: 1310720
-    max_output_tokens: 128000
+    max_output_tokens: 131072
     supports_vision: true
 - model_name: glm-5.3-flash
   litellm_params:
@@ -400,12 +400,12 @@ model_list:
   litellm_params:
     model: openrouter/z-ai/glm-5.3-flash
     order: 5
-    input_cost_per_token: 4.5e-08
-    output_cost_per_token: 1.4e-07
-    cache_read_input_token_cost: 1.0e-08
+    input_cost_per_token: 4.0e-08
+    output_cost_per_token: 5.0e-07
+    cache_read_input_token_cost: 1.5e-08
   model_info:
     max_input_tokens: 1310720
-    max_output_tokens: 128000
+    max_output_tokens: 131072
     supports_vision: true
 - litellm_params:
     api_base: os.environ/AZURE_OPENAI_API_BASE_SWEDEN
@@ -1044,9 +1044,9 @@ model_list:
     api_key: os.environ/KILO_API_KEY
     input_cost_per_token: 4.35e-07
     output_cost_per_token: 8.7e-07
-    cache_read_input_token_cost: 3.6e-09
+    cache_read_input_token_cost: 4.0e-09
   model_info:
-    max_input_tokens: 1048576
+    max_input_tokens: 1050000
     max_output_tokens: 131072
     supports_vision: true
     supports_audio_input: true
@@ -1077,7 +1077,7 @@ model_list:
     output_cost_per_token: 8.7e-07
     cache_read_input_token_cost: 3.6e-09
   model_info:
-    max_input_tokens: 1048576
+    max_input_tokens: 1050000
     max_output_tokens: 131072
     supports_vision: true
     supports_audio_input: true
@@ -1190,17 +1190,17 @@ model_list:
     output_cost_per_token: 1.8e-07
   model_info:
     max_input_tokens: 1000000
-    max_output_tokens: 235929
+    max_output_tokens: 131072
   model_name: nemotron-3.5-lightning
 - litellm_params:
     cache_read_input_token_cost: 4.0e-08
-    input_cost_per_token: 7.0e-08
+    input_cost_per_token: 8.0e-08
     model: openrouter/nvidia/nemotron-3.5-lightning
     order: 5
     output_cost_per_token: 2.0e-07
   model_info:
     max_input_tokens: 1000000
-    max_output_tokens: 235929
+    max_output_tokens: 131072
   model_name: nemotron-3.5-lightning
 - litellm_params:
     api_base: http://ollama:11434

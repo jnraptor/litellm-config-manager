@@ -301,7 +301,7 @@
         "mimo-v2.6-pro": {
           "name": "mimo-v2.6-pro",
           "limit": {
-            "context": 1048576,
+            "context": 1050000,
             "output": 131072
           },
           "modalities": {
