@@ -177,6 +177,7 @@ models:
     description: ''
     providers:
       openrouter: xiaomi/mimo-v2.6-flash
+      poe: mimo-v2.6-flash-el
       kilo: xiaomi/mimo-v2.6-flash
       requesty: xiaomi/mimo-v2.6-flash
   mimo-v2.6-pro:
@@ -184,6 +185,7 @@ models:
     description: ''
     providers:
       openrouter: xiaomi/mimo-v2.6-pro
+      poe: mimo-v2.6-pro-el
       kilo: xiaomi/mimo-v2.6-pro
       requesty: xiaomi/mimo-v2.6-pro
   claude-opus-5-5:
