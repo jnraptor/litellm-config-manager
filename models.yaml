@@ -209,3 +209,17 @@ models:
       openrouter: openai/gpt-6-luna
       kilo: openai/gpt-6-luna
       requesty: gpt-6-luna
+  gpt-image-2.5-flare:
+    display_name: gpt-image-2.5-flare
+    description: ''
+    providers:
+      openrouter: openai/gpt-image-2.5-flare
+      requesty: openai/gpt-image-2.5-flare
+      azure_ai: gpt-image-2.5-flare
+  gpt-image-2.5-sunburst:
+    display_name: gpt-image-2.5-sunburst
+    description: ''
+    providers:
+      openrouter: openai/gpt-image-2.5-sunburst
+      requesty: openai/gpt-image-2.5-sunburst
+      azure_ai: gpt-image-2.5-sunburst
