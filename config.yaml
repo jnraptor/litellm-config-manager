@@ -227,9 +227,9 @@ model_list:
   litellm_params:
     model: openrouter/deepseek/deepseek-v4.1-flash
     order: 5
-    input_cost_per_token: 3.0e-07
-    output_cost_per_token: 1.2e-06
-    cache_read_input_token_cost: 6.0e-09
+    input_cost_per_token: 1.98e-08
+    output_cost_per_token: 3.96e-07
+    cache_read_input_token_cost: 2.91e-09
   model_info:
     max_input_tokens: 1048576
     max_output_tokens: 943718
@@ -317,7 +317,7 @@ model_list:
     order: 4
     output_cost_per_token: 4.4e-06
   model_info:
-    max_input_tokens: 1310720
+    max_input_tokens: 1048576
     max_output_tokens: 943717
   model_name: glm-5.3
 - model_name: glm-5.3
@@ -346,7 +346,7 @@ model_list:
     order: 5
     output_cost_per_token: 4.4e-06
   model_info:
-    max_input_tokens: 1310720
+    max_input_tokens: 1048576
     max_output_tokens: 943717
   model_name: glm-5.3
 - model_name: glm-5.3-flash
@@ -372,7 +372,7 @@ model_list:
     output_cost_per_token: 5.0e-07
     cache_read_input_token_cost: 3.0e-08
   model_info:
-    max_input_tokens: 1310720
+    max_input_tokens: 1048576
     max_output_tokens: 943717
     supports_vision: true
 - model_name: glm-5.3-flash
@@ -404,7 +404,7 @@ model_list:
     output_cost_per_token: 5.0e-07
     cache_read_input_token_cost: 3.0e-08
   model_info:
-    max_input_tokens: 1310720
+    max_input_tokens: 1048576
     max_output_tokens: 943717
     supports_vision: true
 - litellm_params:
@@ -1045,11 +1045,11 @@ model_list:
     order: 4
     api_base: https://api.kilo.ai/api/gateway
     api_key: os.environ/KILO_API_KEY
-    input_cost_per_token: 8.0e-08
-    output_cost_per_token: 1.28e-06
-    cache_read_input_token_cost: 8.0e-08
+    input_cost_per_token: 1.4e-07
+    output_cost_per_token: 2.8e-07
+    cache_read_input_token_cost: 2.8e-09
   model_info:
-    max_input_tokens: 1048576
+    max_input_tokens: 1050000
     max_output_tokens: 131072
     supports_vision: true
     supports_audio_input: true
@@ -1080,7 +1080,7 @@ model_list:
     output_cost_per_token: 2.8e-07
     cache_read_input_token_cost: 2.8e-09
   model_info:
-    max_input_tokens: 1048576
+    max_input_tokens: 1050000
     max_output_tokens: 131072
     supports_vision: true
     supports_audio_input: true
