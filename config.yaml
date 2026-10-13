@@ -234,9 +234,9 @@ model_list:
   litellm_params:
     model: openrouter/deepseek/deepseek-v4.1-flash
     order: 5
-    input_cost_per_token: 1.5e-07
-    output_cost_per_token: 6.0e-07
-    cache_read_input_token_cost: 3.0e-09
+    input_cost_per_token: 4.38e-08
+    output_cost_per_token: 1.752e-07
+    cache_read_input_token_cost: 8.76e-10
   model_info:
     max_input_tokens: 1048576
     max_output_tokens: 393216
@@ -407,9 +407,9 @@ model_list:
   litellm_params:
     model: openrouter/z-ai/glm-5.3-flash
     order: 5
-    input_cost_per_token: 2.32e-08
-    output_cost_per_token: 1.2e-06
-    cache_read_input_token_cost: 2.32e-08
+    input_cost_per_token: 2.61e-08
+    output_cost_per_token: 9.0e-07
+    cache_read_input_token_cost: 1.08e-08
   model_info:
     max_input_tokens: 1048576
     max_output_tokens: 943718
@@ -651,7 +651,7 @@ model_list:
     api_base: os.environ/AZURE_OPENAI_API_BASE
     api_key: os.environ/AZURE_OPENAI_API_KEY
     cache_creation_input_token_cost: 2.5e-06
-    cache_read_input_token_cost: 2.0000000000000002e-07
+    cache_read_input_token_cost: 1.0000000000000001e-07
     input_cost_per_token: 2.0e-06
     model: azure_ai/gpt-6.1-sol
     order: 4
