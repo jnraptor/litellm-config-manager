@@ -21,15 +21,6 @@ models:
       fireworks: accounts/fireworks/models/kimi-k3
       opencode-go: openai/kimi-k3
       requesty: sference/kimi-k3
-  gpt-5.6-luna:
-    display_name: gpt-5.6-luna
-    description: ''
-    providers:
-      openrouter: openai/gpt-5.6-luna
-      kilo: openai/gpt-5.6-luna
-      requesty: openai-responses/gpt-5.6-luna
-      azure_ai: gpt-5.6-luna
-      opencode-go: openai/gpt-5.6-luna
   qwen3.8-max:
     display_name: qwen3.8-max
     description: ''
@@ -78,23 +69,6 @@ models:
       fireworks: accounts/fireworks/models/glm-5p3-flash
       opencode-go: openai/glm-5.3-flash
       requesty: zai/glm-5.3-flash
-  qwen3.8-flash:
-    display_name: qwen3.8-flash
-    description: ''
-    providers:
-      openrouter: qwen/qwen3.8-flash
-      poe: qwen3.8-flash-el
-      kilo: qwen/qwen3.8-flash
-      opencode-go: anthropic/qwen3.8-flash
-      requesty: alibaba/qwen3.8-flash
-  gemini-3.8-flash:
-    display_name: gemini-3.8-flash
-    description: ''
-    providers:
-      openrouter: google/gemini-3.8-flash
-      poe: gemini-3.8-flash
-      kilo: google/gemini-3.8-flash
-      requesty: vertex/gemini-3.8-flash
   gpt-6-astra:
     display_name: gpt-6-astra
     description: ''
