@@ -186,3 +186,12 @@ models:
     providers:
       openrouter: nvidia/nemotron-3.5-super-vl
       kilo: nvidia/nemotron-3.5-super-vl
+  muse-spark-open:
+    display_name: muse-spark-open
+    description: ''
+    providers:
+      openrouter: meta/muse-spark-open
+      poe: muse-spark-open
+      kilo: meta/muse-spark-open
+      fireworks: accounts/fireworks/models/muse-spark-open
+      requesty: muse-spark-open
