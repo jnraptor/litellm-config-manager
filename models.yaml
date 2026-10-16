@@ -180,3 +180,9 @@ models:
       poe: claude-haiku-5.5
       kilo: anthropic/claude-haiku-5.5
       requesty: claude-haiku-5-5
+  nemotron-3.5-super-vl:
+    display_name: nemotron-3.5-super-vl
+    description: ''
+    providers:
+      openrouter: nvidia/nemotron-3.5-super-vl
+      kilo: nvidia/nemotron-3.5-super-vl

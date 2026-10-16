@@ -105,7 +105,7 @@
           "name": "glm-5.3-flash",
           "limit": {
             "context": 1048576,
-            "output": 943717
+            "output": 943718
           },
           "modalities": {
             "input": [
@@ -284,6 +284,22 @@
           "modalities": {
             "input": [
               "text"
+            ],
+            "output": [
+              "text"
+            ]
+          }
+        },
+        "nemotron-3.5-super-vl": {
+          "name": "nemotron-3.5-super-vl",
+          "limit": {
+            "context": 1048576,
+            "output": 235929
+          },
+          "modalities": {
+            "input": [
+              "text",
+              "image"
             ],
             "output": [
               "text"
