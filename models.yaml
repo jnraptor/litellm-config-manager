@@ -195,3 +195,10 @@ models:
       kilo: meta/muse-spark-open
       fireworks: accounts/fireworks/models/muse-spark-open
       requesty: muse-spark-open
+  deepseek-v4.1-flash-1017:
+    display_name: deepseek-v4.1-flash-1017
+    description: ''
+    providers:
+      openrouter: deepseek/deepseek-v4.1-flash-1017
+      kilo: deepseek/deepseek-v4.1-flash-1017
+      requesty: deepseek-v4.1-flash-1017
