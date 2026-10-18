@@ -337,7 +337,7 @@ model_list:
     input_cost_per_token: 7.9e-08
     model: openrouter/z-ai/glm-5.3
     order: 5
-    output_cost_per_token: 2.5e-06
+    output_cost_per_token: 1.4e-06
   model_info:
     max_input_tokens: 1048576
     max_output_tokens: 943718
@@ -764,7 +764,7 @@ model_list:
   model_name: kimi-k3
 - litellm_params:
     cache_read_input_token_cost: 2.1e-07
-    input_cost_per_token: 3.04e-07
+    input_cost_per_token: 2.49e-07
     model: openrouter/moonshotai/kimi-k3
     order: 5
     output_cost_per_token: 1.1936e-05
