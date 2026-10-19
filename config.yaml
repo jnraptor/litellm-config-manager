@@ -234,7 +234,7 @@ model_list:
   litellm_params:
     model: openrouter/deepseek/deepseek-v4.1-flash
     order: 5
-    input_cost_per_token: 3.76e-08
+    input_cost_per_token: 3.04e-08
     output_cost_per_token: 8.0e-08
     cache_read_input_token_cost: 1.6e-09
   model_info:
@@ -995,6 +995,7 @@ model_list:
   model_info:
     max_input_tokens: 1000000
     max_output_tokens: 524288
+    supports_vision: true
 - model_name: minimax-m3.1-flash
   litellm_params:
     model: openrouter/minimax/minimax-m3.1-flash:free
@@ -1004,6 +1005,7 @@ model_list:
   model_info:
     max_input_tokens: 1000000
     max_output_tokens: 524288
+    supports_vision: true
 - model_name: muse-spark-open
   litellm_params:
     model: fireworks_ai/accounts/fireworks/models/muse-spark-open
