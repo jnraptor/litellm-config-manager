@@ -291,6 +291,21 @@
             ]
           }
         },
+        "minimax-m3.1-flash": {
+          "name": "minimax-m3.1-flash",
+          "limit": {
+            "context": 1000000,
+            "output": 524288
+          },
+          "modalities": {
+            "input": [
+              "text"
+            ],
+            "output": [
+              "text"
+            ]
+          }
+        },
         "muse-spark-open": {
           "name": "muse-spark-open",
           "limit": {

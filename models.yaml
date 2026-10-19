@@ -203,3 +203,9 @@ models:
       kilo: deepseek/deepseek-v4.1-flash-1017
       fireworks: accounts/fireworks/models/deepseek-v4p1-flash-1017
       requesty: deepseek-v4.1-flash-1017
+  minimax-m3.1-flash:
+    display_name: minimax-m3.1-flash
+    description: ''
+    providers:
+      openrouter: minimax/minimax-m3.1-flash:free
+      kilo: minimax/minimax-m3.1-flash:free
