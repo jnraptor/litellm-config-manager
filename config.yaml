@@ -235,7 +235,7 @@ model_list:
     model: openrouter/deepseek/deepseek-v4.1-flash
     order: 5
     input_cost_per_token: 4.0e-08
-    output_cost_per_token: 1.44e-07
+    output_cost_per_token: 8.0e-08
     cache_read_input_token_cost: 1.6e-09
   model_info:
     max_input_tokens: 1048576
@@ -394,7 +394,7 @@ model_list:
     model: openrouter/z-ai/glm-5.3-flash
     order: 5
     input_cost_per_token: 4.8e-08
-    output_cost_per_token: 2.0e-07
+    output_cost_per_token: 1.6e-07
     cache_read_input_token_cost: 6.0e-09
   model_info:
     max_input_tokens: 1048576
@@ -764,7 +764,7 @@ model_list:
   model_name: kimi-k3
 - litellm_params:
     cache_read_input_token_cost: 2.1e-07
-    input_cost_per_token: 2.49e-07
+    input_cost_per_token: 2.39e-07
     model: openrouter/moonshotai/kimi-k3
     order: 5
     output_cost_per_token: 1.1936e-05

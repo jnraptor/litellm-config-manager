@@ -201,4 +201,5 @@ models:
     providers:
       openrouter: deepseek/deepseek-v4.1-flash-1017
       kilo: deepseek/deepseek-v4.1-flash-1017
+      fireworks: accounts/fireworks/models/deepseek-v4p1-flash-1017
       requesty: deepseek-v4.1-flash-1017
