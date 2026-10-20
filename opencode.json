@@ -70,22 +70,6 @@
             ]
           }
         },
-        "deepseek-v4.1-flash": {
-          "name": "deepseek-v4.1-flash",
-          "limit": {
-            "context": 1048576,
-            "output": 943718
-          },
-          "modalities": {
-            "input": [
-              "text",
-              "image"
-            ],
-            "output": [
-              "text"
-            ]
-          }
-        },
         "deepseek-v4.1-flash-1017": {
           "name": "deepseek-v4.1-flash-1017",
           "limit": {
