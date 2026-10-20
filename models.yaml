@@ -201,3 +201,5 @@ models:
     providers:
       openrouter: minimax/minimax-m3.1-flash:free
       kilo: minimax/minimax-m3.1-flash:free
+      requesty: minimax-m3.1-flash
+      poe: minimax-m3.1-flash
