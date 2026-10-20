@@ -211,12 +211,11 @@ model_list:
     supports_vision: true
 - model_name: deepseek-v4.1-flash-1017
   litellm_params:
-    model: poe/deepseek-v4.1-1017
+    model: poe/ds-v4.1-flash-1017
     order: 4
     api_key: os.environ/POE_API_KEY
     input_cost_per_token: 3.03e-07
     output_cost_per_token: 1.2121e-06
-    cache_read_input_token_cost: 6.1e-09
 - model_name: deepseek-v4.1-flash-1017
   litellm_params:
     model: openai/deepseek-v4.1-flash-1017
