@@ -211,7 +211,7 @@ model_list:
     supports_vision: true
 - model_name: deepseek-v4.1-flash-1017
   litellm_params:
-    model: poe/ds-v4.1-flash-1017
+    model: poe/deepseek-v4.1-1017
     order: 4
     api_key: os.environ/POE_API_KEY
     input_cost_per_token: 3.03e-07
@@ -265,7 +265,7 @@ model_list:
   model_name: glm-5.3
 - model_name: glm-5.3
   litellm_params:
-    model: poe/glm-5.3-el
+    model: poe/glm-5.3
     order: 4
     api_key: os.environ/POE_API_KEY
     input_cost_per_token: 1.4141e-06
@@ -320,7 +320,7 @@ model_list:
     supports_vision: true
 - model_name: glm-5.3-flash
   litellm_params:
-    model: poe/glm-5.3-flash-el
+    model: poe/glm-5.3-flash
     order: 4
     api_key: os.environ/POE_API_KEY
     input_cost_per_token: 7.58e-08
@@ -805,7 +805,7 @@ model_list:
     supports_audio_input: true
 - model_name: mimo-v2.6-flash
   litellm_params:
-    model: poe/mimo-v2.6-flash-el
+    model: poe/mimo-v2.6-flash
     order: 4
     api_key: os.environ/POE_API_KEY
     input_cost_per_token: 1.414e-07
@@ -850,7 +850,7 @@ model_list:
     supports_audio_input: true
 - model_name: mimo-v2.6-pro
   litellm_params:
-    model: poe/mimo-v2.6-pro-el
+    model: poe/mimo-v2.6-pro
     order: 4
     api_key: os.environ/POE_API_KEY
     input_cost_per_token: 4.394e-07
