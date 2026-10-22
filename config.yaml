@@ -345,9 +345,9 @@ model_list:
   litellm_params:
     model: openrouter/z-ai/glm-5.3-flash
     order: 5
-    input_cost_per_token: 3.43e-08
-    output_cost_per_token: 5.385e-08
-    cache_read_input_token_cost: 6.0e-09
+    input_cost_per_token: 5.2e-09
+    output_cost_per_token: 1.985e-07
+    cache_read_input_token_cost: 5.2e-09
   model_info:
     max_input_tokens: 1048576
     max_output_tokens: 943718
