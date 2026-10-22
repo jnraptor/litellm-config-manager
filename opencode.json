@@ -310,21 +310,6 @@
             ]
           }
         },
-        "nemotron-3.5-lightning": {
-          "name": "nemotron-3.5-lightning",
-          "limit": {
-            "context": 1000000,
-            "output": 262144
-          },
-          "modalities": {
-            "input": [
-              "text"
-            ],
-            "output": [
-              "text"
-            ]
-          }
-        },
         "nemotron-3.5-super-vl": {
           "name": "nemotron-3.5-super-vl",
           "limit": {
