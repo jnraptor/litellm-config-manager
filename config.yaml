@@ -739,6 +739,7 @@ model_list:
   model_info:
     max_input_tokens: 1048576
     max_output_tokens: 943718
+    supports_vision: true
 - model_name: kimi-k3.1-pro
   litellm_params:
     model: openai/kimi-k3.1-pro
@@ -762,6 +763,7 @@ model_list:
   model_info:
     max_input_tokens: 1048576
     max_output_tokens: 943718
+    supports_vision: true
 - litellm_params:
     api_base: os.environ/AZURE_MAI_API_BASE_EASTUS
     api_key: os.environ/AZURE_AI_API_KEY_EASTUS
