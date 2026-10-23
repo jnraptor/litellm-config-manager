@@ -105,7 +105,7 @@
           "name": "glm-5.3-flash",
           "limit": {
             "context": 1048576,
-            "output": 943718
+            "output": 943717
           },
           "modalities": {
             "input": [
@@ -220,6 +220,21 @@
             "input": [
               "text",
               "image"
+            ],
+            "output": [
+              "text"
+            ]
+          }
+        },
+        "kimi-k3.1-pro": {
+          "name": "kimi-k3.1-pro",
+          "limit": {
+            "context": 1048576,
+            "output": 1048576
+          },
+          "modalities": {
+            "input": [
+              "text"
             ],
             "output": [
               "text"

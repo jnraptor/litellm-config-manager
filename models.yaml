@@ -193,3 +193,10 @@ models:
       kilo: minimax/minimax-m3.1-flash
       fireworks: accounts/fireworks/models/minimax-m3p1-flash
       requesty: minimax-m3.1-flash
+  kimi-k3.1-pro:
+    display_name: kimi-k3.1-pro
+    description: ''
+    providers:
+      openrouter: moonshotai/kimi-k3.1-pro
+      kilo: moonshotai/kimi-k3.1-pro
+      requesty: kimi-k3.1-pro
