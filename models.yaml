@@ -191,5 +191,5 @@ models:
     providers:
       openrouter: minimax/minimax-m3.1-flash
       kilo: minimax/minimax-m3.1-flash
+      fireworks: accounts/fireworks/models/minimax-m3p1-flash
       requesty: minimax-m3.1-flash
-      
