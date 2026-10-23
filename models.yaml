@@ -100,7 +100,7 @@ models:
       openrouter: xiaomi/mimo-v2.6-flash
       poe: mimo-v2.6-flash-el
       kilo: xiaomi/mimo-v2.6-flash
-      requesty: xiaomi/mimo-v2.6-flash
+      requesty: mimo-v2.6-flash
   mimo-v2.6-pro:
     display_name: mimo-v2.6-pro
     description: ''
@@ -108,7 +108,7 @@ models:
       openrouter: xiaomi/mimo-v2.6-pro
       poe: mimo-v2.6-pro-el
       kilo: xiaomi/mimo-v2.6-pro
-      requesty: xiaomi/mimo-v2.6-pro
+      requesty: mimo-v2.6-pro
   claude-opus-5-5:
     display_name: claude-opus-5-5
     description: ''
@@ -181,15 +181,15 @@ models:
     description: ''
     providers:
       openrouter: deepseek/deepseek-v4.1-flash-1017
+      poe: deepseek-v4.1-flash-1017
       kilo: deepseek/deepseek-v4.1-flash-1017
       fireworks: accounts/fireworks/models/deepseek-v4p1-flash-1017
       requesty: deepseek-v4.1-flash-1017
-      poe: ds-v4.1-flash-1017
   minimax-m3.1-flash:
     display_name: minimax-m3.1-flash
     description: ''
     providers:
-      openrouter: minimax/minimax-m3.1-flash:free
-      kilo: minimax/minimax-m3.1-flash:free
+      openrouter: minimax/minimax-m3.1-flash
+      kilo: minimax/minimax-m3.1-flash
       requesty: minimax-m3.1-flash
-      poe: minimax-m3.1-flash
+      
