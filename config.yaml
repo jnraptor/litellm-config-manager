@@ -1196,9 +1196,9 @@ model_list:
 - litellm_params:
     complexity_router_config:
       tiers:
-        COMPLEX: glm-5.3
-        MEDIUM: deepseek-v4.1-flash
-        REASONING: kimi-k3
+        COMPLEX: deepseek-v4.1-flash
+        MEDIUM: minimax-m3.1-flash
+        REASONING: kimi-k3.1-pro
         SIMPLE: glm-5.3-flash
       tier_boundaries:
         complex_reasoning: 0.6
