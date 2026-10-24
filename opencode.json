@@ -210,22 +210,6 @@
             ]
           }
         },
-        "kimi-k3": {
-          "name": "kimi-k3",
-          "limit": {
-            "context": 1048576,
-            "output": 943718
-          },
-          "modalities": {
-            "input": [
-              "text",
-              "image"
-            ],
-            "output": [
-              "text"
-            ]
-          }
-        },
         "kimi-k3.1-pro": {
           "name": "kimi-k3.1-pro",
           "limit": {

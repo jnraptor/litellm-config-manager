@@ -11,16 +11,6 @@ models:
       opencode-go: anthropic/minimax-m3
       requesty: minimaxi/minimax-m3
       fireworks: accounts/fireworks/models/minimax-m3
-  kimi-k3:
-    display_name: kimi-k3
-    description: ''
-    providers:
-      openrouter: moonshotai/kimi-k3
-      poe: kimi-k3
-      kilo: moonshotai/kimi-k3
-      fireworks: accounts/fireworks/models/kimi-k3
-      opencode-go: openai/kimi-k3
-      requesty: sference/kimi-k3
   qwen3.8-max:
     display_name: qwen3.8-max
     description: ''
