@@ -198,5 +198,6 @@ models:
     description: ''
     providers:
       openrouter: moonshotai/kimi-k3.1-pro
+      poe: kimi-k3.1-pro
       kilo: moonshotai/kimi-k3.1-pro
       requesty: kimi-k3.1-pro
