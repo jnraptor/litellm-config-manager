@@ -285,8 +285,8 @@ model_list:
     max_output_tokens: 1048576
   model_name: glm-5.3
 - litellm_params:
-    cache_read_input_token_cost: 7.8e-08
-    input_cost_per_token: 7.9e-08
+    cache_read_input_token_cost: 6.89e-08
+    input_cost_per_token: 6.99e-08
     model: openrouter/z-ai/glm-5.3
     order: 5
     output_cost_per_token: 1.4e-06
@@ -655,20 +655,6 @@ model_list:
   litellm_params:
     model: openrouter/openai/gpt-image-2.5-sunburst
     order: 5
-- litellm_params:
-    api_key: os.environ/JINA_AI_API_KEY
-    model: jina_ai/jina-embeddings-v4
-    order: 5
-  model_info:
-    mode: embedding
-  model_name: jina-embeddings-v4
-- litellm_params:
-    api_key: os.environ/JINA_AI_API_KEY
-    model: jina_ai/jina-reranker-m0
-    order: 5
-  model_info:
-    mode: rerank
-  model_name: jina-reranker-m0
 - model_name: kimi-k3.1-pro
   litellm_params:
     model: openai/moonshotai/kimi-k3.1-pro
@@ -960,8 +946,8 @@ model_list:
     order: 4
     api_base: https://api.kilo.ai/api/gateway
     api_key: os.environ/KILO_API_KEY
-    input_cost_per_token: 9.0e-08
-    output_cost_per_token: 5.0e-07
+    input_cost_per_token: 1.0e-07
+    output_cost_per_token: 5.5e-07
     cache_read_input_token_cost: 1.0e-08
   model_info:
     max_input_tokens: 1048576
