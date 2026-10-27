@@ -186,6 +186,23 @@
             ]
           }
         },
+        "gpt-6.1-terra": {
+          "name": "gpt-6.1-terra",
+          "limit": {
+            "context": 1050000,
+            "output": 128000
+          },
+          "modalities": {
+            "input": [
+              "text",
+              "image",
+              "pdf"
+            ],
+            "output": [
+              "text"
+            ]
+          }
+        },
         "gpt-image-2.5-flare": {
           "name": "gpt-image-2.5-flare",
           "modalities": {

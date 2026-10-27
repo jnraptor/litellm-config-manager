@@ -191,3 +191,11 @@ models:
       poe: kimi-k3.1-pro
       kilo: moonshotai/kimi-k3.1-pro
       requesty: kimi-k3.1-pro
+  gpt-6.1-terra:
+    display_name: gpt-6.1-terra
+    description: ''
+    providers:
+      openrouter: openai/gpt-6.1-terra
+      kilo: openai/gpt-6.1-terra
+      requesty: gpt-6.1-terra
+      azure_ai: gpt-6.1-terra

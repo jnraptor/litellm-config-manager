@@ -569,6 +569,64 @@ model_list:
     max_output_tokens: 128000
     supports_vision: true
     supports_pdf_input: true
+- model_name: gpt-6.1-terra
+  litellm_params:
+    model: azure_ai/gpt-6.1-terra
+    order: 4
+    input_cost_per_token: 1.0e-06
+    output_cost_per_token: 5.0e-06
+    cache_creation_input_token_cost: 1.25e-06
+    cache_read_input_token_cost: 5.0000000000000004e-08
+    api_base: os.environ/AZURE_OPENAI_API_BASE_SWEDEN
+    api_key: os.environ/AZURE_OPENAI_API_KEY_SWEDEN
+  model_info:
+    max_input_tokens: 1050000
+    max_output_tokens: 128000
+    supports_vision: true
+    supports_pdf_input: true
+- model_name: gpt-6.1-terra
+  litellm_params:
+    model: openai/openai/gpt-6.1-terra
+    order: 4
+    api_base: https://api.kilo.ai/api/gateway
+    api_key: os.environ/KILO_API_KEY
+    input_cost_per_token: 1.0e-06
+    output_cost_per_token: 5.0e-06
+    cache_creation_input_token_cost: 1.25e-06
+    cache_read_input_token_cost: 5.0e-08
+  model_info:
+    max_input_tokens: 1050000
+    max_output_tokens: 128000
+    supports_vision: true
+    supports_pdf_input: true
+- model_name: gpt-6.1-terra
+  litellm_params:
+    model: openai/gpt-6.1-terra
+    order: 5
+    api_base: https://router.requesty.ai/v1
+    api_key: os.environ/REQUESTY_API_KEY
+    input_cost_per_token: 1.0e-06
+    output_cost_per_token: 5.0e-06
+    cache_creation_input_token_cost: 2.5e-06
+    cache_read_input_token_cost: 5.0e-08
+  model_info:
+    max_input_tokens: 1050000
+    max_output_tokens: 128000
+    supports_vision: true
+    supports_pdf_input: true
+- model_name: gpt-6.1-terra
+  litellm_params:
+    model: openrouter/openai/gpt-6.1-terra
+    order: 5
+    input_cost_per_token: 1.0e-06
+    output_cost_per_token: 5.0e-06
+    cache_creation_input_token_cost: 1.25e-06
+    cache_read_input_token_cost: 5.0e-08
+  model_info:
+    max_input_tokens: 1050000
+    max_output_tokens: 128000
+    supports_vision: true
+    supports_pdf_input: true
 - litellm_params:
     api_base: os.environ/AZURE_OPENAI_API_BASE
     api_key: os.environ/AZURE_OPENAI_API_KEY
@@ -946,9 +1004,9 @@ model_list:
     order: 4
     api_base: https://api.kilo.ai/api/gateway
     api_key: os.environ/KILO_API_KEY
-    input_cost_per_token: 1.0e-07
-    output_cost_per_token: 5.5e-07
-    cache_read_input_token_cost: 1.0e-08
+    input_cost_per_token: 1.5e-07
+    output_cost_per_token: 6.0e-07
+    cache_read_input_token_cost: 1.5e-08
   model_info:
     max_input_tokens: 1048576
     max_output_tokens: 524288
