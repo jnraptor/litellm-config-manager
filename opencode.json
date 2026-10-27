@@ -309,24 +309,6 @@
             ]
           }
         },
-        "muse-spark-open": {
-          "name": "muse-spark-open",
-          "limit": {
-            "context": 1048576,
-            "output": 943718
-          },
-          "modalities": {
-            "input": [
-              "text",
-              "image",
-              "pdf",
-              "audio"
-            ],
-            "output": [
-              "text"
-            ]
-          }
-        },
         "nemotron-3.5-super-vl": {
           "name": "nemotron-3.5-super-vl",
           "limit": {
@@ -353,23 +335,6 @@
             "input": [
               "text",
               "image"
-            ],
-            "output": [
-              "text"
-            ]
-          }
-        },
-        "qwen3.8-max": {
-          "name": "qwen3.8-max",
-          "limit": {
-            "context": 1048576,
-            "output": 131072
-          },
-          "modalities": {
-            "input": [
-              "text",
-              "image",
-              "pdf"
             ],
             "output": [
               "text"

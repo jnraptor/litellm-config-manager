@@ -11,16 +11,6 @@ models:
       opencode-go: anthropic/minimax-m3
       requesty: minimaxi/minimax-m3
       fireworks: accounts/fireworks/models/minimax-m3
-  qwen3.8-max:
-    display_name: qwen3.8-max
-    description: ''
-    providers:
-      openrouter: qwen/qwen3.8-max-0902
-      poe: qwen3.8-max-0902-el
-      kilo: qwen/qwen3.8-max-0902
-      fireworks: accounts/fireworks/models/qwen3p8-max
-      requesty: qwen3.8-max
-      opencode-go: openai/qwen3.8-max
   gemini-3.7-flash:
     display_name: gemini-3.7-flash
     description: ''
@@ -157,15 +147,6 @@ models:
     providers:
       openrouter: nvidia/nemotron-3.5-super-vl
       kilo: nvidia/nemotron-3.5-super-vl
-  muse-spark-open:
-    display_name: muse-spark-open
-    description: ''
-    providers:
-      openrouter: meta/muse-spark-open
-      poe: muse-spark-open
-      kilo: meta/muse-spark-open
-      fireworks: accounts/fireworks/models/muse-spark-open
-      requesty: muse-spark-open
   deepseek-v4.1-flash-1017:
     display_name: deepseek-v4.1-flash-1017
     description: ''
