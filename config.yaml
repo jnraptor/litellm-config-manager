@@ -607,7 +607,7 @@ model_list:
     api_key: os.environ/REQUESTY_API_KEY
     input_cost_per_token: 1.0e-06
     output_cost_per_token: 5.0e-06
-    cache_creation_input_token_cost: 2.5e-06
+    cache_creation_input_token_cost: 1.25e-06
     cache_read_input_token_cost: 5.0e-08
   model_info:
     max_input_tokens: 1050000
@@ -944,11 +944,11 @@ model_list:
 - litellm_params:
     api_base: https://api.kilo.ai/api/gateway
     api_key: os.environ/KILO_API_KEY
-    cache_read_input_token_cost: 4.48e-08
-    input_cost_per_token: 2.24e-07
+    cache_read_input_token_cost: 6.0e-08
+    input_cost_per_token: 3.0e-07
     model: openai/minimax/minimax-m3
     order: 4
-    output_cost_per_token: 8.8e-07
+    output_cost_per_token: 1.2e-06
   model_info:
     max_input_tokens: 1048576
     max_output_tokens: 512000
