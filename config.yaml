@@ -829,8 +829,8 @@ model_list:
     order: 4
     api_base: https://api.kilo.ai/api/gateway
     api_key: os.environ/KILO_API_KEY
-    input_cost_per_token: 8.7e-08
-    output_cost_per_token: 1.87e-07
+    input_cost_per_token: 1.0e-07
+    output_cost_per_token: 2.8e-07
     cache_read_input_token_cost: 3.0e-09
   model_info:
     max_input_tokens: 1050000
