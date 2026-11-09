@@ -318,7 +318,7 @@ model_list:
     cache_read_input_token_cost: 3.0e-08
   model_info:
     max_input_tokens: 1048576
-    max_output_tokens: 131072
+    max_output_tokens: 943717
     supports_vision: true
 - model_name: glm-5.3-flash
   litellm_params:
@@ -345,12 +345,12 @@ model_list:
   litellm_params:
     model: openrouter/z-ai/glm-5.3-flash
     order: 5
-    input_cost_per_token: 3.35e-08
-    output_cost_per_token: 8.3e-08
+    input_cost_per_token: 1.5e-07
+    output_cost_per_token: 5.0e-07
     cache_read_input_token_cost: 3.0e-08
   model_info:
     max_input_tokens: 1048576
-    max_output_tokens: 131072
+    max_output_tokens: 943717
     supports_vision: true
 - litellm_params:
     api_base: os.environ/AZURE_OPENAI_API_BASE_SWEDEN
@@ -1063,7 +1063,7 @@ model_list:
     model: openrouter/nvidia/nemotron-3.5-super-vl
     order: 5
     input_cost_per_token: 1.5e-07
-    output_cost_per_token: 5.0e-07
+    output_cost_per_token: 4.7e-07
     cache_read_input_token_cost: 2.0e-08
   model_info:
     max_input_tokens: 1048576
