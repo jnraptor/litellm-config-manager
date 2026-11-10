@@ -171,6 +171,7 @@ models:
       openrouter: moonshotai/kimi-k3.1-pro
       poe: kimi-k3.1-pro
       kilo: moonshotai/kimi-k3.1-pro
+      fireworks: accounts/fireworks/models/kimi-k3p1-pro
       requesty: kimi-k3.1-pro
   gpt-6.1-terra:
     display_name: gpt-6.1-terra

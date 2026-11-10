@@ -56,14 +56,6 @@ model_list:
     supports_pdf_input: true
 - model_name: claude-haiku-5-5
   litellm_params:
-    model: poe/claude-haiku-5.5
-    order: 4
-    api_key: os.environ/POE_API_KEY
-    input_cost_per_token: 1.01e-07
-    output_cost_per_token: 5.051e-07
-    cache_read_input_token_cost: 1.01e-08
-- model_name: claude-haiku-5-5
-  litellm_params:
     model: openai/claude-haiku-5-5
     order: 5
     api_base: https://router.requesty.ai/v1
@@ -150,14 +142,6 @@ model_list:
     supports_pdf_input: true
 - model_name: claude-sonnet-5-5
   litellm_params:
-    model: poe/claude-sonnet-5.5
-    order: 4
-    api_key: os.environ/POE_API_KEY
-    input_cost_per_token: 2.0202e-06
-    output_cost_per_token: 1.0101e-05
-    cache_read_input_token_cost: 2.02e-07
-- model_name: claude-sonnet-5-5
-  litellm_params:
     model: openai/claude-sonnet-5-5
     order: 5
     api_base: https://router.requesty.ai/v1
@@ -211,14 +195,6 @@ model_list:
     supports_vision: true
 - model_name: deepseek-v4.1-flash-1017
   litellm_params:
-    model: poe/deepseek-v4.1-flash-1017
-    order: 4
-    api_key: os.environ/POE_API_KEY
-    input_cost_per_token: 3.03e-07
-    output_cost_per_token: 1.2121e-06
-    cache_read_input_token_cost: 6.1e-09
-- model_name: deepseek-v4.1-flash-1017
-  litellm_params:
     model: openai/deepseek-v4.1-flash-1017
     order: 5
     api_base: https://router.requesty.ai/v1
@@ -264,14 +240,6 @@ model_list:
     max_input_tokens: 1048576
     max_output_tokens: 943718
   model_name: glm-5.3
-- model_name: glm-5.3
-  litellm_params:
-    model: poe/glm-5.3
-    order: 4
-    api_key: os.environ/POE_API_KEY
-    input_cost_per_token: 1.697e-06
-    output_cost_per_token: 5.3333e-06
-    cache_read_input_token_cost: 3.152e-07
 - litellm_params:
     api_base: https://router.requesty.ai/v1
     api_key: os.environ/REQUESTY_API_KEY
@@ -320,13 +288,6 @@ model_list:
     max_input_tokens: 1048576
     max_output_tokens: 943717
     supports_vision: true
-- model_name: glm-5.3-flash
-  litellm_params:
-    model: poe/glm-5.3-flash-el
-    order: 4
-    api_key: os.environ/POE_API_KEY
-    input_cost_per_token: 7.58e-08
-    output_cost_per_token: 2.525e-07
 - model_name: glm-5.3-flash
   litellm_params:
     model: openai/glm-5.3-flash
@@ -643,16 +604,6 @@ model_list:
   model_name: gpt-image-2
 - model_name: gpt-image-2
   litellm_params:
-    model: poe/gpt-image-2
-    order: 4
-    api_key: os.environ/POE_API_KEY
-    input_cost_per_token: 5.0505e-06
-    output_cost_per_token: 3.0303e-05
-    cache_read_input_token_cost: 1.2626e-06
-  model_info:
-    mode: image_generation
-- model_name: gpt-image-2
-  litellm_params:
     model: openai/azure/openai/gpt-image-2
     order: 5
     api_base: https://router.requesty.ai/v1
@@ -715,6 +666,18 @@ model_list:
     order: 5
 - model_name: kimi-k3.1-pro
   litellm_params:
+    model: fireworks_ai/accounts/fireworks/models/kimi-k3p1-pro
+    order: 4
+    api_key: os.environ/FIREWORKS_AI_API_KEY
+    input_cost_per_token: 2.0e-06
+    output_cost_per_token: 1.0e-05
+    cache_read_input_token_cost: 2.0000000000000002e-07
+  model_info:
+    max_input_tokens: 1048576
+    max_output_tokens: 131072
+    supports_vision: true
+- model_name: kimi-k3.1-pro
+  litellm_params:
     model: openai/moonshotai/kimi-k3.1-pro
     order: 4
     api_base: https://api.kilo.ai/api/gateway
@@ -726,14 +689,6 @@ model_list:
     max_input_tokens: 1048576
     max_output_tokens: 943718
     supports_vision: true
-- model_name: kimi-k3.1-pro
-  litellm_params:
-    model: poe/kimi-k3.1-pro
-    order: 4
-    api_key: os.environ/POE_API_KEY
-    input_cost_per_token: 2.0202e-06
-    output_cost_per_token: 1.0101e-05
-    cache_read_input_token_cost: 2.02e-07
 - model_name: kimi-k3.1-pro
   litellm_params:
     model: openai/kimi-k3.1-pro
@@ -839,13 +794,6 @@ model_list:
     supports_audio_input: true
 - model_name: mimo-v2.6-flash
   litellm_params:
-    model: poe/mimo-v2.6-flash-el
-    order: 4
-    api_key: os.environ/POE_API_KEY
-    input_cost_per_token: 1.414e-07
-    output_cost_per_token: 2.828e-07
-- model_name: mimo-v2.6-flash
-  litellm_params:
     model: openai/mimo-v2.6-flash
     order: 5
     api_base: https://router.requesty.ai/v1
@@ -884,13 +832,6 @@ model_list:
     max_output_tokens: 131072
     supports_vision: true
     supports_audio_input: true
-- model_name: mimo-v2.6-pro
-  litellm_params:
-    model: poe/mimo-v2.6-pro-el
-    order: 4
-    api_key: os.environ/POE_API_KEY
-    input_cost_per_token: 4.394e-07
-    output_cost_per_token: 8.788e-07
 - model_name: mimo-v2.6-pro
   litellm_params:
     model: openai/mimo-v2.6-pro
@@ -954,14 +895,6 @@ model_list:
     max_output_tokens: 512000
     supports_vision: true
   model_name: minimax-m3
-- model_name: minimax-m3
-  litellm_params:
-    model: poe/minimax-m3
-    order: 4
-    api_key: os.environ/POE_API_KEY
-    input_cost_per_token: 3.03e-07
-    output_cost_per_token: 1.2121e-06
-    cache_read_input_token_cost: 6.06e-08
 - litellm_params:
     api_base: https://router.requesty.ai/v1
     api_key: os.environ/REQUESTY_API_KEY
