@@ -181,3 +181,10 @@ models:
       kilo: openai/gpt-6.1-terra
       requesty: gpt-6.1-terra
       azure_ai: gpt-6.1-terra
+  claude-fable-5-2:
+    display_name: claude-fable-5-2
+    description: ''
+    providers:
+      openrouter: anthropic/claude-fable-5.2
+      kilo: anthropic/claude-fable-5.2
+      requesty: anthropic/claude-fable-5.2
