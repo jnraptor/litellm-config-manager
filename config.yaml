@@ -761,32 +761,6 @@ model_list:
     extra_headers:
       Content-Type: application/json
       api-key: os.environ/AZURE_AI_API_KEY_EASTUS
-    model: openai/MAI-Image-2.5
-    rpm: 2
-    order: 4
-  model_info:
-    base_model: azure_ai/mai-image-2.5
-    mode: image_generation
-  model_name: mai-image-2.5
-- litellm_params:
-    api_base: os.environ/AZURE_MAI_API_BASE_EASTUS
-    api_key: os.environ/AZURE_AI_API_KEY_EASTUS
-    extra_headers:
-      Content-Type: application/json
-      api-key: os.environ/AZURE_AI_API_KEY_EASTUS
-    model: openai/MAI-Image-2.5-Flash
-    order: 4
-    rpm: 2
-  model_info:
-    base_model: azure_ai/mai-image-2.5-flash
-    mode: image_generation
-  model_name: mai-image-2.5-flash
-- litellm_params:
-    api_base: os.environ/AZURE_MAI_API_BASE_EASTUS
-    api_key: os.environ/AZURE_AI_API_KEY_EASTUS
-    extra_headers:
-      Content-Type: application/json
-      api-key: os.environ/AZURE_AI_API_KEY_EASTUS
     model: openai/MAI-Image-2.6
     rpm: 2
     order: 4
@@ -1085,11 +1059,6 @@ model_list:
   model_name: smart_router_1
 router_settings:
   enable_pre_call_checks: true
-  fallbacks:
-  - mai-image-2.6:
-    - mai-image-2.5
-  - mai-image-2.6-flash:
-    - mai-image-2.5-flash
   redis_host: 10.10.1.1
   redis_password: ''
   redis_port: 6379
