@@ -339,8 +339,8 @@ providers:
     model_name_prefix: ''
     model_name_cleanup: []
     special_models:
-    - mistral-medium-3-5
     - mistral-document-ai-2512
+    - MS-Decision-1
     api_base_config: null
     api_key_env: null
     order: 4
