@@ -103,6 +103,24 @@
             ]
           }
         },
+        "gemini-4-hydrogen": {
+          "name": "gemini-4-hydrogen",
+          "limit": {
+            "context": 1048576,
+            "output": 943718
+          },
+          "modalities": {
+            "input": [
+              "text",
+              "image",
+              "pdf",
+              "audio"
+            ],
+            "output": [
+              "text"
+            ]
+          }
+        },
         "glm-5.3": {
           "name": "glm-5.3",
           "limit": {

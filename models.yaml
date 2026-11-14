@@ -188,3 +188,10 @@ models:
       openrouter: anthropic/claude-fable-5.2
       kilo: anthropic/claude-fable-5.2
       requesty: anthropic/claude-fable-5.2
+  gemini-4-hydrogen:
+    display_name: gemini-4-hydrogen
+    description: ''
+    providers:
+      openrouter: google/gemini-4-hydrogen
+      kilo: google/gemini-4-hydrogen
+      requesty: gemini-4-hydrogen
