@@ -91,7 +91,7 @@
           "name": "deepseek-v4.1-flash-1017",
           "limit": {
             "context": 1048576,
-            "output": 943718
+            "output": 393216
           },
           "modalities": {
             "input": [
@@ -359,7 +359,7 @@
           "name": "nemotron-3.5-super-vl",
           "limit": {
             "context": 1048576,
-            "output": 943718
+            "output": 235929
           },
           "modalities": {
             "input": [
