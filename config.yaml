@@ -435,67 +435,6 @@ model_list:
     supports_pdf_input: true
   model_name: gpt-5-nano
 - litellm_params:
-    api_base: os.environ/AZURE_OPENAI_API_BASE
-    api_key: os.environ/AZURE_OPENAI_API_KEY
-    model: azure_ai/gpt-6-astra
-    order: 4
-    rpm: 150
-    tpm: 150000
-    input_cost_per_token: 1.0e-05
-    output_cost_per_token: 5.0e-05
-    cache_read_input_token_cost: 1.0e-06
-    cache_creation_input_token_cost: 1.25e-05
-  model_info:
-    base_model: azure_ai/gpt-6-astra
-    max_input_tokens: 1050000
-    max_output_tokens: 128000
-    supports_vision: true
-    supports_pdf_input: true
-  model_name: gpt-6-astra
-- model_name: gpt-6-astra
-  litellm_params:
-    model: openai/openai/gpt-6-astra
-    order: 4
-    api_base: https://api.kilo.ai/api/gateway
-    api_key: os.environ/KILO_API_KEY
-    input_cost_per_token: 2.0e-05
-    output_cost_per_token: 7.5e-05
-    cache_creation_input_token_cost: 2.5e-05
-    cache_read_input_token_cost: 2.0e-06
-  model_info:
-    max_input_tokens: 1050000
-    max_output_tokens: 128000
-    supports_vision: true
-    supports_pdf_input: true
-- model_name: gpt-6-astra
-  litellm_params:
-    model: openai/gpt-6-astra
-    order: 5
-    api_base: https://router.requesty.ai/v1
-    api_key: os.environ/REQUESTY_API_KEY
-    input_cost_per_token: 1.0e-05
-    output_cost_per_token: 5.0e-05
-    cache_read_input_token_cost: 1.0e-06
-    cache_creation_input_token_cost: 1.25e-05
-  model_info:
-    max_input_tokens: 1050000
-    max_output_tokens: 128000
-    supports_vision: true
-    supports_pdf_input: true
-- model_name: gpt-6-astra
-  litellm_params:
-    model: openrouter/openai/gpt-6-astra
-    order: 5
-    input_cost_per_token: 1.0e-05
-    output_cost_per_token: 5.0e-05
-    cache_creation_input_token_cost: 1.25e-05
-    cache_read_input_token_cost: 1.0e-06
-  model_info:
-    max_input_tokens: 1050000
-    max_output_tokens: 128000
-    supports_vision: true
-    supports_pdf_input: true
-- litellm_params:
     api_base: os.environ/AZURE_OPENAI_API_BASE_SWEDEN
     api_key: os.environ/AZURE_OPENAI_API_KEY_SWEDEN
     cache_creation_input_token_cost: 1.25e-07
@@ -551,67 +490,6 @@ model_list:
     output_cost_per_token: 5.0e-07
     cache_creation_input_token_cost: 1.25e-07
     cache_read_input_token_cost: 1.0e-08
-  model_info:
-    max_input_tokens: 1050000
-    max_output_tokens: 128000
-    supports_vision: true
-    supports_pdf_input: true
-- litellm_params:
-    api_base: os.environ/AZURE_OPENAI_API_BASE_SWEDEN
-    api_key: os.environ/AZURE_OPENAI_API_KEY_SWEDEN
-    cache_creation_input_token_cost: 2.5e-06
-    cache_read_input_token_cost: 1.0000000000000001e-07
-    input_cost_per_token: 2.0e-06
-    model: azure_ai/gpt-6.1-sol
-    order: 4
-    output_cost_per_token: 1.0e-05
-    rpm: 150
-    tpm: 150000
-  model_info:
-    base_model: azure_ai/gpt-6.1-sol
-    max_input_tokens: 1050000
-    max_output_tokens: 128000
-    supports_vision: true
-    supports_pdf_input: true
-  model_name: gpt-6.1-sol
-- model_name: gpt-6.1-sol
-  litellm_params:
-    model: openai/openai/gpt-6.1-sol
-    order: 4
-    api_base: https://api.kilo.ai/api/gateway
-    api_key: os.environ/KILO_API_KEY
-    input_cost_per_token: 4.0e-06
-    output_cost_per_token: 1.5e-05
-    cache_creation_input_token_cost: 5.0e-06
-    cache_read_input_token_cost: 2.0e-07
-  model_info:
-    max_input_tokens: 1050000
-    max_output_tokens: 128000
-    supports_vision: true
-    supports_pdf_input: true
-- model_name: gpt-6.1-sol
-  litellm_params:
-    model: openai/gpt-6.1-sol
-    order: 5
-    api_base: https://router.requesty.ai/v1
-    api_key: os.environ/REQUESTY_API_KEY
-    input_cost_per_token: 2.0e-06
-    output_cost_per_token: 1.0e-05
-    cache_creation_input_token_cost: 2.5e-06
-    cache_read_input_token_cost: 1.0e-07
-  model_info:
-    max_input_tokens: 1050000
-    max_output_tokens: 128000
-    supports_vision: true
-    supports_pdf_input: true
-- model_name: gpt-6.1-sol
-  litellm_params:
-    model: openrouter/openai/gpt-6.1-sol
-    order: 5
-    input_cost_per_token: 2.0e-06
-    output_cost_per_token: 1.0e-05
-    cache_creation_input_token_cost: 2.5e-06
-    cache_read_input_token_cost: 1.0e-07
   model_info:
     max_input_tokens: 1050000
     max_output_tokens: 128000
@@ -675,6 +553,16 @@ model_list:
     max_output_tokens: 128000
     supports_vision: true
     supports_pdf_input: true
+- litellm_params:
+    api_base: os.environ/AZURE_OPENAI_API_BASE_SWEDEN
+    api_key: os.environ/AZURE_OPENAI_API_KEY_SWEDEN
+    model: azure_ai/gpt-6.2-astra
+    order: 4
+    rpm: 150
+    tpm: 150000
+  model_info:
+    base_model: azure_ai/gpt-6.2-astra
+  model_name: gpt-6.2-astra
 - model_name: gpt-6.2-astra
   litellm_params:
     model: openai/openai/gpt-6.2-astra
@@ -716,16 +604,6 @@ model_list:
     max_output_tokens: 128000
     supports_vision: true
     supports_pdf_input: true
-- litellm_params:
-    api_base: os.environ/AZURE_OPENAI_API_BASE_SWEDEN
-    api_key: os.environ/AZURE_OPENAI_API_KEY_SWEDEN
-    model: azure_ai/gpt-6.2-astra
-    order: 4
-    rpm: 150
-    tpm: 150000
-  model_info:
-    base_model: azure_ai/gpt-6.2-astra
-  model_name: gpt-6.2-sol
 - litellm_params:
     api_base: os.environ/AZURE_OPENAI_API_BASE_SWEDEN
     api_key: os.environ/AZURE_OPENAI_API_KEY_SWEDEN
@@ -911,7 +789,7 @@ model_list:
     rpm: 2
     order: 4
   model_info:
-    base_model: azure_ai/mai-image-2.6
+    base_model: azure_ai/MAI-Image-2.6
     mode: image_generation
   model_name: mai-image-2.6
 - model_name: mai-image-2.6
@@ -930,7 +808,7 @@ model_list:
     rpm: 2
     order: 4
   model_info:
-    base_model: azure_ai/mai-image-2.6-flash
+    base_model: azure_ai/MAI-Image-2.6-flash
     mode: image_generation
   model_name: mai-image-2.6-flash
 - model_name: mai-image-2.6-flash
@@ -939,6 +817,32 @@ model_list:
     order: 5
   model_info:
     mode: image_generation
+- litellm_params:
+    api_base: os.environ/AZURE_MAI_API_BASE_EASTUS
+    api_key: os.environ/AZURE_AI_API_KEY_EASTUS
+    extra_headers:
+      Content-Type: application/json
+      api-key: os.environ/AZURE_AI_API_KEY_EASTUS
+    model: openai/MAI-Image-2.7
+    rpm: 6
+    order: 4
+  model_info:
+    base_model: azure_ai/MAI-Image-2.7
+    mode: image_generation
+  model_name: mai-image-2.7
+- litellm_params:
+    api_base: os.environ/AZURE_MAI_API_BASE_EASTUS
+    api_key: os.environ/AZURE_AI_API_KEY_EASTUS
+    extra_headers:
+      Content-Type: application/json
+      api-key: os.environ/AZURE_AI_API_KEY_EASTUS
+    model: openai/MAI-Image-2.7-Flash
+    rpm: 6
+    order: 4
+  model_info:
+    base_model: azure_ai/MAI-Image-2.7-Flash
+    mode: image_generation
+  model_name: mai-image-2.7-Flash
 - model_name: mimo-v2.6-flash
   litellm_params:
     model: openai/xiaomi/mimo-v2.6-flash

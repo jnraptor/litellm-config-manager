@@ -39,13 +39,6 @@ models:
       fireworks: accounts/fireworks/models/glm-5p3-flash
       opencode-go: openai/glm-5.3-flash
       requesty: zai/glm-5.3-flash
-  gpt-6-astra:
-    display_name: gpt-6-astra
-    description: ''
-    providers:
-      openrouter: openai/gpt-6-astra
-      kilo: openai/gpt-6-astra
-      requesty: openai/gpt-6-astra
   gpt-5-nano:
     display_name: gpt-5-nano
     description: ''
@@ -117,14 +110,6 @@ models:
       openrouter: openai/gpt-image-2.5-sunburst
       requesty: openai/gpt-image-2.5-sunburst
       azure_ai: gpt-image-2.5-sunburst
-  gpt-6.1-sol:
-    display_name: gpt-6.1-sol
-    description: ''
-    providers:
-      openrouter: openai/gpt-6.1-sol
-      kilo: openai/gpt-6.1-sol
-      requesty: gpt-6.1-sol
-      azure_ai: gpt-6.1-sol
   claude-sonnet-5-5:
     display_name: claude-sonnet-5-5
     description: ''
