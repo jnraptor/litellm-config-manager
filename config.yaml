@@ -86,10 +86,10 @@ model_list:
     order: 4
     api_base: https://api.kilo.ai/api/gateway
     api_key: os.environ/KILO_API_KEY
-    input_cost_per_token: 5.0e-07
-    output_cost_per_token: 2.5e-06
-    cache_creation_input_token_cost: 6.25e-07
-    cache_read_input_token_cost: 5.0e-08
+    input_cost_per_token: 1.0e-07
+    output_cost_per_token: 5.0e-07
+    cache_creation_input_token_cost: 1.25e-07
+    cache_read_input_token_cost: 1.0e-08
   model_info:
     max_input_tokens: 1000000
     max_output_tokens: 128000
@@ -229,7 +229,7 @@ model_list:
     api_key: os.environ/KILO_API_KEY
     input_cost_per_token: 3.0e-07
     output_cost_per_token: 1.2e-06
-    cache_read_input_token_cost: 6.0e-09
+    cache_read_input_token_cost: 7.0e-09
   model_info:
     max_input_tokens: 1048576
     max_output_tokens: 943718
@@ -458,10 +458,10 @@ model_list:
     order: 4
     api_base: https://api.kilo.ai/api/gateway
     api_key: os.environ/KILO_API_KEY
-    input_cost_per_token: 2.0e-07
-    output_cost_per_token: 7.5e-07
-    cache_creation_input_token_cost: 2.5e-07
-    cache_read_input_token_cost: 2.0e-08
+    input_cost_per_token: 1.0e-07
+    output_cost_per_token: 5.0e-07
+    cache_creation_input_token_cost: 1.25e-07
+    cache_read_input_token_cost: 1.0e-08
   model_info:
     max_input_tokens: 1050000
     max_output_tokens: 128000
@@ -516,10 +516,10 @@ model_list:
     order: 4
     api_base: https://api.kilo.ai/api/gateway
     api_key: os.environ/KILO_API_KEY
-    input_cost_per_token: 2.0e-06
-    output_cost_per_token: 7.5e-06
-    cache_creation_input_token_cost: 2.5e-06
-    cache_read_input_token_cost: 1.0e-07
+    input_cost_per_token: 1.0e-06
+    output_cost_per_token: 5.0e-06
+    cache_creation_input_token_cost: 1.25e-06
+    cache_read_input_token_cost: 5.0e-08
   model_info:
     max_input_tokens: 1050000
     max_output_tokens: 128000
@@ -569,10 +569,10 @@ model_list:
     order: 4
     api_base: https://api.kilo.ai/api/gateway
     api_key: os.environ/KILO_API_KEY
-    input_cost_per_token: 1.6e-05
-    output_cost_per_token: 6.0e-05
-    cache_creation_input_token_cost: 2.0e-05
-    cache_read_input_token_cost: 8.0e-07
+    input_cost_per_token: 8.0e-06
+    output_cost_per_token: 4.0e-05
+    cache_creation_input_token_cost: 1.0e-05
+    cache_read_input_token_cost: 4.0e-07
   model_info:
     max_input_tokens: 1050000
     max_output_tokens: 128000
@@ -620,10 +620,10 @@ model_list:
     order: 4
     api_base: https://api.kilo.ai/api/gateway
     api_key: os.environ/KILO_API_KEY
-    input_cost_per_token: 4.0e-06
-    output_cost_per_token: 1.5e-05
-    cache_creation_input_token_cost: 5.0e-06
-    cache_read_input_token_cost: 2.0e-07
+    input_cost_per_token: 2.0e-06
+    output_cost_per_token: 1.0e-05
+    cache_creation_input_token_cost: 2.5e-06
+    cache_read_input_token_cost: 1.0e-07
   model_info:
     max_input_tokens: 1050000
     max_output_tokens: 128000
@@ -978,9 +978,9 @@ model_list:
     order: 4
     api_base: https://api.kilo.ai/api/gateway
     api_key: os.environ/KILO_API_KEY
-    input_cost_per_token: 1.5e-07
-    output_cost_per_token: 6.0e-07
-    cache_read_input_token_cost: 1.5e-08
+    input_cost_per_token: 7.5e-08
+    output_cost_per_token: 3.0e-07
+    cache_read_input_token_cost: 7.5e-09
   model_info:
     max_input_tokens: 1048576
     max_output_tokens: 524288
@@ -1002,9 +1002,9 @@ model_list:
   litellm_params:
     model: openrouter/minimax/minimax-m3.1-flash
     order: 5
-    input_cost_per_token: 1.5e-07
-    output_cost_per_token: 6.0e-07
-    cache_read_input_token_cost: 1.5e-08
+    input_cost_per_token: 7.5e-08
+    output_cost_per_token: 3.0e-07
+    cache_read_input_token_cost: 7.5e-09
   model_info:
     max_input_tokens: 1048576
     max_output_tokens: 524288
