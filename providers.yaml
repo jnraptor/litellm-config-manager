@@ -341,6 +341,9 @@ providers:
     special_models:
     - mistral-document-ai-2512
     - MS-Decision-1
+    - MS-Decision-1.1
+    - gpt-6.2-sol
+    - gpt-6.2-astra
     api_base_config: null
     api_key_env: null
     order: 4

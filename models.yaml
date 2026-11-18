@@ -195,3 +195,17 @@ models:
       openrouter: google/gemini-4-hydrogen
       kilo: google/gemini-4-hydrogen
       requesty: gemini-4-hydrogen
+  gpt-6.2-astra:
+    display_name: gpt-6.2-astra
+    description: ''
+    providers:
+      openrouter: openai/gpt-6.2-astra
+      kilo: openai/gpt-6.2-astra
+      requesty: gpt-6.2-astra
+  gpt-6.2-sol:
+    display_name: gpt-6.2-sol
+    description: ''
+    providers:
+      openrouter: openai/gpt-6.2-sol
+      kilo: openai/gpt-6.2-sol
+      requesty: gpt-6.2-sol
