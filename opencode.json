@@ -278,56 +278,6 @@
             ]
           }
         },
-        "mimo-v2.6-flash": {
-          "name": "mimo-v2.6-flash",
-          "limit": {
-            "context": 1048576,
-            "output": 131072
-          },
-          "modalities": {
-            "input": [
-              "text",
-              "image",
-              "audio"
-            ],
-            "output": [
-              "text"
-            ]
-          }
-        },
-        "mimo-v2.6-pro": {
-          "name": "mimo-v2.6-pro",
-          "limit": {
-            "context": 1048576,
-            "output": 131072
-          },
-          "modalities": {
-            "input": [
-              "text",
-              "image",
-              "audio"
-            ],
-            "output": [
-              "text"
-            ]
-          }
-        },
-        "minimax-m3": {
-          "name": "minimax-m3",
-          "limit": {
-            "context": 1048576,
-            "output": 512000
-          },
-          "modalities": {
-            "input": [
-              "text",
-              "image"
-            ],
-            "output": [
-              "text"
-            ]
-          }
-        },
         "minimax-m3.1-flash": {
           "name": "minimax-m3.1-flash",
           "limit": {
@@ -344,38 +294,11 @@
             ]
           }
         },
-        "ms-decision-1": {
-          "name": "ms-decision-1",
-          "modalities": {
-            "input": [
-              "text"
-            ],
-            "output": [
-              "text"
-            ]
-          }
-        },
         "ms-decision-1.1": {
           "name": "ms-decision-1.1",
           "modalities": {
             "input": [
               "text"
-            ],
-            "output": [
-              "text"
-            ]
-          }
-        },
-        "nemotron-3.5-super-vl": {
-          "name": "nemotron-3.5-super-vl",
-          "limit": {
-            "context": 1048576,
-            "output": 943718
-          },
-          "modalities": {
-            "input": [
-              "text",
-              "image"
             ],
             "output": [
               "text"

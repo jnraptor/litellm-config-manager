@@ -1,16 +1,4 @@
 models:
-  minimax-m3:
-    display_name: minimax-m3
-    description: Minimax M3
-    providers:
-      openrouter: minimax/minimax-m3
-      vercel: minimax/minimax-m3
-      poe: minimax-m3
-      nvidia: minimaxai/minimax-m3
-      kilo: minimax/minimax-m3
-      opencode-go: anthropic/minimax-m3
-      requesty: minimaxi/minimax-m3
-      fireworks: accounts/fireworks/models/minimax-m3
   gemini-3.7-flash:
     display_name: gemini-3.7-flash
     description: ''
@@ -66,22 +54,6 @@ models:
       poe: gpt-image-2
       requesty: azure/openai/gpt-image-2
       azure_ai: gpt-image-2
-  mimo-v2.6-flash:
-    display_name: mimo-v2.6-flash
-    description: ''
-    providers:
-      openrouter: xiaomi/mimo-v2.6-flash
-      poe: mimo-v2.6-flash-el
-      kilo: xiaomi/mimo-v2.6-flash
-      requesty: mimo-v2.6-flash
-  mimo-v2.6-pro:
-    display_name: mimo-v2.6-pro
-    description: ''
-    providers:
-      openrouter: xiaomi/mimo-v2.6-pro
-      poe: mimo-v2.6-pro-el
-      kilo: xiaomi/mimo-v2.6-pro
-      requesty: mimo-v2.6-pro
   claude-opus-5-5:
     display_name: claude-opus-5-5
     description: ''
@@ -126,12 +98,6 @@ models:
       poe: claude-haiku-5.5
       kilo: anthropic/claude-haiku-5.5
       requesty: claude-haiku-5-5
-  nemotron-3.5-super-vl:
-    display_name: nemotron-3.5-super-vl
-    description: ''
-    providers:
-      openrouter: nvidia/nemotron-3.5-super-vl
-      kilo: nvidia/nemotron-3.5-super-vl
   deepseek-v4.1-flash-1017:
     display_name: deepseek-v4.1-flash-1017
     description: ''
