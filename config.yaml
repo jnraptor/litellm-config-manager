@@ -227,9 +227,9 @@ model_list:
     order: 4
     api_base: https://api.kilo.ai/api/gateway
     api_key: os.environ/KILO_API_KEY
-    input_cost_per_token: 1.5e-07
-    output_cost_per_token: 6.0e-07
-    cache_read_input_token_cost: 3.0e-09
+    input_cost_per_token: 3.0e-07
+    output_cost_per_token: 1.2e-06
+    cache_read_input_token_cost: 7.0e-09
   model_info:
     max_input_tokens: 1048576
     max_output_tokens: 393216
@@ -873,7 +873,7 @@ model_list:
     output_cost_per_token: 2.8e-07
     cache_read_input_token_cost: 2.8e-09
   model_info:
-    max_input_tokens: 1050000
+    max_input_tokens: 1048576
     max_output_tokens: 131072
     supports_vision: true
     supports_audio_input: true
@@ -899,7 +899,7 @@ model_list:
     output_cost_per_token: 2.8e-07
     cache_read_input_token_cost: 2.8e-09
   model_info:
-    max_input_tokens: 1050000
+    max_input_tokens: 1048576
     max_output_tokens: 131072
     supports_vision: true
     supports_audio_input: true
@@ -909,11 +909,11 @@ model_list:
     order: 4
     api_base: https://api.kilo.ai/api/gateway
     api_key: os.environ/KILO_API_KEY
-    input_cost_per_token: 4.35e-07
+    input_cost_per_token: 4.3e-07
     output_cost_per_token: 8.7e-07
-    cache_read_input_token_cost: 4.0e-09
+    cache_read_input_token_cost: 3.6e-09
   model_info:
-    max_input_tokens: 1050000
+    max_input_tokens: 1048576
     max_output_tokens: 131072
     supports_vision: true
     supports_audio_input: true
@@ -939,7 +939,7 @@ model_list:
     output_cost_per_token: 8.7e-07
     cache_read_input_token_cost: 3.6e-09
   model_info:
-    max_input_tokens: 1050000
+    max_input_tokens: 1048576
     max_output_tokens: 131072
     supports_vision: true
     supports_audio_input: true
@@ -958,14 +958,14 @@ model_list:
 - litellm_params:
     api_base: https://api.kilo.ai/api/gateway
     api_key: os.environ/KILO_API_KEY
-    cache_read_input_token_cost: 6.0e-08
-    input_cost_per_token: 3.0e-07
+    cache_read_input_token_cost: 5.0e-08
+    input_cost_per_token: 2.3e-07
     model: openai/minimax/minimax-m3
     order: 4
-    output_cost_per_token: 1.2e-06
+    output_cost_per_token: 9.6e-07
   model_info:
     max_input_tokens: 1048576
-    max_output_tokens: 512000
+    max_output_tokens: 235929
     supports_vision: true
   model_name: minimax-m3
 - litellm_params:
@@ -994,16 +994,28 @@ model_list:
   model_name: minimax-m3
 - model_name: minimax-m3.1-flash
   litellm_params:
+    model: fireworks_ai/accounts/fireworks/models/minimax-m3p1-flash
+    order: 4
+    api_key: os.environ/FIREWORKS_AI_API_KEY
+    input_cost_per_token: 1.5e-07
+    output_cost_per_token: 6.0e-07
+    cache_read_input_token_cost: 1.5e-08
+  model_info:
+    max_input_tokens: 1000000
+    max_output_tokens: 512000
+    supports_vision: true
+- model_name: minimax-m3.1-flash
+  litellm_params:
     model: openai/minimax/minimax-m3.1-flash
     order: 4
     api_base: https://api.kilo.ai/api/gateway
     api_key: os.environ/KILO_API_KEY
-    input_cost_per_token: 7.5e-08
-    output_cost_per_token: 3.0e-07
-    cache_read_input_token_cost: 7.5e-09
+    input_cost_per_token: 1.35e-07
+    output_cost_per_token: 5.4e-07
+    cache_read_input_token_cost: 1.35e-08
   model_info:
     max_input_tokens: 1048576
-    max_output_tokens: 524288
+    max_output_tokens: 512000
     supports_vision: true
 - model_name: minimax-m3.1-flash
   litellm_params:
@@ -1022,9 +1034,9 @@ model_list:
   litellm_params:
     model: openrouter/minimax/minimax-m3.1-flash
     order: 5
-    input_cost_per_token: 7.5e-08
-    output_cost_per_token: 3.0e-07
-    cache_read_input_token_cost: 7.5e-09
+    input_cost_per_token: 1.5e-07
+    output_cost_per_token: 6.0e-07
+    cache_read_input_token_cost: 1.5e-08
   model_info:
     max_input_tokens: 1048576
     max_output_tokens: 524288
@@ -1082,18 +1094,18 @@ model_list:
     cache_read_input_token_cost: 1.0e-08
   model_info:
     max_input_tokens: 1048576
-    max_output_tokens: 235929
+    max_output_tokens: 943718
     supports_vision: true
 - model_name: nemotron-3.5-super-vl
   litellm_params:
     model: openrouter/nvidia/nemotron-3.5-super-vl
     order: 5
     input_cost_per_token: 1.5e-07
-    output_cost_per_token: 5.0e-07
+    output_cost_per_token: 4.7e-07
     cache_read_input_token_cost: 2.0e-08
   model_info:
     max_input_tokens: 1048576
-    max_output_tokens: 235929
+    max_output_tokens: 943718
     supports_vision: true
 - litellm_params:
     api_base: http://ollama:11434

@@ -281,7 +281,7 @@
         "mimo-v2.6-flash": {
           "name": "mimo-v2.6-flash",
           "limit": {
-            "context": 1050000,
+            "context": 1048576,
             "output": 131072
           },
           "modalities": {
@@ -298,7 +298,7 @@
         "mimo-v2.6-pro": {
           "name": "mimo-v2.6-pro",
           "limit": {
-            "context": 1050000,
+            "context": 1048576,
             "output": 131072
           },
           "modalities": {
@@ -370,7 +370,7 @@
           "name": "nemotron-3.5-super-vl",
           "limit": {
             "context": 1048576,
-            "output": 235929
+            "output": 943718
           },
           "modalities": {
             "input": [
