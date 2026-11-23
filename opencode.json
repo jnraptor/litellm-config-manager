@@ -282,7 +282,7 @@
           "name": "minimax-m3.1-flash",
           "limit": {
             "context": 1048576,
-            "output": 524288
+            "output": 1048576
           },
           "modalities": {
             "input": [
