@@ -160,3 +160,26 @@ models:
       openrouter: openai/gpt-6.2-sol
       kilo: openai/gpt-6.2-sol
       requesty: gpt-6.2-sol
+  inkling-2-small:
+    display_name: inkling-2-small
+    description: ''
+    providers:
+      openrouter: thinkingmachines/inkling-2-small
+      kilo: thinkingmachines/inkling-2-small
+      requesty: nebius/inkling-2-small
+  hy4-flash:
+    display_name: hy4-flash
+    description: ''
+    providers:
+      openrouter: tencent/hy4-flash
+      kilo: tencent/hy4-flash
+      fireworks: accounts/fireworks/models/hy4-flash
+      requesty: tencent/hy4-flash
+  qwen4-max:
+    display_name: qwen4-max
+    description: ''
+    providers:
+      openrouter: qwen/qwen4-max
+      kilo: qwen/qwen4-max
+      fireworks: accounts/fireworks/models/qwen4-max
+      requesty: fireworks/qwen4-max

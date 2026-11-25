@@ -140,7 +140,7 @@
           "name": "glm-5.3-flash",
           "limit": {
             "context": 1048576,
-            "output": 943717
+            "output": 943718
           },
           "modalities": {
             "input": [
@@ -262,6 +262,22 @@
             ]
           }
         },
+        "hy4-flash": {
+          "name": "hy4-flash",
+          "limit": {
+            "context": 1048576,
+            "output": 65536
+          },
+          "modalities": {
+            "input": [
+              "text",
+              "image"
+            ],
+            "output": [
+              "text"
+            ]
+          }
+        },
         "kimi-k3.1-pro": {
           "name": "kimi-k3.1-pro",
           "limit": {
@@ -310,6 +326,22 @@
           "limit": {
             "context": 200000,
             "output": 8000
+          },
+          "modalities": {
+            "input": [
+              "text",
+              "image"
+            ],
+            "output": [
+              "text"
+            ]
+          }
+        },
+        "qwen4-max": {
+          "name": "qwen4-max",
+          "limit": {
+            "context": 1000000,
+            "output": 262144
           },
           "modalities": {
             "input": [
