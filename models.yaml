@@ -183,3 +183,9 @@ models:
       kilo: qwen/qwen4-max
       fireworks: accounts/fireworks/models/qwen4-max
       requesty: fireworks/qwen4-max
+  inkling-2-mini:
+    display_name: inkling-2-mini
+    description: ''
+    providers:
+      openrouter: thinkingmachines/inkling-2-mini
+      kilo: thinkingmachines/inkling-2-mini
