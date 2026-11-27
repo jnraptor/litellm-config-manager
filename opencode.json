@@ -278,6 +278,38 @@
             ]
           }
         },
+        "inkling-2-mini": {
+          "name": "inkling-2-mini",
+          "limit": {
+            "context": 1048576,
+            "output": 65536
+          },
+          "modalities": {
+            "input": [
+              "text",
+              "image"
+            ],
+            "output": [
+              "text"
+            ]
+          }
+        },
+        "inkling-2-small": {
+          "name": "inkling-2-small",
+          "limit": {
+            "context": 1048576,
+            "output": 943718
+          },
+          "modalities": {
+            "input": [
+              "text",
+              "image"
+            ],
+            "output": [
+              "text"
+            ]
+          }
+        },
         "kimi-k3.1-pro": {
           "name": "kimi-k3.1-pro",
           "limit": {

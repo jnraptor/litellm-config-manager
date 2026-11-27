@@ -166,6 +166,7 @@ models:
     providers:
       openrouter: thinkingmachines/inkling-2-small
       kilo: thinkingmachines/inkling-2-small
+      fireworks: accounts/fireworks/models/inkling-2-small
       requesty: nebius/inkling-2-small
   hy4-flash:
     display_name: hy4-flash
@@ -189,3 +190,4 @@ models:
     providers:
       openrouter: thinkingmachines/inkling-2-mini
       kilo: thinkingmachines/inkling-2-mini
+      fireworks: accounts/fireworks/models/inkling-2-mini

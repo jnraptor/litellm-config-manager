@@ -251,9 +251,9 @@ model_list:
   litellm_params:
     model: openrouter/deepseek/deepseek-v4.1-flash-1017
     order: 5
-    input_cost_per_token: 1.5e-07
-    output_cost_per_token: 6.0e-07
-    cache_read_input_token_cost: 3.0e-09
+    input_cost_per_token: 3.0e-07
+    output_cost_per_token: 1.2e-06
+    cache_read_input_token_cost: 6.0e-09
   model_info:
     max_input_tokens: 1048576
     max_output_tokens: 393216
@@ -797,6 +797,91 @@ model_list:
     max_input_tokens: 1048576
     max_output_tokens: 65536
     supports_vision: true
+- model_name: inkling-2-mini
+  litellm_params:
+    model: fireworks_ai/accounts/fireworks/models/inkling-2-mini
+    order: 4
+    api_key: os.environ/FIREWORKS_AI_API_KEY
+    input_cost_per_token: 1.5e-07
+    output_cost_per_token: 5.0e-07
+    cache_read_input_token_cost: 1.5e-08
+  model_info:
+    max_input_tokens: 1048576
+    max_output_tokens: 65536
+    supports_vision: true
+- model_name: inkling-2-mini
+  litellm_params:
+    model: openai/thinkingmachines/inkling-2-mini
+    order: 4
+    api_base: https://api.kilo.ai/api/gateway
+    api_key: os.environ/KILO_API_KEY
+    input_cost_per_token: 2.625e-08
+    output_cost_per_token: 1.05e-07
+    cache_read_input_token_cost: 1.3125e-08
+  model_info:
+    max_input_tokens: 1048576
+    max_output_tokens: 65536
+    supports_vision: true
+- model_name: inkling-2-mini
+  litellm_params:
+    model: openrouter/thinkingmachines/inkling-2-mini
+    order: 5
+    input_cost_per_token: 7.5e-08
+    output_cost_per_token: 3.0e-07
+    cache_read_input_token_cost: 1.5e-08
+  model_info:
+    max_input_tokens: 1048576
+    max_output_tokens: 65536
+    supports_vision: true
+- model_name: inkling-2-small
+  litellm_params:
+    model: fireworks_ai/accounts/fireworks/models/inkling-2-small
+    order: 4
+    api_key: os.environ/FIREWORKS_AI_API_KEY
+    input_cost_per_token: 3.0e-07
+    output_cost_per_token: 1.0e-06
+    cache_read_input_token_cost: 3.0e-08
+  model_info:
+    max_input_tokens: 1048576
+    max_output_tokens: 131072
+    supports_vision: true
+- model_name: inkling-2-small
+  litellm_params:
+    model: openai/thinkingmachines/inkling-2-small
+    order: 4
+    api_base: https://api.kilo.ai/api/gateway
+    api_key: os.environ/KILO_API_KEY
+    input_cost_per_token: 7.5e-08
+    output_cost_per_token: 2.5e-07
+    cache_read_input_token_cost: 1.5e-08
+  model_info:
+    max_input_tokens: 1048576
+    max_output_tokens: 943718
+    supports_vision: true
+- model_name: inkling-2-small
+  litellm_params:
+    model: openai/nebius/inkling-2-small
+    order: 5
+    api_base: https://router.requesty.ai/v1
+    api_key: os.environ/REQUESTY_API_KEY
+    input_cost_per_token: 3.0e-07
+    output_cost_per_token: 1.0e-06
+    cache_creation_input_token_cost: 3.0e-07
+    cache_read_input_token_cost: 6.0e-08
+  model_info:
+    max_input_tokens: 1048576
+    max_output_tokens: 943718
+- model_name: inkling-2-small
+  litellm_params:
+    model: openrouter/thinkingmachines/inkling-2-small
+    order: 5
+    input_cost_per_token: 3.0e-07
+    output_cost_per_token: 1.0e-06
+    cache_read_input_token_cost: 3.0e-08
+  model_info:
+    max_input_tokens: 1048576
+    max_output_tokens: 943718
+    supports_vision: true
 - model_name: kimi-k3.1-pro
   litellm_params:
     model: fireworks_ai/accounts/fireworks/models/kimi-k3p1-pro
@@ -954,9 +1039,9 @@ model_list:
   litellm_params:
     model: openrouter/minimax/minimax-m3.1-flash
     order: 5
-    input_cost_per_token: 7.5e-08
-    output_cost_per_token: 3.0e-07
-    cache_read_input_token_cost: 7.5e-09
+    input_cost_per_token: 1.5e-07
+    output_cost_per_token: 6.0e-07
+    cache_read_input_token_cost: 1.5e-08
   model_info:
     max_input_tokens: 1048576
     max_output_tokens: 524288
